@@ -5,6 +5,7 @@ import Landing from '../pages/Landing'
 import WithNav from "./WithNav.tsx";
 
 const Investment: FC = lazy(() => import('../pages/finance/investment/landing'))
+const FinanceLanding: FC = lazy(() => import('../pages/finance/records/Landing.tsx'))
 
 function RolfRoutes(): ReactElement {
     return (
@@ -15,6 +16,7 @@ function RolfRoutes(): ReactElement {
                     <Route element={<Landing/>} path={'/test'}/>
 
                     <Route element={<Investment/>} path="/finance/investment"/>
+                    <Route element={<FinanceLanding/>} path="/finance/records"/>
                 </Route>
             </Routes>
             <Routes>
