@@ -1,0 +1,82 @@
+.dx-datagrid-headers, .dx-treelist-headers {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    font-weight: bold;
+    /*background-color: var(--color-primay);*/
+}
+
+/* Componente with the available pages */
+.dx-pages {
+    margin-top: 10px;
+}
+
+/* Componente with the available page sizes */
+.dx-page-sizes {
+    margin-top: 10px;
+}
+
+/* Selection of the componentes */
+.dx-selection {
+    background-color: var(--color-primay) !important;
+}
+
+/*Header Panel*/
+.dx-datagrid-header-panel {
+    padding: 0;
+    /*background-color: rgba(85, 149, 222, 0.6);*/
+}
+
+.dx-datagrid-header-panel .dx-toolbar {
+    margin: 0;
+    padding-right: 20px;
+    padding-left: 20px;
+    background-color: transparent;
+}
+
+.dx-datagrid-header-panel .dx-toolbar-items-container {
+    height: 70px;
+}
+
+.dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+    background-color: rgba(103, 171, 255, 0.6);
+}
+
+.dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:last-child {
+    padding-right: 10px;
+}
+
+.dx-datagrid-header-panel .dx-selectbox {
+    margin: auto 10px;
+}
+
+.dx-datagrid-header-panel .dx-button {
+    margin: auto 0;
+}
+
+.dx-button-content {
+    /*background-color: var(--color-primay);*/
+    font-weight: bold !important;
+}
+
+.dx-button-content:hover {
+    /*background-color: var(--color-secondary) !important;*/
+    font-weight: bold !important;
+}
+
+.dx-dropdowneditor-icon:hover {
+    background-color: var(--color-secondary) !important;
+    font-weight: bold !important;
+}
+
+.informer {
+    height: 70px;
+    width: 130px;
+    text-align: center;
+    color: #fff;
+}
+
+.count {
+    padding-top: 15px;
+    line-height: 27px;
+    margin: 0;
+}
