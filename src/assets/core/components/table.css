@@ -2,7 +2,7 @@
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     font-weight: bold;
-    /*background-color: var(--color-primay);*/
+    /*background-color: var(--color-primary);*/
 }
 
 /* Componente with the available pages */
@@ -54,7 +54,7 @@
 }
 
 .dx-button-content {
-    /*background-color: var(--color-primay);*/
+    /*background-color: var(--color-primary);*/
     font-weight: bold !important;
 }
 

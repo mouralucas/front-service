@@ -4,6 +4,7 @@ import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx"
 import {getFinanceData} from "../../../../services/axios/Get.tsx";
 import {URL_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
 import {Investment} from "../../Interfaces.tsx";
+import Button from "devextreme-react/button";
 
 interface InvestmentResponse {
     success: boolean
@@ -127,15 +128,42 @@ const App: FC = (): ReactElement => {
                 // />
             ]
         }
+    ]
+
+    const toolBarItems = [
+        {
+            name: 'columnChooserButton',
+            location: 'after',
+        },
+        {
+            name: 'exportButton',
+            location: 'after',
+        },
+        {
+            child: <Button icon='refresh' onClick={getInvestment}/>,
+            location: "after"
+        },
+        // {
+        //     child: <Button icon={'add'} onClick={showInvestmentModal}></Button>,
+        //     location: "after"
+        // },
+        {
+            name: 'searchPanel',
+            location: "after",
+        },
 
     ]
 
 
     return (
         <DataGrid
-            keyExpr={'data'}
+            keyExpr={'investmentId'}
             data={investments}
             columns={columns}
+            toolBar={{
+                visible: true,
+                items: toolBarItems
+            }}
         />
     )
 }

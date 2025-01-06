@@ -16,7 +16,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 import {Item} from "devextreme-react/box";
 import {FilterRow} from "devextreme-react/gantt";
-// import '../../Assets/Core/Components/Table.css'
+import '../../assets/core/components/table.css'
 import {DataGridColumn, DataGridToolBarItem} from "../../assets/core/components/Interfaces";
 import { JSX } from "react/jsx-runtime";
 

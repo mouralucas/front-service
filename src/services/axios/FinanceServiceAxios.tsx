@@ -29,8 +29,9 @@ finance_connections_instance.interceptors.response.use(
                 isRedirecting = true;
                 // Limpa os dados do usuário
                 localStorage.clear();
-                // Redireciona para a página de login
-                window.location.href = '/login';
+
+                const currentPath = encodeURIComponent(window.location.pathname + window.location.search);
+                window.location.href = `/login?from=${currentPath}`;
             }
         }
         return Promise.reject(error);

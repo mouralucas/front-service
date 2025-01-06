@@ -29,7 +29,13 @@ const Login: FC = (): ReactElement => {
             setToken('access', response.tokenPair.accessToken);
             setToken('refresh', response.tokenPair.refreshToken);
 
-            const navigateTo: string = location.state?.from.pathname ?? '/'
+            // Try to get "from" from Navigate state, if none try to get query param "from"
+            let navigateTo: string = location.state?.from.pathname ?? '/'
+            if (navigateTo === '/') {
+                // The query param "from" is used to trigger login from API calls
+                const searchParams = new URLSearchParams(location.search);
+                navigateTo = searchParams.get('from') || '/';
+            }
             navigate(navigateTo, {replace: true})
 
         }).catch((error: Error) => {
