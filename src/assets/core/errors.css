@@ -1,0 +1,4 @@
+.input-error {
+    border: 2px solid red !important; /* Usa !important para garantir a aplicação */
+    border-radius: 4px; /* Ajuste o arredondamento, se necessário */
+}
