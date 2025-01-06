@@ -1,14 +1,14 @@
 import axios, {AxiosInstance} from "axios";
 import {getToken} from "../auth/Auth.tsx";
-import {URL_FINANCE_BASE} from "./ApiUrls.tsx";
+import {URL_USER_BASE} from "./ApiUrls.tsx";
 
-const finance_connections_instance: AxiosInstance = axios.create(
+const user_connections_instance: AxiosInstance = axios.create(
     {
-        baseURL: URL_FINANCE_BASE
+        baseURL: URL_USER_BASE
     }
 );
 
-finance_connections_instance.interceptors.request.use(async config => {
+user_connections_instance.interceptors.request.use(async config => {
     const token: string | null = getToken();
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -18,7 +18,7 @@ finance_connections_instance.interceptors.request.use(async config => {
 
 let isRedirecting = false;
 
-finance_connections_instance.interceptors.response.use(
+user_connections_instance.interceptors.response.use(
     async function (response: any) {
         return response;
     },
@@ -37,4 +37,4 @@ finance_connections_instance.interceptors.response.use(
     }
 );
 
-export default finance_connections_instance
+export default user_connections_instance
