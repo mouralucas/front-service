@@ -38,7 +38,7 @@ const App = (): React.ReactElement => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-lg-12">
                         <Card>
                             <Card.Header>
                                 <div className="row pr-2 pl-2 d-flex justify-content-between align-items-center flex-wrap w-100">

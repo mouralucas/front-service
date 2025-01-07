@@ -17,7 +17,7 @@ const Card = ({children, marginTop = 'mt-4'}: CardProps): ReactElement => {
 
     return (
         <div className={marginTop}>
-            <div className='card-default m-lg-3'>
+            <div className='card-default m-lg-3 overflow-auto'>
                 {subComponents.map((component) => component)}
             </div>
         </div>

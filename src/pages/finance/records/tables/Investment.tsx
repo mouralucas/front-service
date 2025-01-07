@@ -1,10 +1,12 @@
 import {ReactElement, FC, useState, useEffect} from "react";
 import DataGrid from "../../../../components/table/DataGrid";
+import {Button as Btn} from "devextreme-react/data-grid";
 import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
 import {getFinanceData} from "../../../../services/axios/Get.tsx";
 import {URL_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
 import {Investment} from "../../Interfaces.tsx";
 import Button from "devextreme-react/button";
+import ModalInvestment from '../modals/Investment'
 
 interface InvestmentResponse {
     success: boolean
@@ -13,7 +15,19 @@ interface InvestmentResponse {
 }
 
 const App: FC = (): ReactElement => {
+    const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false)
     const [investments, setInvestments] = useState<Investment[]>([])
+
+    const showInvestmentModal = (e: any) => {
+        console.log(e);
+        setModalInvestmentState(true);
+    }
+
+    const hideInvestmentModal = () => {
+        setModalInvestmentState(false);
+        // setSelectedInvestment(undefined);
+        getInvestment();
+    }
 
     useEffect(() => {
         getInvestment();
@@ -105,14 +119,14 @@ const App: FC = (): ReactElement => {
             type: 'buttons',
             width: 110,
             child: [
-                // <Btn
-                //     key={1}
-                //     text="Editar"
-                //     // icon="/url/to/my/icon.ico"
-                //     icon="edit"
-                //     hint="Editar"
-                //     onClick={showInvestmentModal}
-                // />,
+                <Btn
+                    key={1}
+                    text="Editar"
+                    // icon="/url/to/my/icon.ico"
+                    icon="edit"
+                    hint="Editar"
+                    onClick={showInvestmentModal}
+                />,
                 // <Btn
                 //     key={2}
                 //     //icon="/url/to/my/icon.ico"
@@ -156,15 +170,18 @@ const App: FC = (): ReactElement => {
 
 
     return (
-        <DataGrid
-            keyExpr={'investmentId'}
-            data={investments}
-            columns={columns}
-            toolBar={{
-                visible: true,
-                items: toolBarItems
-            }}
-        />
+        <>
+            <DataGrid
+                keyExpr={'investmentId'}
+                data={investments}
+                columns={columns}
+                toolBar={{
+                    visible: true,
+                    items: toolBarItems
+                }}
+            />
+            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} />
+        </>
     )
 }
 

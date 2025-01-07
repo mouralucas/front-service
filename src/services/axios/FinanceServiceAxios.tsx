@@ -27,9 +27,8 @@ finance_connections_instance.interceptors.response.use(
         if (error.response?.status === 401) {
             if (!isRedirecting) {
                 isRedirecting = true;
-                // Limpa os dados do usuário
                 localStorage.clear();
-
+                
                 const currentPath = encodeURIComponent(window.location.pathname + window.location.search);
                 window.location.href = `/login?from=${currentPath}`;
             }
