@@ -3,7 +3,7 @@ import DataGrid from "../../../../components/table/DataGrid";
 import {Button as Btn} from "devextreme-react/data-grid";
 import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
 import {getFinanceData} from "../../../../services/axios/Get.tsx";
-import {URL_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
+import {URL_FINANCE_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
 import {Investment} from "../../Interfaces.tsx";
 import Button from "devextreme-react/button";
 import ModalInvestment from '../modals/Investment'
@@ -16,16 +16,19 @@ interface InvestmentResponse {
 
 const App: FC = (): ReactElement => {
     const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false)
+    const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>()
     const [investments, setInvestments] = useState<Investment[]>([])
 
     const showInvestmentModal = (e: any) => {
-        console.log(e);
+        if (typeof e.row !== 'undefined') {
+            setSelectedInvestment(e.row.data);
+        }
         setModalInvestmentState(true);
     }
 
     const hideInvestmentModal = () => {
         setModalInvestmentState(false);
-        // setSelectedInvestment(undefined);
+        setSelectedInvestment(undefined);
         getInvestment();
     }
 
@@ -34,7 +37,7 @@ const App: FC = (): ReactElement => {
     }, [])
 
     const getInvestment = () => {
-        getFinanceData(URL_INVESTMENT).then((response: InvestmentResponse) => {
+        getFinanceData(URL_FINANCE_INVESTMENT).then((response: InvestmentResponse) => {
             setInvestments(response.investments);
         }).catch(err => {
             console.log(err);
@@ -157,10 +160,10 @@ const App: FC = (): ReactElement => {
             child: <Button icon='refresh' onClick={getInvestment}/>,
             location: "after"
         },
-        // {
-        //     child: <Button icon={'add'} onClick={showInvestmentModal}></Button>,
-        //     location: "after"
-        // },
+        {
+            child: <Button icon={'add'} onClick={showInvestmentModal}></Button>,
+            location: "after"
+        },
         {
             name: 'searchPanel',
             location: "after",
@@ -180,7 +183,7 @@ const App: FC = (): ReactElement => {
                     items: toolBarItems
                 }}
             />
-            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} />
+            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment} />
         </>
     )
 }

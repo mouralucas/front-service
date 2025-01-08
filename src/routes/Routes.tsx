@@ -6,7 +6,7 @@ import WithNav from "./WithNav.tsx";
 import Login from '../pages/user/Login.tsx'
 import RequireAuth from "../services/auth/RequireAuth.tsx";
 
-const Investment: FC = lazy(() => import('../pages/finance/investment/landing'))
+const Investment: FC = lazy(() => import('../pages/finance/investment/Landing'))
 const FinanceLanding: FC = lazy(() => import('../pages/finance/records/Landing.tsx'))
 
 function RolfRoutes(): ReactElement {
