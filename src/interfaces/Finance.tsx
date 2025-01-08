@@ -38,6 +38,44 @@ export interface CreditCard {
     dueAt: string //maybe date
 }
 
+export interface CreditCardInstalments {
+    currentInstallment: number;
+    amount: number;
+    dueDate: string;
+}
+
+export interface CreditCardTransactionTax {
+    currencyId: string;
+    taxId: string;
+    amount: number;
+}
+
+export interface CreditCardTransaction {
+    transactionId: number | null;
+    creditCardId: string;
+    transactionDate: string;
+    categoryId: string;
+    currencyId: string;
+
+    // International transactions information
+    isInternationalTransaction: boolean;
+    transactionCurrencyId: string;
+    transactionAmount: number;
+    dollarExchangeRate?: number;
+    currencyDollarExchangeRate?: number;
+    taxDetail?: CreditCardTransactionTax[];
+    totalTax?: number
+
+    description: string;
+    isInstallment: boolean;
+    installments: CreditCardInstalments[];
+    totInstallments: number
+    totalAmount: number;
+    parentId: number | null;
+    createdAt?: string;
+    lastEditedAt?: string;
+}
+
 // Investment Interfaces
 export interface Investment {
     investmentId?: string | null,

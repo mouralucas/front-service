@@ -2,6 +2,7 @@ import Card from '../../../components/Card'
 import React, {useEffect} from "react";
 import InvestmentTable from './tables/Investment'
 import AccountTransactionTable from './tables/AccountTransaction'
+import CreditCardTransactionTable from './tables/CreditCardTransaction'
 
 const App = (): React.ReactElement => {
     useEffect(() => {
@@ -33,7 +34,7 @@ const App = (): React.ReactElement => {
                         <Card>
                             <Card.Header>Extrato</Card.Header>
                             <Card.Body>
-                                a
+                                <CreditCardTransactionTable />
                             </Card.Body>
                         </Card>
                     </div>
