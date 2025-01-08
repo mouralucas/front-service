@@ -2,6 +2,7 @@ import {getFinanceData} from "../axios/Get.tsx";
 import {GetAccountResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentTypesResponse, GetLiquidityResponse} from "../../interfaces/FinanceRequest.tsx";
 import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentType, Liquidity} from "../../interfaces/Finance.tsx";
 import {URL_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY} from "../axios/ApiUrls.tsx";
+import {toast} from "react-toastify";
 
 
 export const getAccounts = async () => {
@@ -25,7 +26,7 @@ export const getCreditCards = async (): Promise<any[]> => {
             label: i.nickname,
         }));
     } catch {
-        // toast.error('Houve um erro ao buscar os cartões de crédito');
+        toast.error('Houve um erro ao buscar os cartões de crédito');
         return [];
     }
 };
@@ -39,7 +40,7 @@ export const getInvestmentTypes = async (): Promise<any[]> => {
             label: i.investmentTypeName,
         }));
     } catch {
-        // toast.error('Houve um erro ao buscar os cartões de crédito');
+        toast.error('Houve um erro ao buscar os cartões de crédito');
         return [];
     }
 };
@@ -53,7 +54,7 @@ export const getIndexerTypes = async (): Promise<any[]> => {
             label: i.indexerTypeName,
         }));
     } catch {
-        // toast.error('Houve um erro ao buscar os cartões de crédito');
+        toast.error('Houve um erro ao buscar os cartões de crédito');
         return [];
     }
 };
@@ -66,7 +67,7 @@ export const getIndexers = async (): Promise<any[]> => {
             label: i.indexerName,
         }));
     } catch {
-        // toast.error('Houve um erro ao buscar os cartões de crédito');
+        toast.error('Houve um erro ao buscar os cartões de crédito');
         return [];
     }
 };
@@ -78,7 +79,7 @@ export const getCurrencies = async (): Promise<any[]> => {
             {value: i.currencyId, label: i.symbol}
         ));
     } catch {
-        // toast.error('Houve um erro ao buscar as moedas');
+        toast.error('Houve um erro ao buscar as moedas');
         return [];
     }
 };
@@ -90,7 +91,7 @@ export const getLiquidity = async (): Promise<any[]> => {
             {value: i.liquidityId, label: i.liquidityName}
         ));
     } catch {
-        // toast.error('Houve um erro ao buscar as moedas');
+        toast.error('Houve um erro ao buscar as moedas');
         return [];
     }
 };

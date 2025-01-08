@@ -8,6 +8,9 @@ import {format, parseISO} from "date-fns";
 import CurrencyInput from '../../../../components/form/CurrencyInput.tsx'
 import {getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity} from "../../../../services/getCommonData/Finance.tsx";
 import {getCountries} from "../../../../services/getCommonData/Core.tsx";
+import {financialSubmit} from "../../../../services/axios/Submit.tsx";
+import {URL_FINANCE_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
+import {toast} from "react-toastify";
 
 
 interface InvestmentProps {
@@ -113,12 +116,11 @@ const App = (props: InvestmentProps): ReactElement => {
             submit_data = data
         }
 
-        console.log(method + submit_data + e);
-        // financialSubmit(e, URL_INVESTMENT, submit_data, false, method).then(() => {
-        //     toast.success('Investimento salvo com sucesso')
-        // }).catch((err: string | ToastOptions) => {
-        //     toast.error('Erro ao salvar o investimento ' + err)
-        // })
+        financialSubmit(e, URL_FINANCE_INVESTMENT, submit_data, method).then(() => {
+            toast.success('Investimento salvo com sucesso')
+        }).catch((err: string) => {
+            toast.error('Erro ao salvar o investimento ' + err)
+        })
     }
 
 
