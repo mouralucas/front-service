@@ -1,6 +1,7 @@
 import Card from '../../../components/Card'
 import React, {useEffect} from "react";
 import InvestmentTable from './tables/Investment'
+import AccountTransactionTable from './tables/AccountTransaction'
 
 const App = (): React.ReactElement => {
     useEffect(() => {
@@ -21,7 +22,7 @@ const App = (): React.ReactElement => {
                                 </div>
                             </Card.Header>
                             <Card.Body>
-                                a
+                                <AccountTransactionTable />
                             </Card.Body>
                         </Card>
                     </div>

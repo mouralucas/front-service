@@ -7,6 +7,7 @@ export const URL_LOGIN = '/login';
 
 //Account
 export const URL_FINANCE_ACCOUNT = '/account'
+export const URL_FINANCE_ACCOUNT_TRANSACTION = '/account/transaction'
 
 // Credit Card
 export const URL_FINANCE_CREDIT_CARD = '/creditcard'

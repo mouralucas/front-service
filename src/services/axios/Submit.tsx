@@ -23,7 +23,7 @@ const userSubmit = async (
     return response?.data
 }
 
-const financialSubmit = async (
+const financeSubmit = async (
     e: any, url: string,
     values: any,
     method: string
@@ -42,4 +42,4 @@ const financialSubmit = async (
     return response?.data
 }
 
-export { financialSubmit, userSubmit};
+export { financeSubmit, userSubmit};
