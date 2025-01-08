@@ -68,9 +68,41 @@ export interface InvestmentType {
     investmentCategoryId: string
 }
 
+//Finance
+export interface IndexerType {
+    indexerTypeId: string;
+    indexerTypeName: string;
+    description: string;
+}
+
+export interface Indexer {
+    indexerId: string;
+    indexerName: string;
+    description: string;
+}
+
+export interface Liquidity {
+    liquidityId: string;
+    liquidityName: string;
+    description: string;
+}
+
 // Other
 export interface Currency {
     currencyId: string
     name: string
     symbol: string
+}
+
+export interface Category {
+    categoryId: string
+    name: string
+    description: string
+    fatherId: string
+    fatherName: string
+}
+
+export interface Country {
+    countryId: string;
+    countryName: string;
 }

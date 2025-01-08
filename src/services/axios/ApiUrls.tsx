@@ -17,3 +17,10 @@ export const URL_FINANCE_INVESTMENT_TYPE = '/investment/type'
 
 // Other finances
 export const URL_FINANCE_CURRENCY = '/finance/currency'
+export const URL_FINANCE_INDEXER_TYPE = '/finance/indexer-type'
+export const URL_FINANCE_INDEXER = '/finance/indexer'
+export const URL_FINANCE_LIQUIDITY = '/finance/liquidity'
+
+// Core URLs
+export const URL_CATEGORIES = '/core/category'
+export const URL_COUNTRY = '/core/country'

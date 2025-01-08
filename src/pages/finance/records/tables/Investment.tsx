@@ -4,7 +4,7 @@ import {Button as Btn} from "devextreme-react/data-grid";
 import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
 import {getFinanceData} from "../../../../services/axios/Get.tsx";
 import {URL_FINANCE_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
-import {Investment} from "../../Interfaces.tsx";
+import {Investment} from "../../../../interfaces/Finance.tsx";
 import Button from "devextreme-react/button";
 import ModalInvestment from '../modals/Investment'
 

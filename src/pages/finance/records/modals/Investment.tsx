@@ -1,11 +1,13 @@
 import {ReactElement, useEffect, useState} from "react";
 import Modal from '../../../../components/Modal'
-import {Investment} from "../../Interfaces.tsx";
+import {Investment} from "../../../../interfaces/Finance.tsx";
 import {Controller, useForm} from "react-hook-form";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import {format, parseISO} from "date-fns";
-import {getAccounts, getInvestmentTypes} from "../../../../services/getCommonData/Finance.tsx";
+import CurrencyInput from '../../../../components/form/CurrencyInput.tsx'
+import {getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity} from "../../../../services/getCommonData/Finance.tsx";
+import {getCountries} from "../../../../services/getCommonData/Core.tsx";
 
 
 interface InvestmentProps {
@@ -36,20 +38,24 @@ const DefaultInvestment: Investment = {
 }
 
 const App = (props: InvestmentProps): ReactElement => {
-    const {
-        handleSubmit,
-        control,
-        reset,
-        formState: {errors, dirtyFields},
-        getValues,
-    } = useForm<Investment>({defaultValues: DefaultInvestment})
+    const {handleSubmit, control, reset, formState: {errors, dirtyFields}, getValues, setValue} = useForm<Investment>({defaultValues: DefaultInvestment})
 
     const [accounts, setAccounts] = useState<any[]>([])
     const [investmentTypes, setInvestmentTypes] = useState<any[]>([])
+    const [currencies, setCurrencies] = useState<any[]>([])
+    const [indexerTypes, setIndexerTypes] = useState<any[]>([])
+    const [indexers, setIndexers] = useState<any[]>([])
+    const [liquidity, setLiquidity] = useState<any[]>([])
+    const [countries, setCountries] = useState<any[]>([])
 
     const fetchInvestmentData: () => Promise<void> = async () => {
         setAccounts(await getAccounts());
         setInvestmentTypes(await getInvestmentTypes());
+        setCurrencies(await getCurrencies());
+        setIndexerTypes(await getIndexerTypes());
+        setIndexers(await getIndexers());
+        setLiquidity(await getLiquidity());
+        setCountries(await getCountries());
     };
 
     useEffect(() => {
@@ -75,6 +81,14 @@ const App = (props: InvestmentProps): ReactElement => {
             reset(DefaultInvestment);
         }
     }, [props.modalState, props.investment, reset]);
+
+    const calculateTotalAmount = () => {
+        const quantity = getValues("quantity");
+        const price = getValues("price");
+
+        const amount = quantity * price
+        setValue('amount', amount);
+    }
 
     const onSubmit = (data: Investment, e: any) => {
         let method;
@@ -198,6 +212,226 @@ const App = (props: InvestmentProps): ReactElement => {
                                     type="text"
                                     {...field}
                                     className={`form-control input-default ${errors.contractedRate ? "input-error" : ""}`}
+                                />
+                            )}
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-3">
+                        <label htmlFor="">Vencimento</label>
+                        <Controller
+                            name={'maturityDate'}
+                            control={control}
+                            render={({field}) => (
+                                <DatePicker
+                                    selected={field.value ? parseISO(field.value) : null}
+                                    onChange={(date) => {
+                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
+                                    }}
+                                    dateFormat="dd/MM/yyyy"
+                                    className="form-control"
+                                    placeholderText="__/__/____"
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="col-3">
+                        <label htmlFor="">Quantidade</label>
+                        <Controller
+                            name={'quantity'}
+                            control={control}
+                            rules={{
+                                validate: (value) => value !== 0 || "Este campo não deve ser zero",
+                            }}
+                            render={({field}) => (
+                                <CurrencyInput
+                                    value={field.value}
+                                    onValueChange={(values) => field.onChange(values.rawValue)}
+                                    className={`form-control input-default ${errors.quantity ? 'input-error' : ''}`}
+                                    onBlur={calculateTotalAmount}
+                                />
+                            )}
+                        />
+                        {errors.quantity && (<div className="text-danger mt-1">{errors.quantity.message}</div>)}
+                    </div>
+                    <div className="col-3">
+                        <label htmlFor="">Preço</label>
+                        <Controller
+                            name={'price'}
+                            control={control}
+                            rules={{
+                                validate: (value) => value !== 0 || "Este campo não deve ser zero",
+                            }}
+                            render={({field}) => (
+                                <CurrencyInput
+                                    prefix={'R$ '}
+                                    decimalPlaces={5}
+                                    value={field.value}
+                                    onValueChange={(values) => field.onChange(values.rawValue)}
+                                    className={`form-control input-default ${errors.price ? 'input-error' : ''}`}
+                                    onBlur={calculateTotalAmount}
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="col-3">
+                        <label htmlFor="">Total</label>
+                        <Controller
+                            name={'amount'}
+                            control={control}
+                            rules={{
+                                validate: (value) => value !== 0 || "Este campo não deve ser zero",
+                            }}
+                            render={({field}) => (
+                                <CurrencyInput
+                                    prefix={'R$ '}
+                                    value={field.value}
+                                    onValueChange={(values) => field.onChange(values.rawValue)}
+                                    className={`form-control input-default ${errors.amount ? 'input-error' : ''}`}
+                                    disabled={true}
+                                />
+                            )}
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-2">
+                        <label htmlFor="">Moeda</label>
+                        <Controller
+                            name={'currencyId'}
+                            control={control}
+                            render={({field}) => (
+                                <Select
+                                    {...field}
+                                    options={currencies}
+                                    value={currencies.find((c: any) => c.value === field.value)}
+                                    onChange={(val) => field.onChange(val?.value)}
+                                    className={`${errors.currencyId ? "border border-danger" : ""}`}
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="col-5">
+                        <label htmlFor="">Tipo indexador</label>
+                        <Controller
+                            name={'indexerTypeId'}
+                            control={control}
+                            rules={{required: 'Esse campo é obrigatório'}}
+                            render={({field}) => (
+                                <Select
+                                    {...field}
+                                    options={indexerTypes}
+                                    value={indexerTypes.find((c: any) => c.value === field.value)}
+                                    onChange={(val) => field.onChange(val?.value)}
+                                    className={`${errors.indexerTypeId ? "border border-danger" : ""}`}
+                                    placeholder={'Selecione'}
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="col-5">
+                        <label htmlFor="">Indexador</label>
+                        <Controller
+                            name={'indexerId'}
+                            control={control}
+                            rules={{required: 'Esse campo é obrigatório'}}
+                            render={({field}) => (
+                                <Select
+                                    {...field}
+                                    options={indexers}
+                                    value={indexers.find((c: any) => c.value === field.value)}
+                                    onChange={(val) => field.onChange(val?.value)}
+                                    className={`${errors.indexerId ? "border border-danger" : ""}`}
+                                    placeholder={'Selecione'}
+                                />
+                            )}
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-3">
+                        <label htmlFor="">Liquidez</label>
+                        <Controller
+                            name={'liquidityId'}
+                            control={control}
+                            rules={{required: 'Esse campo é obrigatório'}}
+                            render={({field}) => (
+                                <Select
+                                    {...field}
+                                    options={liquidity}
+                                    value={liquidity.find((c: any) => c.value === field.value)}
+                                    onChange={(val) => field.onChange(val?.value)}
+                                    className={`${errors.liquidityId ? "border border-danger" : ""}`}
+                                    placeholder={'Selecione'}
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="col-3">
+                        <label htmlFor="">País</label>
+                        <Controller
+                            name={'countryId'}
+                            control={control}
+                            rules={{required: 'Esse campo é obrigatório'}}
+                            render={({field}) => (
+                                <Select
+                                    {...field}
+                                    options={countries}
+                                    value={countries.find((c: any) => c.value === field.value)}
+                                    onChange={(val) => field.onChange(val?.value)}
+                                    className={`${errors.liquidityId ? "border border-danger" : ""}`}
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="col-3">
+                        <label htmlFor="">Liquidado em</label>
+                        <Controller
+                            name={'liquidationDate'}
+                            control={control}
+                            render={({field}) => (
+                                <DatePicker
+                                    selected={field.value ? parseISO(field.value) : null}
+                                    onChange={(date) => {
+                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
+                                    }}
+                                    dateFormat="dd/MM/yyyy"
+                                    className="form-control"
+                                    placeholderText="__/__/____"
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="col-3">
+                        <label htmlFor="">Valor líquido</label>
+                        <Controller
+                            name={'liquidationAmount'}
+                            control={control}
+                            render={({field}) => (
+                                <CurrencyInput
+                                    prefix={'R$ '}
+                                    value={field.value}
+                                    onValueChange={(values) => field.onChange(values.rawValue)}
+                                    className={`form-control input-default`}
+                                />
+                            )}
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <label htmlFor="">Observações</label>
+                        <Controller
+                            name={'observation'}
+                            control={control}
+                            render={({field}) => (
+                                <textarea
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    onChange={field.onChange}
+                                    rows={5}
+                                    className='form-control'
                                 />
                             )}
                         />
