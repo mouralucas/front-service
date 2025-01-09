@@ -76,6 +76,34 @@ export interface CreditCardTransaction {
     lastEditedAt?: string;
 }
 
+export interface UpdateCreditCardTransaction {
+    transactionId: number | null;
+    creditCardId: string;
+    transactionDate: string;
+    categoryId: string;
+    currencyId: string;
+
+    // International transactions information
+    isInternationalTransaction: boolean;
+    transactionCurrencyId: string;
+    transactionAmount: number;
+    dollarExchangeRate?: number;
+    currencyDollarExchangeRate?: number;
+    taxDetail?: CreditCardTransactionTax[];
+    totalTax?: number
+
+    description: string;
+    isInstallment: boolean;
+    currentInstallment: number;
+    dueDate: string;
+    amount: number;
+    totInstallments: number
+    totalAmount: number;
+    parentId: number | null;
+    createdAt?: string;
+    lastEditedAt?: string;
+}
+
 // Investment Interfaces
 export interface Investment {
     investmentId?: string | null,

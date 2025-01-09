@@ -4,11 +4,11 @@ import DataGrid from "../../../../components/table/DataGrid";
 import {Button as Btn,} from 'devextreme-react/data-grid';
 import Button from "devextreme-react/button";
 import TransactionModal from '../modals/CreditCardTransaction'
-// import UpdateTransactionModal from '../modals/CreditCardTransactionUpdate'
+import UpdateTransactionModal from '../modals/CreditCardTransactionUpdate'
 import {toast} from "react-toastify";
 import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces";
 import {getFinanceData} from "../../../../services/axios/Get";
-import {CreditCardTransaction} from "../../../../interfaces/Finance.tsx";
+import {CreditCardTransaction, UpdateCreditCardTransaction} from "../../../../interfaces/Finance.tsx";
 
 
 interface TransactionResponse {
@@ -19,9 +19,9 @@ interface TransactionResponse {
 
 const App = () => {
     const [creditCardTransaction, setCreditCardTransaction] = useState<CreditCardTransaction[]>();
-    // const [selectedCreditCardTransaction, setSelectedCreditCardTransaction] = useState<UpdateCreditCardTransaction | undefined>(undefined)
+    const [selectedCreditCardTransaction, setSelectedCreditCardTransaction] = useState<UpdateCreditCardTransaction | undefined>(undefined)
     const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
-    // const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
+    const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
 
     const showTransactionModal = () => {
         setTransactionModalState(true);
@@ -33,16 +33,17 @@ const App = () => {
     }
 
     const showUpdateTransactionModal = (e: any) => {
+        console.log(e);
         if (typeof e.row !== 'undefined') {
-            // setSelectedCreditCardTransaction(e.row.data);
-            // setUpdateTransactionModalState(true);
+            setSelectedCreditCardTransaction(e.row.data);
+            setUpdateTransactionModalState(true);
         }
     }
 
-    // const hideUpdateTransactionModal = () => {
-    //     setUpdateTransactionModalState(false);
-    //     getTransactions();
-    // }
+    const hideUpdateTransactionModal = () => {
+        setUpdateTransactionModalState(false);
+        getTransactions();
+    }
 
     const getTransactions = () => {
         getFinanceData(URL_CREDIT_CARD_TRANSACTION, {
@@ -166,7 +167,7 @@ const App = () => {
         }
     ]
 
-    let toolBarItems: DataGridToolBarItem[] = [
+    const toolBarItems: DataGridToolBarItem[] = [
         {
             name: 'columnChooserButton',
             location: 'after',
@@ -206,7 +207,7 @@ const App = () => {
                 }}
             />
             <TransactionModal modalState={transactionModalState} hideModal={hideTransactionModal}/>
-            {/*<UpdateTransactionModal modalState={updateTransactionModalState} hideModal={hideUpdateTransactionModal} creditCardTransaction={selectedCreditCardTransaction}/>*/}
+            <UpdateTransactionModal modalState={updateTransactionModalState} hideModal={hideUpdateTransactionModal} creditCardTransaction={selectedCreditCardTransaction}/>
         </>
     );
 }
