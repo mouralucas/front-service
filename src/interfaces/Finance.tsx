@@ -153,6 +153,17 @@ export interface Liquidity {
     description: string;
 }
 
+export interface InvestmentAllocation {
+    typeAllocation: [{
+        name: string,
+        total: number
+    }],
+    categoryAllocation: [{
+        name: string,
+        total: number
+    }]
+}
+
 // Other
 export interface Currency {
     currencyId: string
