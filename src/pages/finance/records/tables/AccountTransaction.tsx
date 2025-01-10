@@ -55,9 +55,8 @@ const App = () => {
         getStatements();
     }, []);
 
-    const coffeeCommand = (e: any) => {
-        console.log(e)
-        toast('🦄 Cafezinho delícia!');
+    const coffeeCommand = () => {
+        toast('☕ Cafezinho delícia!');
     }
 
     const columns: DataGridColumn[] = [

@@ -134,6 +134,11 @@ export interface InvestmentType {
     investmentCategoryId: string
 }
 
+export interface InvestmentStatement {
+    investmentId: string;
+    name: string;
+}
+
 //Finance
 export interface IndexerType {
     indexerTypeId: string;

@@ -7,6 +7,8 @@ import {URL_FINANCE_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
 import {Investment} from "../../../../interfaces/Finance.tsx";
 import Button from "devextreme-react/button";
 import ModalInvestment from '../modals/Investment'
+import ModalInvestmentStatement from '../modals/InvestmentStatement'
+import {toast} from "react-toastify";
 
 interface InvestmentResponse {
     success: boolean
@@ -16,6 +18,7 @@ interface InvestmentResponse {
 
 const App: FC = (): ReactElement => {
     const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false)
+    const [modalInvestmentStatementState, setModalInvestmentStatementState] = useState<boolean>(false)
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>()
     const [investments, setInvestments] = useState<Investment[]>([])
 
@@ -26,10 +29,22 @@ const App: FC = (): ReactElement => {
         setModalInvestmentState(true);
     }
 
+    const showInvestmentStatementModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedInvestment(e.row.data)
+        }
+        setModalInvestmentStatementState(true);
+    }
+
     const hideInvestmentModal = () => {
         setModalInvestmentState(false);
         setSelectedInvestment(undefined);
         getInvestment();
+    }
+
+    const hideInvestmentStatementModal = () => {
+        setModalInvestmentStatementState(false);
+        setSelectedInvestment(undefined);
     }
 
     useEffect(() => {
@@ -56,6 +71,10 @@ const App: FC = (): ReactElement => {
         const percentageChange: string = parseFloat(cellInfo.percentageChange).toFixed(2);
         const formated_string: string = `${currentSymbol} ${grossAmount} (${percentageChange}%)`
         return formated_string;
+    }
+
+    const coffeeCommand = () => {
+        toast('☕ Cafezinho delícia!');
     }
 
     const columns: DataGridColumn[] = [
@@ -120,7 +139,7 @@ const App: FC = (): ReactElement => {
         {
             caption: 'Ações',
             type: 'buttons',
-            width: 110,
+            width: 130,
             child: [
                 <Btn
                     key={1}
@@ -130,19 +149,24 @@ const App: FC = (): ReactElement => {
                     hint="Editar"
                     onClick={showInvestmentModal}
                 />,
-                // <Btn
-                //     key={2}
-                //     //icon="/url/to/my/icon.ico"
-                //     icon="coffee"
-                //     hint="Coffee"
-                //     onClick={coffeeCommand}
-                // />,
-                // <Btn
-                //     key={3}
-                //     icon="money"
-                //     hint={"Liquidar"}
-                //     onClick={showLiquidateModal}
-                // />
+                <Btn
+                    key={2}
+                    //icon="/url/to/my/icon.ico"
+                    icon="coffee"
+                    hint="Coffee"
+                    onClick={coffeeCommand}
+                />,
+                <Btn
+                    key={3}
+                    icon="money"
+                    hint={"Liquidar"}
+                />,
+                <Btn
+                    key={4}
+                    icon={'percent'}
+                    hint={'Adicionar extrato'}
+                    onClick={showInvestmentStatementModal}
+                />
             ]
         }
     ]
@@ -171,7 +195,6 @@ const App: FC = (): ReactElement => {
 
     ]
 
-
     return (
         <>
             <DataGrid
@@ -183,7 +206,8 @@ const App: FC = (): ReactElement => {
                     items: toolBarItems
                 }}
             />
-            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment} />
+            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
+            <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment} />
         </>
     )
 }

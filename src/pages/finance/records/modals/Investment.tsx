@@ -1,4 +1,4 @@
-import {ReactElement, useEffect, useState} from "react";
+import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
 import Modal from '../../../../components/Modal'
 import {Investment} from "../../../../interfaces/Finance.tsx";
 import {Controller, useForm} from "react-hook-form";
@@ -93,7 +93,7 @@ const App = (props: InvestmentProps): ReactElement => {
         setValue('amount', amount);
     }
 
-    const onSubmit = (data: Investment, e: any) => {
+    const onSubmit = (data: Investment, e: BaseSyntheticEvent<object, any, any> | undefined) => {
         let method;
         let submit_data;
 

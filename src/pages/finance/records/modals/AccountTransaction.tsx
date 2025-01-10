@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {BaseSyntheticEvent, useEffect, useState} from "react";
 import {URL_FINANCE_ACCOUNT_TRANSACTION} from "../../../../services/axios/ApiUrls";
 import {toast, ToastOptions} from "react-toastify";
 import {format, parseISO} from 'date-fns';
@@ -77,7 +77,7 @@ const App = (props: AccountStatementProps) => {
         }
     }, [props.modalState, props.transaction, reset]);
 
-    const onSubmit = (data: AccountTransaction, e: any) => {
+    const onSubmit = (data: AccountTransaction, e: BaseSyntheticEvent<object, any, any> | undefined) => {
         let method;
         let submit_data;
 

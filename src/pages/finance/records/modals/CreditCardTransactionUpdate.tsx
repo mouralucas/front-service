@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {BaseSyntheticEvent, useEffect, useState} from "react";
 import Modal from "../../../../components/Modal";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
@@ -64,8 +64,9 @@ const App = (props: UpdateCreditCardTransactionProps) => {
         setCurrencies(await getCurrencies());
     };
 
-    const onSubmit = (data: UpdateCreditCardTransaction, e: any) => {
-        console.log(data+e);
+    const onSubmit = (data: UpdateCreditCardTransaction, e: BaseSyntheticEvent<object, any, any> | undefined) => {
+        console.log(data);
+        console.log(e);
     }
 
     const body = () => {

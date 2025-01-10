@@ -77,7 +77,7 @@ const App = () => {
     }
 
     const coffeeCommand = () => {
-        toast('🦄 Cafezinho delícia!');
+        toast('☕ Cafezinho delícia!');
     }
 
     const columns: DataGridColumn[] = [
