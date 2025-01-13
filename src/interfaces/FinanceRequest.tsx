@@ -1,4 +1,4 @@
-import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentType, Liquidity} from "./Finance.tsx";
+import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
 
 
 // Account
@@ -45,3 +45,9 @@ export interface GetCategoryResponse {
     quantity: number;
     categories: Category[];
 }
+
+export interface GetTaxFeeResponse {
+    quantity: number;
+    taxFee: TaxFee[];
+}
+

@@ -72,11 +72,6 @@ const App = (props: InvestmentProps): ReactElement => {
         // Load necessary information
         if (props.modalState) {
             fetchInvestmentData().then();
-            // getCurrencies();
-            // getIndexerTypes();
-            // getIndexers();
-            // getLiquidity();
-            // getCountries();
         }
 
         // Clean form when modal closes
@@ -447,6 +442,7 @@ const App = (props: InvestmentProps): ReactElement => {
             showModal={props.modalState}
             hideModal={props.hideModal}
             title={'Investimento'}
+            actionModal={handleSubmit(onSubmit)}
             body={body}
             size={'lg'}
         />

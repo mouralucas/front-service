@@ -150,13 +150,6 @@ const App: FC = (): ReactElement => {
                     onClick={showInvestmentModal}
                 />,
                 <Btn
-                    key={2}
-                    //icon="/url/to/my/icon.ico"
-                    icon="coffee"
-                    hint="Coffee"
-                    onClick={coffeeCommand}
-                />,
-                <Btn
                     key={3}
                     icon="money"
                     hint={"Liquidar"}
@@ -166,7 +159,14 @@ const App: FC = (): ReactElement => {
                     icon={'percent'}
                     hint={'Adicionar extrato'}
                     onClick={showInvestmentStatementModal}
-                />
+                />,
+                <Btn
+                    key={2}
+                    //icon="/url/to/my/icon.ico"
+                    icon="coffee"
+                    hint="Coffee"
+                    onClick={coffeeCommand}
+                />,
             ]
         }
     ]

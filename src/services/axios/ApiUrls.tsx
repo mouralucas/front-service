@@ -1,5 +1,6 @@
 export const URL_USER_BASE = 'http://67.205.180.83:9002';
-export const URL_FINANCE_BASE = 'http://67.205.180.83:9003';
+// export const URL_FINANCE_BASE = 'http://67.205.180.83:9003';
+export const URL_FINANCE_BASE = 'http://localhost:8003';
 export const URL_LIBRARY_BASE = 'http://67.205.180.83:9001';
 
 // User URLs
@@ -25,6 +26,7 @@ export const URL_FINANCE_CURRENCY = '/finance/currency'
 export const URL_FINANCE_INDEXER_TYPE = '/finance/indexer-type'
 export const URL_FINANCE_INDEXER = '/finance/indexer'
 export const URL_FINANCE_LIQUIDITY = '/finance/liquidity'
+export const URL_FINANCE_TAX_FEE = '/finance/tax-fee'
 
 // Core URLs
 export const URL_CATEGORIES = '/core/category'

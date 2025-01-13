@@ -36,7 +36,7 @@ const App = () => {
     const getStatements = () => {
         getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
             startPeriod: 202401,
-            endPeriod: 202412
+            endPeriod: 202505
         }).then((response: TransactionResponse) => {
                 setTransaction(response?.transactions);
             }

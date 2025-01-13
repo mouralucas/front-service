@@ -1,7 +1,7 @@
 import {getFinanceData} from "../axios/Get.tsx";
-import {GetAccountResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentTypesResponse, GetLiquidityResponse} from "../../interfaces/FinanceRequest.tsx";
-import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentType, Liquidity} from "../../interfaces/Finance.tsx";
-import {URL_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY} from "../axios/ApiUrls.tsx";
+import {GetAccountResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentTypesResponse, GetLiquidityResponse, GetTaxFeeResponse} from "../../interfaces/FinanceRequest.tsx";
+import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentType, Liquidity, TaxFee} from "../../interfaces/Finance.tsx";
+import {URL_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE} from "../axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 
 
@@ -93,6 +93,18 @@ export const getLiquidity = async (): Promise<any[]> => {
     } catch {
         toast.error('Houve um erro ao buscar as moedas');
         return [];
+    }
+};
+
+export const getTaxFee = async (countryId: string, taxFeeType: string): Promise<any[]> => {
+    try {
+        const response: GetTaxFeeResponse = await getFinanceData(URL_FINANCE_TAX_FEE, {countryId: countryId, type: taxFeeType});
+        return response.taxFee.map((i: TaxFee) => (
+            {value: i.taxFeeId, label: i.name}
+        ))
+    } catch {
+        toast.error('Houve um erro ao buscar as taxas e impostos')
+        return []
     }
 };
 

@@ -1,0 +1,33 @@
+
+
+.btn-minus-sign {
+    background-image: url("/src/assets/core/images/icons/icon_remove.svg");
+    width: 25px;
+    height: 25px;
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: center;
+    /*border: #000000 !important;*/
+    /*background-color: #F36C24 !important;*/
+}
+
+.btn-plus-sign {
+    background-image: url('/src/assets/core/images/icons/icon_add.svg');
+    width: 25px;
+    height: 25px;
+    /*background-size: 75%;*/
+    background-repeat: no-repeat;
+    background-position: center;
+    /*border: #000000;*/
+    /*background-color: #F36C24 !important;*/
+}
+
+.btn-trash {
+    background-image: url('/src/assets/core/images/icons/icon_trash.svg');
+    width: 25px;
+    height: 25px;
+    background-size: 85%;
+    margin-top: 5px;
+    background-repeat: no-repeat;
+    background-position: center;
+}

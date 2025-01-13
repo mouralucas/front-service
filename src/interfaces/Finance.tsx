@@ -44,9 +44,9 @@ export interface CreditCardInstalments {
     dueDate: string;
 }
 
-export interface CreditCardTransactionTax {
+export interface TaxFeeDetail {
     currencyId: string;
-    taxId: string;
+    taxFeeId: string;
     amount: number;
 }
 
@@ -63,7 +63,7 @@ export interface CreditCardTransaction {
     transactionAmount: number;
     dollarExchangeRate?: number;
     currencyDollarExchangeRate?: number;
-    taxDetail?: CreditCardTransactionTax[];
+    taxDetail?: TaxFeeDetail[];
     totalTax?: number
 
     description: string;
@@ -89,7 +89,7 @@ export interface UpdateCreditCardTransaction {
     transactionAmount: number;
     dollarExchangeRate?: number;
     currencyDollarExchangeRate?: number;
-    taxDetail?: CreditCardTransactionTax[];
+    taxDetail?: TaxFeeDetail[];
     totalTax?: number
 
     description: string;
@@ -137,6 +137,14 @@ export interface InvestmentType {
 export interface InvestmentStatement {
     investmentId: string;
     name: string;
+    transactionDate: string;
+    maturityDate: string | null;
+    referenceDate: string | null;
+    period: string;
+    grossAmount: number;
+    netAmount: number;
+    taxDetails: TaxFeeDetail[];
+    feeDetails: TaxFeeDetail[];
 }
 
 //Finance
@@ -169,6 +177,15 @@ export interface InvestmentAllocation {
     }]
 }
 
+export interface TaxFee {
+    taxFeeId: string;
+    name: string
+    description: string;
+    acronyms: string;
+    countryId: string;
+    type: string
+}
+
 // Other
 export interface Currency {
     currencyId: string
@@ -182,9 +199,4 @@ export interface Category {
     description: string
     fatherId: string
     fatherName: string
-}
-
-export interface Country {
-    countryId: string;
-    countryName: string;
 }
