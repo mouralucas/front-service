@@ -3,6 +3,7 @@ import Line from "../../../../components/chart/Line"
 import {getFinanceData} from "../../../../services/axios/Get";
 import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../services/axios/ApiUrls";
 import {toast, ToastOptions} from "react-toastify";
+import {GetInvestmentPerformanceResponse} from "../../../../interfaces/FinanceRequest.tsx";
 
 const App = () => {
     const [performance, setPerformance] = useState<any>([])
@@ -14,7 +15,7 @@ const App = () => {
     const getPerformanceData = () => {
         getFinanceData(URL_FINANCE_INVESTMENT_PERFORMANCE, {
             periodRange: 12,
-        }).then((response: any) => {
+        }).then((response: GetInvestmentPerformanceResponse) => {
             setPerformance(response);
         }).catch((err: string | ToastOptions) => {
             toast.error(`Houve um erro ao buscar a performance dos investimentos ${err}`)
@@ -23,7 +24,7 @@ const App = () => {
 
     return (
         <Line
-            id={'investment_profit_chart'}
+            id={'investment_performance_chart'}
             data={performance?.data}
             series={performance?.series}
             argumentField={'period'}

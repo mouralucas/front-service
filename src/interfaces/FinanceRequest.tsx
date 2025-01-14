@@ -20,6 +20,11 @@ export interface GetInvestmentTypesResponse {
     investmentTypes: InvestmentType[];
 }
 
+export interface GetInvestmentPerformanceResponse {
+    data: { period: number, variation: number, indexerVariation: number }[]
+    series: { value: string, name: string }[];
+}
+
 // Finance
 export interface GetIndexerTypesResponse {
     quantity: number;

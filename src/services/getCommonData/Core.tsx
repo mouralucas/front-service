@@ -1,4 +1,4 @@
-import {GetCountryResponse} from "../../interfaces/CoreRequest.ts";
+import {GetCountryResponse} from "../../interfaces/CoreRequest.tsx";
 import {getFinanceData} from "../axios/Get.tsx";
 import {URL_COUNTRY} from "../axios/ApiUrls.tsx";
 import {Country} from "../../interfaces/Core.tsx";

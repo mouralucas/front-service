@@ -1,4 +1,10 @@
 import Modal from "../../../../components/Modal.tsx";
+import {useEffect, useState} from "react";
+import {getFinanceData} from "../../../../services/axios/Get.tsx";
+import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../services/axios/ApiUrls.tsx";
+import {GetInvestmentPerformanceResponse} from "../../../../interfaces/FinanceRequest.tsx";
+import PerformanceChart from '../charts/Performance';
+import {toast, ToastOptions} from "react-toastify";
 
 interface InvestmentPerformanceProps {
     modalState: boolean;
@@ -7,9 +13,32 @@ interface InvestmentPerformanceProps {
 }
 
 const App = (props: InvestmentPerformanceProps) => {
+    const [performance, setPerformance] = useState<any>([])
+
+    useEffect(() => {
+        if (props.modalState) {
+            getPerformanceData();
+        }
+
+    }, [props.modalState]);
+
+    const getPerformanceData = () => {
+        getFinanceData(URL_FINANCE_INVESTMENT_PERFORMANCE, {
+            periodRange: 60,
+            investmentId: props.investmentId,
+        }).then((response: GetInvestmentPerformanceResponse) => {
+            setPerformance(response);
+        }).catch((err: string | ToastOptions) => {
+            toast.error(`Houve um erro ao buscar a performance dos investimentos ${err}`)
+        })
+    }
 
     const body =
-        <>Lucas</>
+        <div className='row'>
+            <div className="col-12">
+                <PerformanceChart performance={performance} />
+            </div>
+        </div>
 
     const footer =
         <>
