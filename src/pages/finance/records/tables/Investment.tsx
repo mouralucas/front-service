@@ -8,6 +8,7 @@ import {Investment} from "../../../../interfaces/Finance.tsx";
 import Button from "devextreme-react/button";
 import ModalInvestment from '../modals/Investment'
 import ModalInvestmentStatement from '../modals/InvestmentStatement'
+import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
 import {toast} from "react-toastify";
 
 interface InvestmentResponse {
@@ -19,6 +20,9 @@ interface InvestmentResponse {
 const App: FC = (): ReactElement => {
     const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false)
     const [modalInvestmentStatementState, setModalInvestmentStatementState] = useState<boolean>(false)
+    const [modalInvestmentPerformanceState, setModalInvestmentPerformanceState] = useState<boolean>(false)
+
+    const [investmentId, setInvestmentId] = useState<string>('')
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>()
     const [investments, setInvestments] = useState<Investment[]>([])
 
@@ -36,6 +40,14 @@ const App: FC = (): ReactElement => {
         setModalInvestmentStatementState(true);
     }
 
+    const showInvestmentPerformanceModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setInvestmentId(e.row.data.investmentId);
+            setModalInvestmentPerformanceState(true);
+        }
+
+    }
+
     const hideInvestmentModal = () => {
         setModalInvestmentState(false);
         setSelectedInvestment(undefined);
@@ -45,6 +57,11 @@ const App: FC = (): ReactElement => {
     const hideInvestmentStatementModal = () => {
         setModalInvestmentStatementState(false);
         setSelectedInvestment(undefined);
+    }
+
+    const hideInvestmentPerformanceModal = () => {
+        setModalInvestmentPerformanceState(false);
+        setInvestmentId('');
     }
 
     useEffect(() => {
@@ -139,7 +156,7 @@ const App: FC = (): ReactElement => {
         {
             caption: 'Ações',
             type: 'buttons',
-            width: 130,
+            width: 180,
             child: [
                 <Btn
                     key={1}
@@ -150,22 +167,28 @@ const App: FC = (): ReactElement => {
                     onClick={showInvestmentModal}
                 />,
                 <Btn
-                    key={3}
+                    key={2}
                     icon="money"
                     hint={"Liquidar"}
                 />,
                 <Btn
-                    key={4}
+                    key={3}
                     icon={'percent'}
                     hint={'Adicionar extrato'}
                     onClick={showInvestmentStatementModal}
                 />,
                 <Btn
-                    key={2}
+                    key={4}
                     //icon="/url/to/my/icon.ico"
                     icon="coffee"
-                    hint="Coffee"
+                    hint="Café"
                     onClick={coffeeCommand}
+                />,
+                <Btn
+                    key={5}
+                    icon="info"
+                    hint='Evolução'
+                    onClick={showInvestmentPerformanceModal}
                 />,
             ]
         }
@@ -207,7 +230,8 @@ const App: FC = (): ReactElement => {
                 }}
             />
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
-            <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment} />
+            <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment}/>
+            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} />
         </>
     )
 }

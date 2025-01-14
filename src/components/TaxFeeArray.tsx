@@ -11,6 +11,7 @@ interface TaxFeeArrayProps {
     currencies: any[],
     taxFeeList: any[]
     type: 'taxDetails' | 'feeDetails'
+    taxFeeTitile: string
 }
 
 const App = (props: TaxFeeArrayProps) => {
@@ -81,12 +82,10 @@ const App = (props: TaxFeeArrayProps) => {
                                     onClick={() => props.appendTaxFee({ currencyId: 'BRL', taxFeeId: '', amount: 0 })}
                                 ></button>
                             }
-                            {taxIndex > 0 &&
                                 <button
                                     className='btn btn-minus-sign btn-outline-primary m-lg-2'
                                     onClick={() => props.removeTaxFee(taxIndex)}
                                 ></button>
-                            }
                         </div>
                     </div>
                 </div>

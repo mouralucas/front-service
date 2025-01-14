@@ -105,7 +105,6 @@ const App = (props: InvestmentProps): ReactElement => {
             });
 
             submit_data = modifiedFields
-            console.log(submit_data);
         } else {
             method = 'post'
             submit_data = data

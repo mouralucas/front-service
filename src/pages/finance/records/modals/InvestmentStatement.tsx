@@ -8,6 +8,9 @@ import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
 import {getCurrencies, getTaxFee} from "../../../../services/getCommonData/Finance.tsx";
 import '../../../../assets/core/icons.css'
 import TaxArray from "../../../../components/TaxFeeArray.tsx";
+import {financeSubmit} from "../../../../services/axios/Submit.tsx";
+import {URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../services/axios/ApiUrls.tsx";
+import {toast} from "react-toastify";
 
 interface InvestmentStatementProps {
     modalState: boolean,
@@ -16,6 +19,7 @@ interface InvestmentStatementProps {
 }
 
 const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
+    statementId: null,
     investmentId: '',
     name: '',
     maturityDate: null,
@@ -23,8 +27,8 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
     period: '',
     grossAmount: 0,
     netAmount: 0,
-    taxDetails: [{currencyId: 'BRL', taxFeeId: '', amount: 0}],
-    feeDetails: [{currencyId: 'BRL', taxFeeId: '', amount: 0}],
+    taxDetails: [],
+    feeDetails: [],
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
@@ -69,8 +73,23 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     }, [getValues, props.investment, props.modalState, reset]);
 
     const onSubmit = (data: InvestmentStatement, e: BaseSyntheticEvent<object> | undefined) => {
-        console.log(data);
-        console.log(e)
+        let method: string;
+        let submitData: InvestmentStatement;
+
+        if (data.statementId !== null) {
+            alert(data.statementId);
+            method = 'patch'
+            submitData = data
+        } else {
+            method = 'post'
+            submitData = data
+        }
+
+        financeSubmit(e, URL_FINANCE_INVESTMENT_STATEMENT, submitData, method).then(() => {
+            toast.success('Extrato inserido com sucesso');
+        }).catch(() => {
+            toast.error('Erro ao salvar extrato');
+        })
     }
 
     const body: ReactElement =
@@ -156,7 +175,6 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                         render={({field}) => (
                             <input type={'text'}
                                    {...field}
-                                   disabled={true}
                                    className={'form-control input-default'}
                             />
                         )}
@@ -201,15 +219,35 @@ const App = (props: InvestmentStatementProps): ReactElement => {
             </div>
             <hr/>
             <div className="row">
-                <TaxArray type={'taxDetails'} control={control} taxFeeList={taxes}
-                          errors={errors} taxFeeFields={taxFields}
-                          appendTaxFee={appendTax} removeTaxFee={removeTax} currencies={currencies}/>
+                {taxFields.length === 0 &&
+                    <>
+                        <div className="col-9"></div>
+                        <div className="col-3">
+                            <button className={'btn btn-outline-secondary text-center w-100'} onClick={() => appendTax([{currencyId: 'BRL', taxFeeId: '', amount: 0}])}>Adicionar imposto</button>
+                        </div>
+                    </>
+                }
+                {taxFields.length > 0 &&
+                    <TaxArray taxFeeTitile={'Imposto'} type={'taxDetails'} control={control} taxFeeList={taxes}
+                              errors={errors} taxFeeFields={taxFields}
+                              appendTaxFee={appendTax} removeTaxFee={removeTax} currencies={currencies}/>
+                }
             </div>
             <hr/>
             <div className="row">
-                <TaxArray type={'feeDetails'} control={control} taxFeeList={fees}
-                          errors={errors} taxFeeFields={feeFields}
-                          appendTaxFee={appendFee} removeTaxFee={removeFee} currencies={currencies}/>
+                {feeFields.length === 0 &&
+                    <>
+                        <div className="col-9"></div>
+                        <div className="col-3">
+                            <button className={'btn btn-outline-secondary text-center w-100'} onClick={() => appendFee([{currencyId: 'BRL', taxFeeId: '', amount: 0}])}>Adicionar taxa</button>
+                        </div>
+                    </>
+                }
+                {feeFields.length > 0 &&
+                    <TaxArray taxFeeTitile={'Taxa'} type={'feeDetails'} control={control} taxFeeList={fees}
+                              errors={errors} taxFeeFields={feeFields}
+                              appendTaxFee={appendFee} removeTaxFee={removeFee} currencies={currencies}/>
+                }
             </div>
         </form>
 
