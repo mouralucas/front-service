@@ -9,7 +9,7 @@ interface PieCharProps {
     type?: any
 
     legend?: {
-        show: boolean;
+        enabled: boolean;
         orientation?: string;
         verticalAlignment?: string;
         horizontalAlignment?: string;
@@ -17,7 +17,7 @@ interface PieCharProps {
     }
 
     tooltip?: {
-        show: boolean;
+        enabled: boolean;
         format?: string;
         customizeTooltip?: any;
     }
@@ -66,14 +66,14 @@ const App = (props: PieCharProps) => {
             <Margin bottom={20}/>
             <Export enabled={props.exportEnabled ?? false}/>
             <Legend
-                visible={props.legend?.show ?? false}
+                visible={props.legend?.enabled ?? false}
                 orientation={props.legend?.orientation ?? 'horizontal'}
                 verticalAlignment={props.legend?.verticalAlignment ?? "bottom"}
                 horizontalAlignment={props.legend?.horizontalAlignment ?? "center"}
                 itemTextPosition={props.legend?.itemTextPosition ?? "right"}
             />
             <Tooltip
-                enabled={props.tooltip?.show ?? false}
+                enabled={props.tooltip?.enabled ?? false}
                 format={props.tooltip?.format ?? "fixedPoint"}
                 customizeTooltip={props.tooltip?.customizeTooltip ?? toolTipFunc}
             />

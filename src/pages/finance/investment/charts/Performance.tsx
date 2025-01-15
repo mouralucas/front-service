@@ -22,6 +22,19 @@ const App = () => {
         })
     }
 
+    const customToolTip = (pointInfo: any) => {
+        const period: string = pointInfo.point.data.period
+        const series: string = pointInfo.points.map(
+            (p: { seriesName: any; valueText: any; }) =>
+                `${p.seriesName}: ${parseFloat(p.valueText).toFixed(2)}%`
+        ).join('<br/>')
+
+        const formattedString = `Período ${period}<br/>${series}`
+        return {
+            text: formattedString,
+        };
+    }
+
     return (
         <Line
             id={'investment_performance_chart'}
@@ -31,6 +44,13 @@ const App = () => {
             title={"Evolução do investimento"}
             subtitle={"Evolução, em %, dos investimentos comparados ao CDI"}
             type={'spline'}
+            toolTip={
+            {
+                enabled: true,
+                shared: true,
+                customizeTooltip: customToolTip,
+            }
+            }
         />
     )
 }

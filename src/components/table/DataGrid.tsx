@@ -1,24 +1,9 @@
 import {ReactElement} from "react";
-import DataGrid, {
-    Column,
-    Summary,
-    TotalItem,
-    ColumnChooser,
-    Format,
-    Grouping,
-    GroupPanel,
-    HeaderFilter,
-    LoadPanel,
-    Pager,
-    Paging,
-    SearchPanel,
-    Toolbar
-} from 'devextreme-react/data-grid';
+import DataGrid, {Column, ColumnChooser, Format, Grouping, GroupPanel, HeaderFilter, LoadPanel, Pager, Paging, SearchPanel, Summary, Toolbar, TotalItem} from 'devextreme-react/data-grid';
 import {Item} from "devextreme-react/box";
 import {FilterRow} from "devextreme-react/gantt";
 import '../../assets/core/components/table.css'
 import {DataGridColumn, DataGridToolBarItem} from "../../assets/core/components/Interfaces";
-import { JSX } from "react/jsx-runtime";
 
 
 const pageSizes: number[] = [10, 15, 20, 50, 100];
@@ -141,7 +126,7 @@ const App = (props: DataGridProps): ReactElement => {
     }
 
     const setToolbar = (): ReactElement[] | null => {
-        const lista_toolbar: JSX.Element[] | null = [];
+        const lista_toolbar: ReactElement[] | null = [];
         if (props.toolBar?.items) {
             props.toolBar?.items?.forEach(function (item: any, index: number) {
                 const propsItem = {

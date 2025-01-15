@@ -1,4 +1,5 @@
-import {ArgumentAxis, Chart, CommonSeriesSettings, Export, Grid, Legend, Margin, Series, Subtitle, Title, Tooltip,} from 'devextreme-react/chart';
+import {ArgumentAxis, Chart, CommonSeriesSettings, Export, Grid, Legend, Margin, Point, Series, Subtitle, Title, Tooltip,} from 'devextreme-react/chart';
+import {ReactElement} from "react";
 
 
 interface LineChartProps {
@@ -9,24 +10,55 @@ interface LineChartProps {
     title: string
     subtitle?: string
     type?: string
+    toolTip?: {
+        enabled: boolean,
+        shared?: boolean,
+        zIndex?: number,
+        customizeTooltip?: any
+    }
 }
 
 const App = (props: LineChartProps) => {
+
+    const setToolTip = (): ReactElement => {
+        let toolTip;
+
+        if (!props.toolTip) {
+            toolTip = <></>
+        } else {
+            toolTip =
+                <Tooltip
+                    enabled={props.toolTip?.enabled || false}
+                    shared={!!props.toolTip.shared}
+                    zIndex={props.toolTip?.zIndex || 1}
+                    customizeTooltip={props.toolTip?.customizeTooltip || null}
+                />
+        }
+
+        return toolTip
+    }
+
     return (
         <Chart
             id={props.id}
             palette={"Pastel"}
-            dataSource={props.data}>
+            dataSource={props.data}
+        >
 
             <CommonSeriesSettings
                 argumentField={props.argumentField}
                 type={props.type || 'line'}
             />
             {
-                props.series?.map((item) => <Series
-                    key={item.value}
-                    valueField={item.value}
-                    name={item.name}/>)
+                props.series?.map((item) =>
+                    <Series
+                        key={item.value}
+                        valueField={item.value}
+                        name={item.name}
+                    >
+                        <Point visible={false} hoverMode={'includePoints'}/>
+                    </Series>
+                )
             }
             <Margin bottom={20}/>
             <ArgumentAxis
@@ -45,7 +77,7 @@ const App = (props: LineChartProps) => {
             <Title text={props.title}>
                 {props.subtitle ? <Subtitle text={props.subtitle}/> : <></>}
             </Title>
-            <Tooltip enabled={true}/>
+            {setToolTip()}
         </Chart>
     )
 }

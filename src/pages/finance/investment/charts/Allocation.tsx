@@ -10,17 +10,20 @@ interface InvestmentAllocationResponse {
     message?: string
     typeAllocation: InvestmentAllocation[]
     categoryAllocation: InvestmentAllocation[]
+    custodianAllocation: InvestmentAllocation[]
 }
 
 const App = () => {
-    const [incomingAllocation, setIncomingAllocation] = useState<InvestmentAllocation[]>([])
-    const [investmentAllocation, setInvestmentAllocation] = useState<InvestmentAllocation[]>([])
+    const [typeAllocation, setTypeAllocation] = useState<InvestmentAllocation[]>([])
+    const [categoryAllocation, setCategoryAllocation] = useState<InvestmentAllocation[]>([])
+    const [custodianAllocation, setCustodianAllocation] = useState<InvestmentAllocation[]>([])
 
 
     const getAllocation = () => {
         getFinanceData(URL_FINANCE_INVESTMENT_ALLOCATION, {showMode: 'father'}).then((response: InvestmentAllocationResponse) => {
-            setIncomingAllocation(response.typeAllocation);
-            setInvestmentAllocation(response.categoryAllocation);
+            setTypeAllocation(response.typeAllocation);
+            setCategoryAllocation(response.categoryAllocation);
+            setCustodianAllocation(response.custodianAllocation);
         }).catch((err: string | ToastOptions) => {
             toast.error(`Houve um erro ao buscar os tipos de investimento ${err}`)
         })
@@ -32,49 +35,71 @@ const App = () => {
 
     return (
         <div className="row">
-            <div className="col-6">
+            <div className="col-4">
                 <PieChart
-                    data={incomingAllocation}
-                    title={"Alocação por tipo de renda"}
+                    data={typeAllocation}
+                    title={"Tipo de renda"}
                     axis={{argumentField: 'name', valueField: 'total'}}
                     type={'doughnut'}
                     legend={
                         {
-                            show: true,
-                            orientation: 'vertical',
+                            enabled: true,
+                            orientation: 'horizontal',
                             verticalAlignment: 'bottom',
                             horizontalAlignment: 'left',
                         }
                     }
                     tooltip={
                         {
-                            show: true,
+                            enabled: true,
                         }
                     }
                 />
             </div>
-            <div className="col-6">
+            <div className="col-4">
                 <PieChart
-                    data={investmentAllocation}
-                    title={"Alocação por tipo de investimento"}
+                    data={categoryAllocation}
+                    title={"Tipo de investimento"}
                     axis={{argumentField: 'name', valueField: 'total'}}
                     type={'doughnut'}
                     legend={
                         {
-                            show: true,
-                            orientation: 'vertical',
+                            enabled: true,
+                            orientation: 'horizontal',
                             verticalAlignment: 'bottom',
                             horizontalAlignment: 'left',
                         }
                     }
                     tooltip={
                         {
-                            show: true,
+                            enabled: true,
+                        }
+                    }
+                />
+            </div>
+            <div className="col-4">
+                <PieChart
+                    data={custodianAllocation}
+                    title={"Agente de custódia"}
+                    axis={{argumentField: 'name', valueField: 'total'}}
+                    type={'doughnut'}
+                    legend={
+                        {
+                            enabled: true,
+                            orientation: 'horizontal',
+                            verticalAlignment: 'bottom',
+                            horizontalAlignment: 'left',
+                        }
+                    }
+                    tooltip={
+                        {
+                            enabled: true,
                         }
                     }
                 />
             </div>
         </div>
+
     )
 }
 
