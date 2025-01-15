@@ -1,9 +1,10 @@
-import Modal from "../../../../components/Modal.tsx";
+import Modal from "../../../../components/Modal";
 import {useEffect, useState} from "react";
-import {getFinanceData} from "../../../../services/axios/Get.tsx";
-import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../services/axios/ApiUrls.tsx";
-import {GetInvestmentPerformanceResponse} from "../../../../interfaces/FinanceRequest.tsx";
+import {getFinanceData} from "../../../../services/axios/Get";
+import {URL_FINANCE_INVESTMENT_PERFORMANCE, URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../services/axios/ApiUrls";
+import {GetInvestmentPerformanceResponse, GetStatementResponse} from "../../../../interfaces/FinanceRequest";
 import PerformanceChart from '../charts/Performance';
+import StatementTable from '../tables/InvestmentStatement';
 import {toast, ToastOptions} from "react-toastify";
 
 interface InvestmentPerformanceProps {
@@ -12,15 +13,26 @@ interface InvestmentPerformanceProps {
     investmentId: string;
 }
 
+
 const App = (props: InvestmentPerformanceProps) => {
     const [performance, setPerformance] = useState<any>([])
+    const [statements, setStatements] = useState<any>([])
 
     useEffect(() => {
         if (props.modalState) {
             getPerformanceData();
+            getInvestmentStatement();
         }
 
     }, [props.modalState]);
+
+    const getInvestmentStatement = () => {
+        getFinanceData(URL_FINANCE_INVESTMENT_STATEMENT, {investmentId: props.investmentId}).then((response: GetStatementResponse) => {
+            setStatements(response.statement)
+        }).catch(() => {
+            toast.error('Erro ao buscar os extratos do investimento')
+        })
+    }
 
     const getPerformanceData = () => {
         getFinanceData(URL_FINANCE_INVESTMENT_PERFORMANCE, {
@@ -34,11 +46,18 @@ const App = (props: InvestmentPerformanceProps) => {
     }
 
     const body =
-        <div className='row'>
-            <div className="col-12">
-                <PerformanceChart performance={performance} />
+        <>
+            <div className='row'>
+                <div className="col-12">
+                    <PerformanceChart performance={performance}/>
+                </div>
             </div>
-        </div>
+            <div className="row">
+                <div className="col-12">
+                    <StatementTable statementList={statements}/>
+                </div>
+            </div>
+        </>
 
     const footer =
         <>

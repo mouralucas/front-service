@@ -1,4 +1,4 @@
-import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
+import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentStatement, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
 
 
 // Account
@@ -23,6 +23,11 @@ export interface GetInvestmentTypesResponse {
 export interface GetInvestmentPerformanceResponse {
     data: { period: number, variation: number, indexerVariation: number }[]
     series: { value: string, name: string }[];
+}
+
+export interface GetStatementResponse {
+    quantity: number;
+    statement: InvestmentStatement[];
 }
 
 // Finance
