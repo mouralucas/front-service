@@ -17,10 +17,7 @@ const App = (): React.ReactElement => {
                     <div className="col-12">
                         <Card>
                             <Card.Header>
-                                <div className="row pr-2 pl-2 d-flex justify-content-between align-items-center flex-wrap w-100">
-                                    <div className="col-10">Fatura</div>
-                                    <div className="col-2"></div>
-                                </div>
+                                <b>Transações bancárias</b>
                             </Card.Header>
                             <Card.Body>
                                 <AccountTransactionTable />
@@ -32,7 +29,9 @@ const App = (): React.ReactElement => {
                 <div className="row">
                     <div className="col-12">
                         <Card>
-                            <Card.Header>Extrato</Card.Header>
+                            <Card.Header>
+                                <b>Transações no cartão de crédito</b>
+                            </Card.Header>
                             <Card.Body>
                                 <CreditCardTransactionTable />
                             </Card.Body>
@@ -43,10 +42,7 @@ const App = (): React.ReactElement => {
                     <div className="col-lg-12">
                         <Card>
                             <Card.Header>
-                                <div className="row pr-2 pl-2 d-flex justify-content-between align-items-center flex-wrap w-100">
-                                    <div className="col-10">Investimentos</div>
-                                    <div className="col-2"></div>
-                                </div>
+                                    <b>Investimentos</b>
                             </Card.Header>
                             <Card.Body>
                                 <InvestmentTable />
