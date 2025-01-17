@@ -21,6 +21,7 @@ export interface GetInvestmentTypesResponse {
 }
 
 export interface GetInvestmentPerformanceResponse {
+    indexerName: string;
     data: { period: number, variation: number, indexerVariation: number }[]
     series: { value: string, name: string }[];
 }

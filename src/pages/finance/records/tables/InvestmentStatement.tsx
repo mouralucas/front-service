@@ -11,7 +11,8 @@ interface InvestmentStatementProps {
 
 const App = (props: InvestmentStatementProps): ReactElement => {
     function grossAmountCustomCell(cellInfo: any) {
-        const currentSymbol: string = cellInfo.currencySymbol;
+        // const currentSymbol: string = cellInfo.currencySymbol;
+        const currentSymbol: string = "R$ ";
         const grossAmount: string = parseFloat(cellInfo.grossAmount).toFixed(2);
         const formated_string: string = `${currentSymbol} ${grossAmount}`
         return formated_string;
@@ -48,13 +49,13 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         },
         {
             dataField: "grossAmount",
-            caption: 'Atual',
+            caption: 'Bruto',
             dataType: "currency",
             calculateCellValue: grossAmountCustomCell,
         },
         {
             dataField: "netAmount",
-            caption: 'Atual',
+            caption: 'Líquido',
             dataType: "currency",
         }
     ]

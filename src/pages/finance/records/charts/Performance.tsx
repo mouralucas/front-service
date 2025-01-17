@@ -1,6 +1,7 @@
 import Line from "../../../../components/chart/Line"
 
 interface InvestmentPerformanceProps {
+    indexerName: any;
     performance: any;
 }
 
@@ -25,7 +26,7 @@ const App = (props: InvestmentPerformanceProps) => {
             series={props.performance?.series}
             argumentField={'period'}
             title={"Evolução do investimento"}
-            subtitle={"Evolução, em %, dos investimentos comparados ao CDI"}
+            subtitle={`Evolução, em %, dos investimentos comparados ao ${props.indexerName}`}
             type={'spline'}
             toolTip={
                 {

@@ -65,12 +65,10 @@ const App = (props: AccountStatementProps) => {
             reset(DefaultTransaction);
         }
 
-
         // Load necessary information
         if (props.modalState) {
             fetchAccountTransactionData().then()
         }
-
         // Clean form when modal closes
         if (!props.modalState) {
             reset(DefaultTransaction);
@@ -102,6 +100,7 @@ const App = (props: AccountStatementProps) => {
         financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submit_data, method).then(() => {
             toast.success('Transação salva com sucesso');
             reset(DefaultTransaction);
+            props.hideModal();
         }).catch((err: string | ToastOptions) => {
             toast.error('Erro ao salvar a transação da conta ' + err);
         })
@@ -176,8 +175,9 @@ const App = (props: AccountStatementProps) => {
                                                 {...field}
                                                 options={accounts}
                                                 value={accounts.find((c: any) => c.value === field.value)}
-                                                onChange={(value: any) => field.onChange(value?.value)}
-                                                className={`${errors.accountId ? "input-error" : ""}`}
+                                                onChange={(val: any) => field.onChange(val?.value)}
+                                                className={`${errors.accountId ? "border border-danger" : ""}`}
+                                                placeholder={'Selecione'}
                                             />
                                         )}
                             />

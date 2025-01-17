@@ -15,6 +15,7 @@ interface InvestmentPerformanceProps {
 
 
 const App = (props: InvestmentPerformanceProps) => {
+    const [indexerName, setIndexerName] = useState<string>()
     const [performance, setPerformance] = useState<any>([])
     const [statements, setStatements] = useState<any>([])
 
@@ -40,6 +41,7 @@ const App = (props: InvestmentPerformanceProps) => {
             investmentId: props.investmentId,
         }).then((response: GetInvestmentPerformanceResponse) => {
             setPerformance(response);
+            setIndexerName(response.indexerName);
         }).catch((err: string | ToastOptions) => {
             toast.error(`Houve um erro ao buscar a performance dos investimentos ${err}`)
         })
@@ -49,7 +51,7 @@ const App = (props: InvestmentPerformanceProps) => {
         <>
             <div className='row'>
                 <div className="col-12">
-                    <PerformanceChart performance={performance}/>
+                    <PerformanceChart performance={performance} indexerName={indexerName}/>
                 </div>
             </div>
             <div className="row">

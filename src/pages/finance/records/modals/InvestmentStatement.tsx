@@ -19,7 +19,7 @@ interface InvestmentStatementProps {
 }
 
 const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
-    statementId: null,
+    investmentStatementId: null,
     investmentId: '',
     name: '',
     maturityDate: null,
@@ -76,8 +76,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         let method: string;
         let submitData: InvestmentStatement;
 
-        if (data.statementId !== null) {
-            alert(data.statementId);
+        if (data.investmentStatementId !== null) {
             method = 'patch'
             submitData = data
         } else {

@@ -62,7 +62,7 @@ const App = (props: ModalProps): React.ReactElement => {
                                 onClick={props.hideModal}
                             ></button>
                         </div>
-                        <div className="modal-body overflow-auto">
+                        <div className="modal-body">
                             {props.body ?? <p>This is the modal body.</p>}
                         </div>
                         <div className="modal-footer">

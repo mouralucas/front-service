@@ -30,6 +30,7 @@ const App = () => {
 
     const hideModal = () => {
         setModalState(false);
+        setSelectedTransaction(undefined);
         getStatements();
     }
 
