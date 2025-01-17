@@ -1,0 +1,35 @@
+/* Estilo global para remover margens */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Contêiner do loader */
+.loader-container {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    height: 100vh; /* Ocupa toda a altura da janela */
+    background-color: #f0f0f0; /* Cor de fundo opcional */
+}
+
+/* Animação do spinner */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 0, 0, 0.1); /* Borda externa */
+    border-top: 5px solid #3498db; /* Cor da borda animada */
+    border-radius: 50%; /* Faz o círculo */
+    animation: spin 1s linear infinite; /* Define a animação */
+}
+
+/* Keyframes para girar o círculo */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
