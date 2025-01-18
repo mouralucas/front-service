@@ -39,7 +39,7 @@ const App = (): React.ReactElement => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-lg-12">
+                    <div className="col-12">
                         <Card>
                             <Card.Header>
                                     <b>Investimentos</b>

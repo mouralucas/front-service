@@ -257,7 +257,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
             title={'Investimento'}
             actionModal={handleSubmit(onSubmit)}
             body={body}
-            size={'lg'}
+            size={'modal-xl'}
         />
     )
 }

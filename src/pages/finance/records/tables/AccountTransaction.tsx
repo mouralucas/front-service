@@ -4,10 +4,11 @@ import DataGrid from "../../../../components/table/DataGrid";
 import Button from "devextreme-react/button";
 import {Button as Btn} from "devextreme-react/data-grid";
 import {toast} from "react-toastify";
-import { AccountTransaction } from "../../../../interfaces/Finance";
+import {AccountTransaction} from "../../../../interfaces/Finance";
 import {getFinanceData} from "../../../../services/axios/Get.tsx";
 import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
 import ModalStatement from '../modals/AccountTransaction.tsx'
+import Loader from '../../../../components/Loader'
 
 interface TransactionResponse {
     quantity: number
@@ -18,6 +19,7 @@ const App = () => {
     const [transaction, setTransaction] = useState<AccountTransaction[] | null>();
     const [selectedTransaction, setSelectedTransaction] = useState<AccountTransaction | null>()
     const [modalState, setModalState] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const showModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -31,15 +33,16 @@ const App = () => {
     const hideModal = () => {
         setModalState(false);
         setSelectedTransaction(undefined);
-        getStatements();
+        getTransactions();
     }
 
-    const getStatements = () => {
+    const getTransactions = () => {
         getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
             startPeriod: 202401,
             endPeriod: 202505
         }).then((response: TransactionResponse) => {
                 setTransaction(response?.transactions);
+                setIsLoading(false);
             }
         ).catch(err => {
             toast.error('Houve um erro ao buscar extratos: ' + err)
@@ -53,7 +56,7 @@ const App = () => {
     }
 
     useEffect(() => {
-        getStatements();
+        getTransactions();
     }, []);
 
     const coffeeCommand = () => {
@@ -121,7 +124,7 @@ const App = () => {
         }
     ]
 
-    let toolBarItems = [
+    const toolBarItems = [
         {
             name: 'columnChooserButton',
             location: 'after',
@@ -131,7 +134,7 @@ const App = () => {
             location: 'after',
         },
         {
-            child: <Button icon='refresh' onClick={getStatements}/>,
+            child: <Button icon='refresh' onClick={getTransactions}/>,
             location: "after"
         },
         {
@@ -146,22 +149,26 @@ const App = () => {
     ]
 
     return (
-        <>
-            <DataGrid
-                keyExpr={'transactionId'}
-                columns={columns}
-                data={transaction}
-                toolBar={{
-                    visible: true,
-                    items: toolBarItems
-                }}
-                showLoadPanel={false}
-                searchPanel={{
-                    visible: true
-                }}
-            />
+        <div>
+            {isLoading ?
+                (<Loader/>)
+                : (
+                    <DataGrid
+                        keyExpr={'transactionId'}
+                        columns={columns}
+                        data={transaction}
+                        toolBar={{
+                            visible: true,
+                            items: toolBarItems
+                        }}
+                        showLoadPanel={false}
+                        searchPanel={{
+                            visible: true
+                        }}
+                    />)
+            }
             <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction}/>
-        </>
+        </div>
     );
 }
 

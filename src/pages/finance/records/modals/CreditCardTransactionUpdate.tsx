@@ -194,7 +194,7 @@ const App = (props: UpdateCreditCardTransactionProps) => {
                fullscreen={false}
             // actionModal={handleSubmit(onSubmit)}
             // disableAction={!isDirty}
-               size={'lg'}
+               size={'modal-xl'}
         />
     )
 }

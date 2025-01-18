@@ -443,7 +443,7 @@ const App = (props: InvestmentProps): ReactElement => {
             title={'Investimento'}
             actionModal={handleSubmit(onSubmit)}
             body={body}
-            size={'lg'}
+            size={'modal-xl'}
         />
     )
 }

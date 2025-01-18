@@ -82,6 +82,7 @@ const App = (props: InvestmentPerformanceProps) => {
             title={'Investimento'}
             body={body}
             footer={footer}
+            size={'modal-xl'}
         />
     )
 }

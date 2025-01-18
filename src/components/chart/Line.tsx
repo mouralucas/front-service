@@ -1,7 +1,6 @@
 import {ArgumentAxis, Chart, CommonSeriesSettings, Export, Grid, Legend, Margin, Point, Series, Subtitle, Title, Tooltip,} from 'devextreme-react/chart';
 import {ReactElement} from "react";
 
-
 interface LineChartProps {
     id: string
     data: any[] | undefined
@@ -15,6 +14,7 @@ interface LineChartProps {
         shared?: boolean,
         zIndex?: number,
         customizeTooltip?: any
+        contentRender?: any
     }
 }
 
@@ -31,7 +31,8 @@ const App = (props: LineChartProps) => {
                     enabled={props.toolTip?.enabled || false}
                     shared={!!props.toolTip.shared}
                     zIndex={props.toolTip?.zIndex || 1}
-                    customizeTooltip={props.toolTip?.customizeTooltip || null}
+                    customizeTooltip={!!props.toolTip?.customizeTooltip}
+                    contentRender={props.toolTip?.contentRender || null}
                 />
         }
 

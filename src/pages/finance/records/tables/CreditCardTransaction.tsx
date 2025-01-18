@@ -9,7 +9,7 @@ import {toast} from "react-toastify";
 import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces";
 import {getFinanceData} from "../../../../services/axios/Get";
 import {CreditCardTransaction, UpdateCreditCardTransaction} from "../../../../interfaces/Finance.tsx";
-
+import Loader from '../../../../components/Loader'
 
 interface TransactionResponse {
     success: boolean
@@ -22,6 +22,7 @@ const App = () => {
     const [selectedCreditCardTransaction, setSelectedCreditCardTransaction] = useState<UpdateCreditCardTransaction | undefined>(undefined)
     const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
     const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const showTransactionModal = () => {
         setTransactionModalState(true);
@@ -51,6 +52,7 @@ const App = () => {
             endPeriod: 202506
         }).then((response: TransactionResponse) => {
             setCreditCardTransaction(response.transactions);
+            setIsLoading(false);
         }).catch(response => {
             toast.error("Erro ao buscar transações")
             return {'error': response}
@@ -193,19 +195,23 @@ const App = () => {
 
     return (
         <>
-            <DataGrid
-                keyExpr={'transactionId'}
-                columns={columns}
-                data={creditCardTransaction}
-                toolBar={{
-                    visible: true,
-                    items: toolBarItems
-                }}
-                showLoadPanel={false}
-                searchPanel={{
-                    visible: true
-                }}
-            />
+            {isLoading ?
+                (<Loader/>)
+                :
+                <DataGrid
+                    keyExpr={'transactionId'}
+                    columns={columns}
+                    data={creditCardTransaction}
+                    toolBar={{
+                        visible: true,
+                        items: toolBarItems
+                    }}
+                    showLoadPanel={false}
+                    searchPanel={{
+                        visible: true
+                    }}
+                />
+            }
             <TransactionModal modalState={transactionModalState} hideModal={hideTransactionModal}/>
             <UpdateTransactionModal modalState={updateTransactionModalState} hideModal={hideUpdateTransactionModal} creditCardTransaction={selectedCreditCardTransaction}/>
         </>

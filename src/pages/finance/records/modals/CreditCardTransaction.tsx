@@ -77,6 +77,10 @@ const App = (props: CreditCardBillProps): React.ReactElement => {
             fetchTransactionData().then();
         }
 
+        if (!props.modalState) {
+            reset(DefaultCreditCardTransaction);
+        }
+
     }, [props.modalState, reset]);
 
     const updateInstallmentList = () => {
@@ -142,7 +146,7 @@ const App = (props: CreditCardBillProps): React.ReactElement => {
         financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submit_data, method).then(() => {
             toast.success('Investimento salvo com sucesso')
         }).catch((err: string | ToastOptions) => {
-            toast.error('Erro ao salvar o investimento ' + err)
+            toast.error('Erro ao salvar a transação com o cartão de crédito ' + err)
         })
     }
 
@@ -480,7 +484,7 @@ const App = (props: CreditCardBillProps): React.ReactElement => {
                fullscreen={false}
                actionModal={handleSubmit(onSubmit)}
                disableAction={!isDirty}
-               size={'lg'}
+               size={'modal-xl'}
         />
     )
 }

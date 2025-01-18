@@ -1,7 +1,7 @@
-import {GetCountryResponse} from "../../interfaces/CoreRequest.tsx";
-import {getFinanceData} from "../axios/Get.tsx";
-import {URL_COUNTRY} from "../axios/ApiUrls.tsx";
-import {Country} from "../../interfaces/Core.tsx";
+import {GetCountryResponse, GetLanguageResponse} from "../../interfaces/CoreRequest.tsx";
+import {getFinanceData, getLibraryData} from "../axios/Get.tsx";
+import {URL_COUNTRY, URL_LANGUAGE} from "../axios/ApiUrls.tsx";
+import {Country, Language} from "../../interfaces/Core.tsx";
 import {toast} from "react-toastify";
 
 export const getCountries = async (): Promise<any[]> => {
@@ -16,3 +16,19 @@ export const getCountries = async (): Promise<any[]> => {
         return [];
     }
 };
+
+export const getLanguages = async (selectFormat: boolean) => {
+    try {
+        const response: GetLanguageResponse = await getLibraryData(URL_LANGUAGE);
+        if (selectFormat) {
+            return response.languages.map((i: Language) => (
+                {value: i.languageId, label: i.languageName}
+            ));
+        }
+
+        return response.languages
+    } catch {
+        toast.error('Houve um erro ao buscar os idiomas');
+        return []
+    }
+}

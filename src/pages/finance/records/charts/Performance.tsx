@@ -1,22 +1,27 @@
 import Line from "../../../../components/chart/Line"
 
+// Import this css to test tooltip style
+import '../../../../assets/core/components/tooltip.css'
+
 interface InvestmentPerformanceProps {
     indexerName: any;
     performance: any;
 }
 
 const App = (props: InvestmentPerformanceProps) => {
-    const customToolTip = (pointInfo: any) => {
-        const period: string = pointInfo.point.data.period
-        const series: string = pointInfo.points.map(
-            (p: { seriesName: any; valueText: any; }) =>
-                `${p.seriesName}: ${parseFloat(p.valueText).toFixed(2)}%`
-        ).join('<br/>')
-
-        const formattedString = `Período ${period}<br/>${series}`
-        return {
-            text: formattedString,
-        };
+    const testTooltip = (pointInfo: any) => {
+        return <div className="state-tooltip">
+            <div className="state-tooltip">
+                {pointInfo.points.map((p: { seriesName: string; valueText: string; }) => (
+                    <div key={p.seriesName}>
+                        <strong>{p.seriesName}</strong>
+                        <br/>
+                        {`${parseFloat(p.valueText).toFixed(2)}%`}
+                        <br/>
+                    </div>
+                ))}
+            </div>
+        </div>;
     }
 
     return (
@@ -32,7 +37,9 @@ const App = (props: InvestmentPerformanceProps) => {
                 {
                     enabled: true,
                     shared: true,
-                    customizeTooltip: customToolTip
+                    zIndex: 3,
+                    // customizeTooltip: customToolTip
+                    contentRender: testTooltip
                 }
             }
         />

@@ -234,7 +234,7 @@ const App = (props: AccountStatementProps) => {
                 fullscreen={false}
                 actionModal={handleSubmit(onSubmit)}
                 disableAction={!isDirty}
-                size={'lg'}
+                size={'modal-xl'}
             />
         </div>
     );

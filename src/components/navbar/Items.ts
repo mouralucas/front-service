@@ -8,11 +8,11 @@ export const items = [
     },
     {
         title: 'Biblioteca',
-        url: 'library/home',
+        url: '/library/records',
         submenu: [
             {
                 title: 'Home',
-                url: 'library/home',
+                url: '/library/records',
             },
             {
                 title: 'Backlog',

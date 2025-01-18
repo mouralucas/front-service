@@ -14,7 +14,7 @@ interface ModalProps {
     headerComponents?: React.ReactElement;
     fullscreen?: any;
     title?: string;
-    size?: any;
+    size?: 'modal-sm' | 'modal-lg' | 'modal-xl' | 'modal-fullscreen';
 }
 
 
@@ -51,7 +51,7 @@ const App = (props: ModalProps): React.ReactElement => {
                 role="dialog"
                 aria-modal="true"
             >
-                <div className="modal-dialog modal-dialog-centered modal-lg">
+                <div className={`modal-dialog modal-dialog-centered ${props.size ?? ''}`}>
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">{props.title ?? "Modal Title"}</h5>
