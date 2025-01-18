@@ -90,7 +90,7 @@ const App = (props: ItemModalProps) => {
 
     const fetchItemData: () => Promise<void> = async () => {
         setAuthors(await getAuthors(true));
-        setStatuses(await getStatuses(true));
+        setStatuses(await getStatuses('LIBRARY_ITEM', true));
         setItemSeries(await getSeries(true));
         setItemCollections(await getCollections(true));
         setPublishers(await getPublishers(true));
@@ -564,7 +564,7 @@ const App = (props: ItemModalProps) => {
                 </div>
                 <div className="row mt-3">
                     <div className="col-12">
-                        <label htmlFor="">Descrição</label>
+                        <label htmlFor="">Observações</label>
                         <Controller name={'observation'}
                                     control={control}
                                     rules={{required: false}}

@@ -32,9 +32,9 @@ export const getAuthors = async (selectFormat: boolean) => {
 }
 
 
-export const getStatuses = async (selectFormat: boolean) => {
+export const getStatuses = async (itemType: string, selectFormat: boolean) => {
     try {
-        const response: GetStatusResponse = await getLibraryData(URL_LIBRARY_STATUS);
+        const response: GetStatusResponse = await getLibraryData(URL_LIBRARY_STATUS, {itemType: itemType});
         if (selectFormat) {
             return response.statuses.map((i: LastStatus) => (
                 {value: i.statusId, label: i.name}

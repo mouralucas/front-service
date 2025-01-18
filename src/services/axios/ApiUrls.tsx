@@ -37,7 +37,7 @@ export const URL_LANGUAGE = '/language';
 // Library URLs
 export const URL_LIBRARY_ITEM = '/item';
 export const URL_LIBRARY_AUTHOR = '/author';
-export const URL_LIBRARY_STATUS = '/library/status'
+export const URL_LIBRARY_STATUS = '/status'
 export const URL_LIBRARY_SERIE = '/serie';
 export const URL_LIBRARY_COLLECTION = '/collection';
 export const URL_LIBRARY_PUBLISHER = '/publisher';
