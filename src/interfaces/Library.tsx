@@ -48,8 +48,11 @@ export interface Author {
 }
 
 export interface Serie {
-    serieId: string
-    serieName: string
+    serieId: string;
+    serieName: string;
+    originalName: string;
+    description: string;
+    countryId: string;
 }
 
 export interface Collection {

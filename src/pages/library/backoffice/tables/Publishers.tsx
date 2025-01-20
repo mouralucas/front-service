@@ -1,19 +1,20 @@
-import {ReactElement, useEffect, useState} from "react";
 import DataGrid from "../../../../components/table/DataGrid.tsx";
-import {getAuthors} from "../../../../services/getCommonData/Library.tsx";
+import {useEffect, useState} from "react";
+import {getPublishers} from "../../../../services/getCommonData/Library.tsx";
 import {toast} from "react-toastify";
 import {Button as Btn,} from 'devextreme-react/data-grid';
 import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
 
-const App = (): ReactElement => {
-    const [authors, setAuthors] = useState<any[]>([])
 
-    const getAvailableAuthors = async () => {
-        setAuthors(await getAuthors(false));
+const App = () => {
+    const [publishers, setPublishers] = useState<any[]>([])
+
+    const getAvailablePublishers = async () => {
+        setPublishers(await getPublishers(false));
     }
 
     useEffect(() => {
-        getAvailableAuthors().then();
+        getAvailablePublishers().then();
     }, [])
 
     const coffeeCommand = () => {
@@ -22,30 +23,25 @@ const App = (): ReactElement => {
 
     const columns: DataGridColumn[] = [
         {
-            dataField: "authorId",
+            dataField: "publisherId",
             caption: "Id",
             dataType: "number",
-            width: 150,
+            width: 70,
         },
         {
-            dataField: "authorName",
+            dataField: "publisherName",
             caption: "Nome",
             dataType: "string",
         },
         {
-            dataField: "birthDate",
-            caption: "Nascimento",
-            dataType: "date",
+            dataField: "description",
+            caption: "Descrição",
+            dataType: "string",
             format: 'shortDate',
         },
         {
-            dataField: "countryName",
+            dataField: "country_name",
             caption: "Pais",
-            dataType: "string",
-        },
-        {
-            dataField: "languageName",
-            caption: "Idioma",
             dataType: "string",
         },
         {
@@ -65,7 +61,7 @@ const App = (): ReactElement => {
                     key={2}
                     //icon="/url/to/my/icon.ico"
                     icon="coffee"
-                    hint="Café"
+                    hint="My Command"
                     onClick={coffeeCommand}
                 />]
         }
@@ -73,8 +69,8 @@ const App = (): ReactElement => {
 
     return (
         <DataGrid
-            keyExpr={'authorId'}
-            data={authors}
+            keyExpr={'publisherId'}
+            data={publishers}
             columns={columns}
         />
     )
