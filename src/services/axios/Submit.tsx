@@ -1,5 +1,6 @@
 import financeAxios from '../axios/FinanceServiceAxios'
 import userAxios from '../axios/UserServiceAxios'
+import libraryAxios from '../axios/LibraryServiceAxios'
 
 
 const userSubmit = async (
@@ -42,4 +43,23 @@ const financeSubmit = async (
     return response?.data
 }
 
-export { financeSubmit, userSubmit};
+const librarySubmit = async (
+    e: any, url: string,
+    values: any,
+    method: string
+) => {
+    e.preventDefault();
+
+    const response = await libraryAxios({
+        method: method,
+        url: url,
+        data: values,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+
+    return response?.data
+}
+
+export { financeSubmit, librarySubmit, userSubmit};

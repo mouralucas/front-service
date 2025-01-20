@@ -6,18 +6,27 @@ import {Button as Btn,} from 'devextreme-react/data-grid';
 import {toast} from "react-toastify";
 import ItemModal from '../modals/Item'
 import Button from "devextreme-react/button";
+import {Item} from "../../../interfaces/Library.tsx";
 
 
 const App = () => {
     const [books, setBooks] = useState<any[]>([])
+    const [selectedBook, setSelectedBook] = useState<Item | null>(null)
     const [itemModalState, setItemModalState] = useState<boolean>(false)
 
-    const showItemModal = () => {
+    const showItemModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedBook(e.row.data)
+        } else {
+            setSelectedBook(null);
+        }
+
         setItemModalState(true);
     }
 
     const hideItemModal = () => {
         setItemModalState(false);
+        setSelectedBook(null);
     }
 
     const fetchBooks: () => Promise<void> = async () => {
@@ -146,7 +155,7 @@ const App = () => {
                     items: toolBarItems
                 }}
             />
-            <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={null}/>
+            <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook}/>
         </>
 
     )

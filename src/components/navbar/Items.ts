@@ -16,7 +16,7 @@ export const items = [
             },
             {
                 title: 'Backlog',
-                url: 'library/backlog',
+                url: '/library/backoffice',
             },
         ],
     },

@@ -9,9 +9,12 @@ import {Item} from '../../../interfaces/Library'
 import {getAuthors, getCollections, getPublishers, getSeries, getStatuses} from "../../../services/getCommonData/Library";
 import {getLanguages} from "../../../services/getCommonData/Core.tsx";
 import Modal from "../../../components/Modal.tsx";
+import {librarySubmit} from "../../../services/axios/Submit.tsx";
+import {URL_LIBRARY_ITEM} from "../../../services/axios/ApiUrls.tsx";
+import {toast} from "react-toastify";
 
 export interface ItemModalProps {
-    item: Item | null
+    item: Item | undefined | null
     modalState: boolean
     hideModalItem: any
 }
@@ -21,7 +24,7 @@ const DefaultItem: Item = {
     itemId: null,
     lastStatusId: null,
     lastStatusDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
-    mainAuthorId: null,
+    mainAuthorId: '',
     authorsId: [],
     translatorId: 0,
     title: '',
@@ -74,12 +77,16 @@ const itemFormats = [
     {
         value: 'paperback',
         label: 'Capa comum'
+    },
+    {
+        value: 'ebook',
+        label: 'eBook'
     }
 ]
 
 
 const App = (props: ItemModalProps) => {
-    const {handleSubmit, control, reset, formState: {isDirty}} = useForm<Item>({defaultValues: DefaultItem});
+    const {handleSubmit, control, reset, formState: {isDirty, dirtyFields}, getValues} = useForm<Item>({defaultValues: DefaultItem});
 
     const [authors, setAuthors] = useState<any[]>([]);
     const [statuses, setStatuses] = useState<any[]>([])
@@ -117,8 +124,32 @@ const App = (props: ItemModalProps) => {
     }, [props.modalState, props.item, reset]);
 
     const onSubmit = (data: Item, e: BaseSyntheticEvent<object> | undefined) => {
-        console.log(data);
-        console.log(e);
+        let method;
+        let submitData;
+
+        if (data.itemId !== null){
+            method = 'patch'
+
+            const currentValues: Item = getValues();
+            const modifiedFields: Partial<Record<keyof Item, Item[keyof Item]>> = {
+                itemId: data.itemId
+            };
+
+            (Object.keys(dirtyFields) as Array<keyof Item>).forEach((key: keyof Item) => {
+                modifiedFields[key] = currentValues[key];
+            });
+
+            submitData = modifiedFields
+        } else {
+            method = 'post'
+            submitData = data
+        }
+
+        librarySubmit(e, URL_LIBRARY_ITEM, submitData, method).then(() => {
+            toast.success('Item salvo com sucesso');
+        }).catch(() => {
+            toast.error('Erro ao salvar o item');
+        })
     };
 
     const body: ReactElement =
