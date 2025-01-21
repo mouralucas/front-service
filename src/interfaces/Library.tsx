@@ -37,9 +37,9 @@ export interface Item {
 }
 
 export interface Author {
-    authorId?: string
+    authorId?: string | null
     authorName: string
-    birthDate?: string
+    birthDate?: string | null
     languageId?: string
     languageName?: string
     countryId?: string

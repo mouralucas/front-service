@@ -4,13 +4,17 @@ import {URL_COUNTRY, URL_LANGUAGE} from "../axios/ApiUrls.tsx";
 import {Country, Language} from "../../interfaces/Core.tsx";
 import {toast} from "react-toastify";
 
-export const getCountries = async (): Promise<any[]> => {
+export const getCountries = async (selectFormat: boolean): Promise<any[]> => {
     try {
         const response: GetCountryResponse = await getFinanceData(URL_COUNTRY);
-        return response.countries.map((i: Country) => ({
-            value: i.countryId,
-            label: i.countryName,
-        }));
+        if (selectFormat) {
+            return response.countries.map((i: Country) => ({
+                value: i.countryId,
+                label: i.countryName,
+            }));
+        }
+
+        return response.countries;
     } catch {
         toast.error('Houve um erro ao buscar os cartões de crédito');
         return [];

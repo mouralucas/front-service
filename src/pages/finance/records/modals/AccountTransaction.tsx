@@ -77,7 +77,7 @@ const App = (props: AccountStatementProps) => {
 
     const onSubmit = (data: AccountTransaction, e: BaseSyntheticEvent<object, any, any> | undefined) => {
         let method;
-        let submit_data;
+        let submitData;
 
         if (data.transactionId !== null){
             method = 'patch'
@@ -91,13 +91,13 @@ const App = (props: AccountStatementProps) => {
                 modifiedFields[key] = currentValues[key];
             });
 
-            submit_data = modifiedFields
+            submitData = modifiedFields
         } else {
             method = 'post'
-            submit_data = data
+            submitData = data
         }
 
-        financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submit_data, method).then(() => {
+        financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submitData, method).then(() => {
             toast.success('Transação salva com sucesso');
             reset(DefaultTransaction);
             props.hideModal();

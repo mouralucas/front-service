@@ -58,7 +58,7 @@ const App = (props: InvestmentProps): ReactElement => {
         setIndexerTypes(await getIndexerTypes());
         setIndexers(await getIndexers());
         setLiquidity(await getLiquidity());
-        setCountries(await getCountries());
+        setCountries(await getCountries(true));
     };
 
     useEffect(() => {

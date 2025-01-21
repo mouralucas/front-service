@@ -83,7 +83,6 @@ const App = () => {
             name: 'searchPanel',
             location: "after",
         },
-
     ]
 
     return (

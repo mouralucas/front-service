@@ -3,10 +3,29 @@ import DataGrid from "../../../../components/table/DataGrid.tsx";
 import {getAuthors} from "../../../../services/getCommonData/Library.tsx";
 import {toast} from "react-toastify";
 import {Button as Btn,} from 'devextreme-react/data-grid';
-import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
+import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
+import Button from "devextreme-react/button";
+import AuthorModal from '../modals/Author'
+import {Author} from "../../../../interfaces/Library.tsx";
+
 
 const App = (): ReactElement => {
     const [authors, setAuthors] = useState<any[]>([])
+    const [authorModalState, setAuthorModalState] = useState<boolean>(false)
+    const [selectedAuthor, setSelectedAuthor] = useState<Author | undefined>(undefined)
+
+    const showAuthorModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedAuthor(e.row.data);
+        }
+        setAuthorModalState(true);
+    }
+
+    const hideAuthorModal = () => {
+        setAuthorModalState(false);
+        setSelectedAuthor(undefined);
+        getAvailableAuthors().then();
+    }
 
     const getAvailableAuthors = async () => {
         setAuthors(await getAuthors(false));
@@ -53,14 +72,14 @@ const App = (): ReactElement => {
             type: 'buttons',
             width: 110,
             child: [
-                // <Btn
-                //     key={1}
-                //     text="Editar"
-                //     // icon="/url/to/my/icon.ico"
-                //     icon="edit"
-                //     hint="Editar"
-                //     onClick={showModal}
-                // />,
+                <Btn
+                    key={1}
+                    text="Editar"
+                    // icon="/url/to/my/icon.ico"
+                    icon="edit"
+                    hint="Editar"
+                    onClick={showAuthorModal}
+                />,
                 <Btn
                     key={2}
                     //icon="/url/to/my/icon.ico"
@@ -71,12 +90,42 @@ const App = (): ReactElement => {
         }
     ]
 
+    const toolBarItems: DataGridToolBarItem[] = [
+        {
+            name: 'columnChooserButton',
+            location: 'after',
+        },
+        {
+            name: 'exportButton',
+            location: 'after',
+        },
+        {
+            child: <Button icon={'refresh'} onClick={getAvailableAuthors}/>,
+            location: "after"
+        },
+        {
+            child: <Button icon={'add'} onClick={showAuthorModal}></Button>,
+            location: "after"
+        },
+        {
+            name: 'searchPanel',
+            location: "after",
+        },
+    ]
+
     return (
+        <>
         <DataGrid
             keyExpr={'authorId'}
             data={authors}
             columns={columns}
+            toolBar={{
+                visible: true,
+                items: toolBarItems
+            }}
         />
+            <AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor} />
+        </>
     )
 }
 
