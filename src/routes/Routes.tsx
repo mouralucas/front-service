@@ -6,10 +6,12 @@ import WithNav from "./WithNav.tsx";
 import Login from '../pages/user/Login.tsx'
 import RequireAuth from "../services/auth/RequireAuth.tsx";
 
+const Error404: FC = lazy(() => import('../pages/errors/404'))
 const Investment: FC = lazy(() => import('../pages/finance/investment/Landing'))
 const FinanceLanding: FC = lazy(() => import('../pages/finance/records/Landing.tsx'))
 const LibraryLanding: FC = lazy(() => import('../pages/library/Landing.tsx'))
 const LibraryBackoffice: FC = lazy(() => import('../pages/library/backoffice/Landing'));
+
 
 function RolfRoutes(): ReactElement {
     return (
@@ -29,6 +31,7 @@ function RolfRoutes(): ReactElement {
                 </Route>
                 <Route element={<WithoutNav/>}>
                     <Route element={<Login />} path={'/login'}/>
+                    <Route element={<Error404/>} path="*"/>
                 </Route>
             </Routes>
         </BrowserRouter>

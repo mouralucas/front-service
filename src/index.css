@@ -12,6 +12,13 @@
 }
 
 /*Project Default*/
+.main-container {
+  width: 80%;
+  margin: 0 auto;
+  max-width: 1200px;
+  min-width: 320px;
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;

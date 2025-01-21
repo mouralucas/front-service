@@ -1,3 +1,75 @@
+
+.error-404 {
+    display: flex;
+    justify-content: center;
+
+    margin: 70px auto 20px;
+    width: 70%;
+}
+
+.error-404_img {
+    width: 40%;
+    text-align: center;
+}
+
+.error-404_img img {
+    display: block;
+    margin: auto;
+
+    width: 100%;
+    max-width: 350px;
+}
+
+.error-404_text {
+    width: 60%;
+}
+
+h2.error-404 {
+    margin-bottom: 10px;
+    font-size: 3.500em;
+    font-weight: 800;
+    color: #333;
+}
+
+p.error-404-title {
+    font-size: 1.625em;
+    font-weight: 400;
+    color: #444;
+}
+
+p.error-404-specification {
+    font-size: 1em;
+    color: #999;
+}
+
+h2.error-404,
+p.error-404-title,
+p.error-404-specification {
+    margin-left: 50px;
+}
+
+.bt-back-error404 {
+    justify-content: center;
+    margin-top: 80px;
+
+    text-align: center;
+}
+
+a.bt-back-error404 {
+    padding: 13px 30px 11px 60px;
+
+    border: 1px solid var(--color-primay);
+    border-radius: 4px;
+
+    font-weight: 400;
+    text-decoration: none;
+    color: var(--color-primay);
+    text-decoration-color: var(--color-primay);
+
+    /*background: url('') no-repeat left 15% center;*/
+    background-size: 15px;
+}
+
 .input-error {
     border: 2px solid red !important; /* Usa !important para garantir a aplicação */
     border-radius: 4px; /* Ajuste o arredondamento, se necessário */
