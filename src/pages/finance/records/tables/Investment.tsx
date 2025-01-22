@@ -1,4 +1,4 @@
-import {ReactElement, FC, useState, useEffect} from "react";
+import {FC, ReactElement, useEffect, useState} from "react";
 import DataGrid from "../../../../components/table/DataGrid";
 import {Button as Btn} from "devextreme-react/data-grid";
 import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
@@ -9,7 +9,7 @@ import Button from "devextreme-react/button";
 import ModalInvestment from '../modals/Investment'
 import ModalInvestmentStatement from '../modals/InvestmentStatement'
 import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
-import {toast} from "react-toastify";
+import Loader from "../../../../components/Loader.tsx";
 
 interface InvestmentResponse {
     success: boolean
@@ -25,6 +25,9 @@ const App: FC = (): ReactElement => {
     const [investmentId, setInvestmentId] = useState<string>('')
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>()
     const [investments, setInvestments] = useState<Investment[]>([])
+
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
 
     const showInvestmentModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -70,7 +73,9 @@ const App: FC = (): ReactElement => {
 
     const getInvestment = () => {
         getFinanceData(URL_FINANCE_INVESTMENT).then((response: InvestmentResponse) => {
+            // TODO: add to common data
             setInvestments(response.investments);
+            setIsLoading(false);
         }).catch(err => {
             console.log(err);
         })
@@ -90,16 +95,12 @@ const App: FC = (): ReactElement => {
         return formated_string;
     }
 
-    const coffeeCommand = () => {
-        toast('☕ Cafezinho delícia!');
-    }
-
     const columns: DataGridColumn[] = [
         {
             dataField: "investmentId",
             caption: "Id",
             dataType: "string",
-            width: 70,
+            width: 40,
             visible: false
         },
         {
@@ -113,34 +114,34 @@ const App: FC = (): ReactElement => {
             caption: "Nome",
             dataType: "string",
             alignment: 'left',
-            width: 400,
+            width: 250,
         },
         {
             dataField: "transactionDate",
             caption: "Data",
             dataType: "date",
             format: 'dd/MM/yyyy',
-            width: 130
+            width: 100
         },
         {
             dataField: "maturityDate",
             caption: "Vencimento",
             dataType: "date",
             format: 'dd/MM/yyyy',
-            width: 130
+            width: 100
         },
         {
             dataField: "amount",
             caption: "Valor",
             dataType: "currency",
             calculateCellValue: amountCustomCell,
-            width: 200
         },
         {
             dataField: "grossAmount",
             caption: 'Atual',
             dataType: "currency",
             calculateCellValue: grossAmountCustomCell,
+            width: 150,
         },
         {
             dataField: 'contractedRate',
@@ -153,10 +154,11 @@ const App: FC = (): ReactElement => {
             dataType: "string",
             visible: false
         },
+        // TODO: try to change this column with a tooltip with the options
         {
             caption: 'Ações',
             type: 'buttons',
-            width: 180,
+            width: 150,
             child: [
                 <Btn
                     key={1}
@@ -176,13 +178,6 @@ const App: FC = (): ReactElement => {
                     icon={'percent'}
                     hint={'Adicionar extrato'}
                     onClick={showInvestmentStatementModal}
-                />,
-                <Btn
-                    key={4}
-                    //icon="/url/to/my/icon.ico"
-                    icon="coffee"
-                    hint="Café"
-                    onClick={coffeeCommand}
                 />,
                 <Btn
                     key={5}
@@ -220,18 +215,20 @@ const App: FC = (): ReactElement => {
 
     return (
         <>
-            <DataGrid
-                keyExpr={'investmentId'}
-                data={investments}
-                columns={columns}
-                toolBar={{
-                    visible: true,
-                    items: toolBarItems
-                }}
-            />
+            {isLoading ? <Loader/> :
+                <DataGrid
+                    keyExpr={'investmentId'}
+                    data={investments}
+                    columns={columns}
+                    toolBar={{
+                        visible: true,
+                        items: toolBarItems
+                    }}
+                />
+            }
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
             <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment}/>
-            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} />
+            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId}/>
         </>
     )
 }

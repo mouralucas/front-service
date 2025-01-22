@@ -5,13 +5,18 @@ import {toast} from "react-toastify";
 import {Button as Btn,} from 'devextreme-react/data-grid';
 import Button from "devextreme-react/button";
 import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
+import Loader from "../../../../components/Loader.tsx";
 
 
 const App = () => {
     const [collections, setCollections] = useState<any[]>([])
 
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
     const getAvailableCollections = async () => {
         setCollections(await getCollections(false));
+
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -86,17 +91,24 @@ const App = () => {
     ]
 
     return (
-        <DataGrid
-            keyExpr={'collectionId'}
-            data={collections}
-            columns={columns}
-            toolBar={
-                {
-                    visible: true,
-                    items: toolBarItems,
-                }
+        <>
+            {isLoading ?
+                <Loader/>
+                :
+                <DataGrid
+                    keyExpr={'collectionId'}
+                    data={collections}
+                    columns={columns}
+                    toolBar={
+                        {
+                            visible: true,
+                            items: toolBarItems,
+                        }
+                    }
+                />
             }
-        />
+            {/*<AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor}/>*/}
+        </>
     )
 }
 

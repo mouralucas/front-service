@@ -3,14 +3,20 @@ import {useEffect, useState} from "react";
 import {getPublishers} from "../../../../services/getCommonData/Library.tsx";
 import {toast} from "react-toastify";
 import {Button as Btn,} from 'devextreme-react/data-grid';
-import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
+import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
+import Loader from "../../../../components/Loader.tsx";
+import Button from "devextreme-react/button";
 
 
 const App = () => {
     const [publishers, setPublishers] = useState<any[]>([])
 
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
     const getAvailablePublishers = async () => {
         setPublishers(await getPublishers(false));
+
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -67,12 +73,48 @@ const App = () => {
         }
     ]
 
+    const toolBarItems: DataGridToolBarItem[] = [
+        {
+            name: 'columnChooserButton',
+            location: 'after',
+        },
+        {
+            name: 'exportButton',
+            location: 'after',
+        },
+        {
+            child: <Button icon={'refresh'} onClick={getAvailablePublishers}/>,
+            location: "after"
+        },
+        // {
+        //     child: <Button icon={'add'} onClick={}></Button>,
+        //     location: "after"
+        // },
+        {
+            name: 'searchPanel',
+            location: "after",
+        },
+    ]
+
     return (
-        <DataGrid
-            keyExpr={'publisherId'}
-            data={publishers}
-            columns={columns}
-        />
+        <>
+            {isLoading ?
+                <Loader/>
+                :
+                <DataGrid
+                    keyExpr={'publisherId'}
+                    data={publishers}
+                    columns={columns}
+                    toolBar={
+                        {
+                            visible: true,
+                            items: toolBarItems
+                        }
+                    }
+                />
+            }
+            {/*<AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor}/>*/}
+        </>
     )
 }
 
