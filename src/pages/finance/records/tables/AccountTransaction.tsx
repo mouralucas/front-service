@@ -37,6 +37,7 @@ const App = () => {
     }
 
     const getTransactions = () => {
+        setIsLoading(true);
         getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
             startPeriod: 202401,
             endPeriod: 202505
@@ -46,6 +47,7 @@ const App = () => {
             }
         ).catch(err => {
             toast.error('Houve um erro ao buscar extratos: ' + err)
+            setIsLoading(false);
         })
     }
 

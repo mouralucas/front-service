@@ -14,6 +14,7 @@ const App = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const getAvailablePublishers = async () => {
+        setIsLoading(true);
         setPublishers(await getPublishers(false));
 
         setIsLoading(false);

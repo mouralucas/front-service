@@ -14,8 +14,8 @@ const App = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const getAvailableSeries = async () => {
+        setIsLoading(true);
         setSeries(await getSeries(false));
-
         setIsLoading(false);
     }
 

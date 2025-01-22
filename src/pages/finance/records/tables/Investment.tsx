@@ -10,6 +10,7 @@ import ModalInvestment from '../modals/Investment'
 import ModalInvestmentStatement from '../modals/InvestmentStatement'
 import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
 import Loader from "../../../../components/Loader.tsx";
+import {toast} from "react-toastify";
 
 interface InvestmentResponse {
     success: boolean
@@ -72,12 +73,14 @@ const App: FC = (): ReactElement => {
     }, [])
 
     const getInvestment = () => {
+        setIsLoading(true);
         getFinanceData(URL_FINANCE_INVESTMENT).then((response: InvestmentResponse) => {
             // TODO: add to common data
             setInvestments(response.investments);
             setIsLoading(false);
-        }).catch(err => {
-            console.log(err);
+        }).catch(() => {
+            toast.error('Houve um erro ao buscar os investimentos')
+            setIsLoading(false);
         })
     }
 

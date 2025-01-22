@@ -31,8 +31,8 @@ const App = (): ReactElement => {
     }
 
     const getAvailableAuthors = async () => {
+        setIsLoading(true);
         setAuthors(await getAuthors(false));
-
         setIsLoading(false);
     }
 

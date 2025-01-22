@@ -14,6 +14,7 @@ const App = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const getAvailableCollections = async () => {
+        setIsLoading(true);
         setCollections(await getCollections(false));
 
         setIsLoading(false);

@@ -47,6 +47,7 @@ const App = () => {
     }
 
     const getTransactions = () => {
+        setIsLoading(true);
         getFinanceData(URL_CREDIT_CARD_TRANSACTION, {
             startPeriod: 202401,
             endPeriod: 202506
@@ -55,6 +56,7 @@ const App = () => {
             setIsLoading(false);
         }).catch(response => {
             toast.error("Erro ao buscar transações")
+            setIsLoading(false);
             return {'error': response}
         })
     }

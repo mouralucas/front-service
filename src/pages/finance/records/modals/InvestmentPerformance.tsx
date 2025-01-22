@@ -6,6 +6,7 @@ import {GetInvestmentPerformanceResponse, GetStatementResponse} from "../../../.
 import PerformanceChart from '../charts/Performance';
 import StatementTable from '../tables/InvestmentStatement';
 import {toast, ToastOptions} from "react-toastify";
+import Loader from "../../../../components/Loader.tsx";
 
 interface InvestmentPerformanceProps {
     modalState: boolean;
@@ -19,12 +20,15 @@ const App = (props: InvestmentPerformanceProps) => {
     const [performance, setPerformance] = useState<any>([])
     const [statements, setStatements] = useState<any>([])
 
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
     useEffect(() => {
         if (props.modalState) {
             getPerformanceData();
             getInvestmentStatement();
-        }
 
+            setIsLoading(false);
+        }
     }, [props.modalState]);
 
     const getInvestmentStatement = () => {
@@ -47,7 +51,8 @@ const App = (props: InvestmentPerformanceProps) => {
         })
     }
 
-    const body =
+
+    const body = isLoading ? <Loader/> :
         <>
             <div className='row'>
                 <div className="col-12">
