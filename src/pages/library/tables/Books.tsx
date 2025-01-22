@@ -7,12 +7,15 @@ import {toast} from "react-toastify";
 import ItemModal from '../modals/Item'
 import Button from "devextreme-react/button";
 import {Item} from "../../../interfaces/Library.tsx";
+import Loader from "../../../components/Loader.tsx";
 
 
 const App = () => {
     const [books, setBooks] = useState<any[]>([])
     const [selectedBook, setSelectedBook] = useState<Item | null>(null)
     const [itemModalState, setItemModalState] = useState<boolean>(false)
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const showItemModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -29,13 +32,14 @@ const App = () => {
         setSelectedBook(null);
     }
 
-    const fetchBooks: () => Promise<void> = async () => {
-        const items = await getItems('book')
-        setBooks(items.items);
+    const getAvailableBooks: () => Promise<void> = async () => {
+        setIsLoading(true);
+        setBooks(await getItems('book'));
+        setIsLoading(false);
     }
 
     useEffect(() => {
-        fetchBooks().then()
+        getAvailableBooks().then()
     }, []);
 
 
@@ -130,7 +134,7 @@ const App = () => {
             location: 'after',
         },
         {
-            child: <Button icon={'refresh'} onClick={fetchBooks}/>,
+            child: <Button icon={'refresh'} onClick={getAvailableBooks}/>,
             location: "after"
         },
         {
@@ -146,6 +150,7 @@ const App = () => {
 
     return (
         <>
+            { isLoading ? <Loader /> :
             <DataGrid
                 keyExpr={'itemId'}
                 data={books}
@@ -155,6 +160,7 @@ const App = () => {
                     items: toolBarItems
                 }}
             />
+            }
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook}/>
         </>
 

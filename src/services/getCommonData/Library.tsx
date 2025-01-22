@@ -7,7 +7,8 @@ import {Author, Collection, LastStatus, Publisher, Serie} from "../../interfaces
 
 export const getItems = async (itemType: string) => {
     try {
-        return await getLibraryData(URL_LIBRARY_ITEM, {itemType: itemType});
+        const response = await getLibraryData(URL_LIBRARY_ITEM, {itemType: itemType});
+        return response.items
     } catch {
         toast.error('Houve um erro ao buscar os itens')
         return [];
