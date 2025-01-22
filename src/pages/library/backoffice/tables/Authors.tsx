@@ -7,12 +7,15 @@ import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/compo
 import Button from "devextreme-react/button";
 import AuthorModal from '../modals/Author'
 import {Author} from "../../../../interfaces/Library.tsx";
+import Loader from '../../../../components/Loader'
 
 
 const App = (): ReactElement => {
     const [authors, setAuthors] = useState<any[]>([])
     const [authorModalState, setAuthorModalState] = useState<boolean>(false)
     const [selectedAuthor, setSelectedAuthor] = useState<Author | undefined>(undefined)
+
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const showAuthorModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -29,6 +32,8 @@ const App = (): ReactElement => {
 
     const getAvailableAuthors = async () => {
         setAuthors(await getAuthors(false));
+
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -115,16 +120,20 @@ const App = (): ReactElement => {
 
     return (
         <>
-        <DataGrid
-            keyExpr={'authorId'}
-            data={authors}
-            columns={columns}
-            toolBar={{
-                visible: true,
-                items: toolBarItems
-            }}
-        />
-            <AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor} />
+            {isLoading ?
+                <Loader/>
+                :
+                <DataGrid
+                    keyExpr={'authorId'}
+                    data={authors}
+                    columns={columns}
+                    toolBar={{
+                        visible: true,
+                        items: toolBarItems
+                    }}
+                />
+            }
+            <AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor}/>
         </>
     )
 }

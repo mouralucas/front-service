@@ -11,6 +11,7 @@ import {getCountries} from "../../../../services/getCommonData/Core.tsx";
 import {financeSubmit} from "../../../../services/axios/Submit.tsx";
 import {URL_FINANCE_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
+import Loader from "../../../../components/Loader.tsx";
 
 
 interface InvestmentProps {
@@ -51,6 +52,8 @@ const App = (props: InvestmentProps): ReactElement => {
     const [liquidity, setLiquidity] = useState<any[]>([])
     const [countries, setCountries] = useState<any[]>([])
 
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
     const fetchInvestmentData: () => Promise<void> = async () => {
         setAccounts(await getAccounts());
         setInvestmentTypes(await getInvestmentTypes());
@@ -59,6 +62,8 @@ const App = (props: InvestmentProps): ReactElement => {
         setIndexers(await getIndexers());
         setLiquidity(await getLiquidity());
         setCountries(await getCountries(true));
+
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -118,7 +123,7 @@ const App = (props: InvestmentProps): ReactElement => {
     }
 
 
-    const body: ReactElement =
+    const body: ReactElement = isLoading ? <Loader /> :
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">

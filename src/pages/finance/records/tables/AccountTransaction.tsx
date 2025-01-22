@@ -151,21 +151,21 @@ const App = () => {
     return (
         <div>
             {isLoading ?
-                (<Loader/>)
-                : (
-                    <DataGrid
-                        keyExpr={'transactionId'}
-                        columns={columns}
-                        data={transaction}
-                        toolBar={{
-                            visible: true,
-                            items: toolBarItems
-                        }}
-                        showLoadPanel={false}
-                        searchPanel={{
-                            visible: true
-                        }}
-                    />)
+                <Loader/>
+                :
+                <DataGrid
+                    keyExpr={'transactionId'}
+                    columns={columns}
+                    data={transaction}
+                    toolBar={{
+                        visible: true,
+                        items: toolBarItems
+                    }}
+                    showLoadPanel={false}
+                    searchPanel={{
+                        visible: true
+                    }}
+                />
             }
             <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction}/>
         </div>

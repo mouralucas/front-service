@@ -12,6 +12,7 @@ import Modal from "../../../components/Modal.tsx";
 import {librarySubmit} from "../../../services/axios/Submit.tsx";
 import {URL_LIBRARY_ITEM} from "../../../services/axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
+import Loader from "../../../components/Loader.tsx";
 
 export interface ItemModalProps {
     item: Item | undefined | null
@@ -95,6 +96,8 @@ const App = (props: ItemModalProps) => {
     const [publishers, setPublishers] = useState<any[]>([])
     const [languages, setLanguages] = useState<any[]>([])
 
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
     const fetchItemData: () => Promise<void> = async () => {
         setAuthors(await getAuthors(true));
         setStatuses(await getStatuses('LIBRARY_ITEM', true));
@@ -102,6 +105,8 @@ const App = (props: ItemModalProps) => {
         setItemCollections(await getCollections(true));
         setPublishers(await getPublishers(true));
         setLanguages(await getLanguages(true));
+
+        setIsLoading(false);
     }
 
     useEffect(() => {
@@ -152,7 +157,7 @@ const App = (props: ItemModalProps) => {
         })
     };
 
-    const body: ReactElement =
+    const body: ReactElement = isLoading ? <Loader /> :
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">

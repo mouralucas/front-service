@@ -1,4 +1,4 @@
-import React, {BaseSyntheticEvent, useEffect, useState} from "react";
+import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
 
 import Modal from '../../../../components/Modal'
 import {Controller, useFieldArray, useForm} from "react-hook-form";
@@ -12,6 +12,7 @@ import {financeSubmit} from "../../../../services/axios/Submit.tsx";
 import {toast, ToastOptions} from "react-toastify";
 import {getCategories, getCreditCards, getCurrencies} from "../../../../services/getCommonData/Finance.tsx";
 import {CreditCardTransaction} from "../../../../interfaces/Finance.tsx";
+import Loader from "../../../../components/Loader.tsx";
 
 interface CreditCardBillProps {
     modalState: boolean;
@@ -49,13 +50,15 @@ const DefaultCreditCardTransaction: CreditCardTransaction = {
     lastEditedAt: undefined
 }
 
-const App = (props: CreditCardBillProps): React.ReactElement => {
+const App = (props: CreditCardBillProps): ReactElement => {
     const {handleSubmit, control, reset, formState: {isDirty, dirtyFields, errors}, getValues, watch} = useForm<CreditCardTransaction>({defaultValues: DefaultCreditCardTransaction})
 
     const [creditCards, setCreditCards] = useState<any[]>([])
     const [categories, setCategories] = useState<any[]>([])
     const [currencies, setCurrencies] = useState<any[]>([])
     const [qtdInstallments] = useState<any[]>(Array.from({length: 12}, (_, i) => ({value: i + 1, label: i + 1})))
+
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const showInternationalTransaction: boolean = watch('isInternationalTransaction')
 
@@ -68,6 +71,8 @@ const App = (props: CreditCardBillProps): React.ReactElement => {
         setCreditCards(await getCreditCards());
         setCategories(await getCategories());
         setCurrencies(await getCurrencies());
+
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -122,7 +127,7 @@ const App = (props: CreditCardBillProps): React.ReactElement => {
         }
     }
 
-    const onSubmit = (data: CreditCardTransaction, e: BaseSyntheticEvent<object, any, any> | undefined) => {
+    const onSubmit = (data: CreditCardTransaction, e: BaseSyntheticEvent<object> | undefined) => {
         let method;
         let submit_data;
         if (data.transactionId !== null) {
@@ -150,7 +155,7 @@ const App = (props: CreditCardBillProps): React.ReactElement => {
         })
     }
 
-    const body: React.ReactElement =
+    const body: ReactElement = isLoading ? <Loader /> :
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
@@ -481,7 +486,6 @@ const App = (props: CreditCardBillProps): React.ReactElement => {
                hideModal={props.hideModal}
                title={'Transação'}
                body={body}
-               fullscreen={false}
                actionModal={handleSubmit(onSubmit)}
                disableAction={!isDirty}
                size={'modal-xl'}
