@@ -1,12 +1,14 @@
 import {ReactElement} from "react";
-import DataGrid, {Column, ColumnChooser, Format, Grouping, GroupPanel, HeaderFilter, LoadPanel, Pager, Paging, SearchPanel, Summary, Toolbar, TotalItem} from 'devextreme-react/data-grid';
+import DataGrid, {Column, ColumnChooser, Format, Grouping, GroupPanel,
+    HeaderFilter, LoadPanel, Pager, Paging, SearchPanel, Summary, Toolbar, TotalItem, Export} from 'devextreme-react/data-grid';
 import {Item} from "devextreme-react/box";
 import {FilterRow} from "devextreme-react/gantt";
 import '../../assets/core/components/table.css'
 import {DataGridColumn, DataGridToolBarItem} from "../../assets/core/components/Interfaces";
 
 
-const pageSizes: number[] = [10, 15, 20, 50, 100];
+const pageSizes: number[] = [10, 15, 25, 50, 100];
+
 // const exportFormats: string[] = ['pdf', 'xlsx'];
 
 interface DataGridProps {
@@ -20,15 +22,25 @@ interface DataGridProps {
     showRowLines?: boolean
     showColumnLines?: boolean
     pagerDisplayMode?: string
-    pager?: any
-    paging?: any
+    pager?: {
+        enabled: boolean;
+    }
+    paging?: {
+        enabled: boolean;
+        pageSize: number;
+    }
+    export?: {
+        enabled: boolean;
+    }
     pagerInfoText?: string
     showPagerInfo?: boolean
     showPagerNavButtons?: boolean
     showPageSizeSelector?: boolean
-    columnChooser?: any
-    showToolBar?: boolean
-    toolBarItems?: any[]
+    columnChooser?: {
+        enabled: boolean
+    }
+    // showToolBar?: boolean
+    // toolBarItems?: any[]
     showFilterRow?: boolean
     showHeaderFilter?: boolean
     showLoadPanel?: boolean
@@ -86,43 +98,29 @@ const App = (props: DataGridProps): ReactElement => {
     }
 
     const setPager = (): ReactElement => {
-        let pager;
-        if (props.pager) {
-            pager = <></>;
-        } else {
-            pager = <Pager
-                visible={true}
-                allowedPageSizes={props.allowedPageSizes ?? pageSizes}
-                displayMode={props.pagerDisplayMode ?? 'full'}
-                showPageSizeSelector={props.showPageSizeSelector ?? true}
-                showInfo={props.showPagerInfo ?? true}
-                infoText={props.pagerInfoText ?? null}
-                showNavigationButtons={props.showPagerNavButtons ?? true}
-            />;
-        }
-        return pager
+        return <Pager
+            visible={props.pager?.enabled ?? true}
+            allowedPageSizes={props.allowedPageSizes ?? pageSizes}
+            displayMode={props.pagerDisplayMode ?? 'full'}
+            showPageSizeSelector={props.showPageSizeSelector ?? true}
+            showInfo={props.showPagerInfo ?? true}
+            infoText={props.pagerInfoText ?? null}
+            showNavigationButtons={props.showPagerNavButtons ?? true}
+        />;
     }
 
-    // const setPaging = (): ReactElement | null => {
-    //     let paging;
-    //     if (props.paging) {
-    //         paging = null;
-    //     } else {
-    //         paging = <Paging defaultPageSize={10}/>;
-    //     }
-    //
-    //     return paging
-    // }
+    const setPaging = (): ReactElement | null => {
+        return <Paging
+            enabled={props.paging?.enabled ?? true}
+            defaultPageSize={props.paging?.pageSize ?? 10}
+        />;
+    }
 
     const setColumnChooser = (): ReactElement | null => {
-        let columnChooser;
-        if (props.columnChooser) {
-            columnChooser = null
-        } else {
-            columnChooser = <ColumnChooser enabled={true} mode="dragAndDrop"/>;
-        }
-
-        return columnChooser
+        return <ColumnChooser
+            enabled={props.columnChooser?.enabled ?? true}
+            mode="dragAndDrop"
+        />;
     }
 
     const setToolbar = (): ReactElement[] | null => {
@@ -140,6 +138,12 @@ const App = (props: DataGridProps): ReactElement => {
             });
         }
         return lista_toolbar
+    }
+
+    const setExport = (): ReactElement => {
+        return <Export
+            enabled={props.export?.enabled ?? false}
+        />
     }
 
     const setSummary = (): ReactElement => {
@@ -185,12 +189,13 @@ const App = (props: DataGridProps): ReactElement => {
                 {setSummary()}
                 {setColumnChooser()}
 
+
                 {/* Page elements */}
                 {setPager()}
-                <Paging defaultPageSize={props.paging ?? 10}/>;
+                {setPaging()}
 
                 {/* Toolbar elements */}
-                {/*{setExport()}*/}
+                {setExport()}
 
                 {props.toolBar &&
                     <Toolbar visible={props.toolBar.visible}>

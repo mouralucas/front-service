@@ -1,6 +1,6 @@
 import {ReactElement, useEffect} from 'react'
-import Card from "../../components/Card";
-import BookTable from './tables/Books'
+import Card from "../../../components/Card.tsx";
+import BookTable from './tables/Books.tsx'
 
 const App = (): ReactElement => {
     useEffect(() => {

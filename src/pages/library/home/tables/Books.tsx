@@ -1,13 +1,13 @@
-import DataGrid from "../../../components/table/DataGrid.tsx";
+import DataGrid from "../../../../components/table/DataGrid.tsx";
 import {useEffect, useState} from "react";
-import {getItems} from "../../../services/getCommonData/Library";
-import {DataGridColumn, DataGridToolBarItem} from "../../../assets/core/components/Interfaces.tsx";
+import {getItems} from "../../../../services/getCommonData/Library.tsx";
+import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
 import {Button as Btn,} from 'devextreme-react/data-grid';
 import {toast} from "react-toastify";
-import ItemModal from '../modals/Item'
+import ItemModal from '../modals/Item.tsx'
 import Button from "devextreme-react/button";
-import {Item} from "../../../interfaces/Library.tsx";
-import Loader from "../../../components/Loader.tsx";
+import {Item} from "../../../../interfaces/Library.tsx";
+import Loader from "../../../../components/Loader.tsx";
 
 
 const App = () => {
@@ -52,7 +52,7 @@ const App = () => {
             dataField: "itemId",
             caption: "Id",
             dataType: "number",
-            visible: true,
+            visible: false,
         },
         {
             dataField: "title",
@@ -150,16 +150,17 @@ const App = () => {
 
     return (
         <>
-            { isLoading ? <Loader /> :
-            <DataGrid
-                keyExpr={'itemId'}
-                data={books}
-                columns={columns}
-                toolBar={{
-                    visible: true,
-                    items: toolBarItems
-                }}
-            />
+            {isLoading ? <Loader/> :
+                <DataGrid
+                    keyExpr={'itemId'}
+                    data={books}
+                    columns={columns}
+                    toolBar={{
+                        visible: true,
+                        items: toolBarItems
+                    }}
+                    showFilterRow={true}
+                />
             }
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook}/>
         </>

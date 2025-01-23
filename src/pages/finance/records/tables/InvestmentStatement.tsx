@@ -66,6 +66,11 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                 keyExpr={'investmentStatementId'}
                 data={props.statementList}
                 columns={columns}
+                columnChooser={
+                    {
+                        enabled: false
+                    }
+                }
             />
         </>
     )

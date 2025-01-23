@@ -4,15 +4,15 @@ import Select from 'react-select';
 import DatePicker from "react-datepicker";
 import {format, parseISO} from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
-import CurrencyInput from "../../../components/form/CurrencyInput";
-import {Item} from '../../../interfaces/Library'
-import {getAuthors, getCollections, getPublishers, getSeries, getStatuses} from "../../../services/getCommonData/Library";
-import {getLanguages} from "../../../services/getCommonData/Core.tsx";
-import Modal from "../../../components/Modal.tsx";
-import {librarySubmit} from "../../../services/axios/Submit.tsx";
-import {URL_LIBRARY_ITEM} from "../../../services/axios/ApiUrls.tsx";
+import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
+import {Item} from '../../../../interfaces/Library.tsx'
+import {getAuthors, getCollections, getPublishers, getSeries, getStatuses} from "../../../../services/getCommonData/Library.tsx";
+import {getLanguages} from "../../../../services/getCommonData/Core.tsx";
+import Modal from "../../../../components/Modal.tsx";
+import {librarySubmit} from "../../../../services/axios/Submit.tsx";
+import {URL_LIBRARY_ITEM} from "../../../../services/axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
-import Loader from "../../../components/Loader.tsx";
+import Loader from "../../../../components/Loader.tsx";
 
 export interface ItemModalProps {
     item: Item | undefined | null
