@@ -39,8 +39,6 @@ interface DataGridProps {
     columnChooser?: {
         enabled: boolean
     }
-    // showToolBar?: boolean
-    // toolBarItems?: any[]
     showFilterRow?: boolean
     showHeaderFilter?: boolean
     showLoadPanel?: boolean
@@ -57,17 +55,14 @@ interface DataGridProps {
         items?: DataGridToolBarItem[]
     }
     summary?: {
-        field: any
-        type: string
-        displayFormat: any
+        column: any
+        type?: string
+        displayFormat?: any
     }
 }
 
 const App = (props: DataGridProps): ReactElement => {
     const setColumns = (): ReactElement[] => {
-        if (!props.columns) {
-            return []
-        } else {
             const columns_list: ReactElement[] = [];
             props.columns.forEach(function (column: DataGridColumn, index: number) {
                 columns_list.push(
@@ -93,8 +88,7 @@ const App = (props: DataGridProps): ReactElement => {
                 )
             });
 
-            return columns_list
-        }
+            return columns_list;
     }
 
     const setPager = (): ReactElement => {
@@ -150,7 +144,7 @@ const App = (props: DataGridProps): ReactElement => {
         if (props.summary) {
             return <Summary>
                 <TotalItem
-                    column={props.summary.field}
+                    column={props.summary.column}
                     summaryType={props.summary.type ?? "sum"} // O tipo de resumo, você pode usar "sum", "avg", "count", etc.
                     displayFormat={props.summary.displayFormat ?? "Total: {0}"} // O formato de exibição do valor total
                 />

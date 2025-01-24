@@ -135,13 +135,13 @@ const App: FC = (): ReactElement => {
         },
         {
             dataField: "amount",
-            caption: "Valor",
+            caption: "Investido",
             dataType: "currency",
             calculateCellValue: amountCustomCell,
         },
         {
             dataField: "grossAmount",
-            caption: 'Atual',
+            caption: 'Bruto',
             dataType: "currency",
             calculateCellValue: grossAmountCustomCell,
             width: 150,
