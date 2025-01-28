@@ -18,6 +18,10 @@ export const items = [
                 title: 'Backlog',
                 url: '/library/backoffice',
             },
+            {
+                title: 'Item',
+                url: '/library/item',
+            },
         ],
     },
     {
@@ -25,13 +29,13 @@ export const items = [
         // url: 'finance/home'
         submenu: [
             {
-               title: 'Investimentos',
-               submenu: [
-                   {
-                       title: 'Dashboard',
-                       url: '/finance/investment'
-                   }
-               ]
+                title: 'Investimentos',
+                submenu: [
+                    {
+                        title: 'Dashboard',
+                        url: '/finance/investment'
+                    }
+                ]
             },
             {
                 title: 'Dashboard',

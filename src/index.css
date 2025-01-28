@@ -62,3 +62,27 @@
   background-color: #fff!important;
   border-color: #d8dbe0!important;
 }
+
+.cover-image-container {
+  position: relative;
+  width: 100%; /* Ajusta à largura do col-3 */
+  height: 0;
+  padding-top: 150%; /* Proporção 2:3 */
+  background-color: #f0f0f0; /* Cor de fundo para placeholder */
+  overflow: hidden;
+  border-radius: 8px; /* Opcional: bordas arredondadas */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Opcional: sombra */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover-image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Mantém a proporção da imagem */
+  object-position: center; /* Centraliza a imagem */
+}
