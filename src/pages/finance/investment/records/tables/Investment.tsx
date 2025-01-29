@@ -1,14 +1,14 @@
 import {FC, ReactElement, useEffect, useState} from "react";
 import DataGrid from "../../../../../components/table/DataGrid";
 import {Button as Btn} from "devextreme-react/data-grid";
-import {DataGridColumn} from "../../../../../assets/core/components/Interfaces.tsx";
+import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
 import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {URL_FINANCE_INVESTMENT} from "../../../../../services/axios/ApiUrls.tsx";
 import {Investment} from "../../../../../interfaces/Finance.tsx";
 import Button from "devextreme-react/button";
 import ModalInvestment from '../modals/Investment'
-import ModalInvestmentStatement from '../modals/InvestmentStatement'
-import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
+import ModalInvestmentStatement from '../modals/Statement.tsx'
+import ModalInvestmentPerformance from '../modals/Performance.tsx'
 import Loader from "../../../../../components/Loader.tsx";
 import {toast} from "react-toastify";
 
@@ -195,7 +195,7 @@ const App: FC = (): ReactElement => {
         }
     ]
 
-    const toolBarItems = [
+    const toolBarItems: DataGridToolBarItem[] = [
         {
             name: 'columnChooserButton',
             location: 'after',

@@ -98,10 +98,10 @@ const App = (props: InvestmentProps): ReactElement => {
 
     const onSubmit = (data: Investment, e: BaseSyntheticEvent<object, any, any> | undefined) => {
         let method;
-        let submit_data;
+        let submitData;
 
         if (data.investmentId !== null) {
-            method = 'patch'
+            method = 'patch';
 
             const currentValues: Investment = getValues();
             const modifiedFields: Partial<Record<keyof Investment, Investment[keyof Investment]>> = {
@@ -112,13 +112,13 @@ const App = (props: InvestmentProps): ReactElement => {
                 modifiedFields[key] = currentValues[key];
             });
 
-            submit_data = modifiedFields
+            submitData = modifiedFields
         } else {
             method = 'post'
-            submit_data = data
+            submitData = data
         }
 
-        financeSubmit(e, URL_FINANCE_INVESTMENT, submit_data, method).then(() => {
+        financeSubmit(e, URL_FINANCE_INVESTMENT, submitData, method).then(() => {
             toast.success('Investimento salvo com sucesso')
         }).catch((err: string) => {
             toast.error('Erro ao salvar o investimento ' + err)
@@ -135,7 +135,7 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'transactionDate'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: 'Esse campo é obrigatório'}}
                             render={({field}) => (
                                 <DatePicker
                                     selected={parseISO(field.value)}
@@ -143,7 +143,7 @@ const App = (props: InvestmentProps): ReactElement => {
                                         field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
                                     }}
                                     dateFormat="dd/MM/yyyy"
-                                    className="form-control"
+                                    className={`form-control ${errors.transactionDate} ? 'input-error' : ''`}
                                     placeholderText="Selecione uma data"
                                 />
                             )}

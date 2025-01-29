@@ -150,7 +150,7 @@ export interface InvestmentStatement {
 }
 
 export interface InvestmentObjective {
-    objectiveId: string;
+    objectiveId: string | null;
     title: string;
     description: string;
     amount: number;
