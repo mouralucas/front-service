@@ -1,7 +1,7 @@
 import {ReactElement} from "react";
-import {InvestmentStatement} from "../../../../interfaces/Finance";
-import {DataGridColumn} from "../../../../assets/core/components/Interfaces";
-import DataGrid from "../../../../components/table/DataGrid";
+import {InvestmentStatement} from "../../../../../interfaces/Finance.tsx";
+import {DataGridColumn} from "../../../../../assets/core/components/Interfaces.tsx";
+import DataGrid from "../../../../../components/table/DataGrid.tsx";
 
 interface InvestmentStatementProps {
     statementList: InvestmentStatement[];

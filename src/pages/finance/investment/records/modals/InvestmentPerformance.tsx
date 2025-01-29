@@ -1,12 +1,12 @@
-import Modal from "../../../../components/Modal";
+import Modal from "../../../../../components/Modal";
 import {useEffect, useState} from "react";
-import {getFinanceData} from "../../../../services/axios/Get";
-import {URL_FINANCE_INVESTMENT_PERFORMANCE, URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../services/axios/ApiUrls";
-import {GetInvestmentPerformanceResponse, GetInvestmentStatementResponse} from "../../../../interfaces/FinanceRequest";
+import {getFinanceData} from "../../../../../services/axios/Get";
+import {URL_FINANCE_INVESTMENT_PERFORMANCE, URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../../services/axios/ApiUrls";
+import {GetInvestmentPerformanceResponse, GetInvestmentStatementResponse} from "../../../../../interfaces/FinanceRequest";
 import PerformanceChart from '../charts/Performance';
 import StatementTable from '../tables/InvestmentStatement';
 import {toast, ToastOptions} from "react-toastify";
-import Loader from "../../../../components/Loader.tsx";
+import Loader from "../../../../../components/Loader.tsx";
 
 interface InvestmentPerformanceProps {
     modalState: boolean;

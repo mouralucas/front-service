@@ -9,7 +9,7 @@ interface PieCharProps {
     type?: any
 
     legend?: {
-        enabled: boolean;
+        visible: boolean;
         orientation?: string;
         verticalAlignment?: string;
         horizontalAlignment?: string;
@@ -66,7 +66,7 @@ const App = (props: PieCharProps) => {
             <Margin bottom={20}/>
             <Export enabled={props.exportEnabled ?? false}/>
             <Legend
-                visible={props.legend?.enabled ?? false}
+                visible={props.legend?.visible ?? false}
                 orientation={props.legend?.orientation ?? 'horizontal'}
                 verticalAlignment={props.legend?.verticalAlignment ?? "bottom"}
                 horizontalAlignment={props.legend?.horizontalAlignment ?? "center"}

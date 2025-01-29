@@ -1,7 +1,7 @@
-import Line from "../../../../components/chart/Line"
+import Line from "../../../../../components/chart/Line.tsx"
 
 // Import this css to test tooltip style
-import '../../../../assets/core/components/tooltip.css'
+import '../../../../../assets/core/components/tooltip.css'
 
 interface InvestmentPerformanceProps {
     indexerName: any;

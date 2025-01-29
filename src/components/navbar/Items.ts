@@ -34,6 +34,10 @@ export const items = [
                     {
                         title: 'Dashboard',
                         url: '/finance/investment'
+                    },
+                    {
+                        title: 'Informações',
+                        url: 'finance/investment/records'
                     }
                 ]
             },

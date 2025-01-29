@@ -1,7 +1,7 @@
-import Card from '../../../components/Card'
+import Card from '../../../../components/Card'
 import React, {useEffect} from "react";
-import AccountTransactionTable from './tables/AccountTransaction'
-import CreditCardTransactionTable from './tables/CreditCardTransaction'
+import InvestmentTable from './tables/Investment'
+import ObjectivesTable from './tables/Objectives'
 
 const App = (): React.ReactElement => {
     useEffect(() => {
@@ -16,23 +16,20 @@ const App = (): React.ReactElement => {
                     <div className="col-12">
                         <Card>
                             <Card.Header>
-                                <b>Transações bancárias</b>
+                                <b>Investimentos</b>
                             </Card.Header>
                             <Card.Body>
-                                <AccountTransactionTable />
+                                <InvestmentTable />
                             </Card.Body>
                         </Card>
                     </div>
                 </div>
-
                 <div className="row">
                     <div className="col-12">
                         <Card>
-                            <Card.Header>
-                                <b>Transações no cartão de crédito</b>
-                            </Card.Header>
+                            <Card.Header><b>Objetivos</b></Card.Header>
                             <Card.Body>
-                                <CreditCardTransactionTable />
+                                <ObjectivesTable />
                             </Card.Body>
                         </Card>
                     </div>

@@ -1,15 +1,15 @@
 import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
-import Modal from "../../../../components/Modal.tsx";
-import {Investment, InvestmentStatement} from "../../../../interfaces/Finance.tsx";
+import Modal from "../../../../../components/Modal.tsx";
+import {Investment, InvestmentStatement} from "../../../../../interfaces/Finance.tsx";
 import {Controller, useFieldArray, useForm} from "react-hook-form";
 import DatePicker from "react-datepicker";
 import {format, parseISO} from "date-fns";
-import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
-import {getCurrencies, getTaxFee} from "../../../../services/getCommonData/Finance.tsx";
-import '../../../../assets/core/icons.css'
-import TaxArray from "../../../../components/TaxFeeArray.tsx";
-import {financeSubmit} from "../../../../services/axios/Submit.tsx";
-import {URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../services/axios/ApiUrls.tsx";
+import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
+import {getCurrencies, getTaxFee} from "../../../../../services/getCommonData/Finance.tsx";
+import '../../../../../assets/core/icons.css'
+import TaxArray from "../../../../../components/TaxFeeArray.tsx";
+import {financeSubmit} from "../../../../../services/axios/Submit.tsx";
+import {URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../../services/axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 
 interface InvestmentStatementProps {

@@ -7,7 +7,8 @@ import Login from '../pages/user/Login.tsx'
 import RequireAuth from "../services/auth/RequireAuth.tsx";
 
 const Error404: FC = lazy(() => import('../pages/errors/404'))
-const Investment: FC = lazy(() => import('../pages/finance/investment/Landing'))
+const InvestmentDashboard: FC = lazy(() => import('../pages/finance/investment/dashboard/Landing.tsx'))
+const InvestmentRecords: FC = lazy(() => import('../pages/finance/investment/records/Landing'))
 const FinanceLanding: FC = lazy(() => import('../pages/finance/records/Landing.tsx'))
 const LibraryLanding: FC = lazy(() => import('../pages/library/home/Landing.tsx'))
 const LibraryBackoffice: FC = lazy(() => import('../pages/library/backoffice/Landing'));
@@ -22,7 +23,8 @@ function RolfRoutes(): ReactElement {
                     <Route element={<Landing/>} path={'/'}></Route>
 
                     {/* Finance */}
-                    <Route element={<RequireAuth><Investment/></RequireAuth>} path="/finance/investment"/>
+                    <Route element={<RequireAuth><InvestmentDashboard/></RequireAuth>} path="/finance/investment"/>
+                    <Route element={<RequireAuth><InvestmentRecords/></RequireAuth>} path="/finance/investment/records"/>
                     <Route element={<RequireAuth><FinanceLanding/></RequireAuth>} path="/finance/records"/>
 
                     {/* Library */}

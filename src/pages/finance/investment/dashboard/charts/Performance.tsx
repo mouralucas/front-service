@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import Line from "../../../../components/chart/Line"
-import {getFinanceData} from "../../../../services/axios/Get";
-import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../services/axios/ApiUrls";
+import Line from "../../../../../components/chart/Line.tsx"
+import {getFinanceData} from "../../../../../services/axios/Get.tsx";
+import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../../services/axios/ApiUrls.tsx";
 import {toast, ToastOptions} from "react-toastify";
-import {GetInvestmentPerformanceResponse} from "../../../../interfaces/FinanceRequest.tsx";
+import {GetInvestmentPerformanceResponse} from "../../../../../interfaces/FinanceRequest.tsx";
 
 const App = () => {
     const [performance, setPerformance] = useState<any>([])

@@ -1,7 +1,7 @@
 import {FC, ReactElement} from "react";
-import Card from "../../../components/Card";
-import AllocationChart from './charts/Allocation'
-import PerformanceChart from './charts/Performance'
+import Card from "../../../../components/Card.tsx";
+import AllocationChart from './charts/Allocation.tsx'
+import PerformanceChart from './charts/Performance.tsx'
 
 const InvestmentLanding: FC = (): ReactElement => {
     return (
