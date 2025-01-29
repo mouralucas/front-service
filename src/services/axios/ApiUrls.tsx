@@ -22,6 +22,7 @@ export const URL_FINANCE_INVESTMENT_TYPE = '/investment/type'
 export const URL_FINANCE_INVESTMENT_STATEMENT = '/investment/statement'
 export const URL_FINANCE_INVESTMENT_ALLOCATION = '/investment/allocation'
 export const URL_FINANCE_INVESTMENT_PERFORMANCE = '/investment/performance'
+export const URL_FINANCE_INVESTMENT_OBJECTIVE = '/investment/objective'
 
 // Other finances
 export const URL_FINANCE_CURRENCY = '/finance/currency'

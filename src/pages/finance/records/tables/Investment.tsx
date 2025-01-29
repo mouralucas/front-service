@@ -24,6 +24,7 @@ const App: FC = (): ReactElement => {
     const [modalInvestmentPerformanceState, setModalInvestmentPerformanceState] = useState<boolean>(false)
 
     const [investmentId, setInvestmentId] = useState<string>('')
+    const [investmentName, setInvestmentName] = useState<string>('')
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>()
     const [investments, setInvestments] = useState<Investment[]>([])
 
@@ -47,6 +48,7 @@ const App: FC = (): ReactElement => {
     const showInvestmentPerformanceModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
             setInvestmentId(e.row.data.investmentId);
+            setInvestmentName(e.row.data.name);
             setModalInvestmentPerformanceState(true);
         }
 
@@ -66,6 +68,7 @@ const App: FC = (): ReactElement => {
     const hideInvestmentPerformanceModal = () => {
         setModalInvestmentPerformanceState(false);
         setInvestmentId('');
+        setInvestmentName('');
     }
 
     useEffect(() => {
@@ -231,7 +234,7 @@ const App: FC = (): ReactElement => {
             }
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
             <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment}/>
-            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId}/>
+            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName}/>
         </>
     )
 }

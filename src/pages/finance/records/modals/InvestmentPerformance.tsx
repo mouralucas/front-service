@@ -2,7 +2,7 @@ import Modal from "../../../../components/Modal";
 import {useEffect, useState} from "react";
 import {getFinanceData} from "../../../../services/axios/Get";
 import {URL_FINANCE_INVESTMENT_PERFORMANCE, URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../services/axios/ApiUrls";
-import {GetInvestmentPerformanceResponse, GetStatementResponse} from "../../../../interfaces/FinanceRequest";
+import {GetInvestmentPerformanceResponse, GetInvestmentStatementResponse} from "../../../../interfaces/FinanceRequest";
 import PerformanceChart from '../charts/Performance';
 import StatementTable from '../tables/InvestmentStatement';
 import {toast, ToastOptions} from "react-toastify";
@@ -12,6 +12,7 @@ interface InvestmentPerformanceProps {
     modalState: boolean;
     hideModal: any;
     investmentId: string;
+    investmentName: string;
 }
 
 
@@ -32,7 +33,7 @@ const App = (props: InvestmentPerformanceProps) => {
     }, [props.modalState]);
 
     const getInvestmentStatement = () => {
-        getFinanceData(URL_FINANCE_INVESTMENT_STATEMENT, {investmentId: props.investmentId}).then((response: GetStatementResponse) => {
+        getFinanceData(URL_FINANCE_INVESTMENT_STATEMENT, {investmentId: props.investmentId}).then((response: GetInvestmentStatementResponse) => {
             setStatements(response.statement)
         }).catch(() => {
             toast.error('Erro ao buscar os extratos do investimento')
@@ -77,14 +78,13 @@ const App = (props: InvestmentPerformanceProps) => {
                     </button>
                 </div>
             </div>
-
         </>
 
     return (
         <Modal
             showModal={props.modalState}
             hideModal={props.hideModal}
-            title={'Investimento'}
+            title={props.investmentName || 'Investimento'}
             body={body}
             footer={footer}
             size={'modal-xl'}

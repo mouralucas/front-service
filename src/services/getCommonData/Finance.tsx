@@ -1,7 +1,7 @@
 import {getFinanceData} from "../axios/Get.tsx";
-import {GetAccountResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentTypesResponse, GetLiquidityResponse, GetTaxFeeResponse} from "../../interfaces/FinanceRequest.tsx";
-import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentType, Liquidity, TaxFee} from "../../interfaces/Finance.tsx";
-import {URL_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE} from "../axios/ApiUrls.tsx";
+import {GetAccountResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentObjectivesResponse, GetInvestmentTypesResponse, GetLiquidityResponse, GetTaxFeeResponse} from "../../interfaces/FinanceRequest.tsx";
+import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentType, Liquidity, TaxFee} from "../../interfaces/Finance.tsx";
+import {URL_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_OBJECTIVE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE} from "../axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 
 
@@ -44,6 +44,23 @@ export const getInvestmentTypes = async (): Promise<any[]> => {
         return [];
     }
 };
+
+export const getInvestmentObjectives = async (selectFormat: boolean): Promise<any[]> => {
+    try {
+        const response: GetInvestmentObjectivesResponse = await getFinanceData(URL_FINANCE_INVESTMENT_OBJECTIVE);
+        if (selectFormat) {
+            return response.objectives.map((i: InvestmentObjective) => ({
+                value: i.objectiveId,
+                label: i.title,
+            }))
+        }
+
+        return response.objectives
+    } catch {
+        toast.error('Houve um erro ao buscas os objetivos');
+        return []
+    }
+}
 
 //Finance
 export const getIndexerTypes = async (): Promise<any[]> => {

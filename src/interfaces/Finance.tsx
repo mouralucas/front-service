@@ -124,6 +124,7 @@ export interface Investment {
     liquidationAmount?: number;
     countryId: string;
     observation?: string;
+    objectiveId?: string;
 }
 
 export interface InvestmentType {
@@ -146,6 +147,14 @@ export interface InvestmentStatement {
     netAmount: number;
     taxDetails: TaxFeeDetail[];
     feeDetails: TaxFeeDetail[];
+}
+
+export interface InvestmentObjective {
+    objectiveId: string;
+    title: string;
+    description: string;
+    amount: number;
+    estimatedDeadline: string;
 }
 
 //Finance

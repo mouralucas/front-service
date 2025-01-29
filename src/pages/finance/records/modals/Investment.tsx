@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import {format, parseISO} from "date-fns";
 import CurrencyInput from '../../../../components/form/CurrencyInput.tsx'
-import {getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity} from "../../../../services/getCommonData/Finance.tsx";
+import {getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentObjectives, getInvestmentTypes, getLiquidity} from "../../../../services/getCommonData/Finance.tsx";
 import {getCountries} from "../../../../services/getCommonData/Core.tsx";
 import {financeSubmit} from "../../../../services/axios/Submit.tsx";
 import {URL_FINANCE_INVESTMENT} from "../../../../services/axios/ApiUrls.tsx";
@@ -38,7 +38,8 @@ const DefaultInvestment: Investment = {
     countryId: 'BR',
     liquidationDate: null,
     liquidationAmount: 0,
-    observation: ''
+    observation: '',
+    objectiveId: ''
 }
 
 const App = (props: InvestmentProps): ReactElement => {
@@ -46,6 +47,7 @@ const App = (props: InvestmentProps): ReactElement => {
 
     const [accounts, setAccounts] = useState<any[]>([])
     const [investmentTypes, setInvestmentTypes] = useState<any[]>([])
+    const [obejectives, setObejectives] = useState<any[]>([])
     const [currencies, setCurrencies] = useState<any[]>([])
     const [indexerTypes, setIndexerTypes] = useState<any[]>([])
     const [indexers, setIndexers] = useState<any[]>([])
@@ -57,6 +59,7 @@ const App = (props: InvestmentProps): ReactElement => {
     const fetchInvestmentData: () => Promise<void> = async () => {
         setAccounts(await getAccounts());
         setInvestmentTypes(await getInvestmentTypes());
+        setObejectives(await getInvestmentObjectives(true));
         setCurrencies(await getCurrencies());
         setIndexerTypes(await getIndexerTypes());
         setIndexers(await getIndexers());
@@ -123,11 +126,11 @@ const App = (props: InvestmentProps): ReactElement => {
     }
 
 
-    const body: ReactElement = isLoading ? <Loader /> :
+    const body: ReactElement = isLoading ? <Loader/> :
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-3">
                         <label htmlFor="">Data</label>
                         <Controller
                             name={'transactionDate'}
@@ -146,7 +149,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             )}
                         />
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                         <label htmlFor="">Conta</label>
                         <Controller
                             name={'accountId'}
@@ -167,7 +170,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             <div className="text-danger mt-1">{errors.accountId.message}</div>
                         )}
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                         <label htmlFor="">Tipo de investimento</label>
                         <Controller
                             name={'investmentTypeId'}
@@ -180,6 +183,22 @@ const App = (props: InvestmentProps): ReactElement => {
                                     value={investmentTypes.find((c: any) => c.value === field.value)}
                                     onChange={(val: any) => field.onChange(val?.value)}
                                     className={`${errors.investmentTypeId ? "border border-danger" : ""}`}
+                                    placeholder={'Selecione'}
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="col-3">
+                        <label htmlFor="">Objetivo</label>
+                        <Controller
+                            name={'objectiveId'}
+                            control={control}
+                            render={({field}) => (
+                                <Select
+                                    {...field}
+                                    options={obejectives}
+                                    value={obejectives.find((c: any) => c.value === field.value)}
+                                    onChange={(val: any) => field.onChange(val?.value)}
                                     placeholder={'Selecione'}
                                 />
                             )}
