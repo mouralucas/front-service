@@ -47,7 +47,7 @@ const App = (props: InvestmentProps): ReactElement => {
 
     const [accounts, setAccounts] = useState<any[]>([])
     const [investmentTypes, setInvestmentTypes] = useState<any[]>([])
-    const [obejectives, setObejectives] = useState<any[]>([])
+    const [objectives, setObjectives] = useState<any[]>([])
     const [currencies, setCurrencies] = useState<any[]>([])
     const [indexerTypes, setIndexerTypes] = useState<any[]>([])
     const [indexers, setIndexers] = useState<any[]>([])
@@ -59,7 +59,7 @@ const App = (props: InvestmentProps): ReactElement => {
     const fetchInvestmentData: () => Promise<void> = async () => {
         setAccounts(await getAccounts());
         setInvestmentTypes(await getInvestmentTypes());
-        setObejectives(await getInvestmentObjectives(true));
+        setObjectives(await getInvestmentObjectives(true));
         setCurrencies(await getCurrencies());
         setIndexerTypes(await getIndexerTypes());
         setIndexers(await getIndexers());
@@ -96,8 +96,8 @@ const App = (props: InvestmentProps): ReactElement => {
         setValue('amount', amount);
     }
 
-    const onSubmit = (data: Investment, e: BaseSyntheticEvent<object, any, any> | undefined) => {
-        let method;
+    const onSubmit = (data: Investment, e: BaseSyntheticEvent<object> | undefined) => {
+        let method: string;
         let submitData;
 
         if (data.investmentId !== null) {
@@ -196,8 +196,8 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
-                                    options={obejectives}
-                                    value={obejectives.find((c: any) => c.value === field.value)}
+                                    options={objectives}
+                                    value={objectives.find((c: any) => c.value === field.value)}
                                     onChange={(val: any) => field.onChange(val?.value)}
                                     placeholder={'Selecione'}
                                 />

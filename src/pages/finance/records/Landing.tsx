@@ -11,7 +11,6 @@ const App = (): React.ReactElement => {
     return (
         <div className="container">
             {/*<Sidebar/>*/}
-            <div className="App">
                 <div className="row">
                     <div className="col-12">
                         <Card>
@@ -37,7 +36,6 @@ const App = (): React.ReactElement => {
                         </Card>
                     </div>
                 </div>
-            </div>
         </div>
     );
 }

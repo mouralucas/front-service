@@ -6,7 +6,7 @@ import {Button as Btn} from "devextreme-react/data-grid";
 import {toast} from "react-toastify";
 import {AccountTransaction} from "../../../../interfaces/Finance";
 import {getFinanceData} from "../../../../services/axios/Get.tsx";
-import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
+import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
 import ModalStatement from '../modals/AccountTransaction.tsx'
 import Loader from '../../../../components/Loader'
 
@@ -126,7 +126,7 @@ const App = () => {
         }
     ]
 
-    const toolBarItems = [
+    const toolBarItems: DataGridToolBarItem[] = [
         {
             name: 'columnChooserButton',
             location: 'after',

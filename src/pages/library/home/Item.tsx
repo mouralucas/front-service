@@ -21,6 +21,10 @@ const App = (props: ItemProps): ReactElement => {
                 </div>
                 <div className="col-9">
                     <div className="row">
+                        <label htmlFor="">Descrição</label>
+                        {props.item?.summary}
+                    </div>
+                    <div className="row">
                         <div className="col-12">
                             <label htmlFor="">Título</label>
                             <p className='h2'>
@@ -39,12 +43,13 @@ const App = (props: ItemProps): ReactElement => {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <label htmlFor="">Outro</label>
-                            {props.item?.subtitle ?? 'Moura'}
+                            <label htmlFor="">Autor</label>
+                            {props.item?.mainAuthorName}
                         </div>
                     </div>
                 </div>
             </div>
+
             <div className="row">
                 <div className="col-4">
                     <label htmlFor="">ISBN</label>

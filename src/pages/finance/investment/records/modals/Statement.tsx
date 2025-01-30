@@ -78,6 +78,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
 
         if (data.investmentStatementId !== null) {
             method = 'patch'
+            //TODO: implement correctly
             submitData = data
         } else {
             method = 'post'

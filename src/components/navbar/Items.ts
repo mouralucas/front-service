@@ -38,7 +38,7 @@ export const items = [
                     {
                         title: 'Informações',
                         url: 'finance/investment/records'
-                    }
+                    },
                 ]
             },
             {
@@ -48,6 +48,10 @@ export const items = [
             {
                 title: 'Registros',
                 url: 'finance/records'
+            },
+            {
+                title: 'Configurações',
+                url: 'finance/admin'
             }
         ]
     },

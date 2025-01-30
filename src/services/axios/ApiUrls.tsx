@@ -1,6 +1,6 @@
 export const URL_USER_BASE = 'http://67.205.180.83:9002';
-// export const URL_FINANCE_BASE = 'http://67.205.180.83:9003';
-export const URL_FINANCE_BASE = 'http://127.0.0.1:8003';
+export const URL_FINANCE_BASE = 'http://67.205.180.83:9003';
+// export const URL_FINANCE_BASE = 'http://127.0.0.1:8003';
 export const URL_LIBRARY_BASE = 'http://67.205.180.83:9001';
 // export const URL_LIBRARY_BASE = 'http://127.0.0.1:8001';
 
@@ -25,6 +25,7 @@ export const URL_FINANCE_INVESTMENT_PERFORMANCE = '/investment/performance'
 export const URL_FINANCE_INVESTMENT_OBJECTIVE = '/investment/objective'
 
 // Other finances
+export const URL_FINANCE_BANK = '/finance/bank'
 export const URL_FINANCE_CURRENCY = '/finance/currency'
 export const URL_FINANCE_INDEXER_TYPE = '/finance/indexer-type'
 export const URL_FINANCE_INDEXER = '/finance/indexer'

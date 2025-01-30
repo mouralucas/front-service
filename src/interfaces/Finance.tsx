@@ -158,6 +158,12 @@ export interface InvestmentObjective {
 }
 
 //Finance
+export interface Bank {
+    bankId: string | null;
+    bankName: string;
+    code: number | null;
+}
+
 export interface IndexerType {
     indexerTypeId: string;
     indexerTypeName: string;

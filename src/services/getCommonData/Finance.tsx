@@ -1,7 +1,7 @@
 import {getFinanceData} from "../axios/Get.tsx";
-import {GetAccountResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentObjectivesResponse, GetInvestmentTypesResponse, GetLiquidityResponse, GetTaxFeeResponse} from "../../interfaces/FinanceRequest.tsx";
-import {Account, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentType, Liquidity, TaxFee} from "../../interfaces/Finance.tsx";
-import {URL_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_OBJECTIVE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE} from "../axios/ApiUrls.tsx";
+import {GetAccountResponse, GetBankResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentObjectivesResponse, GetInvestmentTypesResponse, GetLiquidityResponse, GetTaxFeeResponse} from "../../interfaces/FinanceRequest.tsx";
+import {Account, Bank, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentType, Liquidity, TaxFee} from "../../interfaces/Finance.tsx";
+import {URL_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_BANK, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_OBJECTIVE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE} from "../axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 
 
@@ -63,6 +63,23 @@ export const getInvestmentObjectives = async (selectFormat: boolean): Promise<an
 }
 
 //Finance
+export const getBanks = async (selectFormat: boolean): Promise<any[]> => {
+    try {
+        const response: GetBankResponse = await getFinanceData(URL_FINANCE_BANK)
+        if (selectFormat) {
+            return response.banks.map((i: Bank) => ({
+                value: i.bankId,
+                label: i.bankName,
+            }));
+        }
+
+        return response.banks
+    } catch {
+        toast.error('Houve um erro ao buscar os bancos');
+        return [];
+    }
+}
+
 export const getIndexerTypes = async (): Promise<any[]> => {
     try {
         const response: GetIndexerTypesResponse = await getFinanceData(URL_FINANCE_INDEXER_TYPE);
