@@ -53,7 +53,7 @@ const App = (): ReactElement => {
         },
         {
             dataField: "title",
-            caption: "Nome",
+            caption: "Título",
             dataType: "string",
         },
         {

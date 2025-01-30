@@ -93,13 +93,18 @@ export const getIndexerTypes = async (): Promise<any[]> => {
     }
 };
 
-export const getIndexers = async (): Promise<any[]> => {
+export const getIndexers = async (selectFormat: boolean): Promise<any[]> => {
     try {
         const response: GetIndexersResponse = await getFinanceData(URL_FINANCE_INDEXER);
-        return response.indexers.map((i: Indexer) => ({
-            value: i.indexerId,
-            label: i.indexerName,
-        }));
+
+        if (selectFormat) {
+            return response.indexers.map((i: Indexer) => ({
+                value: i.indexerId,
+                label: i.indexerName,
+            }));
+        }
+
+        return response.indexers;
     } catch {
         toast.error('Houve um erro ao buscar os cartões de crédito');
         return [];
