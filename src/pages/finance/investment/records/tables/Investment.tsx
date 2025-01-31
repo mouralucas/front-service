@@ -63,6 +63,7 @@ const App: FC = (): ReactElement => {
     const hideInvestmentStatementModal = () => {
         setModalInvestmentStatementState(false);
         setSelectedInvestment(undefined);
+        getInvestment();
     }
 
     const hideInvestmentPerformanceModal = () => {

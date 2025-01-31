@@ -5,6 +5,7 @@ import Button from "devextreme-react/button";
 import {getBanks} from "../../../../services/getCommonData/Finance.tsx";
 import {Bank} from "../../../../interfaces/Finance.tsx";
 import BankModal from '../modals/Bank'
+import Loader from "../../../../components/Loader.tsx";
 
 const App = (): ReactElement => {
     const [banks, setBanks] = useState<Bank[]>([])
@@ -12,9 +13,13 @@ const App = (): ReactElement => {
     const [bankModalState, setBankModalState] = useState<boolean>(false)
     const [selectedBank, setSelectedBank] = useState<Bank | undefined>()
 
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
 
     const fetchBankData = async () => {
         setBanks(await getBanks(false))
+
+        setIsLoading(false);
     }
 
     const showBankModal = (e: any) => {
@@ -79,17 +84,21 @@ const App = (): ReactElement => {
 
     return (
         <>
-            <DataGrid
-                keyExpr='bankId'
-                data={banks}
-                columns={columns}
-                toolBar={
-                    {
-                        visible: true,
-                        items: toolBarItems
+            {isLoading ?
+                <Loader/>
+                :
+                <DataGrid
+                    keyExpr='bankId'
+                    data={banks}
+                    columns={columns}
+                    toolBar={
+                        {
+                            visible: true,
+                            items: toolBarItems
+                        }
                     }
-                }
-            />
+                />
+            }
             <BankModal modalState={bankModalState} hideModal={hideBankModal} bank={selectedBank}/>
         </>
     )
