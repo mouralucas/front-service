@@ -79,7 +79,6 @@ const App: FC = (): ReactElement => {
     const getInvestment = () => {
         setIsLoading(true);
         getFinanceData(URL_FINANCE_INVESTMENT).then((response: InvestmentResponse) => {
-            // TODO: add to common data
             setInvestments(response.investments);
             setIsLoading(false);
         }).catch(() => {

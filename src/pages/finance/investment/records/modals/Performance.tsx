@@ -1,12 +1,6 @@
 import Modal from "../../../../../components/Modal";
-import {useEffect, useState} from "react";
-import {getFinanceData} from "../../../../../services/axios/Get";
-import {URL_FINANCE_INVESTMENT_PERFORMANCE, URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../../services/axios/ApiUrls";
-import {GetInvestmentPerformanceResponse, GetInvestmentStatementResponse} from "../../../../../interfaces/FinanceRequest";
 import PerformanceChart from '../charts/Performance';
 import StatementTable from '../tables/InvestmentStatement';
-import {toast, ToastOptions} from "react-toastify";
-import Loader from "../../../../../components/Loader.tsx";
 
 interface InvestmentPerformanceProps {
     modalState: boolean;
@@ -17,52 +11,16 @@ interface InvestmentPerformanceProps {
 
 
 const App = (props: InvestmentPerformanceProps) => {
-    const [indexerName, setIndexerName] = useState<string>()
-    const [performance, setPerformance] = useState<any>([])
-    const [statements, setStatements] = useState<any>([])
-
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-
-    useEffect(() => {
-        if (props.modalState) {
-            getPerformanceData();
-            getInvestmentStatement();
-
-            setIsLoading(false);
-        }
-    }, [props.modalState]);
-
-    const getInvestmentStatement = () => {
-        getFinanceData(URL_FINANCE_INVESTMENT_STATEMENT, {investmentId: props.investmentId}).then((response: GetInvestmentStatementResponse) => {
-            setStatements(response.statement)
-        }).catch(() => {
-            toast.error('Erro ao buscar os extratos do investimento')
-        })
-    }
-
-    const getPerformanceData = () => {
-        getFinanceData(URL_FINANCE_INVESTMENT_PERFORMANCE, {
-            periodRange: 60,
-            investmentId: props.investmentId,
-        }).then((response: GetInvestmentPerformanceResponse) => {
-            setPerformance(response);
-            setIndexerName(response.indexerName);
-        }).catch((err: string | ToastOptions) => {
-            toast.error(`Houve um erro ao buscar a performance dos investimentos ${err}`)
-        })
-    }
-
-
-    const body = isLoading ? <Loader/> :
+    const body =
         <>
             <div className='row'>
                 <div className="col-12">
-                    <PerformanceChart performance={performance} indexerName={indexerName}/>
+                    <PerformanceChart investmentId={props.investmentId}/>
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    <StatementTable statementList={statements}/>
+                    <StatementTable investmentId={props.investmentId}/>
                 </div>
             </div>
         </>
