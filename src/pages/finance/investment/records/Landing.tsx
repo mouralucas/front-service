@@ -1,6 +1,7 @@
 import Card from '../../../../components/Card'
 import React, {useEffect} from "react";
 import InvestmentTable from './tables/Investment'
+import InvestmentLiquidatedTable from './tables/InvestmentLiquidated.tsx'
 import ObjectivesTable from './tables/Objectives'
 
 const App = (): React.ReactElement => {
@@ -30,6 +31,18 @@ const App = (): React.ReactElement => {
                             <Card.Header><b>Objetivos</b></Card.Header>
                             <Card.Body>
                                 <ObjectivesTable />
+                            </Card.Body>
+                        </Card>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <Card>
+                            <Card.Header>
+                                <b>Investimentos Liquidados</b>
+                            </Card.Header>
+                            <Card.Body>
+                                <InvestmentLiquidatedTable />
                             </Card.Body>
                         </Card>
                     </div>
