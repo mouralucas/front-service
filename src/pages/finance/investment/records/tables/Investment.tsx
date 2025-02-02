@@ -78,7 +78,7 @@ const App: FC = (): ReactElement => {
 
     const getInvestment = () => {
         setIsLoading(true);
-        getFinanceData(URL_FINANCE_INVESTMENT).then((response: InvestmentResponse) => {
+        getFinanceData(URL_FINANCE_INVESTMENT, {isLiquidated: false}).then((response: InvestmentResponse) => {
             setInvestments(response.investments);
             setIsLoading(false);
         }).catch(() => {
