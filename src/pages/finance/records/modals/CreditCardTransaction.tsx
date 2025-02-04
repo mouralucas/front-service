@@ -149,9 +149,9 @@ const App = (props: CreditCardBillProps): ReactElement => {
         }
 
         financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submit_data, method).then(() => {
-            toast.success('Investimento salvo com sucesso')
+            toast.success('Transação em crédito salva com sucesso')
         }).catch((err: string | ToastOptions) => {
-            toast.error('Erro ao salvar a transação com o cartão de crédito ' + err)
+            toast.error('Erro ao salvar transação com o cartão de crédito ' + err)
         })
     }
 
