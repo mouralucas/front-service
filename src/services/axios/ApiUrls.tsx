@@ -33,7 +33,7 @@ export const URL_FINANCE_LIQUIDITY = '/finance/liquidity'
 export const URL_FINANCE_TAX_FEE = '/finance/tax-fee'
 
 // Core URLs
-export const URL_CATEGORIES = '/core/category'
+export const URL_FINANCE_CATEGORIES = '/core/category'
 export const URL_COUNTRY = '/core/country'
 export const URL_LANGUAGE = '/language';
 

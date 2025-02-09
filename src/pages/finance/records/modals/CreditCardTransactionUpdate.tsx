@@ -60,7 +60,7 @@ const App = (props: UpdateCreditCardTransactionProps) => {
 
     const fetchTransactionData = async () => {
         setCreditCards(await getCreditCards());
-        setCategories(await getCategories());
+        setCategories(await getCategories(true));
         setCurrencies(await getCurrencies());
     };
 

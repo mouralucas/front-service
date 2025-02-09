@@ -69,7 +69,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
 
     const fetchTransactionData: () => Promise<void> = async () => {
         setCreditCards(await getCreditCards());
-        setCategories(await getCategories());
+        setCategories(await getCategories(true));
         setCurrencies(await getCurrencies());
 
         setIsLoading(false);

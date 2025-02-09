@@ -210,9 +210,9 @@ export interface Currency {
 }
 
 export interface Category {
-    categoryId: string
+    categoryId: string | null
     name: string
-    description: string
-    fatherId: string
-    fatherName: string
+    description?: string
+    fatherId?: string
+    fatherName?: string
 }

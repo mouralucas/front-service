@@ -1,7 +1,7 @@
 import {getFinanceData} from "../axios/Get.tsx";
 import {GetAccountResponse, GetBankResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentObjectivesResponse, GetInvestmentTypesResponse, GetLiquidityResponse, GetTaxFeeResponse} from "../../interfaces/FinanceRequest.tsx";
 import {Account, Bank, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentType, Liquidity, TaxFee} from "../../interfaces/Finance.tsx";
-import {URL_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_BANK, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_OBJECTIVE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE} from "../axios/ApiUrls.tsx";
+import {URL_FINANCE_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_BANK, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_OBJECTIVE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE} from "../axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 
 
@@ -148,12 +148,15 @@ export const getTaxFee = async (countryId: string, taxFeeType: string): Promise<
 };
 
 // Other
-export const getCategories = async (): Promise<any[]> => {
+export const getCategories = async (selectFormat: boolean): Promise<any[]> => {
     try {
-        const response: GetCategoryResponse = await getFinanceData(URL_CATEGORIES);
-        return response.categories.map((i: Category) =>
-            ({value: i.categoryId, label: i.name})
-        );
+        const response: GetCategoryResponse = await getFinanceData(URL_FINANCE_CATEGORIES);
+        if (selectFormat) {
+            return response.categories.map((i: Category) =>
+                ({value: i.categoryId, label: i.name})
+            );
+        }
+        return response.categories
     } catch {
         // toast.error('Houve um erro ao buscar as categorias' + err);
         return [];

@@ -56,7 +56,7 @@ const App = (props: AccountStatementProps) => {
 
     const fetchAccountTransactionData: () => Promise<void> = async () => {
         setAccounts(await getAccounts());
-        setCategories(await getCategories());
+        setCategories(await getCategories(true));
         setCurrencies(await getCurrencies());
 
         setIsLoading(false);
