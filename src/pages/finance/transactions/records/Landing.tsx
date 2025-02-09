@@ -1,7 +1,7 @@
-import Card from '../../../components/Card'
+import Card from '../../../../components/Card.tsx'
 import React, {useEffect} from "react";
-import AccountTransactionTable from './tables/AccountTransaction'
-import CreditCardTransactionTable from './tables/CreditCardTransaction'
+import AccountTransactionTable from './tables/AccountTransaction.tsx'
+import CreditCardTransactionTable from './tables/CreditCardTransaction.tsx'
 
 const App = (): React.ReactElement => {
     useEffect(() => {

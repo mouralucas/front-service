@@ -1,14 +1,14 @@
 import {useEffect, useState} from "react";
-import {URL_FINANCE_ACCOUNT_TRANSACTION} from "../../../../services/axios/ApiUrls";
-import DataGrid from "../../../../components/table/DataGrid";
+import {URL_FINANCE_ACCOUNT_TRANSACTION} from "../../../../../services/axios/ApiUrls.tsx";
+import DataGrid from "../../../../../components/table/DataGrid.tsx";
 import Button from "devextreme-react/button";
 import {Button as Btn} from "devextreme-react/data-grid";
 import {toast} from "react-toastify";
-import {AccountTransaction} from "../../../../interfaces/Finance";
-import {getFinanceData} from "../../../../services/axios/Get.tsx";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
+import {AccountTransaction} from "../../../../../interfaces/Finance.tsx";
+import {getFinanceData} from "../../../../../services/axios/Get.tsx";
+import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
 import ModalStatement from '../modals/AccountTransaction.tsx'
-import Loader from '../../../../components/Loader'
+import Loader from '../../../../../components/Loader.tsx'
 
 interface TransactionResponse {
     quantity: number

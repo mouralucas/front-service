@@ -1,12 +1,12 @@
 import React, {BaseSyntheticEvent, useEffect, useState} from "react";
-import Modal from "../../../../components/Modal";
+import Modal from "../../../../../components/Modal.tsx";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
-import CurrencyInput from "../../../../components/form/CurrencyInput";
+import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import DatePicker from "react-datepicker";
 import {format, parseISO} from "date-fns";
-import {getCategories, getCreditCards, getCurrencies} from "../../../../services/getCommonData/Finance.tsx";
-import {UpdateCreditCardTransaction} from "../../../../interfaces/Finance.tsx";
+import {getCategories, getCreditCards, getCurrencies} from "../../../../../services/getCommonData/Finance.tsx";
+import {UpdateCreditCardTransaction} from "../../../../../interfaces/Finance.tsx";
 
 interface UpdateCreditCardTransactionProps {
     creditCardTransaction: UpdateCreditCardTransaction | undefined;

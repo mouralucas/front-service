@@ -1,16 +1,16 @@
 import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
-import {URL_FINANCE_ACCOUNT_TRANSACTION} from "../../../../services/axios/ApiUrls";
+import {URL_FINANCE_ACCOUNT_TRANSACTION} from "../../../../../services/axios/ApiUrls.tsx";
 import {toast, ToastOptions} from "react-toastify";
 import {format, parseISO} from 'date-fns';
 import {Controller, useForm} from "react-hook-form";
-import Modal from "../../../../components/Modal";
-import CurrencyInput from "../../../../components/form/CurrencyInput";
+import Modal from "../../../../../components/Modal.tsx";
+import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
-import {financeSubmit} from "../../../../services/axios/Submit";
-import {getAccounts, getCategories, getCurrencies} from "../../../../services/getCommonData/Finance.tsx";
-import {AccountTransaction} from "../../../../interfaces/Finance.tsx";
-import Loader from "../../../../components/Loader.tsx";
+import {financeSubmit} from "../../../../../services/axios/Submit.tsx";
+import {getAccounts, getCategories, getCurrencies} from "../../../../../services/getCommonData/Finance.tsx";
+import {AccountTransaction} from "../../../../../interfaces/Finance.tsx";
+import Loader from "../../../../../components/Loader.tsx";
 
 /**
  *

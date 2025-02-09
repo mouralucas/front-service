@@ -1,15 +1,15 @@
 import {useEffect, useState} from "react";
-import {URL_CREDIT_CARD_TRANSACTION} from "../../../../services/axios/ApiUrls";
-import DataGrid from "../../../../components/table/DataGrid";
+import {URL_CREDIT_CARD_TRANSACTION} from "../../../../../services/axios/ApiUrls.tsx";
+import DataGrid from "../../../../../components/table/DataGrid.tsx";
 import {Button as Btn,} from 'devextreme-react/data-grid';
 import Button from "devextreme-react/button";
-import TransactionModal from '../modals/CreditCardTransaction'
-import UpdateTransactionModal from '../modals/CreditCardTransactionUpdate'
+import TransactionModal from '../modals/CreditCardTransaction.tsx'
+import UpdateTransactionModal from '../modals/CreditCardTransactionUpdate.tsx'
 import {toast} from "react-toastify";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces";
-import {getFinanceData} from "../../../../services/axios/Get";
-import {CreditCardTransaction, UpdateCreditCardTransaction} from "../../../../interfaces/Finance.tsx";
-import Loader from '../../../../components/Loader'
+import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
+import {getFinanceData} from "../../../../../services/axios/Get.tsx";
+import {CreditCardTransaction, UpdateCreditCardTransaction} from "../../../../../interfaces/Finance.tsx";
+import Loader from '../../../../../components/Loader.tsx'
 
 interface TransactionResponse {
     success: boolean

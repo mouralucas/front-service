@@ -43,7 +43,7 @@ export const items = [
             },
             {
                 title: 'Dashboard',
-                url: 'finance/dashboard'
+                url: 'finance/transaction/dashboard'
             },
             {
                 title: 'Transações',
