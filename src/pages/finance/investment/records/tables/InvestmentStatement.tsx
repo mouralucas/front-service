@@ -43,6 +43,14 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         return formated_string;
     }
 
+    function netAmountCustomCell(cellInfo: any) {
+        // const currentSymbol: string = cellInfo.currencySymbol;
+        const currentSymbol: string = "R$ ";
+        const netAmount: string = parseFloat(cellInfo.netAmount).toFixed(2);
+        const formated_string: string = `${currentSymbol} ${netAmount}`
+        return formated_string;
+    }
+
     const columns: DataGridColumn[] = [
         {
             dataField: "investmentStatementId",
@@ -82,6 +90,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
             dataField: "netAmount",
             caption: 'Líquido',
             dataType: "currency",
+            calculateCellValue: netAmountCustomCell,
         }
     ]
 

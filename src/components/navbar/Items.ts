@@ -46,8 +46,8 @@ export const items = [
                 url: 'finance/dashboard'
             },
             {
-                title: 'Registros',
-                url: 'finance/records'
+                title: 'Transações',
+                url: 'finance/transaction'
             },
             {
                 title: 'Configurações',

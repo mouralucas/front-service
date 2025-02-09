@@ -30,7 +30,7 @@ function RolfRoutes(): ReactElement {
                     {/* Finance */}
                     <Route element={<RequireAuth><InvestmentDashboard/></RequireAuth>} path="/finance/investment"/>
                     <Route element={<RequireAuth><InvestmentRecords/></RequireAuth>} path="/finance/investment/records"/>
-                    <Route element={<RequireAuth><FinanceLanding/></RequireAuth>} path="/finance/records"/>
+                    <Route element={<RequireAuth><FinanceLanding/></RequireAuth>} path="/finance/transaction"/>
                     <Route element={<RequireAuth><FinanceAdmin/></RequireAuth>} path="/finance/admin"/>
 
                     {/* Library */}

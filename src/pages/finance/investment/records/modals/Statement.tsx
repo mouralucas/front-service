@@ -23,7 +23,7 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
     investmentId: '',
     name: '',
     maturityDate: null,
-    referenceDate: null,
+    referenceDate: null, // TODO: create function to get last business day from last month
     period: '',
     grossAmount: 0,
     netAmount: 0,
