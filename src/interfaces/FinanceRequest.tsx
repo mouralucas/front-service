@@ -1,4 +1,4 @@
-import {Account, Bank, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentStatement, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
+import {Account, Bank, Category, CreditCard, CreditCardBillHistory, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentStatement, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
 
 
 // Account
@@ -11,6 +11,10 @@ export interface GetAccountResponse {
 export interface GetCreditCardsResponse {
     quantity: number;
     creditCards: CreditCard[];
+}
+
+export interface GetCreditCardBillHistoryResponse {
+    creditCardBillHistory: CreditCardBillHistory[];
 }
 
 

@@ -1,6 +1,8 @@
 import {ReactElement} from "react";
-import DataGrid, {Column, ColumnChooser, Format, Grouping, GroupPanel,
-    HeaderFilter, LoadPanel, Pager, Paging, SearchPanel, Summary, Toolbar, TotalItem, Export} from 'devextreme-react/data-grid';
+import DataGrid, {
+    Column, ColumnChooser, Format, Grouping, GroupPanel,
+    HeaderFilter, LoadPanel, Pager, Paging, SearchPanel, Summary, Toolbar, TotalItem, Export
+} from 'devextreme-react/data-grid';
 import {Item} from "devextreme-react/box";
 import {FilterRow} from "devextreme-react/gantt";
 import '../../assets/core/components/table.css'
@@ -15,15 +17,20 @@ interface DataGridProps {
     data: any
     keyExpr: string
     columns: DataGridColumn[]
-    allowedPageSizes?: number[]
+
     allowColumnReordering?: boolean
     rowAlternationEnabled?: boolean
     showBorders?: boolean
     showRowLines?: boolean
     showColumnLines?: boolean
-    pagerDisplayMode?: string
     pager?: {
-        enabled: boolean;
+        visible: boolean;
+        allowedPageSizes?: number[]
+        showNavButtons?: boolean
+        showPageSizeSelector?: boolean
+        showInfo?: boolean
+        displayMode?: string
+        infoText?: string
     }
     paging?: {
         enabled: boolean;
@@ -32,10 +39,6 @@ interface DataGridProps {
     export?: {
         enabled: boolean;
     }
-    pagerInfoText?: string
-    showPagerInfo?: boolean
-    showPagerNavButtons?: boolean
-    showPageSizeSelector?: boolean
     columnChooser?: {
         enabled: boolean
     }
@@ -59,47 +62,48 @@ interface DataGridProps {
         type?: string
         displayFormat?: any
     }
+    wordWrapEnabled?: boolean
 }
 
 const App = (props: DataGridProps): ReactElement => {
     const setColumns = (): ReactElement[] => {
-            const columns_list: ReactElement[] = [];
-            props.columns.forEach(function (column: DataGridColumn, index: number) {
-                columns_list.push(
-                    <Column
-                        key={index}
-                        type={column.type ?? null}
-                        dataField={column.dataField}
-                        caption={column.caption}
-                        dataType={column.dataType}
-                        format={column.format}
-                        alignment={column.alignment ?? 'center'}
-                        width={column.width ?? null}
-                        visible={column.visible ?? true}
-                        cellTemplate={column.cellTemplate}
-                        customizeText={column.customizeText ?? null}
-                        calculateCellValue={column.calculateCellValue}
-                        cellRender={column.cellRender ?? null}
-                        groupIndex={column.groupIndex ?? null}
-                    >
-                        {column.child}
-                        {column.format && <Format type="currency" precision={5}/>}
-                    </Column>
-                )
-            });
+        const columns_list: ReactElement[] = [];
+        props.columns.forEach(function (column: DataGridColumn, index: number) {
+            columns_list.push(
+                <Column
+                    key={index}
+                    type={column.type ?? null}
+                    dataField={column.dataField}
+                    caption={column.caption}
+                    dataType={column.dataType}
+                    format={column.format}
+                    alignment={column.alignment ?? 'center'}
+                    width={column.width ?? null}
+                    visible={column.visible ?? true}
+                    cellTemplate={column.cellTemplate}
+                    customizeText={column.customizeText ?? null}
+                    calculateCellValue={column.calculateCellValue}
+                    cellRender={column.cellRender ?? null}
+                    groupIndex={column.groupIndex ?? null}
+                >
+                    {column.child}
+                    {column.format && <Format type="currency" precision={5}/>}
+                </Column>
+            )
+        });
 
-            return columns_list;
+        return columns_list;
     }
 
     const setPager = (): ReactElement => {
         return <Pager
-            visible={props.pager?.enabled ?? true}
-            allowedPageSizes={props.allowedPageSizes ?? pageSizes}
-            displayMode={props.pagerDisplayMode ?? 'full'}
-            showPageSizeSelector={props.showPageSizeSelector ?? true}
-            showInfo={props.showPagerInfo ?? true}
-            infoText={props.pagerInfoText ?? null}
-            showNavigationButtons={props.showPagerNavButtons ?? true}
+            visible={props.pager?.visible ?? true}
+            allowedPageSizes={props.pager?.allowedPageSizes ?? pageSizes}
+            displayMode={props.pager?.displayMode ?? 'full'}
+            showPageSizeSelector={props.pager?.showPageSizeSelector ?? true}
+            showInfo={props.pager?.showInfo ?? true}
+            infoText={props.pager?.infoText ?? null}
+            showNavigationButtons={props.pager?.showNavButtons ?? true}
         />;
     }
 
@@ -112,7 +116,7 @@ const App = (props: DataGridProps): ReactElement => {
 
     const setColumnChooser = (): ReactElement | null => {
         return <ColumnChooser
-            enabled={props.columnChooser?.enabled ?? true}
+            enabled={props.columnChooser?.enabled ?? false}
             mode="dragAndDrop"
         />;
     }
@@ -169,6 +173,7 @@ const App = (props: DataGridProps): ReactElement => {
                 // columnHidingEnabled={props.columnHidingEnabled ?? true}
                 focusedRowEnabled={props.focusedRowEnabled ?? false}
                 // onRowPrepared={}
+                wordWrapEnabled={props.wordWrapEnabled ?? false}
             >
 
                 <GroupPanel visible={props.groupPanel?.visible ?? false}/>

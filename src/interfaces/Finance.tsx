@@ -104,6 +104,17 @@ export interface UpdateCreditCardTransaction {
     lastEditedAt?: string;
 }
 
+export interface CreditCardBillHistory {
+    id: number;
+    period: number;
+    totalAmount: number;
+    creditCards: {
+        nickname: string;
+        currencySymbol: string;
+        total: number;
+    }
+}
+
 // Investment Interfaces
 export interface Investment {
     investmentId?: string | null,
