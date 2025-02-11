@@ -31,7 +31,7 @@ const App = (props: LineChartProps) => {
                     enabled={props.toolTip?.enabled || false}
                     shared={!!props.toolTip.shared}
                     zIndex={props.toolTip?.zIndex || 1}
-                    customizeTooltip={!!props.toolTip?.customizeTooltip}
+                    customizeTooltip={props.toolTip?.customizeTooltip ?? null}
                     contentRender={props.toolTip?.contentRender || null}
                 />
         }

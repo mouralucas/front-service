@@ -62,8 +62,6 @@ const App = () => {
     }
 
     const updatePerformanceByIndexer = () => {
-        console.log(filters.selectedIndexer);
-        console.log(filters.selectedPeriod)
         getPerformance(filters.selectedIndexer, filters.selectedPeriod);
     }
 
@@ -71,10 +69,10 @@ const App = () => {
         const period: string = pointInfo.point.data.period
         const series: string = pointInfo.points.map(
             (p: { seriesName: any; valueText: any; }) =>
-                `${p.seriesName}: ${parseFloat(p.valueText).toFixed(2)}%`
+                `<b>${p.seriesName}</b>: ${parseFloat(p.valueText).toFixed(2)}%`
         ).join('<br/>')
 
-        const formattedString = `Período ${period}<br/>${series}`
+        const formattedString = `<b>Período</b> ${period}<br/>${series}`
         return {
             text: formattedString,
         };
