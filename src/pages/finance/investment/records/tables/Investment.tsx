@@ -1,15 +1,16 @@
 import {FC, ReactElement, useEffect, useState} from "react";
 import DataGrid from "../../../../../components/table/DataGrid";
 import {Button as Btn} from "devextreme-react/data-grid";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {URL_FINANCE_INVESTMENT} from "../../../../../services/axios/ApiUrls.tsx";
-import {Investment} from "../../../../../interfaces/Finance.tsx";
+import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces";
+import {getFinanceData} from "../../../../../services/axios/Get";
+import {URL_FINANCE_INVESTMENT} from "../../../../../services/axios/ApiUrls";
+import {Investment} from "../../../../../interfaces/Finance";
 import Button from "devextreme-react/button";
 import ModalInvestment from '../modals/Investment'
-import ModalInvestmentStatement from '../modals/Statement.tsx'
-import ModalInvestmentPerformance from '../modals/Performance.tsx'
-import Loader from "../../../../../components/Loader.tsx";
+import ModalInvestmentStatement from '../modals/Statement'
+import ModalInvestmentPerformance from '../modals/Performance'
+import Drawer from '../../../../../components/Drawer'
+import Loader from "../../../../../components/Loader";
 import {toast} from "react-toastify";
 
 interface InvestmentResponse {
@@ -27,6 +28,8 @@ const App: FC = (): ReactElement => {
     const [investmentName, setInvestmentName] = useState<string>('')
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>()
     const [investments, setInvestments] = useState<Investment[]>([])
+
+    const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -70,6 +73,10 @@ const App: FC = (): ReactElement => {
         setModalInvestmentPerformanceState(false);
         setInvestmentId('');
         setInvestmentName('');
+    }
+
+    const openDrawer = () => {
+        setIsDrawerOpened(true);
     }
 
     useEffect(() => {
@@ -178,6 +185,7 @@ const App: FC = (): ReactElement => {
                     key={2}
                     icon="money"
                     hint={"Liquidar"}
+                    onClick={openDrawer}
                 />,
                 <Btn
                     key={3}
@@ -235,6 +243,7 @@ const App: FC = (): ReactElement => {
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
             <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment}/>
             <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName}/>
+            <Drawer isOpened={isDrawerOpened} changePanelOpened={setIsDrawerOpened}/>
         </>
     )
 }

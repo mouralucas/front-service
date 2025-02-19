@@ -20,6 +20,8 @@ const LibraryLanding: FC = lazy(() => import('../pages/library/home/Landing.tsx'
 const LibraryBackoffice: FC = lazy(() => import('../pages/library/backoffice/Landing'));
 const LibraryItem: FC = lazy(() => import('../pages/library/home/Item'));
 
+const Le: FC = lazy(() => import('../pages/Leticia.tsx'))
+
 function RolfRoutes(): ReactElement {
     return (
         <BrowserRouter>
@@ -27,6 +29,9 @@ function RolfRoutes(): ReactElement {
                 <Route element={<WithNav/>}>
                     {/* Default page */}
                     <Route element={<Landing/>} path={'/'}></Route>
+
+                    {/* Letiça */}
+                    <Route element={<Le></Le>} path={'/letiça'}/>
 
                     {/* Finance */}
                     <Route element={<RequireAuth><InvestmentDashboard/></RequireAuth>} path="/finance/investment"/>
