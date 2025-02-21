@@ -1,4 +1,4 @@
-import {ReactElement, useState} from "react";
+import {ReactElement, useCallback, useState} from "react";
 import DataGrid from '../components/table/DataGrid'
 import {Button as Btn} from "devextreme-react/data-grid";
 import Drawer from "../components/Drawer.tsx";
@@ -7,9 +7,9 @@ import Drawer from "../components/Drawer.tsx";
 const App = (): ReactElement => {
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false);
 
-    const showDrawer = () => {
-        setIsDrawerOpened(true);
-    }
+    const onOpenDrawerClick = useCallback(() => {
+        setIsDrawerOpened(!isDrawerOpened);
+    }, [isDrawerOpened]);
 
     return (
         <div className="container">
@@ -49,13 +49,13 @@ const App = (): ReactElement => {
                                         // icon="/url/to/my/icon.ico"
                                         icon="edit"
                                         hint="Abrir Drawer"
-                                        onClick={showDrawer}
+                                        onClick={onOpenDrawerClick}
                                     />
                                 ]
                             }
                         ]}
                     />
-                    <Drawer isOpened={isDrawerOpened} changePanelOpened={setIsDrawerOpened} />
+                    <Drawer isOpened={isDrawerOpened} changePanelOpened={onOpenDrawerClick} />
                 </div>
             </div>
         </div>

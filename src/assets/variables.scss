@@ -6,6 +6,15 @@
   .dx-theme-material {
     --change-password-popup-height: 260px;
   }
+
+  --border-color: #000000;
+  --base-bg: #FFFFFF;
+  --toolbar-vertical-padding: 16px;
+  --content-padding: 24px;
+  --page-padding: 32px;
+  --toolbar-margin-bottom: var(--content-padding);
+  --accent-color: var(--color-primay);
+  --base-text-color: #fff;
 }
 
 @mixin separator() {
@@ -107,6 +116,8 @@
   }
 
   span {
+    color: inherit;
+
     &::before {
       background-color: $status-color;
     }
