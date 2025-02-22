@@ -55,7 +55,7 @@ const App = (): ReactElement => {
                             }
                         ]}
                     />
-                    <Drawer isOpened={isDrawerOpened} changePanelOpened={onOpenDrawerClick} />
+                    <Drawer isOpened={isDrawerOpened} changePanelOpened={onOpenDrawerClick} content={<></>}/>
                 </div>
             </div>
         </div>

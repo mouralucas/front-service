@@ -1,3 +1,32 @@
+@use "../variables.scss" as *;
+@use "sass:math";
+
+.status-item {
+  span {
+    font-size: 13px;
+
+    &::before {
+      --diameter: 10px;
+
+      content: " ";
+      width: var(--diameter);
+      height: var(--diameter);
+      border-radius: calc(var(--diameter) / 2);
+      margin-right: calc(var(--diameter) / 2);
+      display: inline-block;
+    }
+
+    &.input {
+      display: block;
+      padding: 15px 16px 14px;
+    }
+  }
+}
+
+.status-owned {
+  @include status-contact(#2eb52c);
+}
+
 .custom-toolbar {
   display: flex;
   align-items: center;
@@ -20,18 +49,17 @@
     font-size: 14px;
   }
 
-  .form-photo-view {
+  .item-cover-view {
     position: relative;
     display: flex;
 
-    .form-photo {
+    .item-cover {
       border-radius: 8px;
       background-repeat: no-repeat;
       background-size: cover;
       border: 1px solid var(--border-color);
     }
   }
-
   .toolbar-button {
     background: none;
     border: none;

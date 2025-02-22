@@ -1,19 +1,20 @@
 import DataGrid from "../../../../components/table/DataGrid.tsx";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {getItems} from "../../../../services/getCommonData/Library.tsx";
 import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
 import {Button as Btn,} from 'devextreme-react/data-grid';
-import {toast} from "react-toastify";
 import ItemModal from '../modals/Item.tsx'
 import Button from "devextreme-react/button";
 import {Item} from "../../../../interfaces/Library.tsx";
 import Loader from "../../../../components/Loader.tsx";
+import BookDrawer from "../drawer/Book.tsx";
 
 
 const App = () => {
     const [books, setBooks] = useState<any[]>([])
     const [selectedBook, setSelectedBook] = useState<Item | null>(null)
     const [itemModalState, setItemModalState] = useState<boolean>(false)
+    const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -42,10 +43,9 @@ const App = () => {
         getAvailableBooks().then()
     }, []);
 
-
-    const coffeeCommand = () => {
-        toast('☕ Cafezinho delícia!');
-    }
+    const onOpenDrawerClick = useCallback(() => {
+        setIsDrawerOpened(!isDrawerOpened);
+    }, [isDrawerOpened]);
 
     const columns: DataGridColumn[] = [
         {
@@ -116,9 +116,9 @@ const App = () => {
                 <Btn
                     // text="My Command"
                     // // icon="/url/to/my/icon.ico"
-                    icon="coffee"
-                    hint="My Command"
-                    onClick={coffeeCommand}
+                    icon="eye"
+                    hint="Visualizar"
+                    onClick={onOpenDrawerClick}
                 />
             ]
         }
@@ -163,6 +163,7 @@ const App = () => {
                 />
             }
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook}/>
+            <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} />
         </>
 
     )
