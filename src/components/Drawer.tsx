@@ -20,23 +20,6 @@ const Drawer = (props: DrawerProps) => {
     return ReactDOM.createPortal(
         <div id='contact-panel' className={classNames({'panel': true, 'open': props.isOpened, 'pin': isPinned && (isLarge || isMedium)})}>
             <div className="data-wrapper">
-                {/*<Toolbar className="panel-toolbar">*/}
-                {/*    <ToolbarItem location={'before'}>*/}
-                {/*        <span className='contact-name value'>Lucas Moura</span>*/}
-                {/*    </ToolbarItem>*/}
-                {/*    <ToolbarItem location={'before'}>*/}
-                {/*        <div className={`status status-item status-owned`}>*/}
-                {/*            <span>Na estante</span>*/}
-                {/*        </div>*/}
-                {/*    </ToolbarItem>*/}
-                {/*    <ToolbarItem location='after'>*/}
-                {/*        <Button*/}
-                {/*            icon='close'*/}
-                {/*            stylingMode='text'*/}
-                {/*            onClick={props.changePanelOpened}*/}
-                {/*        />*/}
-                {/*    </ToolbarItem>*/}
-                {/*</Toolbar>*/}
                 <div className="custom-toolbar">
                     <div className="toolbar-item before">
                         <span className="contact-name">Lucas Moura</span>
@@ -73,8 +56,29 @@ const Drawer = (props: DrawerProps) => {
                         </div>
                     </div>
                     <div className="col-6">
-                        <span>Título</span>
-                        O Iluminado
+                        <table className={'mt-2 me-2'}>
+                            <tr>
+                                <th>Título</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>O Iluminado</div>
+                                    <div className="fw-light text-muted small">Aqui é o subtítulo</div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table className={'mt-2 me-2'}>
+                            <tr>
+                                <th>
+                                    <div>
+                                        Stephen King
+                                        <div className="fw-light text-mutted small">
+                                            Owen King; Outro Autor; Mais um ainda
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
