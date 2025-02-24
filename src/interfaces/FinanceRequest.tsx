@@ -17,6 +17,13 @@ export interface GetCreditCardBillHistoryResponse {
     creditCardBillHistory: CreditCardBillHistory[];
 }
 
+export interface CreditCardBillConsolidatedResponse {
+    average: number;
+    goal: number;
+    periodRange: string[];
+    bill: any[];
+}
+
 
 // Investment
 export interface GetInvestmentTypesResponse {

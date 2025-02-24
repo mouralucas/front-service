@@ -38,6 +38,13 @@ export interface CreditCard {
     dueAt: string //maybe date
 }
 
+export interface CreditCardBill {
+    creditCardId?: string | null;
+    period: number;
+    totalAmount: number;
+}
+
+
 export interface CreditCardInstalments {
     currentInstallment: number;
     amount: number;

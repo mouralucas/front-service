@@ -16,6 +16,7 @@ export const URL_FINANCE_CREDIT_CARD = '/creditcard'
 export const URL_CREDIT_CARD_TRANSACTION = '/creditcard/transaction'
 export const URL_CREDIT_CARD_INSTALLMENT_DUE_DATES = '/creditcard/transaction/installment/due-date'
 export const URL_FINANCE_CREDIT_CARD_BILL_HISTORY = '/creditcard/bill/history'
+export const URL_FINANCE_CREDIT_CARD_BILL_EVOLUTION = '/creditcard/bill/consolidated'
 
 // Investment URLs
 export const URL_FINANCE_INVESTMENT = '/investment'
