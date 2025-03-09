@@ -5,27 +5,19 @@ import {CreditCardBillConsolidatedResponse} from '../../../../../interfaces/Fina
 import {useEffect, useState} from "react";
 import {CreditCardBill} from '../../../../../interfaces/Finance.tsx';
 import {toast} from "react-toastify";
-import {RangeSelector} from "devextreme-react";
-import {Behavior, Scale} from "devextreme-react/range-selector";
-
-// This interface should be here?
-interface PeriodRangeSelector {
-    date: Date;
-    value: string;
-}
+import DatePicker from "react-datepicker";
 
 const CreditCardBillEvolution = () => {
     const [creditCardBillEvolution, setCreditCardBillEvolution] = useState<CreditCardBill[]>([])
     const [expenseAvg, setExpenseAvg] = useState<number>(0)
     const [expenseGoal, setExpenseGoal] = useState<number>(0)
 
-    // Variables for the bill history range selector
-    const [acceptedYearRangeValues, setAcceptedYearRangeValues] = useState<PeriodRangeSelector[] | null>(null);
-    const [selectedBillHistoryRange, setSelectedBillHistoryRange] = useState<[Date, Date]>()
+    const [dateRange, setDateRange] = useState<any>(['2024-01-01', '2025-06-01']);
+    const [startDate, endDate] = dateRange;
 
     useEffect(() => {
-        getCreditCardBillEvolution(202401, 202412);
-    }, []);
+        getCreditCardBillEvolution(startDate, endDate);
+    }, [endDate, startDate]);
 
     const getCreditCardBillEvolution = (startAt: number, endAt: number) => {
         getFinanceData(URL_FINANCE_CREDIT_CARD_BILL_EVOLUTION, {
@@ -41,21 +33,6 @@ const CreditCardBillEvolution = () => {
                 )
             );
             setCreditCardBillEvolution(options);
-
-
-            const period_range = response.periodRange.map((period: any) => ({
-                date: new Date(Math.floor(period / 100), (period % 100) - 1, 1),
-                value: period,
-            }));
-
-            // Only set accepted range when not available yet
-            if (acceptedYearRangeValues == null) {
-                setAcceptedYearRangeValues(period_range);
-            }
-
-            const sd = new Date(Math.floor(startAt / 100), (startAt % 100) - 1, 1)
-            const ed = new Date(Math.floor(endAt / 100), (endAt % 100) - 1, 1)
-            setSelectedBillHistoryRange([sd, ed])
 
             setExpenseGoal(response.goal);
             setExpenseAvg(response.average);
@@ -80,23 +57,6 @@ const CreditCardBillEvolution = () => {
         return null;
     }
 
-    const onHandleMove = (e: any) => {
-        const startDate = e.value[0];
-        const startMonth = startDate.getUTCMonth() + 1;
-        const startYear = startDate.getUTCFullYear();
-
-        const startPeriod = startYear * 100 + startMonth;
-
-        const endDate = e.value[1];
-        const endMonth = endDate.getUTCMonth() + 1;
-        const endYear = endDate.getUTCFullYear();
-
-        const endPeriod = endYear * 100 + endMonth;
-
-        setSelectedBillHistoryRange([startDate, endDate])
-        getCreditCardBillEvolution(startPeriod, endPeriod);
-    }
-
     function customizeTooltip(pointInfo: any) {
         return {
             html:
@@ -118,8 +78,44 @@ const CreditCardBillEvolution = () => {
         };
     }
 
+    // useEffect(() => {
+    //     console.log(dateRange);
+    // }, [dateRange]);
+
     return (
         <>
+            <div className="row mb-3">
+                <div className="col-4"></div>
+                <div className="col-4">
+                    {/*<Select*/}
+                    {/*    options={periodsRange}*/}
+                    {/*    value={periodsRange.find((c: any) => c.value === filters.selectedPeriod)}*/}
+                    {/*    placeholder={'Selecione'}*/}
+                    {/*    onChange={(val: any) => setFilters(prev => ({...prev, selectedPeriod: val.value}))}*/}
+                    {/*/>*/}
+                    <DatePicker
+                        selectsRange={true}
+                        startDate={startDate}
+                        endDate={endDate}
+                        onChange={(update) => {
+                            console.log(update)
+                            setDateRange(update);
+                        }}
+                        showMonthYearPicker
+                        dateFormat={'MMM/yyyy'}
+                        locale={'pt-BR'}
+                        className={'form-control'}
+                    />
+                </div>
+                <div className="col-4">
+                    {/*<Select*/}
+                    {/*    options={indexers}*/}
+                    {/*    value={indexers.find((c: any) => c.value === filters.selectedIndexer)}*/}
+                    {/*    placeholder={'Selecione'}*/}
+                    {/*    onChange={(val: any) => setFilters(prev => ({ ...prev, selectedIndexer: val.value }))}*/}
+                    {/*/>*/}
+                </div>
+            </div>
             <BarChart
                 title={"Histórico de faturas"}
                 data={creditCardBillEvolution}
@@ -168,22 +164,7 @@ const CreditCardBillEvolution = () => {
                     enabled: true,
                     customizeTooltip: customizeTooltip
                 }}
-            ></BarChart>
-            <RangeSelector
-                dataSource={acceptedYearRangeValues}
-                dataSourceField={'date'}
-                onValueChanged={onHandleMove}
-                defaultValue={selectedBillHistoryRange}
-                // scale={{ valueType: 'datetime', tickInterval: { months: 1 } }}
-                // behavior={{ snapToTicks: true }}
-            >
-                <Scale tickInterval={'year'} minorTickInterval={'month'} valueType={'period'}>
-                    {/*<Label>*/}
-                    {/*    <Format type={"decimal"}/>*/}
-                    {/*</Label>*/}
-                </Scale>
-                <Behavior callValueChanged="onHandleMove"/>
-            </RangeSelector>
+            />
         </>
     )
 }

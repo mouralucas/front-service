@@ -131,6 +131,9 @@ const App = (): ReactElement => {
                         visible: true,
                         items: toolBarItems
                     }}
+                    searchPanel={{
+                        visible: true
+                    }}
                 />
             }
             <AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor}/>
