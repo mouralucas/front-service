@@ -6,6 +6,7 @@ import image from '../../../../assets/core/images/no-cover.png'
 
 interface BookDrawerProps {
     openDrawerState: boolean;
+    itemId: number;
     onCloseDrawerClick: () => void;
 }
 

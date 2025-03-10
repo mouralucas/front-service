@@ -9,7 +9,6 @@ import Button from "devextreme-react/button";
 import ModalInvestment from '../modals/Investment'
 import ModalInvestmentStatement from '../modals/Statement'
 import ModalInvestmentPerformance from '../modals/Performance'
-import Drawer from '../../../../../components/Drawer'
 import Loader from "../../../../../components/Loader";
 import {toast} from "react-toastify";
 
@@ -29,7 +28,7 @@ const App: FC = (): ReactElement => {
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>()
     const [investments, setInvestments] = useState<Investment[]>([])
 
-    const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
+    // const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -75,9 +74,9 @@ const App: FC = (): ReactElement => {
         setInvestmentName('');
     }
 
-    const openDrawer = () => {
-        setIsDrawerOpened(true);
-    }
+    // const openDrawer = () => {
+    //     setIsDrawerOpened(true);
+    // }
 
     useEffect(() => {
         getInvestment();
@@ -181,12 +180,12 @@ const App: FC = (): ReactElement => {
                     hint="Editar"
                     onClick={showInvestmentModal}
                 />,
-                <Btn
-                    key={2}
-                    icon="money"
-                    hint={"Liquidar"}
-                    onClick={openDrawer}
-                />,
+                // <Btn
+                //     key={2}
+                //     icon="money"
+                //     hint={"Liquidar"}
+                //     onClick={openDrawer}
+                // />,
                 <Btn
                     key={3}
                     icon={'percent'}
@@ -243,7 +242,7 @@ const App: FC = (): ReactElement => {
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
             <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment}/>
             <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName}/>
-            <Drawer isOpened={isDrawerOpened} changePanelOpened={setIsDrawerOpened}/>
+            {/*<Drawer isOpened={isDrawerOpened} changePanelOpened={setIsDrawerOpened}/>*/}
         </>
     )
 }
