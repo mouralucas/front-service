@@ -6,6 +6,7 @@ import {URL_FINANCE_CREDIT_CARD_BILL_HISTORY} from "../../../../../services/axio
 import {toast} from "react-toastify";
 import {GetCreditCardBillHistoryResponse} from "../../../../../interfaces/FinanceRequest.tsx";
 import Loader from "../../../../../components/Loader.tsx";
+import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
 
 
 const App = (): ReactElement => {
@@ -19,9 +20,11 @@ const App = (): ReactElement => {
 
     const getCreditCardBillHistory = () => {
         setIsLoading(true);
+        const dates = getLastPeriods(11);
+
         getFinanceData(URL_FINANCE_CREDIT_CARD_BILL_HISTORY, {
-            startPeriod: 202401,
-            endPeriod: 202412,
+            startPeriod: getPeriodFromDate(dates[0]),
+            endPeriod: getPeriodFromDate(dates[1]),
         }).then((response: GetCreditCardBillHistoryResponse) => {
             setCreditCardBillHistory(response.creditCardBillHistory);
             setIsLoading(false);

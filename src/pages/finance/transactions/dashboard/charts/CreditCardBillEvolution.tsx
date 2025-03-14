@@ -6,18 +6,35 @@ import {useEffect, useState} from "react";
 import {CreditCardBill} from '../../../../../interfaces/Finance.tsx';
 import {toast} from "react-toastify";
 import DatePicker from "react-datepicker";
+import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
+import { ptBR } from 'date-fns/locale';
 
 const CreditCardBillEvolution = () => {
     const [creditCardBillEvolution, setCreditCardBillEvolution] = useState<CreditCardBill[]>([])
     const [expenseAvg, setExpenseAvg] = useState<number>(0)
     const [expenseGoal, setExpenseGoal] = useState<number>(0)
 
-    const [dateRange, setDateRange] = useState<any>(['2024-01-01', '2025-06-01']);
+    const [dateRange, setDateRange] = useState<any>([]);
     const [startDate, endDate] = dateRange;
 
     useEffect(() => {
-        getCreditCardBillEvolution(startDate, endDate);
-    }, [endDate, startDate]);
+        setDateRange(getLastPeriods())
+        updateDateRange(getLastPeriods())
+    }, []);
+
+    // useEffect(() => {
+    //     if (!dateRange) {
+    //         setDateRange(getLastPeriods())
+    //     }
+    //
+    // }, [endDate, startDate]);
+
+    const updateDateRange = (dates: any) => {
+        console.log(dates);
+        if (dates[1] !== null) {
+            getCreditCardBillEvolution(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
+        }
+    }
 
     const getCreditCardBillEvolution = (startAt: number, endAt: number) => {
         getFinanceData(URL_FINANCE_CREDIT_CARD_BILL_EVOLUTION, {
@@ -78,10 +95,6 @@ const CreditCardBillEvolution = () => {
         };
     }
 
-    // useEffect(() => {
-    //     console.log(dateRange);
-    // }, [dateRange]);
-
     return (
         <>
             <div className="row mb-3">
@@ -93,19 +106,6 @@ const CreditCardBillEvolution = () => {
                     {/*    placeholder={'Selecione'}*/}
                     {/*    onChange={(val: any) => setFilters(prev => ({...prev, selectedPeriod: val.value}))}*/}
                     {/*/>*/}
-                    <DatePicker
-                        selectsRange={true}
-                        startDate={startDate}
-                        endDate={endDate}
-                        onChange={(update) => {
-                            console.log(update)
-                            setDateRange(update);
-                        }}
-                        showMonthYearPicker
-                        dateFormat={'MMM/yyyy'}
-                        locale={'pt-BR'}
-                        className={'form-control'}
-                    />
                 </div>
                 <div className="col-4">
                     {/*<Select*/}
@@ -114,6 +114,19 @@ const CreditCardBillEvolution = () => {
                     {/*    placeholder={'Selecione'}*/}
                     {/*    onChange={(val: any) => setFilters(prev => ({ ...prev, selectedIndexer: val.value }))}*/}
                     {/*/>*/}
+                    <DatePicker
+                        selectsRange={true}
+                        startDate={startDate}
+                        endDate={endDate}
+                        onChange={(update) => {
+                            updateDateRange(update);
+                            setDateRange(update);
+                        }}
+                        showMonthYearPicker
+                        dateFormat={'MMM/yyyy'}
+                        locale={ptBR}
+                        className={'form-control'}
+                    />
                 </div>
             </div>
             <BarChart
