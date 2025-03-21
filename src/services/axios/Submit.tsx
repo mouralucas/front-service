@@ -1,6 +1,6 @@
 import financeAxios from '../axios/FinanceServiceAxios'
 import userAxios from '../axios/UserServiceAxios'
-import libraryAxios from '../axios/LibraryServiceAxios'
+import libraryAxios from './LibraryServiceAxios.tsx'
 
 
 const userSubmit = async (

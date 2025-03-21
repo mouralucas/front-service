@@ -1,6 +1,6 @@
 import financeAxios from "../../services/axios/FinanceServiceAxios"
 import userAxios from "../../services/axios/UserServiceAxios"
-import libraryAxios from "../../services/axios/LibraryServiceAxios"
+import libraryAxios from "./LibraryServiceAxios.tsx"
 
 const getUserData = async (url: string, params: any = null) => {
     let response;
