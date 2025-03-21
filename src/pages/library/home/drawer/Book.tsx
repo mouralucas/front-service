@@ -6,27 +6,27 @@ import image from '../../../../assets/core/images/no-cover.png'
 
 interface BookDrawerProps {
     openDrawerState: boolean;
-    itemId: number;
-    onCloseDrawerClick: () => void;
+    itemId?: number;
+    item?: any;
+    onCloseDrawerClick: (e: any) => void;
 }
 
 const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
-    // TODO: add here fetch to item summary
 
     const html: ReactElement =
         <>
             <div className="custom-toolbar">
                 <div className="toolbar-item before">
-                    <span className="contact-name">Lucas Moura</span>
+                    <span className="contact-name">{props.item?.title}</span>
                 </div>
                 <div className="toolbar-item before">
                     <div className="status-item status-owned">
-                        <span>Na estante</span>
+                        <span>{props.item?.lastStatusName}</span>
                     </div>
                 </div>
                 <div className="toolbar-item after">
-                    ouo
+
                 </div>
                 <div className="toolbar-item after">
                     <button className="toolbar-button close-button" onClick={props.onCloseDrawerClick}>
@@ -58,21 +58,51 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                         </tr>
                         <tr>
                             <td>
-                                <div>O Iluminado</div>
-                                <div className="fw-light text-muted small">Aqui é o subtítulo</div>
+                                <div>{props.item?.title}</div>
+                                <div className="fw-light text-muted small">{props.item?.subtitle}</div>
                             </td>
                         </tr>
                     </table>
+                        <table className={'mt-2 me-2'}>
+                            <tr>
+                                <th>
+                                    <div>
+                                        {props.item?.mainAuthorName}
+                                        <div className="fw-light text-mutted small">
+                                            Owen King; Outro Autor; Mais um ainda
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
                     <table className={'mt-2 me-2'}>
                         <tr>
-                            <th>
-                                <div>
-                                    Stephen King
-                                    <div className="fw-light text-mutted small">
-                                        Owen King; Outro Autor; Mais um ainda
-                                    </div>
-                                </div>
-                            </th>
+                            <th className={'contact-name'}>Páginas</th>
+                        </tr>
+                        <tr>
+                            {props.item?.pages}
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div className="ms-2 row">
+                <div className="col-3">
+                    <table className={'mt-2 me-2'}>
+                        <tr>
+                            <th className={'contact-name'}>Editora</th>
+                        </tr>
+                        <tr>
+                            {props.item?.publisherName}
+                        </tr>
+                    </table>
+                </div>
+                <div className="col-9">
+                    <table className={'mt-2 me-2'}>
+                        <tr>
+                            <th className={'contact-name'}>Série</th>
+                        </tr>
+                        <tr>
+                            {props.item?.serieName}
                         </tr>
                     </table>
                 </div>

@@ -43,8 +43,15 @@ const App = () => {
         getAvailableBooks().then()
     }, []);
 
-    const onOpenDrawerClick = useCallback(() => {
+    const onOpenDrawerClick = useCallback((e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedBook(e.row.data)
+        } else {
+            setSelectedBook(null);
+        }
+
         setIsDrawerOpened(!isDrawerOpened);
+
     }, [isDrawerOpened]);
 
     const columns: DataGridColumn[] = [
@@ -163,7 +170,7 @@ const App = () => {
                 />
             }
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook}/>
-            <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} />
+            <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook}/>
         </>
 
     )
