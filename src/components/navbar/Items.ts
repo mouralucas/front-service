@@ -3,10 +3,6 @@
 
 export const items = [
     {
-      title: 'Letiça',
-      url: '/letiça',
-    },
-    {
         title: 'Home',
         url: '/',
     },
