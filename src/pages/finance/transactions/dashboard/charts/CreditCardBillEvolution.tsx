@@ -75,23 +75,17 @@ const CreditCardBillEvolution = () => {
     }
 
     function customizeTooltip(pointInfo: any) {
+        console.log(pointInfo);
+
+        const period: string = pointInfo.point.data.period
+        const series: string = pointInfo.points.map(
+            (p: { seriesName: any; valueText: any; }) =>
+                `<b>${p.seriesName}</b>: R$ ${parseFloat(p.valueText).toFixed(2)}`
+        ).join('<br/>')
+
+        const formattedString = `<b>Período</b> ${period}<br/>${series}`
         return {
-            html:
-                `<div>
-                    <div class="tooltip-header">
-                        ${pointInfo.argumentText}
-                    </div>
-                    <div class="tooltip-body"><div class="series-name">
-                        <span class='top-series-name'>
-                            ${pointInfo.points[0].seriesName}:
-                        </span> 
-                    </div>
-                    <div class="value-text">
-                        <span class='top-series-value'>
-                            R$ ${pointInfo.points[0].valueText}
-                        </span>
-                    </div>
-                </div>`,
+            text: formattedString,
         };
     }
 
@@ -100,20 +94,8 @@ const CreditCardBillEvolution = () => {
             <div className="row mb-3">
                 <div className="col-4"></div>
                 <div className="col-4">
-                    {/*<Select*/}
-                    {/*    options={periodsRange}*/}
-                    {/*    value={periodsRange.find((c: any) => c.value === filters.selectedPeriod)}*/}
-                    {/*    placeholder={'Selecione'}*/}
-                    {/*    onChange={(val: any) => setFilters(prev => ({...prev, selectedPeriod: val.value}))}*/}
-                    {/*/>*/}
                 </div>
                 <div className="col-4">
-                    {/*<Select*/}
-                    {/*    options={indexers}*/}
-                    {/*    value={indexers.find((c: any) => c.value === filters.selectedIndexer)}*/}
-                    {/*    placeholder={'Selecione'}*/}
-                    {/*    onChange={(val: any) => setFilters(prev => ({ ...prev, selectedIndexer: val.value }))}*/}
-                    {/*/>*/}
                     <DatePicker
                         selectsRange={true}
                         startDate={startDate}
