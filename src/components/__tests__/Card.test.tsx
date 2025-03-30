@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react';
+import {render} from '@testing-library/react';
+import { expect } from 'vitest';
 import '@testing-library/jest-dom';
 import Card from '../Card';
 
