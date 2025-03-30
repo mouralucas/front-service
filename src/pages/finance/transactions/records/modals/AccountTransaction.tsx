@@ -123,6 +123,7 @@ const App = (props: AccountStatementProps) => {
                             rules={{required: 'Esse campo é obrigatório'}}
                             render={({field}) => (
                                 <Select
+                                    key={field.value}
                                     {...field}
                                     options={currencies}
                                     value={currencies.find((c: any) => c.value === field.value)}
@@ -176,6 +177,7 @@ const App = (props: AccountStatementProps) => {
                                     rules={{required: 'Esse campo é obrigatório'}}
                                     render={({field}) => (
                                         <Select
+                                            key={field.value}
                                             {...field}
                                             options={accounts}
                                             value={accounts.find((c: any) => c.value === field.value)}
@@ -195,6 +197,7 @@ const App = (props: AccountStatementProps) => {
                                     rules={{required: 'Esse campo é obrigatório'}}
                                     render={({field}) => (
                                         <Select
+                                            key={field.value}
                                             {...field}
                                             options={categories}
                                             value={categories.find((c: any) => c.value === field.value)}

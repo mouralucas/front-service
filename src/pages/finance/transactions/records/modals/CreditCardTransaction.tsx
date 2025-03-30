@@ -149,9 +149,10 @@ const App = (props: CreditCardBillProps): ReactElement => {
         }
 
         financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submit_data, method).then(() => {
-            toast.success('Transação em crédito salva com sucesso')
+            toast.success('Transação em crédito salva com sucesso');
+            reset(DefaultCreditCardTransaction);
         }).catch((err: string | ToastOptions) => {
-            toast.error('Erro ao salvar transação com o cartão de crédito ' + err)
+            toast.error('Erro ao salvar transação com o cartão de crédito ' + err);
         })
     }
 
@@ -167,6 +168,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
                             rules={{required: 'Esse campo é obrigatório'}}
                             render={({field}) => (
                                 <Select
+                                    key={field.value}
                                     {...field}
                                     options={creditCards}
                                     value={creditCards.find((c: any) => c.value === field.value)}
@@ -245,6 +247,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
                                     rules={{required: 'Esse campo é obrigatório'}}
                                     render={({field}) => (
                                         <Select
+                                            key={field.value}
                                             {...field}
                                             options={categories}
                                             value={categories.find((c: any) => c.value === field.value)}
