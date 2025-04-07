@@ -2,16 +2,20 @@
 
 #contact-panel {
   --contact-side-panel-width: 350px;
-  //position: fixed;
-  //top: 0;
-  //left: 0;
-  //width: 100vw;
-  //height: 100vh;
-  //background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
-  //z-index: 1000; /* Garantir que fique acima de outros elementos */
-  //display: flex;
-  //justify-content: center;
-  //align-items: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0; // ou left: 0; dependendo de onde quer a drawer
+  width: 350px; // ajuste conforme necessário
+  height: 100vh;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  transform: translateX(100%); // inicia fora da tela se for uma drawer lateral
+  transition: transform 0.3s ease-in-out;
+
+  &.open {
+    transform: translateX(0);
+  }
 }
 
 .screen-x-small #contact-panel {

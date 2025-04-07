@@ -12,8 +12,6 @@ interface BookDrawerProps {
 }
 
 const BookDrawer = (props: BookDrawerProps): ReactElement => {
-
-
     const html: ReactElement =
         <>
             <div className="custom-toolbar">
