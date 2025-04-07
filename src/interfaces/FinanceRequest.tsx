@@ -1,4 +1,4 @@
-import {Account, Bank, Category, CreditCard, CreditCardBillHistory, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentStatement, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
+import {Account, Bank, Category, CreditCard, CreditCardBill, CreditCardBillHistory, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentStatement, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
 
 
 // Account
@@ -21,7 +21,7 @@ export interface CreditCardBillConsolidatedResponse {
     average: number;
     goal: number;
     periodRange: string[];
-    bill: any[];
+    bill: CreditCardBill[];
 }
 
 
