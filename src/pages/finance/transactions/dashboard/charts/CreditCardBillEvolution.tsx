@@ -22,13 +22,6 @@ const CreditCardBillEvolution = () => {
         updateDateRange(getLastPeriods())
     }, []);
 
-    // useEffect(() => {
-    //     if (!dateRange) {
-    //         setDateRange(getLastPeriods())
-    //     }
-    //
-    // }, [endDate, startDate]);
-
     const updateDateRange = (dates: any) => {
         console.log(dates);
         if (dates[1] !== null) {

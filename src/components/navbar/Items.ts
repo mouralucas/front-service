@@ -59,5 +59,9 @@ export const items = [
         title: 'About',
         url: '/about',
     },
+    {
+        title: 'Testing',
+        url: '/testing',
+    },
 
 ];
