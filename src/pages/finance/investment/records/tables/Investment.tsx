@@ -237,6 +237,9 @@ const App: FC = (): ReactElement => {
                         visible: true,
                         items: toolBarItems
                     }}
+                    searchPanel={{
+                        visible: true
+                    }}
                 />
             }
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>

@@ -142,7 +142,7 @@ export interface Investment {
     liquidationAmount?: number;
     countryId: string;
     observation?: string;
-    objectiveId?: string;
+    objectiveId?: string | null;
 }
 
 export interface InvestmentType {

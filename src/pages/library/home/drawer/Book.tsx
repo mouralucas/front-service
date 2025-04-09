@@ -105,6 +105,29 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                     </table>
                 </div>
             </div>
+            <hr/>
+            <div className="ms-2 row">
+                <div className="col-6">
+                    <table className={'mt-2 me-2'}>
+                        <tr>
+                            <th className={'contact-name'}>Leituras</th>
+                        </tr>
+                        <tr>
+                            {props.item?.description ?? 12}
+                        </tr>
+                    </table>
+                </div>
+                <div className="col-6">
+                    <table className={'mt-2 me-2'}>
+                        <tr>
+                            <th className={'contact-name'}>Última leitura</th>
+                        </tr>
+                        <tr>
+                            {props.item?.rating ?? '01/01/2025'}
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </>
 
     return (

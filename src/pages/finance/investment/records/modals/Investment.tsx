@@ -39,7 +39,7 @@ const DefaultInvestment: Investment = {
     liquidationDate: null,
     liquidationAmount: 0,
     observation: '',
-    objectiveId: ''
+    objectiveId: null
 }
 
 const App = (props: InvestmentProps): ReactElement => {
@@ -158,6 +158,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
+                                    key={field.value}
                                     options={accounts}
                                     value={accounts.find((c: any) => c.value === field.value)}
                                     onChange={(val: any) => field.onChange(val?.value)}
@@ -179,6 +180,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
+                                    key={field.value}
                                     options={investmentTypes}
                                     value={investmentTypes.find((c: any) => c.value === field.value)}
                                     onChange={(val: any) => field.onChange(val?.value)}
@@ -196,6 +198,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
+                                    key={field.value}
                                     options={objectives}
                                     value={objectives.find((c: any) => c.value === field.value)}
                                     onChange={(val: any) => field.onChange(val?.value)}
@@ -324,6 +327,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
+                                    key={field.value}
                                     options={currencies}
                                     value={currencies.find((c: any) => c.value === field.value)}
                                     onChange={(val) => field.onChange(val?.value)}
@@ -341,6 +345,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
+                                    key={field.value}
                                     options={indexerTypes}
                                     value={indexerTypes.find((c: any) => c.value === field.value)}
                                     onChange={(val) => field.onChange(val?.value)}
@@ -359,6 +364,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
+                                    key={field.value}
                                     options={indexers}
                                     value={indexers.find((c: any) => c.value === field.value)}
                                     onChange={(val) => field.onChange(val?.value)}
@@ -379,6 +385,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
+                                    key={field.value}
                                     options={liquidity}
                                     value={liquidity.find((c: any) => c.value === field.value)}
                                     onChange={(val) => field.onChange(val?.value)}
@@ -397,6 +404,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             render={({field}) => (
                                 <Select
                                     {...field}
+                                    key={field.value}
                                     options={countries}
                                     value={countries.find((c: any) => c.value === field.value)}
                                     onChange={(val) => field.onChange(val?.value)}
