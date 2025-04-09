@@ -87,6 +87,8 @@ const App = (props: InvestmentStatementProps): ReactElement => {
 
         financeSubmit(e, URL_FINANCE_INVESTMENT_STATEMENT, submitData, method).then(() => {
             toast.success('Extrato inserido com sucesso');
+            reset(DefaultInvestmentStatement);
+            props.hideModal();
         }).catch(() => {
             toast.error('Erro ao salvar extrato');
         })
