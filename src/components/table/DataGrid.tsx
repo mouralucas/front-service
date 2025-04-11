@@ -33,7 +33,7 @@ interface DataGridProps {
         infoText?: string
     }
     paging?: {
-        enabled: boolean;
+        enabled?: boolean;
         pageSize: number;
     }
     export?: {

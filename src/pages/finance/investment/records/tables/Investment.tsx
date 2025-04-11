@@ -240,6 +240,10 @@ const App: FC = (): ReactElement => {
                     searchPanel={{
                         visible: true
                     }}
+                    paging={{
+                        enabled: true,
+                        pageSize: 100
+                    }}
                 />
             }
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>

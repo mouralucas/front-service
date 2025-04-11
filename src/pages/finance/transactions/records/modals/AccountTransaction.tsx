@@ -11,6 +11,7 @@ import {financeSubmit} from "../../../../../services/axios/Submit.tsx";
 import {getAccounts, getCategories, getCurrencies} from "../../../../../services/getCommonData/Finance.tsx";
 import {AccountTransaction} from "../../../../../interfaces/Finance.tsx";
 import Loader from "../../../../../components/Loader.tsx";
+import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
 
 /**
  *
@@ -166,7 +167,14 @@ const App = (props: AccountStatementProps) => {
                                     dateFormat="dd/MM/yyyy"
                                     placeholderText="Selecione uma data"
                                     className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
+                                    customInput={
+                                        <DateMaskedInput
+                                            placeholder="dd/mm/aaaa"
+                                            className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
+                                        />
+                                    }
                                 />
+
                             )}
                         />
                     </div>
