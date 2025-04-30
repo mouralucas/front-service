@@ -1,16 +1,16 @@
-import BarChart from '../../../../../components/chart/Bar.tsx'
+import BarChart from '../../../../../components/chart/StackedBar.tsx'
 import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {URL_FINANCE_CREDIT_CARD_BILL_EVOLUTION} from "../../../../../services/axios/ApiUrls.tsx";
-import {CreditCardBillConsolidatedResponse} from '../../../../../interfaces/FinanceRequest.tsx';
 import {useEffect, useState} from "react";
 import {CreditCardBill} from '../../../../../interfaces/Finance.tsx';
 import {toast} from "react-toastify";
 import DatePicker from "react-datepicker";
 import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
-import { ptBR } from 'date-fns/locale';
+import {ptBR} from 'date-fns/locale';
 
 const CreditCardBillEvolution = () => {
     const [creditCardBillEvolution, setCreditCardBillEvolution] = useState<CreditCardBill[]>([])
+    const [dataSeries, setDataSeries] = useState<any[]>([])
     const [expenseAvg, setExpenseAvg] = useState<number>(0)
     const [expenseGoal, setExpenseGoal] = useState<number>(0)
 
@@ -23,7 +23,6 @@ const CreditCardBillEvolution = () => {
     }, []);
 
     const updateDateRange = (dates: any) => {
-        console.log(dates);
         if (dates[1] !== null) {
             getCreditCardBillEvolution(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
         }
@@ -33,17 +32,20 @@ const CreditCardBillEvolution = () => {
         getFinanceData(URL_FINANCE_CREDIT_CARD_BILL_EVOLUTION, {
             'startPeriod': startAt,
             'endPeriod': endAt,
-        }).then((response: CreditCardBillConsolidatedResponse) => {
-            const options = response.bill.map((i: CreditCardBill) =>
-                (
-                    {
-                        period: i.period,
-                        totalAmount: i.totalAmount
+        }).then((response: any) => {
+            const formattedData = response.outro.map((item: any) => {
+                const newItem: any = {period: item.period};
+                Object.keys(item).forEach((key) => {
+                    if (key !== "period") {
+                        newItem[key] = item[key] ? parseFloat(item[key]) : 0;
                     }
-                )
-            );
-            setCreditCardBillEvolution(options);
+                });
+                return newItem;
+            });
 
+            console.log(formattedData);
+            setCreditCardBillEvolution(formattedData);
+            setDataSeries(response.series)
             setExpenseGoal(response.goal);
             setExpenseAvg(response.average);
         }).catch((err: string) => {
@@ -56,20 +58,7 @@ const CreditCardBillEvolution = () => {
         return `R$ ${arg.valueText}`;
     }
 
-    const customizePoint = (arg: { value: number; }) => {
-        if (arg.value < expenseGoal) {
-            return {color: '#77dd77', hoverStyle: {color: '#77dd77'}};
-        } else if (arg.value >= expenseGoal && arg.value <= expenseAvg) {
-            return {color: '#fdfd96', hoverStyle: {color: '#fdfd96'}}
-        } else if (arg.value > expenseAvg) {
-            return {color: '#ff6961', hoverStyle: {color: '#ff6961'}};
-        }
-        return null;
-    }
-
     function customizeTooltip(pointInfo: any) {
-        console.log(pointInfo);
-
         const period: string = pointInfo.point.data.period
         const series: string = pointInfo.points.map(
             (p: { seriesName: any; valueText: any; }) =>
@@ -108,15 +97,16 @@ const CreditCardBillEvolution = () => {
                 title={"Histórico de faturas"}
                 data={creditCardBillEvolution}
                 argumentField={'period'}
-                valueField={'totalAmount'}
+                // valueField={'totalAmount'}
                 name={'Faturas'}
-                customizePoint={customizePoint}
+                // customizePoint={customizePoint}
                 argumentAxis={{
                     argumentType: "string"
                 }}
+                series={dataSeries}
                 valueAxis={{
                     maxValueMargin: 0.01,
-                    name: 'total_amount',
+                    name: 'totalAmount',
                     label: {
                         customizeText: valueAxisLabel
                     },

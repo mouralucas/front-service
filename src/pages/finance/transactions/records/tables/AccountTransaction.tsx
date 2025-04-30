@@ -167,6 +167,9 @@ const App = () => {
                     searchPanel={{
                         visible: true
                     }}
+                    paging={{
+                        pageSize: 50
+                    }}
                 />
             }
             <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction}/>

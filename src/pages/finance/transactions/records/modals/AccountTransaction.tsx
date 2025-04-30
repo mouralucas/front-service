@@ -106,7 +106,6 @@ const App = (props: AccountStatementProps) => {
         financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submitData, method).then(() => {
             toast.success('Transação salva com sucesso');
             reset(DefaultTransaction);
-            props.hideModal();
         }).catch((err: string | ToastOptions) => {
             toast.error('Erro ao salvar a transação da conta ' + err);
         })
