@@ -79,7 +79,7 @@ const App = (props: BarChartProps) => {
 
     return (
         <Chart id="chart"
-               title={'Caralho Mesmo'}
+               title={props.title}
                dataSource={props.data}
                palette={props.palette ?? 'Pastel'}
                customizePoint={props.customizePoint}

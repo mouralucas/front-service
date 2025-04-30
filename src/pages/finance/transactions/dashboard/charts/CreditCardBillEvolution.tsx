@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 import DatePicker from "react-datepicker";
 import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
 import {ptBR} from 'date-fns/locale';
+import {CreditCardBillConsolidatedResponse} from "../../../../../interfaces/FinanceRequest.tsx";
 
 const CreditCardBillEvolution = () => {
     const [creditCardBillEvolution, setCreditCardBillEvolution] = useState<CreditCardBill[]>([])
@@ -32,8 +33,9 @@ const CreditCardBillEvolution = () => {
         getFinanceData(URL_FINANCE_CREDIT_CARD_BILL_EVOLUTION, {
             'startPeriod': startAt,
             'endPeriod': endAt,
-        }).then((response: any) => {
-            const formattedData = response.outro.map((item: any) => {
+        }).then((response: CreditCardBillConsolidatedResponse) => {
+            // Clean the values data to be of type float
+            const formattedData = response.billStacked.map((item: any) => {
                 const newItem: any = {period: item.period};
                 Object.keys(item).forEach((key) => {
                     if (key !== "period") {
@@ -43,7 +45,6 @@ const CreditCardBillEvolution = () => {
                 return newItem;
             });
 
-            console.log(formattedData);
             setCreditCardBillEvolution(formattedData);
             setDataSeries(response.series)
             setExpenseGoal(response.goal);
@@ -94,12 +95,10 @@ const CreditCardBillEvolution = () => {
                 </div>
             </div>
             <BarChart
-                title={"Histórico de faturas"}
+                title={"Evolução de faturas"}
                 data={creditCardBillEvolution}
                 argumentField={'period'}
-                // valueField={'totalAmount'}
                 name={'Faturas'}
-                // customizePoint={customizePoint}
                 argumentAxis={{
                     argumentType: "string"
                 }}

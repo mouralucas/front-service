@@ -22,6 +22,8 @@ export interface CreditCardBillConsolidatedResponse {
     goal: number;
     periodRange: string[];
     bill: CreditCardBill[];
+    billStacked: any;
+    series: string[];
 }
 
 
