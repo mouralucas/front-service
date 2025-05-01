@@ -34,15 +34,6 @@ const App = (props: PieCharProps) => {
         return `${arg.argumentText}: ${value} (${arg.percentText})`;
     }
 
-    // const handlePointClick = (e: any) => {
-    //     const sliceData = e.target.originalArgument;
-    //     // Make a backend call to get details based on sliceData
-    //     // Assume you have the details in response.data
-    //     const response = {}; // Your backend response here
-    //     // setSliceDetails(response.data);
-    //     // setModalIsOpen(true);
-    // };
-
     const toolTipFunc =(info: any) => {
         return {text: `${info.argumentText}: (${info.percentText})`}
     }

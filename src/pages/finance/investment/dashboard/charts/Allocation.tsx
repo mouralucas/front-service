@@ -17,7 +17,6 @@ interface InvestmentAllocationResponse {
 const App = () => {
     const [typeAllocation, setTypeAllocation] = useState<InvestmentAllocation[]>([])
     const [categoryAllocation, setCategoryAllocation] = useState<InvestmentAllocation[]>([])
-    const [custodianAllocation, setCustodianAllocation] = useState<InvestmentAllocation[]>([])
     const [objectivesAllocation, setObjectivesAllocation] = useState<InvestmentAllocation[]>([])
 
 
@@ -25,7 +24,6 @@ const App = () => {
         getFinanceData(URL_FINANCE_INVESTMENT_ALLOCATION, {showMode: 'father'}).then((response: InvestmentAllocationResponse) => {
             setTypeAllocation(response.typeAllocation);
             setCategoryAllocation(response.categoryAllocation);
-            setCustodianAllocation(response.custodianAllocation);
             setObjectivesAllocation(response.objectiveAllocation);
         }).catch((err: string | ToastOptions) => {
             toast.error(`Houve um erro ao buscar os tipos de investimento ${err}`)
@@ -36,91 +34,85 @@ const App = () => {
         getAllocation();
     }, []);
 
+    function customizeTooltip(pointInfo: any) {
+        console.log(pointInfo);
+
+        const serieName = pointInfo.argumentText;
+        const totalValue = pointInfo.value;
+        const formattedValue = parseFloat(totalValue).toFixed(2)
+        const percentage = pointInfo.percentText;
+
+        const formattedString = `<b>${serieName}</b><br/>R$ ${formattedValue} (${percentage})`;
+        return {
+            text: formattedString,
+        };
+    }
+
     return (
         <>
             <div className="row">
-                <div className="col-6">
+                <div className="col-4">
                     <PieChart
                         data={typeAllocation}
                         title={"Tipo de renda"}
                         axis={{argumentField: 'name', valueField: 'total'}}
                         type={'doughnut'}
-                        legend={
-                            {
-                                visible: true,
-                                orientation: 'horizontal',
-                                verticalAlignment: 'bottom',
-                                horizontalAlignment: 'left',
-                            }
-                        }
+                        // legend={
+                        //     {
+                        //         visible: true,
+                        //         orientation: 'horizontal',
+                        //         verticalAlignment: 'bottom',
+                        //         horizontalAlignment: 'left',
+                        //     }
+                        // }
                         tooltip={
                             {
                                 enabled: true,
+                                customizeTooltip: customizeTooltip
                             }
                         }
                     />
                 </div>
-                <div className="col-6">
+                <div className="col-4">
                     <PieChart
                         data={categoryAllocation}
                         title={"Tipo de investimento"}
                         axis={{argumentField: 'name', valueField: 'total'}}
                         type={'doughnut'}
-                        legend={
-                            {
-                                visible: true,
-                                orientation: 'horizontal',
-                                verticalAlignment: 'bottom',
-                                horizontalAlignment: 'left',
-                            }
-                        }
+                        // legend={
+                        //     {
+                        //         visible: true,
+                        //         orientation: 'horizontal',
+                        //         verticalAlignment: 'bottom',
+                        //         horizontalAlignment: 'left',
+                        //     }
+                        // }
                         tooltip={
                             {
                                 enabled: true,
+                                customizeTooltip: customizeTooltip
                             }
                         }
                     />
                 </div>
-            </div>
-            <div className="row">
-                <div className="col-6">
-                    <PieChart
-                        data={custodianAllocation}
-                        title={"Agente de custódia"}
-                        axis={{argumentField: 'name', valueField: 'total'}}
-                        type={'doughnut'}
-                        legend={
-                            {
-                                visible: true,
-                                orientation: 'horizontal',
-                                verticalAlignment: 'bottom',
-                                horizontalAlignment: 'left',
-                            }
-                        }
-                        tooltip={
-                            {
-                                enabled: true,
-                            }
-                        }
-                    />
-                </div>
-                <div className="col-6">
+                <div className="col-4">
                     <PieChart
                         data={objectivesAllocation}
                         title={"Objetivos"}
                         axis={{argumentField: 'name', valueField: 'total'}}
                         type={'doughnut'}
-                        legend={
-                            {
-                                visible: true,
-                                orientation: 'horizontal',
-                                verticalAlignment: 'bottom',
-                                horizontalAlignment: 'left',
-                            }
-                        }
+                        // legend={
+                        //     {
+                        //         visible: true,
+                        //         orientation: 'horizontal',
+                        //         verticalAlignment: 'bottom',
+                        //         horizontalAlignment: 'left',
+                        //     }
+                        // }
                         tooltip={
                             {
                                 enabled: true,
+                                customizeTooltip: customizeTooltip
                             }
                         }
                     />
