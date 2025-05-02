@@ -11,7 +11,6 @@ const userSubmit = async (
 ) => {
     e.preventDefault();
 
-    console.log(method);
     const response = await userAxios({
         method: method,
         url: url,

@@ -35,8 +35,6 @@ const App = () => {
     }, []);
 
     function customizeTooltip(pointInfo: any) {
-        console.log(pointInfo);
-
         const serieName = pointInfo.argumentText;
         const totalValue = pointInfo.value;
         const formattedValue = parseFloat(totalValue).toFixed(2)

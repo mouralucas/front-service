@@ -25,7 +25,6 @@ const Login: FC = (): ReactElement => {
 
     const onSubmit = async (data: LoginInterface, e: any) => {
         userSubmit(e, URL_LOGIN, data, 'post').then((response: LoginResponse) => {
-            console.log(response);
             setToken('access', response.tokenPair.accessToken);
             setToken('refresh', response.tokenPair.refreshToken);
 

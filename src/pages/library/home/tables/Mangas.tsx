@@ -4,14 +4,32 @@ import {Button as Btn} from "devextreme-react/data-grid";
 import {Item} from "../../../../interfaces/Library.tsx";
 import {getItems} from "../../../../services/getCommonData/Library.tsx";
 import Loader from "../../../../components/Loader.tsx";
-import {DataGridColumn} from "../../../../assets/core/components/Interfaces.tsx";
-import ItemDrawer from "../drawer/Book.tsx"
+import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
+import ItemModal from "../modals/Item.tsx";
+import Button from "devextreme-react/button";
 
 const MangaTable = (): ReactElement => {
     const [mangas, setMangas] = useState<Item[]>([]);
-
+    const [selectedManga, setSelectedManga] = useState<Item | null>(null)
+    const [itemModalState, setItemModalState] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false);
+
+
+    const showItemModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedManga(e.row.data)
+        } else {
+            setSelectedManga(null);
+        }
+
+        setItemModalState(true);
+    }
+
+    const hideItemModal = () => {
+        setItemModalState(false);
+        setSelectedManga(null);
+    }
 
     const onOpenDrawerClick = useCallback(() => {
         setIsDrawerOpened(!isDrawerOpened);
@@ -38,7 +56,7 @@ const MangaTable = (): ReactElement => {
             dataField: "mainAuthorName",
             caption: "Autor",
             dataType: "string",
-            groupIndex: 0,
+            // groupIndex: 0,
         },
         {
             dataField: "title",
@@ -96,19 +114,43 @@ const MangaTable = (): ReactElement => {
                     key={1}
                     text="Editar"
                     // icon="/url/to/my/icon.ico"
+                    icon="edit"
+                    hint="Editar"
+                    onClick={showItemModal}
+                />,
+                <Btn
+                    key={1}
+                    text="Editar"
+                    // icon="/url/to/my/icon.ico"
                     icon="eye"
                     hint="Editar"
                     onClick={onOpenDrawerClick}
                 />,
-                // <Btn
-                //     // text="My Command"
-                //     // // icon="/url/to/my/icon.ico"
-                //     icon="coffee"
-                //     hint="My Command"
-                //     onClick={coffeeCommand}
-                // />
             ]
         }
+    ]
+
+    const toolBarItems: DataGridToolBarItem[] = [
+        {
+            name: 'columnChooserButton',
+            location: 'after',
+        },
+        {
+            name: 'exportButton',
+            location: 'after',
+        },
+        {
+            child: <Button icon={'refresh'} onClick={getAvailableMangas}/>,
+            location: "after"
+        },
+        {
+            child: <Button icon={'add'} onClick={showItemModal}></Button>,
+            location: "after"
+        },
+        {
+            name: 'searchPanel',
+            location: "after",
+        },
     ]
 
     return (
@@ -120,9 +162,14 @@ const MangaTable = (): ReactElement => {
                             keyExpr={'itemId'}
                             columns={columns}
                             data={mangas}
-                            // onRowClick={onOpenDrawerClick}
+                            toolBar={{
+                                visible: true,
+                                items: toolBarItems
+                            }}
+                            showFilterRow={true}
                         />
-                        <ItemDrawer openDrawerState={isDrawerOpened} itemId={1} onCloseDrawerClick={onOpenDrawerClick}/>
+                        <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedManga}/>
+                        {/*<ItemDrawer openDrawerState={isDrawerOpened} itemId={1} onCloseDrawerClick={onOpenDrawerClick}/>*/}
                     </>
             }
         </>

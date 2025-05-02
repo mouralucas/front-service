@@ -23,7 +23,6 @@ library_connections_instance.interceptors.response.use(
         return response;
     },
     async function (error: { response: { status: number; }; }) {
-        console.log('Error: ' + error.response?.status);
         if (error.response?.status === 401) {
             if (!isRedirecting) {
                 isRedirecting = true;

@@ -10,7 +10,6 @@ type DateMaskedInputProps = {
     className?: string;
 };
 
-// O `ref` precisa ser do tipo `Ref<HTMLInputElement>` (não `ReactInputMask`)
 const DateMaskedInput = forwardRef<HTMLInputElement, DateMaskedInputProps>(
     ({ value, onClick, onChange, onBlur, placeholder, className }, ref) => (
         <InputMask
@@ -26,7 +25,6 @@ const DateMaskedInput = forwardRef<HTMLInputElement, DateMaskedInputProps>(
     )
 );
 
-// Dá um nome pro componente (boa prática com forwardRef)
 DateMaskedInput.displayName = "DateMaskedInput";
 
 export default DateMaskedInput;

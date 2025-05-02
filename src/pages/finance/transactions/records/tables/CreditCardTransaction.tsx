@@ -34,7 +34,6 @@ const App = () => {
     }
 
     const showUpdateTransactionModal = (e: any) => {
-        console.log(e);
         if (typeof e.row !== 'undefined') {
             setSelectedCreditCardTransaction(e.row.data);
             setUpdateTransactionModalState(true);

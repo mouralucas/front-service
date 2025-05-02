@@ -13,6 +13,7 @@ import {librarySubmit} from "../../../../services/axios/Submit.tsx";
 import {URL_LIBRARY_ITEM} from "../../../../services/axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 import Loader from "../../../../components/Loader.tsx";
+import DateMaskedInput from "../../../../components/form/DateMaskInput.tsx";
 
 export interface ItemModalProps {
     item: Item | undefined | null
@@ -88,7 +89,7 @@ const itemFormats = [
 
 
 const App = (props: ItemModalProps) => {
-    const {handleSubmit, control, reset, formState: {isDirty, dirtyFields}, getValues} = useForm<Item>({defaultValues: DefaultItem});
+    const {handleSubmit, control, reset, formState: {isDirty, dirtyFields, errors}, getValues} = useForm<Item>({defaultValues: DefaultItem});
 
     const [authors, setAuthors] = useState<any[]>([]);
     const [statuses, setStatuses] = useState<any[]>([])
@@ -113,6 +114,7 @@ const App = (props: ItemModalProps) => {
     useEffect(() => {
         // Set initial values
         if (props.modalState && props.item) {
+            console.log(props.item);
             reset(props.item);
         } else if (props.modalState && !props.item) {
             reset(DefaultItem);
@@ -205,9 +207,10 @@ const App = (props: ItemModalProps) => {
                             control={control}
                             render={({field}) => (
                                 <Select
+                                    // key={field.value}
                                     {...field}
                                     options={statuses}
-                                    value={authors.find((c: any) => c.value === field.value)}
+                                    value={statuses.find((c: any) => c.value === field.value)}
                                     onChange={(e: any) => field.onChange(e?.value)}
                                 />
                             )}
@@ -227,6 +230,12 @@ const App = (props: ItemModalProps) => {
                                     dateFormat="dd/MM/yyyy" // Exibe no formato brasileiro
                                     className="form-control"
                                     placeholderText="Selecione uma data"
+                                    customInput={
+                                        <DateMaskedInput
+                                            placeholder="dd/mm/aaaa"
+                                            className={`form-control ${errors.lastStatusDate ? "input-error" : ""}`}
+                                        />
+                                    }
                                 />
                             )}
                         />
@@ -393,6 +402,12 @@ const App = (props: ItemModalProps) => {
                                     className="form-control"
                                     placeholderText="__/__/____"
                                     isClearable
+                                    customInput={
+                                        <DateMaskedInput
+                                            placeholder="dd/mm/aaaa"
+                                            className={`form-control ${errors.publicationDate ? "input-error" : ""}`}
+                                        />
+                                    }
                                 />
                             )}
                         />
@@ -412,6 +427,12 @@ const App = (props: ItemModalProps) => {
                                     dateFormat="dd/MM/yyyy" // Exibe no formato brasileiro
                                     className="form-control"
                                     placeholderText="__/__/____"
+                                    customInput={
+                                        <DateMaskedInput
+                                            placeholder="dd/mm/aaaa"
+                                            className={`form-control ${errors.originalPublicationDate ? "input-error" : ""}`}
+                                        />
+                                    }
                                 />
                             )}
                         />
