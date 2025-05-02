@@ -20,6 +20,7 @@ export const URL_FINANCE_CREDIT_CARD_BILL_EVOLUTION = '/creditcard/bill/evolutio
 
 // Investment URLs
 export const URL_FINANCE_INVESTMENT = '/investment'
+export const URL_FINANCE_BRAZILIAN_FUND_INVESTMENT = '/investment/funds/br'
 export const URL_FINANCE_INVESTMENT_TYPE = '/investment/type'
 export const URL_FINANCE_INVESTMENT_STATEMENT = '/investment/statement'
 export const URL_FINANCE_INVESTMENT_ALLOCATION = '/investment/allocation'

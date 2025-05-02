@@ -36,9 +36,13 @@ export const items = [
                         url: '/finance/investment'
                     },
                     {
-                        title: 'Informações',
-                        url: 'finance/investment/records'
+                        title: 'Ativos',
+                        url: 'finance/investment/active'
                     },
+                    {
+                        title: 'Liquidados',
+                        url: 'finance/investment/settled'
+                    }
                 ]
             },
             {

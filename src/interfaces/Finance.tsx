@@ -143,6 +143,24 @@ export interface Investment {
     countryId: string;
     observation?: string;
     objectiveId?: string | null;
+} // Old version (all types)
+
+export interface BrazilianFundInvestment {
+    investmentId?: string | null;
+    custodianId: string;
+    accountId: string;
+    name: string;
+    investmentTypeId: string;
+    quantity: number;
+    price: number;
+    amount: number;
+    currencyId: string;
+    countryId: string;
+    isLiquidated: boolean;
+    liquidationDate?: string | null;
+    liquidationAmount?: number | null;
+    observation?: string | null;
+    objectiveId?: string | null;
 }
 
 export interface InvestmentType {

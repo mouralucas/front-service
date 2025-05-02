@@ -1,18 +1,26 @@
 import Card from '../../../../components/Card'
 import React, {useEffect} from "react";
 import InvestmentTable from './tables/Investment'
-import InvestmentLiquidatedTable from './tables/InvestmentLiquidated.tsx'
 import ObjectivesTable from './tables/Objectives'
+import BrazilianFundInvestmentTable from "./tables/BrazilianFundInvestment.tsx";
 
-const App = (): React.ReactElement => {
+const ActiveInvestments = (): React.ReactElement => {
     useEffect(() => {
-        document.title = 'Registro de informações';
+        document.title = 'Investimentos ativos';
     }, [])
 
     return (
         <div className="container">
-            {/*<Sidebar/>*/}
             <div className="App">
+                <div className="row">
+                    <div className="col-12">
+                        <Card>
+                            <Card.Body>
+                                <BrazilianFundInvestmentTable/>
+                            </Card.Body>
+                        </Card>
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-12">
                         <Card>
@@ -35,21 +43,9 @@ const App = (): React.ReactElement => {
                         </Card>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12">
-                        <Card>
-                            <Card.Header>
-                                <b>Investimentos Liquidados</b>
-                            </Card.Header>
-                            <Card.Body>
-                                <InvestmentLiquidatedTable />
-                            </Card.Body>
-                        </Card>
-                    </div>
-                </div>
             </div>
         </div>
     );
 }
 
-export default App;
+export default ActiveInvestments;
