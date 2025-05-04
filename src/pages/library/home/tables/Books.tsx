@@ -30,6 +30,7 @@ const App = () => {
     const hideItemModal = () => {
         setItemModalState(false);
         setSelectedBook(null);
+        getAvailableBooks().then();
     }
 
     const getAvailableBooks: () => Promise<void> = async () => {

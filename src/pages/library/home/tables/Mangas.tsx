@@ -29,6 +29,7 @@ const MangaTable = (): ReactElement => {
     const hideItemModal = () => {
         setItemModalState(false);
         setSelectedManga(null);
+        getAvailableMangas().then()
     }
 
     const onOpenDrawerClick = useCallback(() => {
