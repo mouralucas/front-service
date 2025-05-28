@@ -59,7 +59,6 @@ const App = () => {
             dataField: "itemId",
             caption: "Id",
             dataType: "number",
-            visible: false,
         },
         {
             dataField: "title",

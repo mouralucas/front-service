@@ -1,10 +1,10 @@
 import {getFinanceData} from "../axios/Get.tsx";
-import {GetAccountResponse, GetBankResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentObjectivesResponse, GetInvestmentTypesResponse, GetLiquidityResponse, GetTaxFeeResponse} from "../../interfaces/FinanceRequest.tsx";
-import {Account, Bank, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentType, Liquidity, TaxFee} from "../../interfaces/Finance.tsx";
-import {URL_FINANCE_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_BANK, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_OBJECTIVE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE} from "../axios/ApiUrls.tsx";
+import {GetAccountResponse, GetBankResponse, GetBrazilianFundResponse, GetCategoryResponse, GetCreditCardsResponse, GetCurrencyResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentObjectivesResponse, GetInvestmentTypesResponse, GetLiquidityResponse, GetTaxFeeResponse} from "../../interfaces/FinanceRequest.tsx";
+import {Account, Bank, BrazilianFunds, Category, CreditCard, Currency, Indexer, IndexerType, InvestmentObjective, InvestmentType, Liquidity, TaxFee} from "../../interfaces/Finance.tsx";
+import {URL_FINANCE_CATEGORIES, URL_FINANCE_ACCOUNT, URL_FINANCE_BANK, URL_FINANCE_CREDIT_CARD, URL_FINANCE_CURRENCY, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_OBJECTIVE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY, URL_FINANCE_TAX_FEE, URL_FINANCE_BRAZILIAN_FUNDS} from "../axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 
-
+// Accounts
 export const getAccounts = async () => {
     try {
         const response: GetAccountResponse = await getFinanceData(URL_FINANCE_ACCOUNT);
@@ -31,7 +31,7 @@ export const getCreditCards = async (): Promise<any[]> => {
     }
 };
 
-// Investments
+// Investments types
 export const getInvestmentTypes = async (): Promise<any[]> => {
     try {
         const response: GetInvestmentTypesResponse = await getFinanceData(URL_FINANCE_INVESTMENT_TYPE);
@@ -45,6 +45,7 @@ export const getInvestmentTypes = async (): Promise<any[]> => {
     }
 };
 
+// Investment objectives
 export const getInvestmentObjectives = async (selectFormat: boolean): Promise<any[]> => {
     try {
         const response: GetInvestmentObjectivesResponse = await getFinanceData(URL_FINANCE_INVESTMENT_OBJECTIVE);
@@ -144,6 +145,23 @@ export const getTaxFee = async (countryId: string, taxFeeType: string): Promise<
     } catch {
         toast.error('Houve um erro ao buscar as taxas e impostos')
         return []
+    }
+};
+
+export const getBrazilianFunds = async (selectFormat: boolean): Promise<any[]> => {
+    try {
+        const response: GetBrazilianFundResponse = await getFinanceData(URL_FINANCE_BRAZILIAN_FUNDS);
+        if (selectFormat) {
+            return response.funds.map((i: BrazilianFunds) => ({
+                value: i.fundId,
+                label: i.name,
+            }));
+        }
+
+        return response.funds;
+    } catch {
+        toast.error('Houve um erro ao buscar os fundos de investimentos');
+        return [];
     }
 };
 

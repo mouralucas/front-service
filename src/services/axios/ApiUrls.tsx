@@ -34,6 +34,7 @@ export const URL_FINANCE_INDEXER_TYPE = '/finance/indexer-type'
 export const URL_FINANCE_INDEXER = '/finance/indexer'
 export const URL_FINANCE_LIQUIDITY = '/finance/liquidity'
 export const URL_FINANCE_TAX_FEE = '/finance/tax-fee'
+export const URL_FINANCE_BRAZILIAN_FUNDS = '/finance/funds/br'
 
 // Core URLs
 export const URL_FINANCE_CATEGORIES = '/core/category'

@@ -13,6 +13,7 @@ import {toast, ToastOptions} from "react-toastify";
 import {getCategories, getCreditCards, getCurrencies} from "../../../../../services/getCommonData/Finance.tsx";
 import {CreditCardTransaction} from "../../../../../interfaces/Finance.tsx";
 import Loader from "../../../../../components/Loader.tsx";
+import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
 
 interface CreditCardBillProps {
     modalState: boolean;
@@ -236,6 +237,12 @@ const App = (props: CreditCardBillProps): ReactElement => {
                                     onBlur={updateInstallmentList}
                                     className={`form-control input-default ${errors.transactionDate ? "input-error" : ""}`}
                                     placeholderText="Selecione uma data"
+                                    customInput={
+                                        <DateMaskedInput
+                                            placeholder="dd/mm/aaaa"
+                                            className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
+                                        />
+                                    }
                                 />
                             )}
                         />

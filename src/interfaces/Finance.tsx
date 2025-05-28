@@ -147,16 +147,16 @@ export interface Investment {
 
 export interface BrazilianFundInvestment {
     investmentId?: string | null;
-    custodianId: string;
+    transactionDate: string;
+    fundId: string;
     accountId: string;
     name: string;
-    investmentTypeId: string;
+    investmentTypeId: string; // maybe not needed in UI
     quantity: number;
     price: number;
     amount: number;
     currencyId: string;
     countryId: string;
-    isLiquidated: boolean;
     liquidationDate?: string | null;
     liquidationAmount?: number | null;
     observation?: string | null;
@@ -236,6 +236,25 @@ export interface TaxFee {
     acronyms: string;
     countryId: string;
     type: string
+}
+
+export interface BrazilianFunds {
+    fundId: string;
+    name: string;
+    fundCnpj: string;
+    administrator: string;
+    administratorCnpj: string;
+    status: string;
+    startDate: string;
+    minimumBalance: number;
+    minimumInvestment: number;
+    minimumWithdraw: number;
+    initialInvestment: number;
+    investmentQuotation: string;
+    redemptionQuotation: string;
+    redemptionSettlement: string;
+    fees: any;
+    benchmark: string;
 }
 
 // Other
