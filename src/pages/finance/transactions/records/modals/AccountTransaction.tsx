@@ -9,7 +9,7 @@ import DatePicker from "react-datepicker";
 import Select from 'react-select';
 import {financeSubmit} from "../../../../../services/axios/Submit.tsx";
 import {getAccounts, getCategories, getCurrencies} from "../../../../../services/getCommonData/Finance.tsx";
-import {AccountTransaction} from "../../../../../interfaces/Finance.tsx";
+import {Account, AccountTransaction} from "../../../../../interfaces/Finance.tsx";
 import Loader from "../../../../../components/Loader.tsx";
 import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
 
@@ -61,6 +61,13 @@ const App = (props: AccountStatementProps) => {
         setCurrencies(await getCurrencies());
 
         setIsLoading(false);
+    }
+
+    const updateCurrency = () => {
+        // TODO: find a way to get currency from account
+        const account_id: string = getValues('accountId');
+        const account: Account = accounts.find((account) => account.value === account_id);
+        console.log(account);
     }
 
     useEffect(() => {
@@ -115,6 +122,27 @@ const App = (props: AccountStatementProps) => {
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
+                    <div className="col-4">
+                        <label htmlFor="">Conta</label>
+                        <Controller name={'accountId'}
+                                    control={control}
+                                    rules={{required: 'Esse campo é obrigatório'}}
+                                    render={({field}) => (
+                                        <Select
+                                            key={field.value}
+                                            {...field}
+                                            options={accounts}
+                                            value={accounts.find((c: any) => c.value === field.value)}
+                                            onChange={(val: any) => {
+                                                field.onChange(val?.value)
+                                                updateCurrency()
+                                            }}
+                                            className={`${errors.accountId ? "border border-danger" : ""}`}
+                                            placeholder={'Selecione'}
+                                        />
+                                    )}
+                        />
+                    </div>
                     <div className="col-2">
                         <label htmlFor=""></label>
                         <Controller
@@ -175,24 +203,6 @@ const App = (props: AccountStatementProps) => {
                                 />
 
                             )}
-                        />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">Conta</label>
-                        <Controller name={'accountId'}
-                                    control={control}
-                                    rules={{required: 'Esse campo é obrigatório'}}
-                                    render={({field}) => (
-                                        <Select
-                                            key={field.value}
-                                            {...field}
-                                            options={accounts}
-                                            value={accounts.find((c: any) => c.value === field.value)}
-                                            onChange={(val: any) => field.onChange(val?.value)}
-                                            className={`${errors.accountId ? "border border-danger" : ""}`}
-                                            placeholder={'Selecione'}
-                                        />
-                                    )}
                         />
                     </div>
                 </div>

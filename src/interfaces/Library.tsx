@@ -21,7 +21,7 @@ export interface Item {
     serieId: number
     collectionId: number
     publisherId: number
-    itemFormatId: number
+    formatId: number
     languageId: 'PT'
     coverPrice: number
     paidPrice: number

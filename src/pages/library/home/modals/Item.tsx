@@ -45,7 +45,7 @@ const DefaultItem: Item = {
     serieId: 0,
     collectionId: 0,
     publisherId: 0,
-    itemFormatId: 0,
+    formatId: 0,
     languageId: 'PT',
     coverPrice: 0,
     paidPrice: 0,
@@ -102,7 +102,7 @@ const App = (props: ItemModalProps) => {
 
     const fetchItemData: () => Promise<void> = async () => {
         setAuthors(await getAuthors(true));
-        setStatuses(await getStatuses('LIBRARY_ITEM', true));
+        setStatuses(await getStatuses('ITEM.STATUS', true));
         setItemSeries(await getSeries(true));
         setItemCollections(await getCollections(true));
         setPublishers(await getPublishers(true));
@@ -487,7 +487,7 @@ const App = (props: ItemModalProps) => {
                     <div className="col-4">
                         <label htmlFor="">Formato</label>
                         <Controller
-                            name={'itemFormatId'}
+                            name={'formatId'}
                             control={control}
                             render={({field}) => (
                                 <Select
