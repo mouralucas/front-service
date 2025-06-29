@@ -36,6 +36,20 @@ const BrazilianFundsModal = (props: BrazilianFundsModalProps) => {
                             )}
                         />
                     </div>
+                    <div className="col-6">
+                        <label htmlFor="">CNPJ</label>
+                        <Controller
+                            name={'fundCnpj'}
+                            control={control}
+                            render={({field}) => (
+                                <input
+                                    type={'text'}
+                                    {...field}
+                                    className={`form-control input-default ${errors.fundCnpj ? 'input-error' : ''}`}
+                                />
+                            )}
+                        />
+                    </div>
                 </div>
             </form>
         </>
@@ -46,6 +60,7 @@ const BrazilianFundsModal = (props: BrazilianFundsModalProps) => {
             showModal={props.modalState}
             hideModal={props.hideModal}
             body={body}
+            size={'modal-lg'}
         />
     )
 }
