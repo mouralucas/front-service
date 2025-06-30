@@ -37,7 +37,7 @@ const DefaultBrazilianFundInvestment: BrazilianFundInvestment = {
 
 const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) => {
 
-    const {handleSubmit, control, reset, formState: {errors, dirtyFields}, getValues, setValue} = useForm<BrazilianFundInvestment>({defaultValues: DefaultBrazilianFundInvestment})
+    const {handleSubmit, control, reset, formState: {errors, dirtyFields}, getValues} = useForm<BrazilianFundInvestment>({defaultValues: DefaultBrazilianFundInvestment})
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     // Combo boxes data

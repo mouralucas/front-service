@@ -28,6 +28,7 @@ const BrazilianFundInvestmentTable = () => {
     }, [])
 
     const showInvestmentModal = (e: any) => {
+        alert(e);
         setModalInvestmentState(true);
     }
 

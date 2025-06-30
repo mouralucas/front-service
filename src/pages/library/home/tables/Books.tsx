@@ -7,6 +7,7 @@ import ItemModal from '../modals/Item.tsx'
 import Button from "devextreme-react/button";
 import {Item} from "../../../../interfaces/Library.tsx";
 import Loader from "../../../../components/Loader.tsx";
+import BookDrawer from "../drawer/Book.tsx";
 
 
 const App = () => {
@@ -169,7 +170,7 @@ const App = () => {
                 />
             }
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook}/>
-            {/*<BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook}/>*/}
+            <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook}/>
         </>
 
     )
