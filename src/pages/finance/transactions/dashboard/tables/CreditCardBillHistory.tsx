@@ -39,8 +39,9 @@ const App = (): ReactElement => {
             <div>
                 {cellInfo.data.creditCards.map((account: any, index: number) => (
                     <div key={index}>
-                        <b>{account.nickname}</b>: {account.currency_symbol}{" "}
-                        {account.total.toFixed(2)}
+                        <b>{account.nickname}</b>:{" "}
+                        {account.currencySymbol}
+                        {account.total.toFixed(2)} ({account.currencySymbol}{account.totalInstallments.toFixed(2)})
                     </div>
                 ))}
             </div>
@@ -74,7 +75,7 @@ const App = (): ReactElement => {
         },
         {
             dataField: "creditCard",
-            caption: "Total por cartão",
+            caption: "Total por cartão (Tot. parcelas)",
             cellRender: cardCustomCell,
         }
     ]

@@ -118,6 +118,7 @@ export interface CreditCardBillHistory {
     creditCards: {
         nickname: string;
         currencySymbol: string;
+        totalInstallments: number;
         total: number;
     }
 }
