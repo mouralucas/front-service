@@ -10,6 +10,7 @@ import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/co
 import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {CreditCardTransaction, UpdateCreditCardTransaction} from "../../../../../interfaces/Finance.tsx";
 import Loader from '../../../../../components/Loader.tsx'
+import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
 
 interface TransactionResponse {
     success: boolean
@@ -47,9 +48,11 @@ const App = () => {
 
     const getTransactions = () => {
         setIsLoading(true);
+        const dates = getLastPeriods(11)
+
         getFinanceData(URL_CREDIT_CARD_TRANSACTION, {
-            startPeriod: 202401,
-            endPeriod: 202506
+            startPeriod: getPeriodFromDate(dates[0]),
+            endPeriod: getPeriodFromDate(dates[1])
         }).then((response: TransactionResponse) => {
             setCreditCardTransaction(response.transactions);
             setIsLoading(false);
