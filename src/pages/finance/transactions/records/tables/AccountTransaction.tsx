@@ -1,15 +1,17 @@
-import {useEffect, useState} from "react";
-import {URL_FINANCE_ACCOUNT_TRANSACTION} from "../../../../../services/axios/ApiUrls.tsx";
+import { useEffect, useState } from "react";
+import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import DataGrid from "../../../../../components/table/DataGrid.tsx";
 import Button from "devextreme-react/button";
-import {Button as Btn} from "devextreme-react/data-grid";
-import {toast} from "react-toastify";
-import {AccountTransaction} from "../../../../../interfaces/Finance.tsx";
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
+import { Button as Btn } from "devextreme-react/data-grid";
+import { toast } from "react-toastify";
+import { AccountTransaction } from "../../../../../interfaces/Finance.tsx";
+import { getFinanceData } from "../../../../../services/axios/Get.tsx";
+import { DataGridColumn, DataGridToolBarItem } from "../../../../../assets/core/components/Interfaces.tsx";
 import ModalStatement from '../modals/AccountTransaction.tsx'
 import Loader from '../../../../../components/Loader.tsx'
-import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
+import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime.tsx";
+import DatePicker from "react-datepicker";
+import {ptBR} from 'date-fns/locale';
 
 interface TransactionResponse {
     quantity: number
@@ -21,6 +23,22 @@ const App = () => {
     const [selectedTransaction, setSelectedTransaction] = useState<AccountTransaction | null>()
     const [modalState, setModalState] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
+
+    const [dateRange, setDateRange] = useState<any>([]);
+    const [startDate, endDate] = dateRange;
+
+
+
+    useEffect(() => {
+        setDateRange(getLastPeriods());
+        updateDateRange(getLastPeriods());
+    }, []);
+
+    const updateDateRange = (dates: any) => {
+        if (dates[1] !== null) {
+            getTransactions(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
+        }
+    }
 
     const showModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -37,17 +55,17 @@ const App = () => {
         getTransactions();
     }
 
-    const getTransactions = () => {
+    const getTransactions = (startAt: number, endAt: number) => {
         setIsLoading(true);
         const dates = getLastPeriods(11)
 
         getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
-            startPeriod: getPeriodFromDate(dates[0]),
-            endPeriod: getPeriodFromDate(dates[1])
+            startPeriod: startAt,
+            endPeriod: endAt
         }).then((response: TransactionResponse) => {
-                setTransaction(response?.transactions);
-                setIsLoading(false);
-            }
+            setTransaction(response?.transactions);
+            setIsLoading(false);
+        }
         ).catch(err => {
             toast.error('Houve um erro ao buscar extratos: ' + err)
             setIsLoading(false);
@@ -59,10 +77,6 @@ const App = () => {
 
         return cellInfo.currencySymbol + ' ' + formattedAmount;
     }
-
-    useEffect(() => {
-        getTransactions();
-    }, []);
 
     const coffeeCommand = () => {
         toast('☕ Cafezinho delícia!');
@@ -139,8 +153,19 @@ const App = () => {
             location: 'after',
         },
         {
-            child: <Button icon='refresh' onClick={getTransactions}/>,
-            location: "after"
+            child: <DatePicker
+                selectsRange={true}
+                startDate={startDate}
+                endDate={endDate}
+                onChange={(update) => {
+                    updateDateRange(update);
+                    setDateRange(update);
+                }}
+                showMonthYearPicker
+                dateFormat={'MMM/yyyy'}
+                locale={ptBR}
+                className={'form-control'}
+            />
         },
         {
             child: <Button icon={'add'} onClick={showModal}></Button>,
@@ -156,7 +181,7 @@ const App = () => {
     return (
         <div>
             {isLoading ?
-                <Loader/>
+                <Loader />
                 :
                 <DataGrid
                     keyExpr={'transactionId'}
@@ -175,7 +200,7 @@ const App = () => {
                     }}
                 />
             }
-            <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction}/>
+            <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction} />
         </div>
     );
 }

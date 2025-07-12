@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/react,node,webstorm,webstorm+iml,webstorm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,node,webstorm,webstorm+iml,webstorm+all
 
+.vscode
+
 ### Vite ###
 .vite
 

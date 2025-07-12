@@ -1,18 +1,18 @@
-import {useEffect, useState} from "react";
-import {URL_CREDIT_CARD_TRANSACTION} from "../../../../../services/axios/ApiUrls.tsx";
+import { useEffect, useState } from "react";
+import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import DataGrid from "../../../../../components/table/DataGrid.tsx";
-import {Button as Btn,} from 'devextreme-react/data-grid';
+import { Button as Btn, } from 'devextreme-react/data-grid';
 import Button from "devextreme-react/button";
 import TransactionModal from '../modals/CreditCardTransaction.tsx'
 import UpdateTransactionModal from '../modals/CreditCardTransactionUpdate.tsx'
-import {toast} from "react-toastify";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {CreditCardTransaction, UpdateCreditCardTransaction} from "../../../../../interfaces/Finance.tsx";
+import { toast } from "react-toastify";
+import { DataGridColumn, DataGridToolBarItem } from "../../../../../assets/core/components/Interfaces.tsx";
+import { getFinanceData } from "../../../../../services/axios/Get.tsx";
+import { CreditCardTransaction, UpdateCreditCardTransaction } from "../../../../../interfaces/Finance.tsx";
 import Loader from '../../../../../components/Loader.tsx'
-import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
+import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 import DatePicker from "react-datepicker";
-import {ptBR} from 'date-fns/locale';
+import { ptBR } from 'date-fns/locale';
 
 interface TransactionResponse {
     success: boolean
@@ -26,6 +26,7 @@ const App = () => {
     const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
     const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
+
     const [dateRange, setDateRange] = useState<any>([]);
     const [startDate, endDate] = dateRange;
 
@@ -53,7 +54,7 @@ const App = () => {
         }).catch(response => {
             toast.error("Erro ao buscar transações")
             setIsLoading(false);
-            return {'error': response}
+            return { 'error': response }
         })
     }
 
@@ -192,12 +193,12 @@ const App = () => {
             location: 'after',
         },
         {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
             child: <Button icon={'add'} onClick={showTransactionModal}></Button>,
             location: "after"
+        },
+        {
+            name: 'exportButton',
+            location: 'after',
         },
         {
             child: <DatePicker
@@ -224,7 +225,7 @@ const App = () => {
     return (
         <>
             {isLoading ?
-                (<Loader/>)
+                (<Loader />)
                 :
                 <DataGrid
                     keyExpr={'transactionId'}
@@ -240,8 +241,8 @@ const App = () => {
                     }}
                 />
             }
-            <TransactionModal modalState={transactionModalState} hideModal={hideTransactionModal}/>
-            <UpdateTransactionModal modalState={updateTransactionModalState} hideModal={hideUpdateTransactionModal} creditCardTransaction={selectedCreditCardTransaction}/>
+            <TransactionModal modalState={transactionModalState} hideModal={hideTransactionModal} />
+            <UpdateTransactionModal modalState={updateTransactionModalState} hideModal={hideUpdateTransactionModal} creditCardTransaction={selectedCreditCardTransaction} />
         </>
     );
 }
