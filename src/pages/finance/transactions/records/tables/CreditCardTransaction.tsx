@@ -11,6 +11,8 @@ import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {CreditCardTransaction, UpdateCreditCardTransaction} from "../../../../../interfaces/Finance.tsx";
 import Loader from '../../../../../components/Loader.tsx'
 import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
+import DatePicker from "react-datepicker";
+import {ptBR} from 'date-fns/locale';
 
 interface TransactionResponse {
     success: boolean
@@ -24,35 +26,27 @@ const App = () => {
     const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
     const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [dateRange, setDateRange] = useState<any>([]);
+    const [startDate, endDate] = dateRange;
 
-    const showTransactionModal = () => {
-        setTransactionModalState(true);
-    }
+    useEffect(() => {
+        setDateRange(getLastPeriods());
+        updateDateRange(getLastPeriods())
+    }, []);
 
-    const hideTransactionModal = () => {
-        setTransactionModalState(false);
-        getTransactions();
-    }
 
-    const showUpdateTransactionModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedCreditCardTransaction(e.row.data);
-            setUpdateTransactionModalState(true);
+    const updateDateRange = (dates: any) => {
+        if (dates[1] !== null) {
+            getTransactions(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
         }
     }
 
-    const hideUpdateTransactionModal = () => {
-        setUpdateTransactionModalState(false);
-        getTransactions();
-    }
-
-    const getTransactions = () => {
+    const getTransactions = (startAt: number, endAt: number) => {
         setIsLoading(true);
-        const dates = getLastPeriods(11)
 
         getFinanceData(URL_CREDIT_CARD_TRANSACTION, {
-            startPeriod: getPeriodFromDate(dates[0]),
-            endPeriod: getPeriodFromDate(dates[1])
+            startPeriod: startAt,
+            endPeriod: endAt
         }).then((response: TransactionResponse) => {
             setCreditCardTransaction(response.transactions);
             setIsLoading(false);
@@ -63,9 +57,27 @@ const App = () => {
         })
     }
 
-    useEffect(() => {
-        getTransactions();
-    }, []);
+    const showTransactionModal = () => {
+        setTransactionModalState(true);
+    }
+
+    const hideTransactionModal = () => {
+        setTransactionModalState(false);
+        updateDateRange(getLastPeriods());
+    }
+
+
+    const showUpdateTransactionModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedCreditCardTransaction(e.row.data);
+            setUpdateTransactionModalState(true);
+        }
+    }
+
+    const hideUpdateTransactionModal = () => {
+        setUpdateTransactionModalState(false);
+        updateDateRange(getLastPeriods());
+    }
 
     /**
      * Custom function to show the installments in the table it shows the current installment and the total in the format xx/xx
@@ -85,6 +97,7 @@ const App = () => {
     const coffeeCommand = () => {
         toast('☕ Cafezinho delícia!');
     }
+
 
     const columns: DataGridColumn[] = [
         {
@@ -183,12 +196,23 @@ const App = () => {
             location: 'after',
         },
         {
-            child: <Button icon={'refresh'} onClick={getTransactions}/>,
+            child: <Button icon={'add'} onClick={showTransactionModal}></Button>,
             location: "after"
         },
         {
-            child: <Button icon={'add'} onClick={showTransactionModal}></Button>,
-            location: "after"
+            child: <DatePicker
+                selectsRange={true}
+                startDate={startDate}
+                endDate={endDate}
+                onChange={(update) => {
+                    updateDateRange(update);
+                    setDateRange(update);
+                }}
+                showMonthYearPicker
+                dateFormat={'MMM/yyyy'}
+                locale={ptBR}
+                className={'form-control'}
+            />
         },
         {
             name: 'searchPanel',
