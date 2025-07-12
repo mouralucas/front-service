@@ -9,6 +9,7 @@ import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
 import ModalStatement from '../modals/AccountTransaction.tsx'
 import Loader from '../../../../../components/Loader.tsx'
+import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
 
 interface TransactionResponse {
     quantity: number
@@ -38,9 +39,11 @@ const App = () => {
 
     const getTransactions = () => {
         setIsLoading(true);
+        const dates = getLastPeriods(11)
+
         getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
-            startPeriod: 202401,
-            endPeriod: 202505
+            startPeriod: getPeriodFromDate(dates[0]),
+            endPeriod: getPeriodFromDate(dates[1])
         }).then((response: TransactionResponse) => {
                 setTransaction(response?.transactions);
                 setIsLoading(false);
