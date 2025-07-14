@@ -1,7 +1,12 @@
-import {ReactElement} from "react";
+import {ReactElement, useEffect, useState} from "react";
 import '../../../../assets/library/itemDrawer.scss'
 import Drawer from "../../../../components/Drawer.tsx";
 import image from '../../../../assets/core/images/no-cover.png'
+import { getLibraryData } from "../../../../services/axios/Get.tsx";
+import { URL_READING_STATS } from "../../../../services/axios/ApiUrls.tsx";
+import { ReadingStatsResponse } from "../../../../interfaces/LibraryRequest.tsx";
+import { ItemReadingStats } from "../../../../interfaces/Library.tsx";
+import { toast } from "react-toastify";
 
 
 interface BookDrawerProps {
@@ -11,7 +16,27 @@ interface BookDrawerProps {
     onCloseDrawerClick: (e: any) => void;
 }
 
+
+
 const BookDrawer = (props: BookDrawerProps): ReactElement => {
+
+    const [stats, setStats] = useState<ItemReadingStats>();
+
+    useEffect(() => {
+        if (props.openDrawerState) {
+            getReadingStats();
+        }
+    }, [props.openDrawerState])
+
+    const getReadingStats = () => {
+        getLibraryData(URL_READING_STATS, {itemId: props.item.itemId}).then((response: ReadingStatsResponse) => {
+            setStats(response);
+            console.log(response);
+        }).catch((e:any) => {
+            toast.error(`Erro ao buscar estatísticas de leitura: ${e.message}`)
+        });
+    }
+    
     const html: ReactElement =
         <>
             <div className="custom-toolbar">
@@ -113,7 +138,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                             <th className={'contact-name'}>Leituras</th>
                         </tr>
                         <tr>
-                            {props.item?.description ?? 12}
+                            {stats?.readingsCount}
                         </tr>
                     </table>
                 </div>
@@ -123,7 +148,29 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                             <th className={'contact-name'}>Última leitura</th>
                         </tr>
                         <tr>
-                            {props.item?.rating ?? '01/01/2025'}
+                            {stats?.lastReadingDate}
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div className="ms-2 row">
+                <div className="col-6">
+                    <table className={'mt-2 me-2'}>
+                        <tr>
+                            <th className={'contact-name'}>Página atual</th>
+                        </tr>
+                        <tr>
+                            {stats?.currentPage}
+                        </tr>
+                    </table>
+                </div>
+                <div className="col-6">
+                    <table className={'mt-2 me-2'}>
+                        <tr>
+                            <th className={'contact-name'}>Perc. atual</th>
+                        </tr>
+                        <tr>
+                            {stats?.currentPercentage}
                         </tr>
                     </table>
                 </div>

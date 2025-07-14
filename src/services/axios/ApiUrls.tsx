@@ -48,3 +48,5 @@ export const URL_LIBRARY_STATUS = '/status'
 export const URL_LIBRARY_SERIE = '/serie';
 export const URL_LIBRARY_COLLECTION = '/collection';
 export const URL_LIBRARY_PUBLISHER = '/publisher';
+
+export const URL_READING_STATS = '/reading/stats';

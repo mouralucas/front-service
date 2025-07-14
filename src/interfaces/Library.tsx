@@ -37,6 +37,13 @@ export interface Item {
     lastEditedAt?: Date | null
 }
 
+export interface ItemReadingStats {
+    readingsCount: number;
+    lastReadingDate: string;
+    currentPage: number;
+    currentPercentage: number;
+}
+
 export interface Author {
     authorId?: string | null
     authorName: string

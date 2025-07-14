@@ -22,4 +22,11 @@ export interface CollectionResponse {
     collections: Collection[]
 }
 
+export interface ReadingStatsResponse {
+    readingsCount: number;
+    lastReadingDate: string;
+    currentPage: number;
+    currentPercentage: number;
+}
+
 
