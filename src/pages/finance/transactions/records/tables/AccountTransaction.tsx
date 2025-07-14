@@ -52,12 +52,11 @@ const App = () => {
     const hideModal = () => {
         setModalState(false);
         setSelectedTransaction(undefined);
-        getTransactions();
+        updateDateRange(getLastPeriods());
     }
 
     const getTransactions = (startAt: number, endAt: number) => {
         setIsLoading(true);
-        const dates = getLastPeriods(11)
 
         getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
             startPeriod: startAt,
