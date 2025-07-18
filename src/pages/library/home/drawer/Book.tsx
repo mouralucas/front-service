@@ -1,4 +1,4 @@
-import {ReactElement, useEffect, useState} from "react";
+import { ReactElement, useEffect, useState } from "react";
 import '../../../../assets/library/itemDrawer.scss'
 import Drawer from "../../../../components/Drawer.tsx";
 import image from '../../../../assets/core/images/no-cover.png'
@@ -29,14 +29,14 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
     }, [props.openDrawerState])
 
     const getReadingStats = () => {
-        getLibraryData(URL_READING_STATS, {itemId: props.item.itemId}).then((response: ReadingStatsResponse) => {
+        getLibraryData(URL_READING_STATS, { itemId: props.item.itemId }).then((response: ReadingStatsResponse) => {
             setStats(response);
             console.log(response);
-        }).catch((e:any) => {
+        }).catch((e: any) => {
             toast.error(`Erro ao buscar estatísticas de leitura: ${e.message}`)
         });
     }
-    
+
     const html: ReactElement =
         <>
             <div className="custom-toolbar">
@@ -86,18 +86,18 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                             </td>
                         </tr>
                     </table>
-                        <table className={'mt-2 me-2'}>
-                            <tr>
-                                <th>
-                                    <div>
-                                        {props.item?.mainAuthorName}
-                                        <div className="fw-light text-mutted small">
-                                            Owen King; Outro Autor; Mais um ainda
-                                        </div>
+                    <table className={'mt-2 me-2'}>
+                        <tr>
+                            <th>
+                                <div>
+                                    {props.item?.mainAuthorName}
+                                    <div className="fw-light text-mutted small">
+                                        Owen King; Outro Autor; Mais um ainda
                                     </div>
-                                </th>
-                            </tr>
-                        </table>
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
                     <table className={'mt-2 me-2'}>
                         <tr>
                             <th className={'contact-name'}>Páginas</th>
@@ -130,51 +130,67 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                     </table>
                 </div>
             </div>
-            <hr/>
-            <div className="ms-2 row">
-                <div className="col-6">
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th className={'contact-name'}>Leituras</th>
-                        </tr>
-                        <tr>
-                            {stats?.readingsCount}
-                        </tr>
-                    </table>
+            <hr />
+            {(stats?.readingsCount !== undefined && stats.readingsCount > 0) &&
+                <>
+                    <div className="ms-2 row">
+                        <div className="col-6">
+                            <table className={'mt-2 me-2'}>
+                                <tr>
+                                    <th className={'contact-name'}>Leituras</th>
+                                </tr>
+                                <tr>
+                                    {stats?.readingsCount}
+                                </tr>
+                            </table>
+                        </div>
+                        <div className="col-6">
+                            <table className={'mt-2 me-2'}>
+                                <tr>
+                                    <th className={'contact-name'}>Última leitura</th>
+                                </tr>
+                                <tr>
+                                    {stats?.lastReadingDate}
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    { (stats?.currentPage !== undefined && stats.currentPage > 0) &&
+                        <>
+                            <div className="ms-2 row">
+                                <div className="col-6">
+                                    <table className={'mt-2 me-2'}>
+                                        <tr>
+                                            <th className={'contact-name'}>Página atual</th>
+                                        </tr>
+                                        <tr>
+                                            {stats?.currentPage}
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div className="col-6">
+                                    <table className={'mt-2 me-2'}>
+                                        <tr>
+                                            <th className={'contact-name'}>Perc. atual</th>
+                                        </tr>
+                                        <tr>
+                                            {stats?.currentPercentage}
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </>
+                    }
+                </>
+            }
+            {
+                (stats !== undefined && stats.readingsCount === 0) &&
+                <div className="ms-2 row">
+                    <div className="col-12">
+                        <span className="text-muted"><b>Nenhuma leitura registrada.</b></span>
+                    </div>
                 </div>
-                <div className="col-6">
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th className={'contact-name'}>Última leitura</th>
-                        </tr>
-                        <tr>
-                            {stats?.lastReadingDate}
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div className="ms-2 row">
-                <div className="col-6">
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th className={'contact-name'}>Página atual</th>
-                        </tr>
-                        <tr>
-                            {stats?.currentPage}
-                        </tr>
-                    </table>
-                </div>
-                <div className="col-6">
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th className={'contact-name'}>Perc. atual</th>
-                        </tr>
-                        <tr>
-                            {stats?.currentPercentage}
-                        </tr>
-                    </table>
-                </div>
-            </div>
+            }
         </>
 
     return (
