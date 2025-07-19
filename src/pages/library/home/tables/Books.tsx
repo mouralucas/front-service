@@ -1,13 +1,14 @@
 import DataGrid from "../../../../components/table/DataGrid.tsx";
-import {useCallback, useEffect, useState} from "react";
-import {getItems} from "../../../../services/getCommonData/Library.tsx";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
-import {Button as Btn,} from 'devextreme-react/data-grid';
+import { useCallback, useEffect, useState } from "react";
+import { getItems } from "../../../../services/getCommonData/Library.tsx";
+import { DataGridColumn, DataGridToolBarItem } from "../../../../assets/core/components/Interfaces.tsx";
+import { Button as Btn, } from 'devextreme-react/data-grid';
 import ItemModal from '../modals/Item.tsx'
 import Button from "devextreme-react/button";
-import {Item} from "../../../../interfaces/Library.tsx";
+import { Item } from "../../../../interfaces/Library.tsx";
 import Loader from "../../../../components/Loader.tsx";
 import BookDrawer from "../drawer/Book.tsx";
+import { ro } from "date-fns/locale";
 
 
 const App = () => {
@@ -141,7 +142,7 @@ const App = () => {
             location: 'after',
         },
         {
-            child: <Button icon={'refresh'} onClick={getAvailableBooks}/>,
+            child: <Button icon={'refresh'} onClick={getAvailableBooks} />,
             location: "after"
         },
         {
@@ -155,9 +156,26 @@ const App = () => {
 
     ]
 
+    const setRowColour = (e: any) => {
+        if (e.rowType === "data") {
+            if (e.data.lastStatusId === "lost") {
+                e.rowElement.style.cssText = "color: white; background-color: #FFA07A";
+                // or
+                // e.rowElement.classList.add("my-class");
+                // To override alternation color
+            }
+
+            if (e.data.lastStatusId === "wished") {
+                e.rowElement.style.cssText = "color: black; background-color: #77DD77";
+            }
+
+            e.rowElement.className = e.rowElement.className.replace("dx-row-alt", "");
+        }
+    }
+
     return (
         <>
-            {isLoading ? <Loader/> :
+            {isLoading ? <Loader /> :
                 <DataGrid
                     keyExpr={'itemId'}
                     data={books}
@@ -167,10 +185,11 @@ const App = () => {
                         items: toolBarItems
                     }}
                     showFilterRow={true}
+                    onRowPrepared={setRowColour}
                 />
             }
-            <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook}/>
-            <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook}/>
+            <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook} />
+            <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook} />
         </>
 
     )

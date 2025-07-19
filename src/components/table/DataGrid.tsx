@@ -64,6 +64,7 @@ interface DataGridProps {
     }
     wordWrapEnabled?: boolean
     onRowClick?: any
+    onRowPrepared?: any
 }
 
 const App = (props: DataGridProps): ReactElement => {
@@ -176,6 +177,7 @@ const App = (props: DataGridProps): ReactElement => {
                 // onRowPrepared={}
                 wordWrapEnabled={props.wordWrapEnabled ?? false}
                 onRowClick={props.onRowClick ?? null}
+                onRowPrepared={props.onRowPrepared ?? null}
             >
 
                 <GroupPanel visible={props.groupPanel?.visible ?? false}/>
