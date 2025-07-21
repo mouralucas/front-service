@@ -1,17 +1,18 @@
-import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
+import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
 import Modal from '../../../../../components/Modal'
-import {Investment} from "../../../../../interfaces/Finance.tsx";
-import {Controller, useForm} from "react-hook-form";
+import { Investment } from "../../../../../interfaces/Finance.tsx";
+import { Controller, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
-import {format, parseISO} from "date-fns";
+import { format, parseISO } from "date-fns";
 import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx'
-import {getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentObjectives, getInvestmentTypes, getLiquidity} from "../../../../../services/getCommonData/Finance.tsx";
-import {getCountries} from "../../../../../services/getCommonData/Core.tsx";
-import {financeSubmit} from "../../../../../services/axios/Submit.tsx";
-import {URL_FINANCE_INVESTMENT} from "../../../../../services/axios/ApiUrls.tsx";
-import {toast} from "react-toastify";
+import { getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentObjectives, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
+import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
+import { toast } from "react-toastify";
 import Loader from "../../../../../components/Loader.tsx";
+import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
 
 
 interface InvestmentProps {
@@ -43,7 +44,7 @@ const DefaultInvestment: Investment = {
 }
 
 const App = (props: InvestmentProps): ReactElement => {
-    const {handleSubmit, control, reset, formState: {errors, dirtyFields}, getValues, setValue} = useForm<Investment>({defaultValues: DefaultInvestment})
+    const { handleSubmit, control, reset, formState: { errors, dirtyFields }, getValues, setValue } = useForm<Investment>({ defaultValues: DefaultInvestment })
 
     const [accounts, setAccounts] = useState<any[]>([])
     const [investmentTypes, setInvestmentTypes] = useState<any[]>([])
@@ -126,7 +127,7 @@ const App = (props: InvestmentProps): ReactElement => {
     }
 
 
-    const body: ReactElement = isLoading ? <Loader/> :
+    const body: ReactElement = isLoading ? <Loader /> :
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
@@ -135,8 +136,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'transactionDate'}
                             control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => (
                                 <DatePicker
                                     selected={parseISO(field.value)}
                                     onChange={(date: Date | null) => {
@@ -145,6 +146,12 @@ const App = (props: InvestmentProps): ReactElement => {
                                     dateFormat="dd/MM/yyyy"
                                     className={`form-control ${errors.transactionDate} ? 'input-error' : ''`}
                                     placeholderText="Selecione uma data"
+                                    customInput={
+                                        <DateMaskedInput
+                                            placeholder="dd/mm/aaaa"
+                                            className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
+                                        />
+                                    }
                                 />
                             )}
                         />
@@ -154,8 +161,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'accountId'}
                             control={control}
-                            rules={{required: "Este campo é obrigatório"}}
-                            render={({field}) => (
+                            rules={{ required: "Este campo é obrigatório" }}
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     key={field.value}
@@ -176,8 +183,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'investmentTypeId'}
                             control={control}
-                            rules={{required: true}}
-                            render={({field}) => (
+                            rules={{ required: true }}
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     key={field.value}
@@ -195,7 +202,7 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'objectiveId'}
                             control={control}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     key={field.value}
@@ -214,8 +221,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'name'}
                             control={control}
-                            rules={{required: "Este campo é obrigatório"}}
-                            render={({field}) => (
+                            rules={{ required: "Este campo é obrigatório" }}
+                            render={({ field }) => (
                                 <input
                                     type="text"
                                     {...field}
@@ -229,8 +236,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'contractedRate'}
                             control={control}
-                            rules={{required: "Este campo é obrigatório"}}
-                            render={({field}) => (
+                            rules={{ required: "Este campo é obrigatório" }}
+                            render={({ field }) => (
                                 <input
                                     type="text"
                                     {...field}
@@ -246,15 +253,21 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'maturityDate'}
                             control={control}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <DatePicker
                                     selected={field.value ? parseISO(field.value) : null}
-                                    onChange={(date) => {
+                                    onChange={(date: Date | null) => {
                                         field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
                                     }}
                                     dateFormat="dd/MM/yyyy"
-                                    className="form-control"
-                                    placeholderText="__/__/____"
+                                    className={`form-control ${errors.transactionDate} ? 'input-error' : ''`}
+                                    placeholderText="Selecione uma data"
+                                    customInput={
+                                        <DateMaskedInput
+                                            placeholder="dd/mm/aaaa"
+                                            className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
+                                        />
+                                    }
                                 />
                             )}
                         />
@@ -267,7 +280,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             rules={{
                                 validate: (value) => value !== 0 || "Este campo não deve ser zero",
                             }}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <CurrencyInput
                                     value={field.value}
                                     onValueChange={(values) => field.onChange(values.rawValue)}
@@ -286,7 +299,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             rules={{
                                 validate: (value) => value !== 0 || "Este campo não deve ser zero",
                             }}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <CurrencyInput
                                     prefix={'R$ '}
                                     decimalPlaces={5}
@@ -306,7 +319,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             rules={{
                                 validate: (value) => value !== 0 || "Este campo não deve ser zero",
                             }}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <CurrencyInput
                                     prefix={'R$ '}
                                     value={field.value}
@@ -324,7 +337,7 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'currencyId'}
                             control={control}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     key={field.value}
@@ -341,8 +354,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'indexerTypeId'}
                             control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     key={field.value}
@@ -360,8 +373,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'indexerId'}
                             control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     key={field.value}
@@ -381,8 +394,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'liquidityId'}
                             control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     key={field.value}
@@ -400,8 +413,8 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'countryId'}
                             control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     key={field.value}
@@ -418,7 +431,7 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'liquidationDate'}
                             control={control}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <DatePicker
                                     selected={field.value ? parseISO(field.value) : null}
                                     onChange={(date) => {
@@ -436,7 +449,7 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'liquidationAmount'}
                             control={control}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <CurrencyInput
                                     prefix={'R$ '}
                                     value={field.value}
@@ -453,7 +466,7 @@ const App = (props: InvestmentProps): ReactElement => {
                         <Controller
                             name={'observation'}
                             control={control}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <textarea
                                     {...field}
                                     value={field.value ?? ''}
