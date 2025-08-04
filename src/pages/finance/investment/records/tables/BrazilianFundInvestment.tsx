@@ -1,4 +1,4 @@
-import {DataGridColumn} from "../../../../../assets/core/components/Interfaces.tsx";
+import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
 import {useEffect, useState} from "react";
 import DataGrid from "../../../../../components/table/DataGrid.tsx";
 import Loader from "../../../../../components/Loader.tsx";
@@ -8,6 +8,7 @@ import {BrazilianFundInvestment} from "../../../../../interfaces/Finance.tsx";
 import {toast} from "react-toastify";
 import {Button as Btn} from "devextreme-react/data-grid";
 import BrazilianFundInvestmentModal from "../modals/BrazilianFundInvestment.tsx";
+import Button from "devextreme-react/button";
 
 interface BrazilianFundInvestmentResponse {
     success: boolean
@@ -38,7 +39,7 @@ const BrazilianFundInvestmentTable = () => {
     }
 
     const getBrazilianFundInvestments = () => {
-        getFinanceData(URL_FINANCE_BRAZILIAN_FUND_INVESTMENT, {is_liquidated: false}).then((response: BrazilianFundInvestmentResponse) => {
+        getFinanceData(URL_FINANCE_BRAZILIAN_FUND_INVESTMENT, {isSettled: false}).then((response: BrazilianFundInvestmentResponse) => {
             setBrFundInvestments(response.investments);
             setIsLoading(false);
         }).catch(() => {
@@ -114,6 +115,25 @@ const BrazilianFundInvestmentTable = () => {
         }
     ]
 
+    const toolBarItems: DataGridToolBarItem[] = [
+        {
+            name: 'columnChooserButton',
+            location: 'after',
+        },
+        {
+            name: 'exportButton',
+            location: 'after',
+        },
+        {
+            child: <Button icon='refresh' onClick={getBrazilianFundInvestments}/>,
+            location: "after"
+        },
+        {
+            name: 'searchPanel',
+            location: "after",
+        },
+    ]
+
     return (
         <>
             {isLoading ? <Loader/> :
@@ -121,6 +141,10 @@ const BrazilianFundInvestmentTable = () => {
                     keyExpr={'investmentId'}
                     data={brFundInvestments}
                     columns={columns}
+                    toolBar={{
+                        visible: true,
+                        items: toolBarItems
+                    }}
                 />
             }
             <BrazilianFundInvestmentModal modalState={modalInvestmentState} hideModal={hideInvestmentModal} brazilianFundInvestment={null}/>

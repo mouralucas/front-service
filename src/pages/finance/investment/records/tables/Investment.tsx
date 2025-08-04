@@ -223,7 +223,6 @@ const App: FC = (): ReactElement => {
             name: 'searchPanel',
             location: "after",
         },
-
     ]
 
     return (
