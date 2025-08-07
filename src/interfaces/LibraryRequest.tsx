@@ -1,4 +1,4 @@
-import {Author, Collection, LastStatus, Publisher, Serie} from "./Library.tsx";
+import {Author, Collection, ItemReadingStats, LastStatus, Publisher, Serie} from "./Library.tsx";
 
 
 export interface GetAuthorsResponse {
@@ -23,10 +23,7 @@ export interface CollectionResponse {
 }
 
 export interface ReadingStatsResponse {
-    readingsCount: number;
-    lastReadingDate: string;
-    currentPage: number;
-    currentPercentage: number;
+    stats: ItemReadingStats;
 }
 
 

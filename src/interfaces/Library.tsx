@@ -39,9 +39,20 @@ export interface Item {
 
 export interface ItemReadingStats {
     readingsCount: number;
-    lastReadingDate: string;
-    currentPage: number;
-    currentPercentage: number;
+    lastReadingDate: string | null;
+    isCurrentlyReading: boolean;
+    currentReadingId: string | null;
+    currentPage: number | null;
+    currentPercentage: number | null;
+}
+
+export interface ItemReadingProgress {
+    readingId: string;
+    progressType: string | null;
+    value: number | null;
+    date: string;
+    rate: number | null;
+    comment: string | null;
 }
 
 export interface Author {
