@@ -114,7 +114,6 @@ const App = (props: ItemModalProps) => {
     useEffect(() => {
         // Set initial values
         if (props.modalState && props.item) {
-            console.log(props.item);
             reset(props.item);
         } else if (props.modalState && !props.item) {
             reset(DefaultItem);
@@ -169,7 +168,7 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'mainAuthorId'}
                             control={control}
-                            rules={{required: false}}
+                            rules={{required: true}}
                             render={({field}) => (
                                 <Select
                                     {...field}
@@ -205,6 +204,7 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'lastStatusId'}
                             control={control}
+                            rules={{required: true}}
                             render={({field}) => (
                                 <Select
                                     // key={field.value}

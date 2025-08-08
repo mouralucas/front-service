@@ -50,7 +50,7 @@ export interface ItemReadingProgress {
     readingId: string;
     progressType: string | null;
     value: number | null;
-    date: string;
+    progressDate: string;
     rate: number | null;
     comment: string | null;
 }
