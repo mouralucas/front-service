@@ -1,16 +1,38 @@
 import {ReactElement} from "react";
 import Card from "../components/Card.tsx";
 import DataGrid from "../components/table/DataGridV2.tsx";
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, Box } from '@mui/material';
 import { toast } from "react-toastify";
 
 const App = (): ReactElement => {
 
-    const columns:  GridColDef<(typeof rows)[number]>[] = [
-        { field: 'service', headerName: 'Service Name', flex: 1},
-        { field: 'host', headerName: 'Host', flex: 1}
-    ]
+    const handleEdit = (id: number) => {
+        toast.info("Editar registro com ID:" + id);
+        // Aqui você pode chamar sua função de edição
+    };
+
+    const columns: GridColDef[] = [
+        { field: 'service', headerName: 'Service Name', flex: 1 },
+        { field: 'host', headerName: 'Host', flex: 1 },
+        {
+            field: 'actions',
+            headerName: 'Ações',
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={() => handleEdit(params.row.id)}
+                >
+                    Editar
+                </Button>
+            ),
+        },
+    ];
 
     const rows = [
         {'id': 1, 'service': 'Service 1', 'host': 'Host 2'},
