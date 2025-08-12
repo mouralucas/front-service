@@ -2,6 +2,8 @@ import {ReactElement} from "react";
 import Card from "../components/Card.tsx";
 import DataGrid from "../components/table/DataGridV2.tsx";
 import { GridColDef } from '@mui/x-data-grid';
+import { Button, Box } from '@mui/material';
+import { toast } from "react-toastify";
 
 const App = (): ReactElement => {
 
@@ -11,16 +13,19 @@ const App = (): ReactElement => {
     ]
 
     const rows = [
-        {
-            'id': 1,
-            'service': 'Service 1',
-            'host': 'Host 2'
-        },
-        {
-            'id': 2,
-            'service': 'Service 2',
-            'host': 'Host 2'
-        }
+        {'id': 1, 'service': 'Service 1', 'host': 'Host 2'},
+        {'id': 2, 'service': 'Service 2', 'host': 'Host 2'},
+        {'id': 3, 'service': 'Service 3', 'host': 'Host 2'},
+        {'id': 4, 'service': 'Service 4', 'host': 'Host 2'},
+        {'id': 5, 'service': 'Service 5', 'host': 'Host 2'},
+        {'id': 6, 'service': 'Service 6', 'host': 'Host 2'},
+        {'id': 7, 'service': 'Service 7', 'host': 'Host 2'},
+        {'id': 8, 'service': 'Service 8', 'host': 'Host 2'},
+        {'id': 9, 'service': 'Service 9', 'host': 'Host 2'},
+        {'id': 10, 'service': 'Service 10', 'host': 'Host 2'},
+        {'id': 11, 'service': 'Service 11', 'host': 'Host 2'},
+        {'id': 12, 'service': 'Service 12', 'host': 'Host 2'},
+        {'id': 13, 'service': 'Service 13', 'host': 'Host 2'},
     ];
 
     return (
@@ -29,10 +34,30 @@ const App = (): ReactElement => {
                 <div className="col-12">
                     <Card>
                         <Card.Body>
-                            <DataGrid 
-                                columns={columns}
-                                data={rows}
-                            />
+                            <Box>
+                                <Box sx={{ mb: 2, display: 'flex', gap: .5, alignItems: 'center'}}>
+                                <Button
+                                        variant='contained'
+                                        color='success'
+                                        size='small'
+                                        onClick={() => toast.info('Adicionou novos items')}
+                                    >
+                                        Add
+                                    </Button>
+                                    <Button
+                                        variant='contained'
+                                        color='success'
+                                        size='small'
+                                        onClick={() => toast.info('Atualizou')}
+                                    >
+                                        Refresh
+                                    </Button>
+                                </Box>
+                                <DataGrid 
+                                    columns={columns}
+                                    data={rows}
+                                />
+                            </Box>
                         </Card.Body>
                     </Card>
                 </div>

@@ -8,9 +8,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import './index.css';
 import './assets/core/errors.css';
 import App from './App.tsx';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
+import theme from './assets/core/theme.tsx'
 
-const theme = createTheme({})
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>

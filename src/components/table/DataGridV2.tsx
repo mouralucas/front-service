@@ -6,46 +6,54 @@ import { Box } from '@mui/material';
 interface DataGridProps {
     columns: any;
     data: any[];
+    isLoading: boolean;
+    checkBoxSelection: boolean;
+    disableRowSelectionOnClick: boolean;
+    onRowClick: () => null;
 }
 
-const DataGridComp = ({
-    columns,
-    data,
-    isLoading = false,
-    initialState = {},
-    pageSize = 15,
-    rowHeight = 35,
-    variant = 'light',
-    multipleLinesCells = false,
-    padding = 0,
-    search = undefined,
-    emptyStateComponent = undefined,
-    footer = undefined,
-    hideFooter = false,
-    onRowClick = undefined,
-    getRowId = undefined,
-    autoPageSize = false,
-    size = 'normal',
-    sx = undefined,
-}) => {
+const DataGridComp = (props: DataGridProps) => {
     return (
         <Box sx={{ width: '100%' }}>
             <DataGrid 
-                rows={data}
-                columns={columns}
+                rows={props.data}
+                columns={props.columns}
+                loading={props.isLoading ?? false}
                 initialState={{
                     pagination: {
-                    paginationModel: {
-                        pageSize: 5,
-                    },
+                        paginationModel: {
+                            pageSize: 10,
+                        },
                     },
                 }}
-                pageSizeOptions={[5]}
-                checkboxSelection
-                disableRowSelectionOnClick
+                pageSizeOptions={[5, 10, 30, 100]}
+                checkboxSelection={props.checkBoxSelection ?? false}
+                disableRowSelectionOnClick={props.disableRowSelectionOnClick ?? true}
+                onRowClick={props.onRowClick}
             />
         </Box>
     );
 };
 
 export default DataGridComp;
+
+/*
+columns,
+data,
+isLoading = false,
+initialState = {},
+pageSize = 15,
+rowHeight = 35,
+variant = 'light',
+multipleLinesCells = false,
+padding = 0,
+search = undefined,
+emptyStateComponent = undefined,
+footer = undefined,
+hideFooter = false,
+onRowClick = undefined,
+getRowId = undefined,
+autoPageSize = false,
+size = 'normal',
+sx = undefined,
+*/
