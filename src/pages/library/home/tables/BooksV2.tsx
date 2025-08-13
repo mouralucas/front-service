@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState, useCallback } from "react"
 import { Item } from "../../../../interfaces/Library"
 import { getItems } from "../../../../services/getCommonData/Library"
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
-import { Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import DataGridComp from "../../../../components/table/DataGridV2"
 import ItemModal from '../modals/Item.tsx'
 //import BookDrawer from "../drawer/Book.tsx";
@@ -83,7 +83,7 @@ const Books = (): ReactElement => {
 
 
     return (
-        <>
+        <Box sx={{me: 5}}>
             <DataGridComp 
                 columns={columns}
                 data={books}
@@ -91,7 +91,7 @@ const Books = (): ReactElement => {
                 isLoading={isLoading}
             />
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook} />
-        </>
+        </Box>
     )
 }
 
