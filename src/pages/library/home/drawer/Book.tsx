@@ -51,7 +51,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
         const submitData = {
             itemId: props.item.itemId,
         }
-
+        console.log(submitData)
         // librarySubmit('undefined', URL_READING, submitData, 'post').then(() => {
         //     toast.success("Leitura iniciada com sucesso!");
         //     getReadingStats();

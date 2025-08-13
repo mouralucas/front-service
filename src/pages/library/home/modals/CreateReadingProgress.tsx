@@ -19,10 +19,10 @@ interface CreateReadingProgressProps {
 const DefaultReadingProgress: ItemReadingProgress = {
     readingId: '',
     progressType: null,
-    value: null,
+    value: 0,
     progressDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
-    rate: 0,
-    comment: null
+    rate: undefined,
+    comment: undefined
 }
 
 const ReadingProgressOptions = [

@@ -49,10 +49,10 @@ export interface ItemReadingStats {
 export interface ItemReadingProgress {
     readingId: string;
     progressType: string | null;
-    value: number | null;
+    value: number;
     progressDate: string;
-    rate: number | null;
-    comment: string | null;
+    rate: number | undefined;
+    comment: string | undefined;
 }
 
 export interface Author {

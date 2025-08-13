@@ -1,8 +1,16 @@
-import { createTheme } from '@mui/material/styles';
+import { ZIndex, createTheme } from '@mui/material/styles';
 
 import { buttonStyles, iconButtonStyles } from './buttonStyles';
 import { ColorPalette } from './colors';
 import TypographyTheme from './typography';
+
+
+interface MyZIndex extends ZIndex {
+    backdrop: number;
+    floatingElements: number;
+    sidebar: number;
+    verification: number;
+  }
 
 const theme = createTheme({
     breakpoints: {
@@ -11,14 +19,14 @@ const theme = createTheme({
     },
     space: [0, 2, 4, 8, 12, 16, 20, 24, 32, 36, 40, 48, 64, 128, 256, 512],
     spacing: [0, 2, 4, 8, 12, 16, 20, 24, 32, 36, 40, 48, 64, 128, 256, 512],
-    palette: ColorPalette,
+    palette: ColorPalette as any,
     zIndex: {
         backdrop: 100,
         modal: 120,
         floatingElements: 20,
         sidebar: 50,
         verification: 111,
-    },
+    } as MyZIndex,
     borders: {
         separator: '1px solid rgba(97, 99, 112, 0.1);',
         activeText: '1px solid #3248FF',
@@ -32,7 +40,7 @@ const theme = createTheme({
         monospace: 'Menlo, monospace',
     },
     fontSizes: [12, 14, 16, 18, 20, 24, 30, 32, 48, 64, 96],
-    typography: TypographyTheme,
+    typography: TypographyTheme as any,
     components: {
         MuiOutlinedInput: {
             styleOverrides: {
@@ -51,7 +59,7 @@ const theme = createTheme({
         MuiChip: {
             variants: [
                 {
-                    props: { variant: 'eye' },
+                    props: { variant: 'filled' },
                     style: {
                         height: 'auto',
                         lineHeight: 'auto',
@@ -90,15 +98,16 @@ const theme = createTheme({
         },
         MuiButton: buttonStyles,
         MuiIconButton: iconButtonStyles,
+        // @ts-expect-error - Não existe em Components, mas vamos sobrescrever mesmo assim
         MuiClockPicker: {
             styleOverrides: {
-                arrowSwitcher: {
-                    '& + div': {
-                        paddingBottom: '70px',
-                    },
+            arrowSwitcher: {
+                '& + div': {
+                paddingBottom: '70px',
                 },
             },
-        },
+            },
+        } as any,
         MuiFormControlLabel: {
             styleOverrides: {
                 label: {
