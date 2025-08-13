@@ -13,8 +13,8 @@ const App = (): ReactElement => {
     };
 
     const columns: GridColDef[] = [
-        { field: 'service', headerName: 'Service Name', flex: 1 },
-        { field: 'host', headerName: 'Host', flex: 1 },
+        { field: 'service', headerName: 'Service Name', flex: 1, hideable: true },
+        { field: 'host', headerName: 'Host', flex: 1 , hideable: false},
         {
             field: 'actions',
             headerName: 'Ações',

@@ -1,13 +1,20 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
-  base: "/",
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
-      '@styles': '/src/styles'
+      '@styles': '/src/styles',
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Aqui você pode incluir imports automáticos para todas as SCSS
+        // additionalData: `@use "@styles/variables.scss" as *;`
+      },
     },
   },
   preview: {
@@ -18,6 +25,6 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
     host: true,
-    origin: "http://0.0.0.0:3000",
+    origin: 'http://0.0.0.0:3000',
   },
 });

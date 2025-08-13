@@ -1,15 +1,14 @@
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridRowIdGetter } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
-
-
 
 interface DataGridProps {
     columns: any;
     data: any[];
-    isLoading: boolean;
-    checkBoxSelection: boolean;
-    disableRowSelectionOnClick: boolean;
-    onRowClick: () => null;
+    isLoading?: boolean;
+    checkBoxSelection?: boolean;
+    disableRowSelectionOnClick?: boolean;
+    onRowClick?: () => null;
+    getRowId?: GridRowIdGetter<any>;
 }
 
 const DataGridComp = (props: DataGridProps) => {
@@ -30,6 +29,7 @@ const DataGridComp = (props: DataGridProps) => {
                 checkboxSelection={props.checkBoxSelection ?? false}
                 disableRowSelectionOnClick={props.disableRowSelectionOnClick ?? true}
                 onRowClick={props.onRowClick}
+                getRowId={props.getRowId ?? ((row: any) => row.id)}
             />
         </Box>
     );

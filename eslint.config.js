@@ -23,7 +23,7 @@ export default tseslint.config(
                 'warn',
                 {allowConstantExport: true},
             ],
-            '@typescript-eslint/no-explicit-any': 'off', // Desativa a verificação do uso de 'any'
+            '@typescript-eslint/no-explicit-any': 'off',
         },
     },
 )
