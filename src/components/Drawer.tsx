@@ -1,28 +1,27 @@
-import {ReactElement, useState} from "react";
-import classNames from 'classnames';
-import {useScreenSize} from '../utils/media-query';
-import '../assets/core/drawer.scss'
-import '../assets/variables.scss'
-import ReactDOM from 'react-dom';
+import { ReactElement } from "react"
+import SwipeableDrawer from "@mui/material/Drawer"
 
-interface DrawerProps {
+
+interface DrawerV2Props {
     isOpened: boolean;
     changePanelOpened: any;
     content: ReactElement;
+    anchor?: 'left' | 'right' | 'top' | 'bottom';
 }
 
-const Drawer = (props: DrawerProps) => {
-    const [isPinned] = useState<boolean>(false);
-    const {isLarge, isMedium} = useScreenSize();
 
-    return ReactDOM.createPortal(
-        <div id='contact-panel' className={classNames({'panel': true, 'open': props.isOpened, 'pin': isPinned && (isLarge || isMedium)})}>
-            <div className="data-wrapper">
+const DrawerV2 = (props: DrawerV2Props): ReactElement => {
+    return (
+        <div>
+            <SwipeableDrawer 
+                anchor={props.anchor || 'left'}
+                open={props.isOpened} 
+                onClose={props.changePanelOpened}
+            >
                 {props.content}
-            </div>
-        </div>,
-        document.body
-    );
+            </SwipeableDrawer>
+        </div>
+    )
 }
 
-export default Drawer;
+export default DrawerV2;

@@ -1,26 +1,26 @@
-import DataGrid from "../../../../components/table/DataGrid.tsx";
-import { useCallback, useEffect, useState } from "react";
-import { getItems } from "../../../../services/getCommonData/Library.tsx";
-import { DataGridColumn, DataGridToolBarItem } from "../../../../assets/core/components/Interfaces.tsx";
-import { Button as Btn, } from 'devextreme-react/data-grid';
+import { ReactElement, useEffect, useState, useCallback } from "react"
+import { Item } from "../../../../interfaces/Library.tsx"
+import { getItems } from "../../../../services/getCommonData/Library.tsx"
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
+import { Box, Button, TextField } from '@mui/material'
+import DataGridComp from "../../../../components/table/DataGridV2.tsx"
 import ItemModal from '../modals/Item.tsx'
-import Button from "devextreme-react/button";
-import { Item } from "../../../../interfaces/Library.tsx";
-import Loader from "../../../../components/Loader.tsx";
 import BookDrawer from "../drawer/Book.tsx";
 
 
-const App = () => {
+const Books = (): ReactElement => {
     const [books, setBooks] = useState<any[]>([])
     const [selectedBook, setSelectedBook] = useState<Item | null>(null)
     const [itemModalState, setItemModalState] = useState<boolean>(false)
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
+    const [filter, setFilter] = useState('');
+    
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const showItemModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
-            setSelectedBook(e.row.data)
+            setSelectedBook(e.row)
         } else {
             setSelectedBook(null);
         }
@@ -46,7 +46,7 @@ const App = () => {
 
     const onOpenDrawerClick = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
-            setSelectedBook(e.row.data)
+            setSelectedBook(e.row)
         } else {
             setSelectedBook(null);
         }
@@ -55,143 +55,88 @@ const App = () => {
 
     }, [isDrawerOpened]);
 
-    const columns: DataGridColumn[] = [
+
+    const columns: GridColDef[] = [
+        {field: 'itemId', headerName:'Id', flex: 1},
+        {field: 'title', headerName: 'título', flex: 1},
+        {field: 'mainAuthorName', headerName: 'Autor', flex: 1},
+        {field: 'pages', headerName: 'Páginas', flex: 1},
+        {field: 'serieName', headerName: 'Série', flex: 1},
+        {field: 'publisherName', headerName: 'Editora', flex: 1},
+        {field: 'lastStatusName', headerName: 'Status', flex: 1},
         {
-            dataField: "itemId",
-            caption: "Id",
-            dataType: "number",
+            field: 'actions',
+            headerName: 'Ações',
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box sx={{display: 'flex', gap: 2}}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={showItemModal.bind(null, params)}  
+                    >
+                        Editar
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='primary'
+                        size='small'
+                        onClick={onOpenDrawerClick.bind(null, params)}
+                    >
+                        Detalhes
+                    </Button>
+                </Box>
+            ),
         },
-        {
-            dataField: "title",
-            caption: "Título",
-            dataType: "string",
-        },
-        {
-            dataField: "mainAuthorName",
-            caption: "Autor",
-            dataType: "string",
-            visible: true,
-        },
-        {
-            dataField: "pages",
-            caption: "Paginas",
-            dataType: "number",
-            width: 150,
-        },
-        {
-            dataField: "itemType",
-            caption: "Tipo",
-            dataType: "string",
-            width: 150,
-            visible: false,
-        },
-        {
-            dataField: "itemFormat",
-            caption: "Formato",
-            dataType: "string",
-            visible: false
-        },
-        {
-            dataField: "serieName",
-            caption: "Serie",
-            dataType: "string",
-            visible: true,
-        },
-        {
-            dataField: "publisherName",
-            caption: "Editora",
-            dataType: "string",
-        },
-        {
-            dataField: "lastStatusName",
-            caption: "Status",
-            dataType: "string",
-        },
-        {
-            caption: 'Ações',
-            type: 'buttons',
-            width: 110,
-            child: [
-                <Btn
-                    key={1}
-                    text="Editar"
-                    // icon="/url/to/my/icon.ico"
-                    icon="edit"
-                    hint="Editar"
-                    onClick={showItemModal}
-                />,
-                <Btn
-                    // text="My Command"
-                    // // icon="/url/to/my/icon.ico"
-                    icon="eye"
-                    hint="Visualizar"
-                    onClick={onOpenDrawerClick}
-                />
-            ]
-        }
     ]
 
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
-        },
-        {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
-            child: <Button icon={'refresh'} onClick={getAvailableBooks} />,
-            location: "after"
-        },
-        {
-            child: <Button icon={'add'} onClick={showItemModal}></Button>,
-            location: "after"
-        },
-        {
-            name: 'searchPanel',
-            location: "after",
-        },
-
-    ]
-
-    const setRowColour = (e: any) => {
-        if (e.rowType === "data") {
-            if (e.data.lastStatusId === "lost") {
-                e.rowElement.style.cssText = "color: white; background-color: #FFA07A";
-                // or
-                // e.rowElement.classList.add("my-class");
-                // To override alternation color
-            }
-
-            if (e.data.lastStatusId === "wished") {
-                e.rowElement.style.cssText = "color: black; background-color: #77DD77";
-            }
-
-            e.rowElement.className = e.rowElement.className.replace("dx-row-alt", "");
-        }
-    }
+    const filterdRows = filter
+    ? books.filter(row => row.title.toLowerCase().includes(filter.toLowerCase()))
+    : books
 
     return (
-        <>
-            {isLoading ? <Loader /> :
-                <DataGrid
-                    keyExpr={'itemId'}
-                    data={books}
-                    columns={columns}
-                    toolBar={{
-                        visible: true,
-                        items: toolBarItems
-                    }}
-                    showFilterRow={true}
-                    onRowPrepared={setRowColour}
+        <Box sx={{me: 5}}>
+            <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+                <TextField 
+                    label='Filtrar por título'
+                    variant='outlined'
+                    size='small'
+                    value={filter}
+                    onChange={e => setFilter(e.target.value)}
+                    sx={{ minWidth: 250 }}
                 />
-            }
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={showItemModal}
+                    disabled={isLoading}
+                >
+                    Novo
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={getAvailableBooks}
+                    disabled={isLoading}
+                >
+                    Atualizar
+                </Button>
+            </Box>
+            <DataGridComp 
+                columns={columns}
+                data={filterdRows}
+                getRowId={(row: any) => row.itemId}
+                isLoading={isLoading}
+            />
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook} />
             <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook} />
-        </>
-
+        </Box>
     )
 }
 
-export default App;
+export default Books;

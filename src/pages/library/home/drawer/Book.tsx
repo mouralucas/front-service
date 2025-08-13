@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useState } from "react";
-import DrawerV2 from "../../../../components/DrawerV2.tsx";
+import DrawerV2 from "../../../../components/Drawer.tsx";
 import image from '../../../../assets/core/images/no-cover.png'
 import { getLibraryData } from "../../../../services/axios/Get.tsx";
 import { URL_LIBRARY_READING_STATS } from "../../../../services/axios/ApiUrls.tsx";
