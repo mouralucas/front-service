@@ -69,7 +69,7 @@ const Books = (): ReactElement => {
             sortable: false,
             filterable: false,
             renderCell: (params: GridRenderCellParams) => (
-                <Box>
+                <Box sx={{display: 'flex', gap: 2}}>
                     <Button
                         variant="contained"
                         color="primary"

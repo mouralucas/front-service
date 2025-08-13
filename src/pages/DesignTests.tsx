@@ -57,7 +57,7 @@ const App = (): ReactElement => {
                     <Card>
                         <Card.Body>
                             <Box>
-                                <Box sx={{ mb: 2, display: 'flex', gap: .5, alignItems: 'center'}}>
+                                <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center'}}>
                                 <Button
                                         variant='contained'
                                         color='success'
