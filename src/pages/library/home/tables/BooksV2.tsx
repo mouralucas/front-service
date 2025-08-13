@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState, useCallback } from "react"
 import { Item } from "../../../../interfaces/Library"
 import { getItems } from "../../../../services/getCommonData/Library"
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
-import { Box, Button } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import DataGridComp from "../../../../components/table/DataGridV2"
 import ItemModal from '../modals/Item.tsx'
 import BookDrawer from "../drawer/Book.tsx";
@@ -13,6 +13,8 @@ const Books = (): ReactElement => {
     const [selectedBook, setSelectedBook] = useState<Item | null>(null)
     const [itemModalState, setItemModalState] = useState<boolean>(false)
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
+
+    const [filter, setFilter] = useState('');
     
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -91,12 +93,43 @@ const Books = (): ReactElement => {
         },
     ]
 
+    const filterdRows = filter
+    ? books.filter(row => row.title.toLowerCase().includes(filter.toLowerCase()))
+    : books
 
     return (
         <Box sx={{me: 5}}>
+            <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+                <TextField 
+                    label='Filtrar por título'
+                    variant='outlined'
+                    size='small'
+                    value={filter}
+                    onChange={e => setFilter(e.target.value)}
+                    sx={{ minWidth: 250 }}
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={showItemModal}
+                    disabled={isLoading}
+                >
+                    Novo
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={getAvailableBooks}
+                    disabled={isLoading}
+                >
+                    Atualizar
+                </Button>
+            </Box>
             <DataGridComp 
                 columns={columns}
-                data={books}
+                data={filterdRows}
                 getRowId={(row: any) => row.itemId}
                 isLoading={isLoading}
             />

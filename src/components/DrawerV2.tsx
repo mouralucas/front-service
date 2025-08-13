@@ -6,6 +6,7 @@ interface DrawerV2Props {
     isOpened: boolean;
     changePanelOpened: any;
     content: ReactElement;
+    anchor?: 'left' | 'right' | 'top' | 'bottom';
 }
 
 
@@ -13,7 +14,7 @@ const DrawerV2 = (props: DrawerV2Props): ReactElement => {
     return (
         <div>
             <SwipeableDrawer 
-                anchor="right"
+                anchor={props.anchor || 'left'}
                 open={props.isOpened} 
                 onClose={props.changePanelOpened}
             >

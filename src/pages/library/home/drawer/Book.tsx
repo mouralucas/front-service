@@ -243,6 +243,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
             <DrawerV2
                 isOpened={props.openDrawerState}
                 changePanelOpened={props.onCloseDrawerClick}
+                anchor="right"
                 content={html}
             />
             <CreateReadingProgressModal
