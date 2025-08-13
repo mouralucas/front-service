@@ -5,7 +5,7 @@ import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
 import { Box, Button } from '@mui/material'
 import DataGridComp from "../../../../components/table/DataGridV2"
 import ItemModal from '../modals/Item.tsx'
-//import BookDrawer from "../drawer/Book.tsx";
+import BookDrawer from "../drawer/Book.tsx";
 
 
 const Books = (): ReactElement => {
@@ -44,7 +44,7 @@ const Books = (): ReactElement => {
 
     const onOpenDrawerClick = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
-            setSelectedBook(e.row.data)
+            setSelectedBook(e.row)
         } else {
             setSelectedBook(null);
         }
@@ -61,7 +61,7 @@ const Books = (): ReactElement => {
         {field: 'pages', headerName: 'Páginas', flex: 1},
         {field: 'serieName', headerName: 'Série', flex: 1},
         {field: 'publisherName', headerName: 'Editora', flex: 1},
-        {field: 'lastStatusname', headerName: 'Status', flex: 1},
+        {field: 'lastStatusName', headerName: 'Status', flex: 1},
         {
             field: 'actions',
             headerName: 'Ações',
@@ -69,14 +69,24 @@ const Books = (): ReactElement => {
             sortable: false,
             filterable: false,
             renderCell: (params: GridRenderCellParams) => (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    onClick={showItemModal}
-                >
-                    Editar
-                </Button>
+                <Box>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={showItemModal}  
+                    >
+                        Editar
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='primary'
+                        size='small'
+                        onClick={onOpenDrawerClick.bind(null, params)}
+                    >
+                        Refresh
+                    </Button>
+                </Box>
             ),
         },
     ]
@@ -91,6 +101,7 @@ const Books = (): ReactElement => {
                 isLoading={isLoading}
             />
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook} />
+            <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook} />
         </Box>
     )
 }

@@ -1,6 +1,5 @@
 import { ReactElement, useEffect, useState } from "react";
-import '../../../../assets/library/itemDrawer.scss'
-import Drawer from "../../../../components/Drawer.tsx";
+import DrawerV2 from "../../../../components/DrawerV2.tsx";
 import image from '../../../../assets/core/images/no-cover.png'
 import { getLibraryData } from "../../../../services/axios/Get.tsx";
 import { URL_LIBRARY_READING_STATS } from "../../../../services/axios/ApiUrls.tsx";
@@ -241,7 +240,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
     return (
         <>
-            <Drawer
+            <DrawerV2
                 isOpened={props.openDrawerState}
                 changePanelOpened={props.onCloseDrawerClick}
                 content={html}
