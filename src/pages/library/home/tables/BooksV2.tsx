@@ -18,7 +18,7 @@ const Books = (): ReactElement => {
 
     const showItemModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
-            setSelectedBook(e.row.data)
+            setSelectedBook(e.row)
         } else {
             setSelectedBook(null);
         }
@@ -74,7 +74,7 @@ const Books = (): ReactElement => {
                         variant="contained"
                         color="primary"
                         size="small"
-                        onClick={showItemModal}  
+                        onClick={showItemModal.bind(null, params)}  
                     >
                         Editar
                     </Button>
@@ -84,7 +84,7 @@ const Books = (): ReactElement => {
                         size='small'
                         onClick={onOpenDrawerClick.bind(null, params)}
                     >
-                        Refresh
+                        Detalhes
                     </Button>
                 </Box>
             ),
