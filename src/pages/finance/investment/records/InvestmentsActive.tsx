@@ -1,6 +1,6 @@
 import Card from '../../../../components/Card'
 import React, {useEffect} from "react";
-import InvestmentTable from './tables/Investment'
+import InvestmentTable from './tables/InvestmentV2.tsx'
 import ObjectivesTable from './tables/Objectives'
 import BrazilianFundInvestmentTable from "./tables/BrazilianFundInvestment.tsx";
 
