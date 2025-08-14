@@ -57,7 +57,7 @@ const InvestmentV2 = (): ReactElement => {
         { field: 'name', headerName: 'Nome', flex: 1 },
         {
             field: 'transactionDate',
-            headerName: 'Data (vencimento)',
+            headerName: 'Data => vencimento',
             flex: 1,
             valueFormatter: (value, row) => {
                 if (!value) return '';
@@ -96,9 +96,9 @@ const InvestmentV2 = (): ReactElement => {
             flex: 1,
             type: 'number',
             valueFormatter: (value: string, row) => {
-                const vael = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+                const formattedValue = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
                 const percentageChange: string = parseFloat(row.percentageChange).toFixed(2);
-                return  `${vael} (${percentageChange}%)`;
+                return  `${formattedValue} (${percentageChange}%)`;
             }
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },

@@ -4,6 +4,7 @@ import DataGrid from "../components/table/DataGridV2.tsx";
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, Box } from '@mui/material';
 import { toast } from "react-toastify";
+import TestingRowExpand from './testing/table/RowExpanding.tsx';
 
 const App = (): ReactElement => {
 
@@ -52,6 +53,11 @@ const App = (): ReactElement => {
 
     return (
         <div className="container">
+            <div className="row">
+                <div className="col-12">
+                    <TestingRowExpand />
+                </div>
+            </div>
             <div className="row">
                 <div className="col-12">
                     <Card>
