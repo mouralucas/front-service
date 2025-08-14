@@ -14,7 +14,7 @@ const Books = (): ReactElement => {
     const [itemModalState, setItemModalState] = useState<boolean>(false)
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
-    const [filter, setFilter] = useState('');
+    const [bookFilter, setBookFilter] = useState('');
     
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -93,8 +93,8 @@ const Books = (): ReactElement => {
         },
     ]
 
-    const filterdRows = filter
-    ? books.filter(row => row.title.toLowerCase().includes(filter.toLowerCase()))
+    const filterdRows = bookFilter
+    ? books.filter(row => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
     : books
 
     return (
@@ -104,8 +104,8 @@ const Books = (): ReactElement => {
                     label='Filtrar por título'
                     variant='outlined'
                     size='small'
-                    value={filter}
-                    onChange={e => setFilter(e.target.value)}
+                    value={bookFilter}
+                    onChange={e => setBookFilter(e.target.value)}
                     sx={{ minWidth: 250 }}
                 />
                 <Button

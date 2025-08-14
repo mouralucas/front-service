@@ -1,17 +1,40 @@
-import { ReactElement, useState, useEffect } from "react";
-import { Box, Button } from "@mui/material";
-import DataGrid from '../../../../../components/table/DataGridV2'
-import { getFinanceData } from "../../../../../services/axios/Get";
-import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls";
+import { Box, Button, TextField } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
+import { ReactElement, useEffect, useState } from "react";
+import DataGrid from '../../../../../components/table/DataGridV2';
 import { Investment } from "../../../../../interfaces/Finance";
 import { InvestmentResponse } from "../../../../../interfaces/FinanceRequest";
+import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls";
+import { getFinanceData } from "../../../../../services/axios/Get";
+import ModalInvestment from '../modals/Investment';
 
 
 const InvestmentV2 = (): ReactElement => {
     const [investments, setInvestments] = useState<Investment[]>([])
-    
+
+    // Modals States
+    const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false);
+    const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>();
+
+    // Table Filter
+    const [investmentFilter, setInvestmentFilter] = useState('');
+
+    // Loading State
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    // Modals Open/Close functions
+    const showInvestmentModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedInvestment(e.row);
+        }
+        setModalInvestmentState(true);
+    }
+
+    const hideInvestmentModal = () => {
+        setModalInvestmentState(false);
+        setSelectedInvestment(undefined);
+        getInvestment();
+    }
 
     useEffect(() => {
         getInvestment();
@@ -72,17 +95,40 @@ const InvestmentV2 = (): ReactElement => {
             headerName: 'Valor',
             flex: 1,
             type: 'number',
-            valueFormatter: (value: number, row) => {
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            valueFormatter: (value: string, row) => {
+                const vael = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+                const percentageChange: string = parseFloat(row.percentageChange).toFixed(2);
+                return  `${vael} (${percentageChange}%)`;
             }
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
     ]
 
+    const filterdRows = investmentFilter
+    ? investments.filter(row => row.name.toLowerCase().includes(investmentFilter.toLowerCase()))
+    : investments
+
     return (
-        <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <Button
+        <Box sx={{ display: 'block', me: 5}}>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2 }}>
+                <TextField 
+                    label='Filtrar por nome'
+                    variant='outlined'
+                    size='small'
+                    value={investmentFilter}
+                    onChange={e => setInvestmentFilter(e.target.value)}
+                    sx={{ minWidth: 250 }}
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={showInvestmentModal}
+                    disabled={isLoading}
+                >
+                    Novo
+                </Button>
+                <Button
                     variant="contained"
                     color="primary"
                     size="small"
@@ -94,10 +140,11 @@ const InvestmentV2 = (): ReactElement => {
             </Box>
             <DataGrid
                 columns={columns}
-                data={investments}
+                data={filterdRows}
                 getRowId={(row) => row.investmentId.toString()}
                 isLoading={isLoading}
             />
+            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
         </Box>
     )
 }
