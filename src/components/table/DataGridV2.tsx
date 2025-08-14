@@ -30,6 +30,7 @@ const DataGridComp = (props: DataGridProps) => {
                 disableRowSelectionOnClick={props.disableRowSelectionOnClick ?? true}
                 onRowClick={props.onRowClick}
                 getRowId={props.getRowId ?? ((row: any) => row.id)}
+                autoHeight
             />
         </Box>
     );

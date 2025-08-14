@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { Investment } from "../../../../../interfaces/Finance";
@@ -102,6 +102,42 @@ const InvestmentV2 = (): ReactElement => {
             }
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
+        {
+            field: 'actions',
+            headerName: 'Ações',
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box 
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',      // vertical
+                    justifyContent: 'center',  // horizontal
+                    gap: 1,
+                    flex: 1,                   // ocupa toda a largura da célula
+                    height: '100%',            // ocupa toda a altura
+                }}
+                >
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={showInvestmentModal.bind(null, params)}  
+                    >
+                        Editar
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='primary'
+                        size='small'
+                        onClick={showInvestmentModal.bind(null, params)}
+                    >
+                        Extrato
+                    </Button>
+                </Box>
+            ),
+        },
     ]
 
     const filterdRows = investmentFilter
