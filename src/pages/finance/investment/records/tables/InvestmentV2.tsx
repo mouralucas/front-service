@@ -8,6 +8,7 @@ import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls";
 import { getFinanceData } from "../../../../../services/axios/Get";
 import ModalInvestment from '../modals/Investment';
 import ModalInvestmentStatement from '../modals/Statement';
+import ModalInvestmentPerformance from '../modals/Performance';
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -18,13 +19,17 @@ const InvestmentV2 = (): ReactElement => {
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>();
     
     const [modalInvestmentStatementState, setModalInvestmentStatementState] = useState<boolean>(false)
-
+    const [modalInvestmentPerformanceState, setModalInvestmentPerformanceState] = useState<boolean>(false)
 
     // Table Filter
     const [investmentFilter, setInvestmentFilter] = useState('');
 
     // Loading State
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    // Investment information for the stats modal - soon to be deprecated
+    const [investmentId, setInvestmentId] = useState<string>('')
+    const [investmentName, setInvestmentName] = useState<string>('')
 
     // Modals Open/Close functions
     const showInvestmentModal = (e: any) => {
@@ -51,6 +56,20 @@ const InvestmentV2 = (): ReactElement => {
         setModalInvestmentStatementState(false);
         setSelectedInvestment(undefined);
         getInvestment();
+    }
+
+    const showInvestmentPerformanceModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setInvestmentId(e.row.investmentId);
+            setInvestmentName(e.row.name);
+            setModalInvestmentPerformanceState(true);
+        }
+    }
+
+    const hideInvestmentPerformanceModal = () => {
+        setModalInvestmentPerformanceState(false);
+        setInvestmentId('');
+        setInvestmentName('');
     }
 
     useEffect(() => {
@@ -152,6 +171,14 @@ const InvestmentV2 = (): ReactElement => {
                     >
                         Extrato
                     </Button>
+                    <Button
+                        variant="contained"
+                        color='primary'
+                        size='small'
+                        onClick={showInvestmentPerformanceModal.bind(null, params)}
+                    >
+                        Performance
+                    </Button>
                 </Box>
             ),
         },
@@ -199,6 +226,7 @@ const InvestmentV2 = (): ReactElement => {
             />
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
             <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment} />
+            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName}/>
         </Box>
     )
 }

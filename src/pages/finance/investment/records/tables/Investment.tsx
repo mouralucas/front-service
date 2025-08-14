@@ -53,7 +53,6 @@ const App: FC = (): ReactElement => {
             setInvestmentName(e.row.data.name);
             setModalInvestmentPerformanceState(true);
         }
-
     }
 
     const hideInvestmentModal = () => {
