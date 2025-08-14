@@ -7,6 +7,7 @@ import { InvestmentResponse } from "../../../../../interfaces/FinanceRequest";
 import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls";
 import { getFinanceData } from "../../../../../services/axios/Get";
 import ModalInvestment from '../modals/Investment';
+import ModalInvestmentStatement from '../modals/Statement';
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -15,6 +16,9 @@ const InvestmentV2 = (): ReactElement => {
     // Modals States
     const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false);
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>();
+    
+    const [modalInvestmentStatementState, setModalInvestmentStatementState] = useState<boolean>(false)
+
 
     // Table Filter
     const [investmentFilter, setInvestmentFilter] = useState('');
@@ -32,6 +36,19 @@ const InvestmentV2 = (): ReactElement => {
 
     const hideInvestmentModal = () => {
         setModalInvestmentState(false);
+        setSelectedInvestment(undefined);
+        getInvestment();
+    }
+
+    const showInvestmentStatementModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedInvestment(e.row)
+        }
+        setModalInvestmentStatementState(true);
+    }
+
+    const hideInvestmentStatementModal = () => {
+        setModalInvestmentStatementState(false);
         setSelectedInvestment(undefined);
         getInvestment();
     }
@@ -131,7 +148,7 @@ const InvestmentV2 = (): ReactElement => {
                         variant="contained"
                         color='primary'
                         size='small'
-                        onClick={showInvestmentModal.bind(null, params)}
+                        onClick={showInvestmentStatementModal.bind(null, params)}
                     >
                         Extrato
                     </Button>
@@ -181,6 +198,7 @@ const InvestmentV2 = (): ReactElement => {
                 isLoading={isLoading}
             />
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
+            <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment} />
         </Box>
     )
 }

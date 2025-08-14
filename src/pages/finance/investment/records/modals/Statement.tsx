@@ -55,6 +55,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     };
 
     useEffect(() => {
+        // TODO: add fetch to get last statement and set the data and period automatically
         if (props.modalState && props.investment && props.investment.investmentId) {
             reset({
                 ...getValues(),
