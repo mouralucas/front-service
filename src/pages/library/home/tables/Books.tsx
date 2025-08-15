@@ -2,10 +2,15 @@ import { ReactElement, useEffect, useState, useCallback } from "react"
 import { Item } from "../../../../interfaces/Library.tsx"
 import { getItems } from "../../../../services/getCommonData/Library.tsx"
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
-import { Box, Button, TextField } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import DataGridComp from "../../../../components/table/DataGridV2.tsx"
 import ItemModal from '../modals/Item.tsx'
 import BookDrawer from "../drawer/Book.tsx";
+import IconButton from '@mui/material/IconButton';
+import Autorenew from '@mui/icons-material/AutorenewOutlined';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 
 
 const Books = (): ReactElement => {
@@ -81,22 +86,20 @@ const Books = (): ReactElement => {
                         height: '100%',
                     }}
                 >
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        onClick={showItemModal.bind(null, params)}  
+                    <IconButton 
+                        aria-label="editar"
+                        color="success" 
+                        onClick={showItemModal.bind(null, params)}
                     >
-                        Editar
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color='primary'
-                        size='small'
+                        <EditOutlined />
+                    </IconButton>
+                    <IconButton 
+                        aria-label="detalhes"
+                        color="success" 
                         onClick={onOpenDrawerClick.bind(null, params)}
                     >
-                        Detalhes
-                    </Button>
+                        <LibraryBooksOutlinedIcon />
+                    </IconButton>
                 </Box>
             ),
         },
@@ -108,7 +111,7 @@ const Books = (): ReactElement => {
 
     return (
         <Box sx={{me: 5}}>
-            <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'right' }}>
                 <TextField 
                     label='Filtrar por título'
                     variant='outlined'
@@ -117,24 +120,20 @@ const Books = (): ReactElement => {
                     onChange={e => setBookFilter(e.target.value)}
                     sx={{ minWidth: 250 }}
                 />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
+                <IconButton 
+                    aria-label="Novo Registro"
                     onClick={showItemModal}
                     disabled={isLoading}
                 >
-                    Novo
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
+                    <AddCircleOutline />
+                </IconButton>
+                <IconButton 
+                    aria-label="Atualizar"
                     onClick={getAvailableBooks}
                     disabled={isLoading}
                 >
-                    Atualizar
-                </Button>
+                    <Autorenew />
+                </IconButton>
             </Box>
             <DataGridComp 
                 columns={columns}

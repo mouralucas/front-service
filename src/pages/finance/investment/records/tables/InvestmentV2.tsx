@@ -10,10 +10,10 @@ import ModalInvestment from '../modals/Investment';
 import ModalInvestmentStatement from '../modals/Statement';
 import ModalInvestmentPerformance from '../modals/Performance';
 import IconButton from '@mui/material/IconButton';
-import QueryStats from '@mui/icons-material/QueryStatsOutlined';
-import Edit from '@mui/icons-material/EditOutlined';
-import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWalletOutlined';
-import Autorenew from '@mui/icons-material/AutorenewOutlined';
+import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 
 
@@ -166,21 +166,21 @@ const InvestmentV2 = (): ReactElement => {
                         color="success" 
                         onClick={showInvestmentModal.bind(null, params)}
                     >
-                        <Edit />
+                        <EditOutlined />
                     </IconButton>
                     <IconButton 
                         aria-label="extrato"
                         color="secondary" 
                         onClick={showInvestmentStatementModal.bind(null, params)}
                     >
-                        <AccountBalanceWallet />
+                        <AccountBalanceWalletOutlined />
                     </IconButton>
                     <IconButton 
                         aria-label="performance"
                         color="secondary" 
                         onClick={showInvestmentPerformanceModal.bind(null, params)}
                     >
-                        <QueryStats />
+                        <QueryStatsutlined />
                     </IconButton>
                 </Box>
             ),
@@ -214,7 +214,7 @@ const InvestmentV2 = (): ReactElement => {
                     onClick={getInvestment}
                     loading={isLoading}
                 >
-                    <Autorenew />
+                    <AutorenewOutlined />
                 </IconButton>
             </Box>
             <DataGrid
