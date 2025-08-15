@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
@@ -10,11 +10,11 @@ import ModalInvestment from '../modals/Investment';
 import ModalInvestmentStatement from '../modals/Statement';
 import ModalInvestmentPerformance from '../modals/Performance';
 import IconButton from '@mui/material/IconButton';
-import QueryStats from '@mui/icons-material/QueryStats';
-import Edit from '@mui/icons-material/Edit';
-import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
-import Autorenew from '@mui/icons-material/Autorenew';
-import AddCircleOutline from '@mui/icons-material/AddCircle';
+import QueryStats from '@mui/icons-material/QueryStatsOutlined';
+import Edit from '@mui/icons-material/EditOutlined';
+import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWalletOutlined';
+import Autorenew from '@mui/icons-material/AutorenewOutlined';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -163,7 +163,7 @@ const InvestmentV2 = (): ReactElement => {
                 >
                     <IconButton 
                         aria-label="editar"
-                        color="secondary" 
+                        color="success" 
                         onClick={showInvestmentModal.bind(null, params)}
                     >
                         <Edit />
@@ -193,7 +193,7 @@ const InvestmentV2 = (): ReactElement => {
 
     return (
         <Box sx={{ display: 'block', me: 5}}>
-            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
                 <TextField 
                     label='Filtrar por nome'
                     variant='outlined'
