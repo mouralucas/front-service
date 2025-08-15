@@ -1,5 +1,7 @@
 import { DataGrid, GridRowIdGetter } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
+import '../../assets/core/components/tablev2.css'
+
 
 interface DataGridProps {
     columns: any;
@@ -9,6 +11,7 @@ interface DataGridProps {
     disableRowSelectionOnClick?: boolean;
     onRowClick?: () => null;
     getRowId?: GridRowIdGetter<any>;
+    getRowClassName?: any;
 }
 
 const DataGridComp = (props: DataGridProps) => {
@@ -30,6 +33,7 @@ const DataGridComp = (props: DataGridProps) => {
                 disableRowSelectionOnClick={props.disableRowSelectionOnClick ?? true}
                 onRowClick={props.onRowClick}
                 getRowId={props.getRowId ?? ((row: any) => row.id)}
+                getRowClassName={props.getRowClassName ?? ''}
                 autoHeight
             />
         </Box>

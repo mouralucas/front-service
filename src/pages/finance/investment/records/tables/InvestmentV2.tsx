@@ -15,6 +15,7 @@ import EditOutlined from '@mui/icons-material/EditOutlined';
 import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import { isLessThanMonths } from "../../../../../utils/datetime";
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -82,6 +83,23 @@ const InvestmentV2 = (): ReactElement => {
         getInvestment();
     }, [])
 
+    const getRowClassName = (params: any) => {
+        // The check order is based in importance, negative performance should be shown first, then near settle investments, and finally the default row style.
+        const perc = parseFloat(params.row.percentageChange);
+        if (perc < 0) {
+            return 'red-row'
+        }
+
+        if (isLessThanMonths(params.row.maturityDate, 0)) {
+            return 'green-row'
+        }
+
+        if (isLessThanMonths(params.row.maturityDate, 3)) {
+            return 'blue-row'
+        }
+
+    }
+
     const getInvestment = () => {
         setIsLoading(true);
         getFinanceData(URL_FINANCE_INVESTMENT, {isLiquidated: false}).then((response: InvestmentResponse) => {
@@ -115,7 +133,7 @@ const InvestmentV2 = (): ReactElement => {
                   const dd = String(date.getDate()).padStart(2, '0');
                   const mm = String(date.getMonth() + 1).padStart(2, '0');
                   const yy = String(date.getFullYear()).slice(-2);
-                  return `${dd}/${mm}/${yy}`;
+                  return `${mm}/${yy}`;
                 };
             
                 const start = format(value); // transactionDate
@@ -222,6 +240,7 @@ const InvestmentV2 = (): ReactElement => {
                 data={filterdRows}
                 getRowId={(row) => row.investmentId.toString()}
                 isLoading={isLoading}
+                getRowClassName={getRowClassName}
             />
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
             <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment} />
