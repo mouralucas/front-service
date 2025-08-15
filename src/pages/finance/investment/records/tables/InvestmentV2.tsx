@@ -9,6 +9,12 @@ import { getFinanceData } from "../../../../../services/axios/Get";
 import ModalInvestment from '../modals/Investment';
 import ModalInvestmentStatement from '../modals/Statement';
 import ModalInvestmentPerformance from '../modals/Performance';
+import IconButton from '@mui/material/IconButton';
+import QueryStats from '@mui/icons-material/QueryStats';
+import Edit from '@mui/icons-material/Edit';
+import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
+import Autorenew from '@mui/icons-material/Autorenew';
+import AddCircleOutline from '@mui/icons-material/AddCircle';
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -155,30 +161,27 @@ const InvestmentV2 = (): ReactElement => {
                     height: '100%',            // ocupa toda a altura
                 }}
                 >
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        onClick={showInvestmentModal.bind(null, params)}  
+                    <IconButton 
+                        aria-label="editar"
+                        color="secondary" 
+                        onClick={showInvestmentModal.bind(null, params)}
                     >
-                        Editar
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color='primary'
-                        size='small'
+                        <Edit />
+                    </IconButton>
+                    <IconButton 
+                        aria-label="extrato"
+                        color="secondary" 
                         onClick={showInvestmentStatementModal.bind(null, params)}
                     >
-                        Extrato
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color='primary'
-                        size='small'
+                        <AccountBalanceWallet />
+                    </IconButton>
+                    <IconButton 
+                        aria-label="performance"
+                        color="secondary" 
                         onClick={showInvestmentPerformanceModal.bind(null, params)}
                     >
-                        Performance
-                    </Button>
+                        <QueryStats />
+                    </IconButton>
                 </Box>
             ),
         },
@@ -199,24 +202,20 @@ const InvestmentV2 = (): ReactElement => {
                     onChange={e => setInvestmentFilter(e.target.value)}
                     sx={{ minWidth: 250 }}
                 />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
+                <IconButton 
+                    aria-label="Novo Registro"
                     onClick={showInvestmentModal}
-                    disabled={isLoading}
+                    loading={isLoading}
                 >
-                    Novo
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
+                    <AddCircleOutline />
+                </IconButton>
+                <IconButton 
+                    aria-label="Atualizar"
                     onClick={getInvestment}
-                    disabled={isLoading}
+                    loading={isLoading}
                 >
-                    Atualizar
-                </Button>
+                    <Autorenew />
+                </IconButton>
             </Box>
             <DataGrid
                 columns={columns}
