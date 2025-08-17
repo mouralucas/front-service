@@ -15,7 +15,7 @@ interface BookDrawerProps {
     itemId?: number;
     item?: any;
     onCloseDrawerClick: (e: any) => void;
-}
+};
 
 const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
@@ -61,18 +61,35 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
         // });
     }
 
+    const getStatusChipVariant = (): "danger" | "success" | "alert" | "info" | "undefined" => {
+        if (props.openDrawerState) {
+            if (props.item?.lastStatusId == 'lost') {
+                return "danger";
+            }
+
+            return 'info';
+        }
+
+        return "undefined";
+    }
+
     const content: ReactElement =
     <Box display="flex" flexDirection="column" height="100%">
     {/* Toolbar */}
     <Box className="custom-toolbar">
-        <Stack direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
-            <Box className="toolbar-item before">
-                <span className="contact-name">{props.item?.title}</span>
+        <Stack 
+            direction="row" 
+            spacing={2} 
+            alignItems="flex-end" 
+            sx={{ width: '100%' }}
+        >
+            <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center'}} >
+                <Chip 
+                    label={props.item?.lastStatusName}
+                    variant={getStatusChipVariant()}
+                />
+                <span className="contact-name"> | {props.item?.title}</span>
             </Box>
-            <Box className="toolbar-item before">
-                <Chip label={props.item?.lastStatusName} variant="outlined" />
-            </Box>
-            <Box className="toolbar-item after" flexGrow={1} />
         </Stack>
     </Box>
 
@@ -139,7 +156,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                     </Box>
                 </Stack>
 
-                {stats?.isCurrentlyReading && (
+                {stats?.isCurrentlyReading ? (
                     <>
                         <Stack direction="row" spacing={2} mt={2}>
                             <Box flex={1}>
@@ -161,13 +178,20 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                             </Button>
                         </Box>
                     </>
-                )}
+                ) : 
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={startReading}
+                >
+                    Iniciar Nova Leitura
+                </Button>
+                }
             </>
         ) : stats?.readingsCount === 0 ? (
             <Box mt={2}>
                 <Button
                     fullWidth
-                    variant="outlined"
                     onClick={startReading}
                 >
                     Iniciar Leitura

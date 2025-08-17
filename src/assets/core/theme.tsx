@@ -56,36 +56,6 @@ const theme = createTheme({
                 },
             },
         },
-        MuiChip: {
-            variants: [
-                {
-                    props: { variant: 'filled' },
-                    style: {
-                        height: 'auto',
-                        lineHeight: 'auto',
-                        paddingTop: '2px',
-                        paddingBottom: '2px',
-                        backgroundColor: ColorPalette.primary.dark,
-                        color: ColorPalette.white.main,
-                        '&:hover': {
-                            backgroundColor: ColorPalette.primary.main,
-                        },
-                        '&.Mui-disabled': {
-                            backgroundColor: ColorPalette.grey.main,
-                        },
-                        '& .MuiChip-label': {
-                            paddingTop: '4px',
-                            paddingLeft: '4px',
-                            paddingBottom: '4px',
-                            lineHeight: '12px',
-                        },
-                        '& > svg': {
-                            marginLeft: '6px',
-                        },
-                    },
-                },
-            ],
-        },
         MuiPaginationItem: {
             styleOverrides: {
                 root: {
@@ -114,18 +84,32 @@ const theme = createTheme({
                 },
             },
         },
-        MuiDataGrid: {
-            styleOverrides: {
-                root: {
-                    '.MuiDataGrid-overlay': {
-                        height: 'auto !important',
-                        minHeight: '100px',
-                    },
+        
+
+        // Custom theme styles
+        MuiChip: {
+            variants: [
+              {
+                props: { variant: "danger" as any },
+                style: {
+                  backgroundColor: "var(--red-pastel)",
+                  color: "#ffffff",
+                  //"&:hover": {
+                  //  backgroundColor: "var(--info-pastel)", // cor diferente no hover
+                  //},
+                  //"&.MuiChip-clickable.MuiChip-clickableColorPrimary.MuiChip-selected": {
+                  //  backgroundColor: "var(--red-dark)",
+                  //},
+                  //"&:active": {
+                  //  backgroundColor: "var(--red-dark)",
+                  //},
+                  //"&.Mui-focusVisible": {
+                  //  outline: "2px solid var(--red-strong)",
+                  //},
                 },
-            },
+              },
+            ],
         },
-        MuiButton: buttonStyles,
-        MuiIconButton: iconButtonStyles,
     },
 });
 
