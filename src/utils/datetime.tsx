@@ -19,10 +19,6 @@ export const getPeriodFromDate = (date: any): number=> {
 
 
 export const isLessThanMonths = (dateStr: string, months: number = 2, compareDate?: Date): boolean => {
-    // TODO: can be simplified using the getPeriodFromDate function
-    //  e.g. getPeriodFromDate(dateStr) - getPeriodFromDate(compareDate) < months
-    //  Alse be able to receive dateStr as Date or string, the same for compareDate
-    
     const targetDate = new Date(dateStr);
     const refDate = compareDate ? new Date(compareDate) : new Date();
 
@@ -36,4 +32,32 @@ export const isLessThanMonths = (dateStr: string, months: number = 2, compareDat
 
     return monthsDiff <= months || 
            (monthsDiff === months && refDate.getDate() < targetDate.getDate());
+}
+
+export const formatDate = (
+    baseDate: Date | string, 
+    format: string = 'dd/MM/yyyy'
+): string => {
+    if (!baseDate) return '';
+
+    let date: Date;
+    if (baseDate instanceof Date) {
+        date = baseDate;
+    } else {
+        date = new Date(baseDate);
+    }
+
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yy = String(date.getFullYear()).slice(-2);
+
+    if (format === 'dd/MM/yy') {
+        return `${dd}/${mm}/${yy}`;
+    } else if (format === 'MM/yy') {  
+        return `${mm}/${yy}`;
+    }
+
+    // Default format
+    return `${dd}/${mm}/${date.getFullYear()}`;
+    
 }

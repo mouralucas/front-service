@@ -67,6 +67,9 @@ interface DataGridProps {
     onRowPrepared?: any
 }
 
+/*
+@deprecated The use of DevExtreme is no longer available and will soon be removed
+*/
 const App = (props: DataGridProps): ReactElement => {
     const setColumns = (): ReactElement[] => {
         const columns_list: ReactElement[] = [];

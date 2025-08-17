@@ -15,7 +15,7 @@ import EditOutlined from '@mui/icons-material/EditOutlined';
 import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
-import { isLessThanMonths } from "../../../../../utils/datetime";
+import { formatDate, isLessThanMonths } from "../../../../../utils/datetime";
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -122,22 +122,8 @@ const InvestmentV2 = (): ReactElement => {
             valueFormatter: (value, row) => {
                 if (!value) return '';
             
-                const format = (val: any) => {
-                  if (!val) return '';
-                  let date: Date;
-                  if (val instanceof Date) {
-                    date = val;
-                  } else {
-                    date = new Date(String(val));
-                  }
-                  const dd = String(date.getDate()).padStart(2, '0');
-                  const mm = String(date.getMonth() + 1).padStart(2, '0');
-                  const yy = String(date.getFullYear()).slice(-2);
-                  return `${mm}/${yy}`;
-                };
-            
-                const start = format(value); // transactionDate
-                const end = format(row.maturityDate); // maturityDate
+                const start = formatDate(value, 'MM/yy'); // transactionDate
+                const end = formatDate(row.maturityDate, 'MM/yy'); // maturityDate
                 return end ? `${start} => ${end}` : start;
               },  
         },
