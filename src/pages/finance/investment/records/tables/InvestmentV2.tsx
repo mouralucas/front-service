@@ -87,15 +87,15 @@ const InvestmentV2 = (): ReactElement => {
         // The check order is based in importance, negative performance should be shown first, then near settle investments, and finally the default row style.
         const perc = parseFloat(params.row.percentageChange);
         if (perc < 0) {
-            return 'red-row'
+            return 'danger-mui-row'
         }
 
         if (isLessThanMonths(params.row.maturityDate, 0)) {
-            return 'green-row'
+            return 'success-mui-row'
         }
 
         if (isLessThanMonths(params.row.maturityDate, 3)) {
-            return 'blue-row'
+            return 'info-mui-row'
         }
 
     }

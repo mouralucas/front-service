@@ -96,8 +96,6 @@ const theme = createTheme({
                 },
             },
         },
-        MuiButton: buttonStyles,
-        MuiIconButton: iconButtonStyles,
         // @ts-expect-error - Não existe em Components, mas vamos sobrescrever mesmo assim
         MuiClockPicker: {
             styleOverrides: {
@@ -126,6 +124,8 @@ const theme = createTheme({
                 },
             },
         },
+        MuiButton: buttonStyles,
+        MuiIconButton: iconButtonStyles,
     },
 });
 

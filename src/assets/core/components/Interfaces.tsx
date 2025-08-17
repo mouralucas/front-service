@@ -1,3 +1,6 @@
+/**
+ * @deprecated This interface is deprecated. The use of DevExtreme is no longer available and will soon be removed
+ */
 export interface DataGridColumn {
     key?: string
     dataField?: any
@@ -16,6 +19,9 @@ export interface DataGridColumn {
     child?: any | undefined
 }
 
+/**
+ * @deprecated This interface is deprecated. The use of DevExtreme is no longer available and will soon be removed
+ */
 export interface DataGridToolBarItem {
     index?: any
     name?: string

@@ -1,3 +1,8 @@
+const getCssVar = (name: string) => {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+  
+
 export const COLORS = {
     WHITE: '#FFFFFF',
     BLACK: '#000000',
@@ -31,24 +36,6 @@ export const COLORS = {
     MASK_BLURRED: 'rgba(236,237,239,.9)',
     MASK_DARK: 'rgba(0,0,0,.5)',
     MASK_LIGHT: 'rgba(255,255,255,.2)',
-    STACKS: {
-        Java: '#FFAB6E',
-        Python: '#FADE7C',
-        PHP: '#BABCF0',
-        Ruby: '#F28988',
-        Node: '#0DDCAA',
-        'C++': '#64B6F2',
-        '.NET': '#0088C8',
-        Kernel: '#F9B7DE',
-        Other: '#B375FD',
-        Go: '#83E7F4',
-        Appid: '#8894E6',
-        'Java (inl)': '#F07822',
-        'Java (C1)': '#A8693B',
-        'Java (interpreted)': '#d1a280',
-        root: '#373A4A',
-        mine: '#bfbfbf',
-    },
     // to be chabged or added:
     DARK_BLUE_1: '#20224C',
     BLUE_3: '#070F23',

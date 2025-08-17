@@ -1,17 +1,38 @@
 
-
-.red-row {
-    background-color: #F28B82;
+.danger-mui-row {
+    background-color: var(--danger-pastel);
 }
 
-.green-row {
-    background-color: #B5EAD7;
+.success-mui-row {
+    background-color: var(--success-pastel);
 }
 
-.yellow-row {
-    background-color: #FFF2A1;
+.alert-mui-row {
+    background-color: var(--alert-pastel);
 }
 
-.blue-row {
-    background-color: #A7C7E7;
+.info-mui-row {
+    background-color: var(--info-pastel);
+}
+
+
+/* MUI hover classes */
+.MuiDataGrid-root .danger-mui-row:hover .MuiDataGrid-cell,
+.MuiDataGrid-root .danger-mui-row.Mui-hovered .MuiDataGrid-cell { /* fallback p/ v6 */
+  background-color: var(--danger-pastel-secondary);
+}
+
+.MuiDataGrid-root .info-mui-row:hover .MuiDataGrid-cell,
+.MuiDataGrid-root .info-mui-row.Mui-hovered .MuiDataGrid-cell { /* fallback p/ v6 */
+  background-color: var(--info-pastel-secondary);
+}
+
+.MuiDataGrid-root .alert-mui-row:hover .MuiDataGrid-cell,
+.MuiDataGrid-root .alert-mui-row.Mui-hovered .MuiDataGrid-cell { /* fallback p/ v6 */
+  background-color: var(--alert-pastel-secondary);
+}
+
+.MuiDataGrid-root .success-mui-row:hover .MuiDataGrid-cell,
+.MuiDataGrid-root .success-mui-row.Mui-hovered .MuiDataGrid-cell { /* fallback p/ v6 */
+  background-color: var(--success-pastel-secondary);
 }
