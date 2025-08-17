@@ -1,22 +1,20 @@
-import {ReactElement, useEffect, useState} from "react";
-import {DataGridColumn} from "../../../../../assets/core/components/Interfaces.tsx";
-import DataGrid from "../../../../../components/table/DataGrid.tsx";
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../../services/axios/ApiUrls.tsx";
-import {GetInvestmentStatementResponse} from "../../../../../interfaces/FinanceRequest.tsx";
-import {toast} from "react-toastify";
-import Loader from "../../../../../components/Loader.tsx";
+import { ReactElement, useState, useEffect } from "react";
+import DataGridComp from "../../../../../components/table/DataGridV2";
+import { getFinanceData } from "../../../../../services/axios/Get";
+import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls";
+import { GridColDef } from "@mui/x-data-grid";
+import { formatDate } from "../../../../../utils/datetime";
+import { GetInvestmentStatementResponse } from "../../../../../interfaces/FinanceRequest";
 
-interface InvestmentStatementProps {
-    investmentId: string;
 
+interface IncestmentStatementTableProps {
+    investmentId: string
 }
 
-
-const App = (props: InvestmentStatementProps): ReactElement => {
-    const [statements, setStatements] = useState<any>([])
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-
+const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactElement => {
+    const [statements, setStatements] = useState<any>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    
     useEffect(() => {
         if (props.investmentId) {
             getInvestmentStatement()
@@ -30,88 +28,66 @@ const App = (props: InvestmentStatementProps): ReactElement => {
             setStatements(response.statement)
             setIsLoading(false);
         }).catch(() => {
-            toast.error('Erro ao buscar os extratos do investimento')
+            // toast.error('Erro ao buscar os extratos do investimento')
             setIsLoading(false);
         })
     }
 
-    function grossAmountCustomCell(cellInfo: any) {
-        // const currentSymbol: string = cellInfo.currencySymbol;
-        const currentSymbol: string = "R$ ";
-        const grossAmount: string = parseFloat(cellInfo.grossAmount).toFixed(2);
-        const formated_string: string = `${currentSymbol} ${grossAmount}`
-        return formated_string;
-    }
-
-    function netAmountCustomCell(cellInfo: any) {
-        // const currentSymbol: string = cellInfo.currencySymbol;
-        const currentSymbol: string = "R$ ";
-        const netAmount: string = parseFloat(cellInfo.netAmount).toFixed(2);
-        const formated_string: string = `${currentSymbol} ${netAmount}`
-        return formated_string;
-    }
-
-    const columns: DataGridColumn[] = [
-        {
-            dataField: "investmentStatementId",
-            caption: "Id",
-            dataType: "string",
-            width: 70,
-            visible: false
+    const columns: GridColDef[] = [
+        { field: "investmentStatementId", headerName: "Id", flex: 1 },
+        { field: "period", headerName: 'Período', flex: 1},
+        { 
+            field: "referenceDate", 
+            headerName: 'Referência', 
+            flex: 1,
+            valueFormatter: (value) => {
+                if (!value) return '';
+                const formattedDate = formatDate(value);
+                return `${formattedDate}`;
+            },
         },
-        {
-            dataField: "period",
-            caption: "Período",
-            dataType: "number",
+        { 
+            field: "totalTax", 
+            headerName: 'Impostos', 
+            flex: 1,
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         },
-        {
-            dataField: "referenceDate",
-            caption: "Referência",
-            dataType: "date",
-            format: 'dd/MM/yyyy',
+        { 
+            field: "totalFee", 
+            headerName: 'Taxas', 
+            flex: 1,
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         },
-        {
-            dataField: "totalTax",
-            caption: "Impostos",
-            dataType: "number",
+        { 
+            field: "grossAmount",
+            headerName: 'Valor Bruto', 
+            flex: 1,
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         },
-        {
-            dataField: "totalFee",
-            caption: "Taxas",
-            dataType: "number",
-        },
-        {
-            dataField: "grossAmount",
-            caption: 'Bruto',
-            dataType: "currency",
-            calculateCellValue: grossAmountCustomCell,
-        },
-        {
-            dataField: "netAmount",
-            caption: 'Líquido',
-            dataType: "currency",
-            calculateCellValue: netAmountCustomCell,
+        { 
+            field: "netAmount", 
+            headerName: 'Valor Líquido', 
+            flex: 1,
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         }
     ]
 
     return (
-        <>
-            {isLoading ?
-                <Loader/>
-                :
-                <DataGrid
-                    keyExpr={'investmentStatementId'}
-                    data={statements}
-                    columns={columns}
-                    columnChooser={
-                        {
-                            enabled: false
-                        }
-                    }
-                />
-            }
-        </>
+        <DataGridComp 
+            columns={columns}
+            data={statements}
+            isLoading={isLoading}
+            getRowId={(row) => row.investmentStatementId}
+        />
     )
 }
 
-export default App;
+export default InvestmentStatementTable;
