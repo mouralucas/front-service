@@ -7,25 +7,7 @@
 }
 
 :root {
-    --color-primay: #00FF7F;
-    --color-secondary: hsl(270deg 75% 60%);
 
-    /* Basic colors and its hover and focus variations (secondary, tertiary) */
-    --danger-pastel: #F28B82;
-    --danger-pastel-secondary: #E0746B;
-    --danger-pastel-tertiary: #F5A29A;
-
-    --info-pastel: #A7C7E7;
-    --info-pastel-secondary: #8FAFD0;
-    --info-pastel-tertiary: #BAD4ED;
-
-    --alert-pastel: #FFF2A1;
-    --alert-pastel-secondary: #E8D98D;
-    --alert-pastel-tertiary: #FFF6B8;
-
-    --success-pastel: #B5EAD7;
-    --success-pastel-secondary: #9FD1BE;
-    --success-pastel-tertiary: #C9F0E1;
 }
 
 /*Project Default*/

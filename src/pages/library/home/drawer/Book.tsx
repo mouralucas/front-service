@@ -1,13 +1,14 @@
 import { ReactElement, useEffect, useState } from "react";
 import DrawerV2 from "../../../../components/Drawer.tsx";
-import image from '../../../../assets/core/images/no-cover.png'
 import { getLibraryData } from "../../../../services/axios/Get.tsx";
 import { URL_LIBRARY_READING_STATS } from "../../../../services/axios/ApiUrls.tsx";
 import { ReadingStatsResponse } from "../../../../interfaces/LibraryRequest.tsx";
 import { ItemReadingStats } from "../../../../interfaces/Library.tsx";
 import { toast } from "react-toastify";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
-
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import { Box, Button } from "@mui/material";
 
 interface BookDrawerProps {
     openDrawerState: boolean;
@@ -60,183 +61,132 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
         // });
     }
 
-    const html: ReactElement =
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <div className="custom-toolbar">
-                <div className="toolbar-item before">
-                    <span className="contact-name">{props.item?.title}</span>
-                </div>
-                <div className="toolbar-item before">
-                    <div className="status-item status-owned">
-                        <span>{props.item?.lastStatusName}</span>
-                    </div>
-                </div>
-                <div className="toolbar-item after">
+    const content: ReactElement =
+    <Box display="flex" flexDirection="column" height="100%">
+    {/* Toolbar */}
+    <Box className="custom-toolbar">
+        <Stack direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
+            <Box className="toolbar-item before">
+                <span className="contact-name">{props.item?.title}</span>
+            </Box>
+            <Box className="toolbar-item before">
+                <Chip label={props.item?.lastStatusName} variant="outlined" />
+            </Box>
+            <Box className="toolbar-item after" flexGrow={1} />
+        </Stack>
+    </Box>
 
-                </div>
-                <div className="toolbar-item after">
-                    <button className="toolbar-button close-button" onClick={props.onCloseDrawerClick}>
-                        ✖
-                    </button>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-6">
-                    <div className='item-cover-view mt-2 ms-2'>
-                        <div
-                            className={`item-cover`}
-                            style={{
-                                width: 150,
-                                height: 200,
-                                maxHeight: 200,
-                                backgroundImage: `url(${image})`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                                backgroundRepeat: "no-repeat",
-                            }}
-                        />
-                    </div>
-                </div>
-                <div className="col-6">
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th className={'contact-name'}>Título</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>{props.item?.title}</div>
-                                <div className="fw-light text-muted small">{props.item?.subtitle}</div>
-                            </td>
-                        </tr>
-                    </table>
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th>
-                                <div>
-                                    {props.item?.mainAuthorName}
-                                    <div className="fw-light text-mutted small">
-                                        Owen King; Outro Autor; Mais um ainda
-                                    </div>
-                                </div>
-                            </th>
-                        </tr>
-                    </table>
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th className={'contact-name'}>Páginas</th>
-                        </tr>
-                        <tr>
-                            {props.item?.pages}
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div className="ms-2 row">
-                <div className="col-3">
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th className={'contact-name'}>Editora</th>
-                        </tr>
-                        <tr>
-                            {props.item?.publisherName}
-                        </tr>
-                    </table>
-                </div>
-                <div className="col-9">
-                    <table className={'mt-2 me-2'}>
-                        <tr>
-                            <th className={'contact-name'}>Série</th>
-                        </tr>
-                        <tr>
-                            {props.item?.serieName}
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <hr />
-            {/* Reading statistics */}
-            <div style={{ flex: 1, overflowY: 'auto' }}>
-                {(stats?.readingsCount !== undefined && stats.readingsCount > 0) ?
+    {/* Cover + Main info */}
+    <Stack direction="row" spacing={2} p={2}>
+        <Box
+            className="item-cover"
+            sx={{
+                backgroundImage: 'url(/images/no-cover.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                borderRadius: 1,
+                border: '1px solid #ddd',
+                width: 150,
+                height: 200,
+                flexShrink: 0,
+            }}
+        />
+        <Stack spacing={2}>
+            <Box>
+                <div className="contact-name">Título</div>
+                <div>{props.item?.title}</div>
+                <div className="fw-light text-muted small">{props.item?.subtitle}</div>
+            </Box>
+            <Box>
+                <div className="contact-name">Autor</div>
+                <div>{props.item?.mainAuthorName}</div>
+                <div className="fw-light text-muted small">Owen King; Outro Autor; Mais um ainda</div>
+            </Box>
+            <Box>
+                <div className="contact-name">Páginas</div>
+                <div>{props.item?.pages}</div>
+            </Box>
+        </Stack>
+    </Stack>
+
+    {/* Publisher + Serie */}
+    <Stack direction="row" spacing={2} px={2}>
+        <Box flex={1}>
+            <div className="contact-name">Editora</div>
+            <div>{props.item?.publisherName}</div>
+        </Box>
+        <Box flex={2}>
+            <div className="contact-name">Série</div>
+            <div>{props.item?.serieName}</div>
+        </Box>
+    </Stack>
+
+    <hr />
+
+    {/* Reading stats */}
+    <Box flex={1} overflow="auto" px={2} pb={2}>
+        {(stats?.readingsCount !== undefined && stats.readingsCount > 0) ? (
+            <>
+                <Stack direction="row" spacing={2}>
+                    <Box flex={1}>
+                        <div className="contact-name">Leituras</div>
+                        <div>{stats?.readingsCount}</div>
+                    </Box>
+                    <Box flex={1}>
+                        <div className="contact-name">Última leitura</div>
+                        <div>{stats?.lastReadingDate}</div>
+                    </Box>
+                </Stack>
+
+                {stats?.isCurrentlyReading && (
                     <>
-                        <div className="ms-2 row">
-                            <div className="col-6">
-                                <table className={'mt-2 me-2'}>
-                                    <tr>
-                                        <th className={'contact-name'}>Leituras</th>
-                                    </tr>
-                                    <tr>
-                                        {stats?.readingsCount}
-                                    </tr>
-                                </table>
-                            </div>
-                            <div className="col-6">
-                                <table className={'mt-2 me-2'}>
-                                    <tr>
-                                        <th className={'contact-name'}>Última leitura</th>
-                                    </tr>
-                                    <tr>
-                                        {stats?.lastReadingDate}
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        {(stats?.isCurrentlyReading) &&
-                            <>
-                                <div className="ms-2 me-2 row">
-                                    <div className="col-6">
-                                        <table className={'mt-2 me-2'}>
-                                            <tr>
-                                                <th className={'contact-name'}>Página atual</th>
-                                            </tr>
-                                            <tr>
-                                                {stats?.currentPage}
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div className="col-6">
-                                        <table className={'mt-2 me-2'}>
-                                            <tr>
-                                                <th className={'contact-name'}>Perc. atual</th>
-                                            </tr>
-                                            <tr>
-                                                {stats?.currentPercentage}
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div className="ms-2 me-2 mt-2 row">
-                                    <button className='btn btn-outline-secondary text-center w-100'
-                                        onClick={showCreateReadingProgressModal}>Adicionar Progresso
-                                    </button>
-                                </div>
-                            </>
-                        }
+                        <Stack direction="row" spacing={2} mt={2}>
+                            <Box flex={1}>
+                                <div className="contact-name">Página atual</div>
+                                <div>{stats?.currentPage}</div>
+                            </Box>
+                            <Box flex={1}>
+                                <div className="contact-name">Perc. atual</div>
+                                <div>{stats?.currentPercentage}</div>
+                            </Box>
+                        </Stack>
+                        <Box mt={2}>
+                            <Button
+                                fullWidth
+                                variant="outlined"
+                                onClick={showCreateReadingProgressModal}
+                            >
+                                Adicionar Progresso
+                            </Button>
+                        </Box>
                     </>
-                    :
-                    (stats?.readingsCount === 0) ?
-                        <>
-                            <div className="ms-2 row me-2">
-                                <div className="col-12">
-                                    <button className='btn btn-outline-secondary text-center w-100'
-                                        onClick={startReading}>Iniciar Leitura
-                                    </button>
-                                </div>
-                            </div>
-                        </>
-                        :
-                        <>
-                            <div className="ms-2 row me-2">
-                                <div className="col-12">
-                                    <span className="text-muted"><b>Leitura em andamento.</b></span>
-                                    <button className='btn btn-outline-secondary text-center w-100'
-                                        onClick={startReading}>Nova Leitura
-                                    </button>
-                                </div>
-                            </div>
-                        </>
-                }
-            </div>
-        </div>
+                )}
+            </>
+        ) : stats?.readingsCount === 0 ? (
+            <Box mt={2}>
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={startReading}
+                >
+                    Iniciar Leitura
+                </Button>
+            </Box>
+        ) : (
+            <Box mt={2}>
+                <span className="text-muted"><b>Leitura em andamento.</b></span>
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={startReading}
+                >
+                    Nova Leitura
+                </Button>
+            </Box>
+        )}
+    </Box>
+</Box>
 
     return (
         <>
@@ -244,7 +194,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                 isOpened={props.openDrawerState}
                 changePanelOpened={props.onCloseDrawerClick}
                 anchor="right"
-                content={html}
+                content={content}
             />
             <CreateReadingProgressModal
                 modalState={crateReadingProgressModalState}
