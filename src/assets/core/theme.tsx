@@ -10,7 +10,7 @@ interface MyZIndex extends ZIndex {
     floatingElements: number;
     sidebar: number;
     verification: number;
-  }
+}
 
 const theme = createTheme({
     breakpoints: {
@@ -69,11 +69,11 @@ const theme = createTheme({
         // @ts-expect-error - Não existe em Components, mas vamos sobrescrever mesmo assim
         MuiClockPicker: {
             styleOverrides: {
-            arrowSwitcher: {
-                '& + div': {
-                paddingBottom: '70px',
+                arrowSwitcher: {
+                    '& + div': {
+                        paddingBottom: '70px',
+                    },
                 },
-            },
             },
         } as any,
         MuiFormControlLabel: {
@@ -84,30 +84,33 @@ const theme = createTheme({
                 },
             },
         },
-        
+
 
         // Custom theme styles
         MuiChip: {
             variants: [
-              {
-                props: { variant: "danger" as any },
-                style: {
-                  backgroundColor: "var(--red-pastel)",
-                  color: "#ffffff",
-                  //"&:hover": {
-                  //  backgroundColor: "var(--info-pastel)", // cor diferente no hover
-                  //},
-                  //"&.MuiChip-clickable.MuiChip-clickableColorPrimary.MuiChip-selected": {
-                  //  backgroundColor: "var(--red-dark)",
-                  //},
-                  //"&:active": {
-                  //  backgroundColor: "var(--red-dark)",
-                  //},
-                  //"&.Mui-focusVisible": {
-                  //  outline: "2px solid var(--red-strong)",
-                  //},
+                {
+                    props: { variant: "danger" as any },
+                    style: {
+                        backgroundColor: "var(--red-pastel)", // fundo
+                        //border: "1px solid var(--black)", // borda
+                        "& .MuiChip-label": {
+                            color: "var(--white)",
+                        },
+                        //"&:hover": {
+                        //    backgroundColor: "var(--black)",
+                        //},
+                        //"&:active": {
+                        //    backgroundColor: "var(--red-dark)",
+                        //},
+                        //"&.MuiChip-clickable.MuiChip-selected": {
+                        //    backgroundColor: "var(--red-dark)",
+                        //    "& .MuiChip-label": {
+                        //        color: "#fff",
+                        //    },
+                        //},
+                    },
                 },
-              },
             ],
         },
     },

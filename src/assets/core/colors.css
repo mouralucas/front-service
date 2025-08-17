@@ -4,6 +4,8 @@
     --color-secondary: hsl(270deg 75% 60%);
 
     /* Basic colors */
+    --black: #000000;
+    --white: #FFFFFF;
     --red-pastel: #F28B82;
     --green-pastel: #B5EAD7;
 
