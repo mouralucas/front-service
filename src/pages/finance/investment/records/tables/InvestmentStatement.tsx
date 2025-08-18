@@ -14,7 +14,7 @@ interface IncestmentStatementTableProps {
 const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactElement => {
     const [statements, setStatements] = useState<any>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    
+
     useEffect(() => {
         if (props.investmentId) {
             getInvestmentStatement()
@@ -24,7 +24,7 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
     const getInvestmentStatement = () => {
         setIsLoading(true);
 
-        getFinanceData(URL_FINANCE_INVESTMENT_STATEMENT, {investmentId: props.investmentId}).then((response: GetInvestmentStatementResponse) => {
+        getFinanceData(URL_FINANCE_INVESTMENT_STATEMENT, { investmentId: props.investmentId }).then((response: GetInvestmentStatementResponse) => {
             setStatements(response.statement)
             setIsLoading(false);
         }).catch(() => {
@@ -35,44 +35,34 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
 
     const columns: GridColDef[] = [
         { field: "investmentStatementId", headerName: "Id", flex: 1 },
-        { field: "period", headerName: 'Período', flex: 1},
-        { 
-            field: "referenceDate", 
-            headerName: 'Referência', 
-            flex: 1,
-            valueFormatter: (value) => {
-                if (!value) return '';
-                const formattedDate = formatDate(value);
-                return `${formattedDate}`;
-            },
-        },
-        { 
-            field: "totalTax", 
-            headerName: 'Impostos', 
+        { field: "period", headerName: 'Período', flex: 1 },
+        {
+            field: "totalTax",
+            headerName: 'Impostos',
             flex: 1,
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
         },
-        { 
-            field: "totalFee", 
-            headerName: 'Taxas', 
+        {
+            field: "totalFee",
+            headerName: 'Taxas',
             flex: 1,
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
         },
-        { 
+        {
             field: "grossAmount",
-            headerName: 'Valor Bruto', 
+            headerName: 'Valor Bruto',
             flex: 1,
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
         },
-        { 
-            field: "netAmount", 
-            headerName: 'Valor Líquido', 
+        {
+            field: "netAmount",
+            headerName: 'Valor Líquido',
             flex: 1,
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -81,11 +71,14 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
     ]
 
     return (
-        <DataGridComp 
+        <DataGridComp
             columns={columns}
             data={statements}
             isLoading={isLoading}
             getRowId={(row) => row.investmentStatementId}
+            columnVisibilityModel={{
+                investmentStatementId: false
+            }}
         />
     )
 }

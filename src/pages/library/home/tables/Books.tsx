@@ -65,10 +65,7 @@ const Books = (): ReactElement => {
         {field: 'itemId', headerName:'Id', flex: 1},
         {field: 'title', headerName: 'título', flex: 1},
         {field: 'mainAuthorName', headerName: 'Autor', flex: 1},
-        {field: 'pages', headerName: 'Páginas', flex: 1},
         {field: 'serieName', headerName: 'Série', flex: 1},
-        {field: 'publisherName', headerName: 'Editora', flex: 1},
-        {field: 'lastStatusName', headerName: 'Status', flex: 1},
         {
             field: 'actions',
             headerName: 'Ações',
@@ -140,6 +137,9 @@ const Books = (): ReactElement => {
                 data={filterdRows}
                 getRowId={(row: any) => row.itemId}
                 isLoading={isLoading}
+                columnVisibilityModel={{
+                    itemId: false
+                }}
             />
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook} />
             <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook} />

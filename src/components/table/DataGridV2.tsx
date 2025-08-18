@@ -12,12 +12,13 @@ interface DataGridProps {
     onRowClick?: () => null;
     getRowId?: GridRowIdGetter<any>;
     getRowClassName?: any;
+    columnVisibilityModel?: any;
 }
 
 const DataGridComp = (props: DataGridProps) => {
     return (
         <Box sx={{ width: '100%' }}>
-            <DataGrid 
+            <DataGrid
                 rows={props.data}
                 columns={props.columns}
                 loading={props.isLoading ?? false}
@@ -34,6 +35,7 @@ const DataGridComp = (props: DataGridProps) => {
                 onRowClick={props.onRowClick}
                 getRowId={props.getRowId ?? ((row: any) => row.id)}
                 getRowClassName={props.getRowClassName ?? ''}
+                columnVisibilityModel={props.columnVisibilityModel ?? {}}
                 autoHeight
             />
         </Box>

@@ -227,6 +227,9 @@ const InvestmentV2 = (): ReactElement => {
                 getRowId={(row) => row.investmentId.toString()}
                 isLoading={isLoading}
                 getRowClassName={getRowClassName}
+                columnVisibilityModel={{
+                    investmentId: false,
+                }}
             />
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment}/>
             <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment} />
