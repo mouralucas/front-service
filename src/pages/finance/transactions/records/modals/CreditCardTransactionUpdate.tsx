@@ -1,5 +1,5 @@
 import React, {BaseSyntheticEvent, useEffect, useState} from "react";
-import Modal from "../../../../../components/Modal.tsx";
+import Modal from "../../../../../components/ModalOld.tsx";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";

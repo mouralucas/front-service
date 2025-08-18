@@ -1,5 +1,5 @@
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
-import Modal from '../../../../../components/Modal'
+import Modal from '../../../../../components/ModalOld.tsx'
 import { Investment } from "../../../../../interfaces/Finance.tsx";
 import { Controller, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";

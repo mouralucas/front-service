@@ -1,5 +1,5 @@
 import {ReactElement} from "react";
-import Modal from "../../../../components/Modal.tsx";
+import Modal from "../../../../components/ModalOld.tsx";
 
 interface SerieModalProps {
     modalState: boolean;

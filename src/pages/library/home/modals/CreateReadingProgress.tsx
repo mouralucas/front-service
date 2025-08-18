@@ -5,7 +5,7 @@ import Select from 'react-select';
 import DateMaskedInput from "../../../../components/form/DateMaskInput.tsx";
 import DatePicker from "react-datepicker";
 import { format, parseISO } from "date-fns";
-import Modal from "../../../../components/Modal.tsx";
+import Modal from "../../../../components/ModalOld.tsx";
 import { toast } from "react-toastify";
 import { librarySubmit } from "../../../../services/axios/Submit.tsx";
 import { URL_LIBRARY_READING_PROGRESS } from "../../../../services/axios/ApiUrls.tsx";

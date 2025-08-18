@@ -1,4 +1,4 @@
-import Modal from "../../../../../components/Modal";
+import Modal from "../../../../../components/ModalOld";
 import PerformanceChart from '../charts/Performance';
 import StatementTable from '../tables/InvestmentStatement';
 

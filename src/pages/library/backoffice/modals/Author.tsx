@@ -1,5 +1,5 @@
 import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
-import Modal from "../../../../components/Modal.tsx";
+import Modal from "../../../../components/ModalOld.tsx";
 import {Author} from "../../../../interfaces/Library.tsx";
 import {Controller, useForm} from "react-hook-form";
 import {format, parseISO} from "date-fns";

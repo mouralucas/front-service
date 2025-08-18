@@ -3,7 +3,7 @@ import {URL_FINANCE_ACCOUNT_TRANSACTION} from "../../../../../services/axios/Api
 import {toast, ToastOptions} from "react-toastify";
 import {format, parseISO} from 'date-fns';
 import {Controller, useForm} from "react-hook-form";
-import Modal from "../../../../../components/Modal.tsx";
+import Modal from "../../../../../components/ModalOld.tsx";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import DatePicker from "react-datepicker";
 import Select from 'react-select';

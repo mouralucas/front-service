@@ -69,7 +69,7 @@ const App = (props: ObjectivesProps) => {
 
     const body =
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="row">
+            <div className="row mt-2">
                 <div className="col-4">
                     <label htmlFor="">Título</label>
                     <Controller
@@ -85,7 +85,7 @@ const App = (props: ObjectivesProps) => {
                         )}
                     />
                 </div>
-                <div className="col-4">
+                <div className="col-5">
                     <label htmlFor="">Valor</label>
                     <Controller
                         name={'amount'}
@@ -103,7 +103,7 @@ const App = (props: ObjectivesProps) => {
                         )}
                     />
                 </div>
-                <div className="col-4">
+                <div className="col-3">
                     <label htmlFor="">Data</label>
                     <Controller
                         name={'estimatedDeadline'}
@@ -150,7 +150,7 @@ const App = (props: ObjectivesProps) => {
             showModal={props.modalState}
             hideModal={props.hideModal}
             actionModal={handleSubmit(onSubmit)}
-            size={'modal-lg'}
+            size={'modal-sm'}
         />
     )
 }

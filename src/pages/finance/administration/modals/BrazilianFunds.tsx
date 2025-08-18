@@ -1,4 +1,4 @@
-import Modal from "../../../../components/Modal.tsx";
+import Modal from "../../../../components/ModalOld.tsx";
 import {BrazilianFunds} from "../../../../interfaces/Finance.tsx";
 import {Controller, useForm} from "react-hook-form";
 import {BaseSyntheticEvent} from "react";

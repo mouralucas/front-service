@@ -1,85 +1,80 @@
-import React, {ReactElement} from 'react'
-// import 'bootstrap/dist/css/bootstrap.min.css';
-import '../assets/core/components/modal.css'
+import React, { ReactElement } from "react";
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    Box,
+} from "@mui/material";
+import "../assets/core/components/modal.css"; // 👉 importa o css separado
 
 interface ModalProps {
-    // Add defaults no parâmetro e tirar validações do tipo ??
-    // Ref: https://bobbyhadz.com/blog/react-optional-props-typescript
-    showModal: any;
-    hideModal?: any;
-    actionModal?: any;
+    showModal: boolean;
+    hideModal?: () => void;
+    actionModal?: () => void;
     disableAction?: boolean;
     footer?: React.ReactElement;
     body: React.ReactElement;
     headerComponents?: React.ReactElement;
-    fullscreen?: any;
+    fullscreen?: boolean;
     title?: string;
-    size?: 'modal-sm' | 'modal-lg' | 'modal-xl' | 'modal-fullscreen';
+    size?: "modal-sm" | "modal-lg" | "modal-xl" | "modal-fullscreen";
 }
-
 
 const App = (props: ModalProps): React.ReactElement => {
+    const sizeMapping: Record<string, "xs" | "sm" | "md" | "lg" | "xl"> = {
+        "modal-sm": "sm",
+        "modal-lg": "lg",
+        "modal-xl": "xl",
+        "modal-fullscreen": "xl",
+    };
 
-    // Criar um props que recebe o footer, caso não exista o props usar o default (que está feito nessa tela)
-    const footer: React.ReactElement = props.footer ??
-        <>
-            <div className="col-3">
-                <div className="d-flex flex-nowrap">
-                    <button className='btn btn-outline-secondary text-center w-100'
-                            onClick={props.hideModal}>Fechar
-                    </button>
-                </div>
-            </div>
-            <div className="col-4">
-            </div>
-            <div className="col-3">
-                <div className="d-flex flex-nowrap">
-                    <button className='btn btn-default text-black btn-outline-primary text-center w-100 mr-1' disabled={props.disableAction ?? false}
-                            onClick={props.actionModal ?? props.hideModal}>Salvar
-                    </button>
-                </div>
-            </div>
-        </>
-
-    const html: ReactElement =
-        <>
-            {/* Modal */}
-            <div
-                className={`modal ${props.showModal ? "show" : "fade"}`}
-                tabIndex={-1}
-                style={{ display: props.showModal ? "block" : "none" }}
-                role="dialog"
-                aria-modal="true"
-            >
-                <div className={`modal-dialog modal-dialog-centered ${props.size ?? ''}`}>
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">{props.title ?? "Modal Title"}</h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                aria-label="Close"
-                                onClick={props.hideModal}
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            {props.body ?? <p>This is the modal body.</p>}
-                        </div>
-                        <div className="modal-footer">
-                            <div className='row pr-2 pl-2 d-flex justify-content-between align-items-center flex-wrap w-100'>
-                                {footer}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Backdrop */}
-            {props.showModal && <div className="modal-backdrop fade show"></div>}
-        </>
+    const footer: ReactElement =
+        props.footer ?? (
+            <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    fullWidth
+                    onClick={props.hideModal}
+                >
+                    Fechar
+                </Button>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    fullWidth
+                    disabled={props.disableAction ?? false}
+                    onClick={props.actionModal ?? props.hideModal}
+                >
+                    Salvar
+                </Button>
+            </Box>
+        );
 
     return (
-        html
+        <Dialog
+            open={props.showModal}
+            onClose={props.hideModal}
+            fullWidth
+            maxWidth={sizeMapping[props.size ?? ""] ?? "md"}
+            fullScreen={props.size === "modal-fullscreen" || props.fullscreen}
+        >
+            <DialogTitle className="custom-modal-header">
+                {props.title ?? "Modal Title"}
+                {props.headerComponents && <Box ml={2}>{props.headerComponents}</Box>}
+            </DialogTitle>
+
+            <DialogContent>
+                {props.body ?? <p>This is the modal body.</p>}
+            </DialogContent>
+
+            <DialogActions className="custom-modal-footer">
+                {footer}
+            </DialogActions>
+        </Dialog>
     );
-}
+};
+
 export default App;
