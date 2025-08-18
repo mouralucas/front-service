@@ -1,5 +1,5 @@
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
-import Modal from '../../../../../components/ModalOld.tsx'
+import Modal from '../../../../../components/Modal.tsx'
 import { Investment } from "../../../../../interfaces/Finance.tsx";
 import { Controller, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
@@ -130,7 +130,7 @@ const App = (props: InvestmentProps): ReactElement => {
     const body: ReactElement = isLoading ? <Loader /> :
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
+                <div className="row mt-2">
                     <div className="col-3">
                         <label htmlFor="">Data</label>
                         <Controller
