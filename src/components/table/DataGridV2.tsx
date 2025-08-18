@@ -7,12 +7,15 @@ interface DataGridProps {
     columns: any;
     data: any[];
     isLoading?: boolean;
+    pageSizeOptions?: number[];
+    pageSize?: number;
     checkBoxSelection?: boolean;
     disableRowSelectionOnClick?: boolean;
     onRowClick?: () => null;
     getRowId?: GridRowIdGetter<any>;
     getRowClassName?: any;
     columnVisibilityModel?: any;
+    getTreeDataPath?: any;
 }
 
 const DataGridComp = (props: DataGridProps) => {
@@ -25,18 +28,17 @@ const DataGridComp = (props: DataGridProps) => {
                 initialState={{
                     pagination: {
                         paginationModel: {
-                            pageSize: 10,
+                            pageSize: props.pageSize ?? 10,
                         },
                     },
                 }}
-                pageSizeOptions={[5, 10, 30, 100]}
+                pageSizeOptions={props.pageSizeOptions ?? [5, 10, 30, 50, 100]}
                 checkboxSelection={props.checkBoxSelection ?? false}
                 disableRowSelectionOnClick={props.disableRowSelectionOnClick ?? true}
                 onRowClick={props.onRowClick}
                 getRowId={props.getRowId ?? ((row: any) => row.id)}
                 getRowClassName={props.getRowClassName ?? ''}
                 columnVisibilityModel={props.columnVisibilityModel ?? {}}
-                autoHeight
             />
         </Box>
     );
