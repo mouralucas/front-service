@@ -99,3 +99,4 @@ Buttons                 - Pendente
 Modal                   - Pendente
 Drawer                  - Parcial (falta trocar elementos internos)
 Bootstrap grid -> Grid  - Pendente
+Charts -> x-charts      - Bloqueado (depende de modifcação do backend)

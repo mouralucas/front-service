@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import Line from "../../../../../components/chart/Line.tsx"
+import Line from "../../../../../components/chart/LineOld.tsx"
 import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../../services/axios/ApiUrls.tsx";
 import {toast, ToastOptions} from "react-toastify";

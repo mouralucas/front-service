@@ -1,4 +1,4 @@
-import Line from "../../../../../components/chart/Line.tsx"
+import Line from "../../../../../components/chart/LineOld.tsx"
 
 // Import this css to test tooltip style
 import '../../../../../assets/core/components/tooltip.css'
