@@ -21,7 +21,7 @@ interface ModalProps {
   headerComponents?: React.ReactElement;
   fullscreen?: boolean;
   title?: string;
-  size?: "modal-sm" | "modal-lg" | "modal-xl" | "modal-fullscreen";
+  size?: "modal-xs" | "modal-sm" | "modal-md" | "modal-lg" | "modal-xl" | "modal-fullscreen";
 }
 
 const App = (props: ModalProps): React.ReactElement => {

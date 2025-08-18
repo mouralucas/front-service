@@ -1,4 +1,4 @@
-import Modal from "../../../../components/ModalOld.tsx";
+import Modal from "../../../../components/Modal.tsx";
 import {BrazilianFunds} from "../../../../interfaces/Finance.tsx";
 import {Controller, useForm} from "react-hook-form";
 import {BaseSyntheticEvent} from "react";
@@ -20,7 +20,7 @@ const BrazilianFundsModal = (props: BrazilianFundsModalProps) => {
     const body =
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
+                <div className="row mt-2">
                     <div className="col-6">
                         <label htmlFor="">Nome do fundo</label>
                         <Controller
@@ -60,7 +60,7 @@ const BrazilianFundsModal = (props: BrazilianFundsModalProps) => {
             showModal={props.modalState}
             hideModal={props.hideModal}
             body={body}
-            size={'modal-lg'}
+            size={'modal-sm'}
         />
     )
 }

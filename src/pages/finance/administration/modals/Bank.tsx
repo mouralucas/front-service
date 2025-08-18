@@ -1,5 +1,5 @@
 import {BaseSyntheticEvent, ReactElement} from "react";
-import Modal from "../../../../components/ModalOld.tsx";
+import Modal from "../../../../components/Modal.tsx";
 import {Bank} from "../../../../interfaces/Finance.tsx";
 import {Controller, useForm} from "react-hook-form";
 import {financeSubmit} from "../../../../services/axios/Submit.tsx";
@@ -54,7 +54,7 @@ const App = (props: BankModalProps): ReactElement => {
     const body =
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
+                <div className="row mt-2">
                     <div className="col-8">
                         <label htmlFor="">Nome</label>
                         <Controller
@@ -97,7 +97,7 @@ const App = (props: BankModalProps): ReactElement => {
             body={body}
             actionModal={handleSubmit(onSubmit)}
             disableAction={!isDirty}
-            size='modal-lg'
+            size='modal-md'
         />
     )
 }

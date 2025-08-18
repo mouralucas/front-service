@@ -8,7 +8,7 @@ import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
 import {Item} from '../../../../interfaces/Library.tsx'
 import {getAuthors, getCollections, getPublishers, getSeries, getStatuses} from "../../../../services/getCommonData/Library.tsx";
 import {getLanguages} from "../../../../services/getCommonData/Core.tsx";
-import Modal from "../../../../components/ModalOld.tsx";
+import Modal from "../../../../components/Modal.tsx";
 import {librarySubmit} from "../../../../services/axios/Submit.tsx";
 import {URL_LIBRARY_ITEM} from "../../../../services/axios/ApiUrls.tsx";
 import {toast} from "react-toastify";

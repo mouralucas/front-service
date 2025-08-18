@@ -5,7 +5,7 @@ import Select from 'react-select';
 import DateMaskedInput from "../../../../components/form/DateMaskInput.tsx";
 import DatePicker from "react-datepicker";
 import { format, parseISO } from "date-fns";
-import Modal from "../../../../components/ModalOld.tsx";
+import Modal2 from "../../../../components/Modal.tsx";
 import { toast } from "react-toastify";
 import { librarySubmit } from "../../../../services/axios/Submit.tsx";
 import { URL_LIBRARY_READING_PROGRESS } from "../../../../services/axios/ApiUrls.tsx";
@@ -165,14 +165,14 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
 
     return (
         <div>
-            <Modal
+            <Modal2
                 showModal={props.modalState}
                 hideModal={props.hideCreateReadingProgressModal}
                 title={'Progresso de Leitura'}
                 fullscreen={true}
                 body={body}
                 actionModal={handleSubmit(submitReadingProgress)}
-                size={'modal-lg'}
+                size={'modal-sm'}
             />
         </div>
     )

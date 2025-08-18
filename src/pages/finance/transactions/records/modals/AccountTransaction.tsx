@@ -3,7 +3,7 @@ import {URL_FINANCE_ACCOUNT_TRANSACTION} from "../../../../../services/axios/Api
 import {toast, ToastOptions} from "react-toastify";
 import {format, parseISO} from 'date-fns';
 import {Controller, useForm} from "react-hook-form";
-import Modal from "../../../../../components/ModalOld.tsx";
+import Modal from "../../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
@@ -121,7 +121,7 @@ const App = (props: AccountStatementProps) => {
     const body: ReactElement = isLoading ? <Loader /> :
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
+                <div className="row mt-2">
                     <div className="col-4">
                         <label htmlFor="">Conta</label>
                         <Controller name={'accountId'}
@@ -254,7 +254,7 @@ const App = (props: AccountStatementProps) => {
                 body={body}
                 actionModal={handleSubmit(onSubmit)}
                 disableAction={!isDirty}
-                size={'modal-xl'}
+                size={'modal-md'}
             />
         </div>
     );

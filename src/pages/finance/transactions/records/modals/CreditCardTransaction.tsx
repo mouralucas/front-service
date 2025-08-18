@@ -1,6 +1,6 @@
 import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
 
-import Modal from '../../../../../components/ModalOld.tsx'
+import Modal from '../../../../../components/Modal.tsx'
 import {Controller, useFieldArray, useForm} from "react-hook-form";
 import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {URL_CREDIT_CARD_INSTALLMENT_DUE_DATES, URL_CREDIT_CARD_TRANSACTION} from "../../../../../services/axios/ApiUrls.tsx";
@@ -160,7 +160,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
     const body: ReactElement = isLoading ? <Loader /> :
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
+                <div className="row mt-2">
                     <div className="col-6">
                         <label htmlFor="">Cartão</label>
                         <Controller
@@ -498,7 +498,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
                body={body}
                actionModal={handleSubmit(onSubmit)}
                disableAction={!isDirty}
-               size={'modal-xl'}
+               size={'modal-md'}
         />
     )
 }
