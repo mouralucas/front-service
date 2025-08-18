@@ -1,35 +1,35 @@
-import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
-import {useEffect, useState} from "react";
-import DataGrid from "../../../../../components/table/DataGrid.tsx";
-import Loader from "../../../../../components/Loader.tsx";
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {URL_FINANCE_BRAZILIAN_FUND_INVESTMENT} from "../../../../../services/axios/ApiUrls.tsx";
-import {BrazilianFundInvestment} from "../../../../../interfaces/Finance.tsx";
-import {toast} from "react-toastify";
-import {Button as Btn} from "devextreme-react/data-grid";
+import { ReactElement, useState, useEffect } from "react";
+import DataGrid from '../../../../../components/table/DataGridV2';
+import { GridColDef } from "@mui/x-data-grid";
+import { getFinanceData } from "../../../../../services/axios/Get";
+import { URL_FINANCE_BRAZILIAN_FUND_INVESTMENT } from "../../../../../services/axios/ApiUrls";
+import { GetBrazilianFundInvestmentResponse } from "../../../../../interfaces/FinanceRequest";
 import BrazilianFundInvestmentModal from "../modals/BrazilianFundInvestment.tsx";
-import Button from "devextreme-react/button";
+import { BrazilianFundInvestment } from "../../../../../interfaces/Finance";
+import { Box, IconButton } from "@mui/material";
+import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import { formatDate } from "../../../../../utils/datetime";
 
-interface BrazilianFundInvestmentResponse {
-    success: boolean
-    quantity: number
-    investments: BrazilianFundInvestment[]
-}
 
-const BrazilianFundInvestmentTable = () => {
+const BrazilianFundInvestmentTable = (): ReactElement => {
+    const [brFundInvestments, setBrFundInvestments] = useState<BrazilianFundInvestment[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     // Modal states
     const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false)
-
-    const [brFundInvestments, setBrFundInvestments] = useState<BrazilianFundInvestment[]>([])
 
     useEffect(() => {
         getBrazilianFundInvestments();
     }, [])
 
     const showInvestmentModal = (e: any) => {
-        alert(e);
+        if (e.row) {
+
+        }
         setModalInvestmentState(true);
     }
 
@@ -39,117 +39,74 @@ const BrazilianFundInvestmentTable = () => {
     }
 
     const getBrazilianFundInvestments = () => {
-        getFinanceData(URL_FINANCE_BRAZILIAN_FUND_INVESTMENT, {isSettled: false}).then((response: BrazilianFundInvestmentResponse) => {
+        setIsLoading(true);
+        getFinanceData(URL_FINANCE_BRAZILIAN_FUND_INVESTMENT, { isSettled: false }).then((response: GetBrazilianFundInvestmentResponse) => {
             setBrFundInvestments(response.investments);
             setIsLoading(false);
         }).catch(() => {
-            toast.error('Houve um erro aos buscar os investimentos em fundos');
+            //toast.error('Houve um erro aos buscar os investimentos em fundos');
             setIsLoading(false);
         })
     }
 
-    const columns: DataGridColumn[] = [
+    const columns: GridColDef[] = [
+        { field: 'investmentId', headerName: 'Id', flex: 1 },
+        { field: 'fundName', headerName: 'Fundo', flex: 1 },
+        { field: 'name', headerName: 'Nome', flex: 1 },
         {
-            dataField: "investmentId",
-            caption: "Id",
-            dataType: "string",
-            width: 40,
-            visible: false,
-        },
-        {
-            dataField: 'fundName',
-            caption: 'Fundo',
-            groupIndex: 0,
-        },
-        {
-            dataField: "name",
-            caption: "Nome",
-            dataType: "string",
-            alignment: 'left',
-            width: 250,
-        },
-        {
-            dataField: "transactionDate",
-            caption: "Data",
-            dataType: "date",
-            format: 'dd/MM/yyyy',
-            width: 100
-        },
-        {
-            dataField: "amount",
-            caption: "Investido",
-            dataType: "currency",
-            // calculateCellValue: amountCustomCell,
-        },
-        {
-            dataField: "quantity",
-            caption: "Numero de cotas",
-            dataType: "string",
-        },
-        {
-            caption: 'Ações',
-            type: 'buttons',
-            width: 150,
-            child: [
-                <Btn
-                    key={1}
-                    text="Editar"
-                    // icon="/url/to/my/icon.ico"
-                    icon="edit"
-                    hint="Editar"
-                    onClick={showInvestmentModal}
-                />,
-                // <Btn
-                //     key={3}
-                //     icon={'percent'}
-                //     hint={'Adicionar extrato'}
-                //     onClick={showInvestmentStatementModal}
-                // />,
-                // <Btn
-                //     key={5}
-                //     icon="info"
-                //     hint='Evolução'
-                //     onClick={showInvestmentPerformanceModal}
-                // />,
-            ]
-        }
-    ]
+            field: 'transactionDate',
+            headerName: 'Data',
+            flex: 1,
+            valueFormatter: (value) => {
+                if (!value) return '';
 
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
+                const start = formatDate(value);
+                return start;
+            },
         },
         {
-            name: 'exportButton',
-            location: 'after',
+            field: 'amount',
+            headerName: 'Investido',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number, row) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            }
         },
-        {
-            child: <Button icon='refresh' onClick={getBrazilianFundInvestments}/>,
-            location: "after"
-        },
-        {
-            name: 'searchPanel',
-            location: "after",
-        },
+        { field: 'quantity', headerName: 'Quantidade', flex: 1, type: 'number' },
     ]
 
     return (
-        <>
-            {isLoading ? <Loader/> :
-                <DataGrid
-                    keyExpr={'investmentId'}
-                    data={brFundInvestments}
-                    columns={columns}
-                    toolBar={{
-                        visible: true,
-                        items: toolBarItems
-                    }}
-                />
-            }
-            <BrazilianFundInvestmentModal modalState={modalInvestmentState} hideModal={hideInvestmentModal} brazilianFundInvestment={null}/>
-        </>
+        <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
+                <IconButton
+                    aria-label="Novo Registro"
+                    onClick={showInvestmentModal}
+                    loading={isLoading}
+                >
+                    <AddCircleOutline />
+                </IconButton>
+                <IconButton
+                    aria-label="Atualizar"
+                    onClick={getBrazilianFundInvestments}
+                    loading={isLoading}
+                >
+                    <AutorenewOutlined />
+                </IconButton>
+            </Box>
+            <DataGrid
+                columns={columns}
+                data={brFundInvestments}
+                isLoading={isLoading}
+                getRowId={(row) => row.investmentId}
+                columnVisibilityModel={{
+                    investmentId: false, // Hide the investmentId column
+                }}
+            />
+            <BrazilianFundInvestmentModal modalState={modalInvestmentState} hideModal={hideInvestmentModal} brazilianFundInvestment={null} />
+        </Box>
     )
 }
+
 
 export default BrazilianFundInvestmentTable;

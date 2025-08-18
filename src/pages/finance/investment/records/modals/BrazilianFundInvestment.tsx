@@ -1,5 +1,5 @@
 import {ReactElement, useEffect, useState} from "react";
-import Modal from "../../../../../components/ModalOld.tsx";
+import Modal from "../../../../../components/Modal.tsx";
 import Loader from "../../../../../components/Loader.tsx";
 import {Controller, useForm} from "react-hook-form";
 import {BrazilianFundInvestment} from "../../../../../interfaces/Finance.tsx";
@@ -264,7 +264,7 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
             hideModal={props.hideModal}
             title={'Investimento em Fundos'}
             body={body}
-            size={'modal-xl'}
+            size={'modal-md'}
         />
     )
 }
