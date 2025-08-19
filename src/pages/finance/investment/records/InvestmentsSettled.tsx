@@ -1,6 +1,6 @@
 import {ReactElement, useEffect} from "react";
 import Card from "../../../../components/Card.tsx";
-import InvestmentLiquidatedTable from './tables/InvestmentLiquidated.tsx'
+import InvestmentLiquidatedTable from './tables/InvestmentSettled.tsx'
 
 
 const LiquidatedInvestments = (): ReactElement => {
