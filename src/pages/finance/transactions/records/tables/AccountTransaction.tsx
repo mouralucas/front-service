@@ -3,16 +3,18 @@ import DataGrid from '../../../../../components/table/DataGridV2';
 import { Box, IconButton } from "@mui/material";
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { AccountTransaction } from "../../../../../interfaces/Finance";
 import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls";
 import { getFinanceData } from "../../../../../services/axios/Get";
-import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
+import { formatDate, getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import ptBR from "date-fns/locale/pt-BR";
 import { AccountTransactionResponse } from "../../../../../interfaces/FinanceRequest";
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import ModalStatement from '../modals/AccountTransaction.tsx'
 
 
 const AccountTransactionTable = (): ReactElement => {
@@ -37,6 +39,21 @@ const AccountTransactionTable = (): ReactElement => {
             getTransactions(getPeriodFromDate(startDate), getPeriodFromDate(endDate));
         }
     }, [startDate, endDate])
+
+    const showAccountTransactionModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedTransaction(e.row);
+        } else {
+            setSelectedTransaction(null);
+        }
+        setModalState(true);
+    }
+
+    const hideModal = () => {
+        setModalState(false);
+        setSelectedTransaction(undefined);
+        updateDateRange([startDate, endDate]);
+    }
 
     const updateDateRange = (dates: any) => {
         if (dates[1] !== null) {
@@ -66,15 +83,51 @@ const AccountTransactionTable = (): ReactElement => {
         {
             field: 'transactionDate',
             headerName: 'Data',
-            flex: 1
+            flex: 1,
+            valueFormatter: (value) => {
+                if (!value) return '';
+
+                const start = formatDate(value);
+                return start;
+            },
         },
         {
             field: 'amount',
             headerName: 'Valor',
-            flex: 1
+            flex: 1,
+            valueFormatter: (value: number, row) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            }
         },
         { field: 'description', headerName: 'Descrição', flex: 1 },
         { field: 'categoryName', headerName: 'Categoria', flex: 1 },
+        {
+            field: 'actions',
+            headerName: 'Ações',
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',      // vertical
+                        justifyContent: 'center',  // horizontal
+                        gap: 1,
+                        flex: 1,                   // ocupa toda a largura da célula
+                        height: '100%',            // ocupa toda a altura
+                    }}
+                >
+                    <IconButton
+                        aria-label="editar"
+                        color="success"
+                        onClick={showAccountTransactionModal.bind(null, params)}
+                    >
+                        <EditOutlined />
+                    </IconButton>
+                </Box>
+            ),
+        },
     ]
 
     return (
@@ -118,14 +171,14 @@ const AccountTransactionTable = (): ReactElement => {
                 </LocalizationProvider>
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={() => console.log('Novo Registro')}
+                    onClick={showAccountTransactionModal}
                     loading={isLoading}
                 >
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={() => console.log('Update')}
+                    onClick={updateDateRange.bind(null, [startDate, endDate])}
                     loading={isLoading}
                 >
                     <AutorenewOutlined />
@@ -140,6 +193,7 @@ const AccountTransactionTable = (): ReactElement => {
                     transactionId: false
                 }}
             />
+            <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction} />
         </Box>
     )
 }
