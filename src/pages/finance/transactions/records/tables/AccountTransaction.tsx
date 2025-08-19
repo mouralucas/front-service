@@ -136,6 +136,7 @@ const AccountTransactionTable = (): ReactElement => {
             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
                 <DatePicker
                     label="Data inicial"
+                    views={["month", "year"]}
                     value={startDate}
                     onChange={(newValue) => {
                         setStartDate(newValue);
@@ -153,6 +154,7 @@ const AccountTransactionTable = (): ReactElement => {
                 />
                 <DatePicker
                     label="Data final"
+                    views={["month", "year"]}
                     value={endDate}
                     onChange={(newValue) => {
                         setEndDate(newValue);
