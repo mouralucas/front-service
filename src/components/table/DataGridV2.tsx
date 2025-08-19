@@ -22,6 +22,7 @@ const DataGridComp = (props: DataGridProps) => {
     return (
         <Box sx={{ width: '100%' }}>
             <DataGrid
+                autoHeight // TODO: update this attr
                 rows={props.data}
                 columns={props.columns}
                 loading={props.isLoading ?? false}

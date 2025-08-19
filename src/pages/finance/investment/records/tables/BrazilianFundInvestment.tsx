@@ -7,9 +7,6 @@ import { GetBrazilianFundInvestmentResponse } from "../../../../../interfaces/Fi
 import BrazilianFundInvestmentModal from "../modals/BrazilianFundInvestment.tsx";
 import { BrazilianFundInvestment } from "../../../../../interfaces/Finance";
 import { Box, IconButton } from "@mui/material";
-import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
-import EditOutlined from '@mui/icons-material/EditOutlined';
-import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import { formatDate } from "../../../../../utils/datetime";

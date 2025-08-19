@@ -1,58 +1,47 @@
-import { useEffect, useState } from "react";
-import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
-import DataGrid from "../../../../../components/table/DataGrid.tsx";
-import Button from "devextreme-react/button";
-import { Button as Btn } from "devextreme-react/data-grid";
-import { toast } from "react-toastify";
-import { AccountTransaction } from "../../../../../interfaces/Finance.tsx";
-import { getFinanceData } from "../../../../../services/axios/Get.tsx";
-import { DataGridColumn, DataGridToolBarItem } from "../../../../../assets/core/components/Interfaces.tsx";
-import ModalStatement from '../modals/AccountTransaction.tsx'
-import Loader from '../../../../../components/Loader.tsx'
-import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime.tsx";
-import DatePicker from "react-datepicker";
-import {ptBR} from 'date-fns/locale';
+import { ReactElement, useState, useEffect } from "react";
+import DataGrid from '../../../../../components/table/DataGridV2';
+import { Box, IconButton } from "@mui/material";
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import { GridColDef } from "@mui/x-data-grid";
+import { AccountTransaction } from "../../../../../interfaces/Finance";
+import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls";
+import { getFinanceData } from "../../../../../services/axios/Get";
+import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import ptBR from "date-fns/locale/pt-BR";
+import { AccountTransactionResponse } from "../../../../../interfaces/FinanceRequest";
 
-interface TransactionResponse {
-    quantity: number
-    transactions: AccountTransaction[]
-}
 
-const App = () => {
-    const [transaction, setTransaction] = useState<AccountTransaction[] | null>();
+const AccountTransactionTable = (): ReactElement => {
+    const [transaction, setTransaction] = useState<AccountTransaction[]>([]);
     const [selectedTransaction, setSelectedTransaction] = useState<AccountTransaction | null>()
     const [modalState, setModalState] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const [dateRange, setDateRange] = useState<any>([]);
-    const [startDate, endDate] = dateRange;
-
-
+    // Filter date range
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
 
     useEffect(() => {
-        setDateRange(getLastPeriods());
+        const range = getLastPeriods();
+        setStartDate(new Date(range[0]));
+        setEndDate(new Date(range[1]));
         updateDateRange(getLastPeriods());
     }, []);
+
+    useEffect(() => {
+        if (startDate && endDate) {
+            getTransactions(getPeriodFromDate(startDate), getPeriodFromDate(endDate));
+        }
+    }, [startDate, endDate])
 
     const updateDateRange = (dates: any) => {
         if (dates[1] !== null) {
             getTransactions(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
         }
-    }
-
-    const showModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedTransaction(e.row.data);
-        } else {
-            setSelectedTransaction(null);
-        }
-        setModalState(true);
-    }
-
-    const hideModal = () => {
-        setModalState(false);
-        setSelectedTransaction(undefined);
-        updateDateRange(getLastPeriods());
     }
 
     const getTransactions = (startAt: number, endAt: number) => {
@@ -61,147 +50,98 @@ const App = () => {
         getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
             startPeriod: startAt,
             endPeriod: endAt
-        }).then((response: TransactionResponse) => {
+        }).then((response: AccountTransactionResponse) => {
             setTransaction(response?.transactions);
             setIsLoading(false);
         }
         ).catch(err => {
-            toast.error('Houve um erro ao buscar extratos: ' + err)
+            // toast.error('Houve um erro ao buscar extratos: ' + err)
             setIsLoading(false);
         })
     }
 
-    function amountCustomCell(cellInfo: any) {
-        const formattedAmount = cellInfo.amount.toFixed(2)
-
-        return cellInfo.currencySymbol + ' ' + formattedAmount;
-    }
-
-    const coffeeCommand = () => {
-        toast('☕ Cafezinho delícia!');
-    }
-
-    const columns: DataGridColumn[] = [
+    const columns: GridColDef[] = [
+        { field: 'transactionId', headerName: 'Id', flex: 1 },
+        { field: 'accountNickname', headerName: 'Conta', flex: 1 },
         {
-            dataField: "transactionId",
-            caption: "Id",
-            dataType: "number",
-            visible: false,
+            field: 'transactionDate',
+            headerName: 'Data',
+            flex: 1
         },
         {
-            dataField: "accountNickname",
-            caption: "Conta",
-            dataType: "string",
+            field: 'amount',
+            headerName: 'Valor',
+            flex: 1
         },
-        {
-            dataField: "transactionDate",
-            caption: "Compra",
-            dataType: "date",
-            format: 'dd/MM/yyyy',
-            width: 150,
-        },
-        {
-            dataField: "amount",
-            caption: "Valor",
-            dataType: "currency",
-            width: 110,
-            alignment: 'justify',
-            calculateCellValue: amountCustomCell,
-        },
-        {
-            dataField: "description",
-            caption: "Descrição",
-            dataType: "string",
-        },
-        {
-            dataField: "categoryName",
-            caption: "Categoria",
-            dataType: "string",
-        },
-        {
-            caption: 'Ações',
-            type: 'buttons',
-            width: 110,
-            child: [
-                <Btn
-                    key={1}
-                    text="Editar"
-                    // icon="/url/to/my/icon.ico"
-                    icon="edit"
-                    hint="Editar"
-                    onClick={showModal}
-                />,
-                <Btn
-                    // text="My Command"
-                    // // icon="/url/to/my/icon.ico"
-                    icon="coffee"
-                    hint="Coffee"
-                    onClick={coffeeCommand}
-                />
-            ]
-        }
-    ]
-
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
-        },
-        {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
-            child: <DatePicker
-                selectsRange={true}
-                startDate={startDate}
-                endDate={endDate}
-                onChange={(update) => {
-                    updateDateRange(update);
-                    setDateRange(update);
-                }}
-                showMonthYearPicker
-                dateFormat={'MMM/yyyy'}
-                locale={ptBR}
-                className={'form-control'}
-            />
-        },
-        {
-            child: <Button icon={'add'} onClick={showModal}></Button>,
-            location: "after"
-        },
-        {
-            name: 'searchPanel',
-            location: "after",
-        },
-
+        { field: 'description', headerName: 'Descrição', flex: 1 },
+        { field: 'categoryName', headerName: 'Categoria', flex: 1 },
     ]
 
     return (
-        <div>
-            {isLoading ?
-                <Loader />
-                :
-                <DataGrid
-                    keyExpr={'transactionId'}
-                    columns={columns}
-                    data={transaction}
-                    toolBar={{
-                        visible: true,
-                        items: toolBarItems
+        <Box sx={{ display: 'block', me: 5 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+                <DatePicker
+                    label="Data inicial"
+                    value={startDate}
+                    onChange={(newValue) => {
+                        setStartDate(newValue);
+                        if (endDate && newValue && endDate < newValue) {
+                            setEndDate(newValue);
+                        }
                     }}
-                    showLoadPanel={false}
-                    searchPanel={{
-                        visible: true
-                    }}
-                    paging={{
-                        pageSize: 50
-                    }}
+                    maxDate={endDate || undefined}
+                    slotProps={{
+                        textField: {
+                          size: "small",
+                          fullWidth: false
+                        },
+                      }}
                 />
-            }
-            <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction} />
-        </div>
-    );
+                <DatePicker
+                    label="Data final"
+                    value={endDate}
+                    onChange={(newValue) => {
+                        setEndDate(newValue);
+                        if (startDate && newValue && startDate > newValue) {
+                            setStartDate(newValue); // ajusta para não ficar maior
+                        }
+                    }}
+                    minDate={startDate || undefined}
+                    slotProps={{
+                        textField: {
+                          size: "small",
+                          fullWidth: false
+                        },
+                      }}
+                />
+                </LocalizationProvider>
+                <IconButton
+                    aria-label="Novo Registro"
+                    onClick={() => console.log('Novo Registro')}
+                    loading={isLoading}
+                >
+                    <AddCircleOutline />
+                </IconButton>
+                <IconButton
+                    aria-label="Atualizar"
+                    onClick={() => console.log('Update')}
+                    loading={isLoading}
+                >
+                    <AutorenewOutlined />
+                </IconButton>
+            </Box>
+            <DataGrid
+                columns={columns}
+                data={transaction}
+                isLoading={isLoading}
+                getRowId={(row) => row.transactionId}
+                columnVisibilityModel={{
+                    transactionId: false
+                }}
+            />
+        </Box>
+    )
 }
 
-export default App;
+export default AccountTransactionTable;
