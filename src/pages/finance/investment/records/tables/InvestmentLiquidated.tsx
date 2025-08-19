@@ -56,7 +56,7 @@ const App: FC = (): ReactElement => {
     }
 
     function amountCustomCell(cellInfo: any) {
-        const amount: string = parseFloat(cellInfo.liquidationAmount).toFixed(2);
+        const amount: string = parseFloat(cellInfo.settlementAmount).toFixed(2);
         const formated_string: string = `${cellInfo.currencySymbol} ${amount}`
         return formated_string;
     }
@@ -84,13 +84,13 @@ const App: FC = (): ReactElement => {
             width: 100
         },
         {
-            dataField: 'liquidationDate',
+            dataField: 'settlementDate',
             caption: 'Liquidado em',
             dataType: "date",
             format: 'dd/MM/yyyy'
         },
         {
-            dataField: "liquidationAmount",
+            dataField: "settlementAmount",
             caption: "Valor liquidado",
             dataType: "currency",
             calculateCellValue: amountCustomCell,

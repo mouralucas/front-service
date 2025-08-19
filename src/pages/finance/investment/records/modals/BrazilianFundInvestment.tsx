@@ -29,8 +29,8 @@ const DefaultBrazilianFundInvestment: BrazilianFundInvestment = {
     amount: 0,
     currencyId: "BRL",
     countryId: 'BR',
-    liquidationDate: null,
-    liquidationAmount: 0,
+    settlementDate: null,
+    settlementAmount: 0,
     observation: '',
     objectiveId: ''
 }

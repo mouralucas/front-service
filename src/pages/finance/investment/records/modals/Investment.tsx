@@ -37,8 +37,8 @@ const DefaultInvestment: Investment = {
     indexerId: '',
     liquidityId: '',
     countryId: 'BR',
-    liquidationDate: null,
-    liquidationAmount: 0,
+    settlementDate: null,
+    settlementAmount: 0,
     observation: '',
     objectiveId: null
 }
@@ -429,7 +429,7 @@ const App = (props: InvestmentProps): ReactElement => {
                     <div className="col-3">
                         <label htmlFor="">Liquidado em</label>
                         <Controller
-                            name={'liquidationDate'}
+                            name={'settlementDate'}
                             control={control}
                             render={({ field }) => (
                                 <DatePicker
@@ -447,7 +447,7 @@ const App = (props: InvestmentProps): ReactElement => {
                     <div className="col-3">
                         <label htmlFor="">Valor líquido</label>
                         <Controller
-                            name={'liquidationAmount'}
+                            name={'settlementAmount'}
                             control={control}
                             render={({ field }) => (
                                 <CurrencyInput

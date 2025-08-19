@@ -139,8 +139,8 @@ export interface Investment {
     indexerTypeId: string;
     indexerId: string;
     liquidityId: string;
-    liquidationDate?: string | null;
-    liquidationAmount?: number;
+    settlementDate?: string | null;
+    settlementAmount?: number;
     countryId: string;
     observation?: string;
     objectiveId?: string | null;
@@ -158,8 +158,8 @@ export interface BrazilianFundInvestment {
     amount: number;
     currencyId: string;
     countryId: string;
-    liquidationDate?: string | null;
-    liquidationAmount?: number | null;
+    settlementDate?: string | null;
+    settlementAmount?: number | null;
     observation?: string | null;
     objectiveId?: string | null;
 }
