@@ -1,25 +1,35 @@
-import {ReactElement, useEffect, useState} from "react";
-import DataGrid from "../../../../../components/table/DataGrid.tsx";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../../assets/core/components/Interfaces.tsx";
-import {InvestmentObjective} from "../../../../../interfaces/Finance.tsx";
-import {getInvestmentObjectives} from "../../../../../services/getCommonData/Finance";
-import ObjectiveModal from '../modals/Objectives'
-import Button from "devextreme-react/button";
+import { ReactElement, useState, useEffect } from 'react';
+import DataGrid from '../../../../../components/table/DataGridV2';
+import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { InvestmentObjective } from '../../../../../interfaces/Finance';
+import { formatDate } from '../../../../../utils/datetime';
+import { getInvestmentObjectives } from '../../../../../services/getCommonData/Finance';
+import ObjectiveModal from '../modals/Objectives.tsx'
+import IconButton from '@mui/material/IconButton';
+import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 
 
-const App = (): ReactElement => {
+const InvestmentObjectivesTable = (): ReactElement => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [modalObjectivesState, setModalObjectivesState] = useState<boolean>(false)
 
     const [objectives, setObjectives] = useState<InvestmentObjective[]>([])
     const [selectedObjective, setSelectedObjective] = useState<InvestmentObjective | undefined>()
 
     const fetchObjectivesData = async () => {
+        setIsLoading(true);
         setObjectives(await getInvestmentObjectives(false))
+        setIsLoading(false);
     }
 
     const showObjectiveModal = (e: any) => {
         if (typeof e.row != "undefined") {
-            setSelectedObjective(e.row.data);
+            setSelectedObjective(e.row);
         }
 
         setModalObjectivesState(true)
@@ -34,85 +44,93 @@ const App = (): ReactElement => {
     useEffect(() => {
         fetchObjectivesData().then()
     }, [])
-
-
-    const amountCustomCell = (cellInfo: any) => {
-        const currentSymbol: string = "R$ ";
-        const grossAmount: string = parseFloat(cellInfo.amount).toFixed(2);
-        const formated_string: string = `${currentSymbol} ${grossAmount}`
-        return formated_string;
-    }
-
-    const columns: DataGridColumn[] = [
+    
+    const columns: GridColDef[] = [
+        {field: 'objectiveId', headerName: 'Id', flex: 1 },
+        {field: 'title', headerName: 'Título', flex: 1 },
+        {field: 'description', headerName: 'Descrição', flex: 3 },
         {
-            dataField: "objectiveId",
-            caption: "Id",
-            dataType: "string",
-            width: 40,
-            visible: false
+            field: 'amount',
+            headerName: 'Valor',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         },
         {
-            dataField: "title",
-            caption: "Título",
-            dataType: "string",
+            field: 'currentAmount',
+            headerName: 'Vaor Atual',
+            flex: 1
+        },
+        { 
+            field: 'estimatedDeadline', 
+            headerName: 'Prazo Estimado', 
+            flex: 1,
+            valueFormatter: (value) => {
+                if (!value) return '';
+                return formatDate(value);
+            },
         },
         {
-            dataField: "description",
-            caption: "Descrição",
-            dataType: 'string',
+            field: 'actions',
+            headerName: 'Ações',
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',      // vertical
+                        justifyContent: 'center',  // horizontal
+                        gap: 1,
+                        flex: 1,                   // ocupa toda a largura da célula
+                        height: '100%',            // ocupa toda a altura
+                    }}
+                >
+                    <IconButton
+                        aria-label="editar"
+                        color="success"
+                        onClick={showObjectiveModal.bind(null, params)}
+                    >
+                        <EditOutlined />
+                    </IconButton>
+                </Box>
+            ),
         },
-        {
-            dataField: "amount",
-            caption: "Valor",
-            calculateCellValue: amountCustomCell
-        },
-        {
-            dataField: "estimatedDeadline",
-            caption: "Prazo",
-            dataType: "date",
-        }
-    ]
-
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
-        },
-        {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
-            child: <Button icon='refresh' onClick={fetchObjectivesData}/>,
-            location: "after"
-        },
-        {
-            child: <Button icon={'add'} onClick={showObjectiveModal}></Button>,
-            location: "after"
-        },
-        {
-            name: 'searchPanel',
-            location: "after",
-        },
-
     ]
 
     return (
-        <>
+        <Box sx={{ display: 'block', me: 5 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
+                <IconButton
+                    aria-label="Novo Registro"
+                    onClick={showObjectiveModal}
+                    loading={isLoading}
+                >
+                    <AddCircleOutline />
+                </IconButton>
+                <IconButton
+                    aria-label="Atualizar"
+                    onClick={fetchObjectivesData}
+                    loading={isLoading}
+                >
+                    <AutorenewOutlined />
+                </IconButton>
+            </Box>
             <DataGrid
-                keyExpr={'objectiveId'}
-                data={objectives}
                 columns={columns}
-                toolBar={
-                    {
-                        visible: true,
-                        items: toolBarItems
-                    }
-                }
+                data={objectives}
+                isLoading={isLoading}
+                getRowId={(row) => row.objectiveId}
+                columnVisibilityModel={{
+                    objectiveId: false, // Hide the ID column
+                }}
             />
-            <ObjectiveModal modalState={modalObjectivesState} hideModal={hideObjectiveModal} objective={selectedObjective}/>
-        </>
+             <ObjectiveModal modalState={modalObjectivesState} hideModal={hideObjectiveModal} objective={selectedObjective}/>
+        </Box>
     )
 }
 
-export default App;
+export default InvestmentObjectivesTable;

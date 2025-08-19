@@ -159,7 +159,7 @@ const AccountTransactionTable = (): ReactElement => {
                     onChange={(newValue) => {
                         setEndDate(newValue);
                         if (startDate && newValue && startDate > newValue) {
-                            setStartDate(newValue); // ajusta para não ficar maior
+                            setStartDate(newValue); 
                         }
                     }}
                     minDate={startDate || undefined}

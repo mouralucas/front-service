@@ -1,4 +1,4 @@
-import { DataGrid, GridRowIdGetter } from '@mui/x-data-grid';
+import { DataGrid, GridDensity, GridRowIdGetter } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import '../../assets/core/components/tablev2.css'
 
@@ -16,6 +16,7 @@ interface DataGridProps {
     getRowClassName?: any;
     columnVisibilityModel?: any;
     getTreeDataPath?: any;
+    density?: GridDensity;
 }
 
 const DataGridComp = (props: DataGridProps) => {
@@ -23,6 +24,7 @@ const DataGridComp = (props: DataGridProps) => {
         <Box sx={{ width: '100%' }}>
             <DataGrid
                 autoHeight // TODO: update this attr
+                density={props.density ?? 'compact'}
                 rows={props.data}
                 columns={props.columns}
                 loading={props.isLoading ?? false}
