@@ -35,7 +35,7 @@ export const isLessThanMonths = (dateStr: string, months: number = 2, compareDat
 }
 
 export const formatDate = (
-    baseDate: Date | string, 
+    baseDate: Date | string | null, 
     format: string = 'dd/MM/yyyy'
 ): string => {
     if (!baseDate) return '';

@@ -144,6 +144,7 @@ export interface Investment {
     countryId: string;
     observation?: string;
     objectiveId?: string | null;
+    percentageChange?: number;
 } // Old version (all types)
 
 export interface BrazilianFundInvestment {

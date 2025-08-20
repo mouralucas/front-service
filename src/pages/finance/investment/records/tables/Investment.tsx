@@ -114,7 +114,7 @@ const InvestmentV2 = (): ReactElement => {
 
     const columns: GridColDef<Investment>[] = [
         { field: 'investmentId', headerName: 'ID', flex: 1 },
-        { field: 'name', headerName: 'Nome', flex: 1 },
+        { field: 'name', headerName: 'Nome', flex: 2.5 },
         {
             field: 'transactionDate',
             headerName: 'Data => vencimento',
@@ -138,13 +138,16 @@ const InvestmentV2 = (): ReactElement => {
         },
         {
             field: 'grossAmount',
-            headerName: 'Valor',
-            flex: 1,
+            headerName: 'Valor Bruto',
+            flex: 1.5,
             type: 'number',
             valueFormatter: (value: string, row) => {
+                if (!value) return '0.00 (0.00%)';
+                const percentageChange: number = !row.percentageChange ? 0.00 : row.percentageChange;
+     
                 const formattedValue = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
-                const percentageChange: string = parseFloat(row.percentageChange).toFixed(2);
-                return `${formattedValue} (${percentageChange}%)`;
+                const formattedPercChange: string = percentageChange.toFixed(2);
+                return `${formattedValue} (${formattedPercChange}%)`;
             }
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
