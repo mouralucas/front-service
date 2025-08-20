@@ -1,10 +1,10 @@
-import { ReactElement, useState, useEffect } from "react";
-import DataGridComp from "../../../../../components/table/DataGridV2";
-import { getFinanceData } from "../../../../../services/axios/Get";
-import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls";
 import { GridColDef } from "@mui/x-data-grid";
-import { formatDate } from "../../../../../utils/datetime";
+import { ReactElement, useEffect, useState } from "react";
+import DataGridComp from "../../../../../components/table/DataGridV2";
+import { InvestmentStatement } from "../../../../../interfaces/Finance";
 import { GetInvestmentStatementResponse } from "../../../../../interfaces/FinanceRequest";
+import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls";
+import { getFinanceData } from "../../../../../services/axios/Get";
 
 
 interface IncestmentStatementTableProps {
@@ -12,7 +12,7 @@ interface IncestmentStatementTableProps {
 }
 
 const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactElement => {
-    const [statements, setStatements] = useState<any>([]);
+    const [statements, setStatements] = useState<InvestmentStatement[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -33,7 +33,7 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
         })
     }
 
-    const columns: GridColDef[] = [
+    const columns: GridColDef<InvestmentStatement>[] = [
         { field: "investmentStatementId", headerName: "Id", flex: 1 },
         { field: "period", headerName: 'Período', flex: 1 },
         {

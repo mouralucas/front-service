@@ -1,15 +1,15 @@
-import { ReactElement, useState, useEffect } from "react";
-import DataGrid from '../../../../../components/table/DataGridV2';
-import { GridColDef } from "@mui/x-data-grid";
-import { getFinanceData } from "../../../../../services/axios/Get";
-import { URL_FINANCE_BRAZILIAN_FUND_INVESTMENT } from "../../../../../services/axios/ApiUrls";
-import { GetBrazilianFundInvestmentResponse } from "../../../../../interfaces/FinanceRequest";
-import BrazilianFundInvestmentModal from "../modals/BrazilianFundInvestment.tsx";
-import { BrazilianFundInvestment } from "../../../../../interfaces/Finance";
-import { Box, IconButton } from "@mui/material";
-import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import { Box, IconButton } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { ReactElement, useEffect, useState } from "react";
+import DataGrid from '../../../../../components/table/DataGridV2';
+import { BrazilianFundInvestment } from "../../../../../interfaces/Finance";
+import { GetBrazilianFundInvestmentResponse } from "../../../../../interfaces/FinanceRequest";
+import { URL_FINANCE_BRAZILIAN_FUND_INVESTMENT } from "../../../../../services/axios/ApiUrls";
+import { getFinanceData } from "../../../../../services/axios/Get";
 import { formatDate } from "../../../../../utils/datetime";
+import BrazilianFundInvestmentModal from "../modals/BrazilianFundInvestment.tsx";
 
 
 const BrazilianFundInvestmentTable = (): ReactElement => {
@@ -46,7 +46,7 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
         })
     }
 
-    const columns: GridColDef[] = [
+    const columns: GridColDef<BrazilianFundInvestment>[] = [
         { field: 'investmentId', headerName: 'Id', flex: 1 },
         { field: 'fundName', headerName: 'Fundo', flex: 1 },
         { field: 'name', headerName: 'Nome', flex: 1 },

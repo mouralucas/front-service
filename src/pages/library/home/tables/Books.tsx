@@ -1,26 +1,26 @@
-import { ReactElement, useEffect, useState, useCallback } from "react"
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
+import Autorenew from '@mui/icons-material/AutorenewOutlined'
+import EditOutlined from '@mui/icons-material/EditOutlined'
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined'
+import { Box, TextField } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
+import { ReactElement, useCallback, useEffect, useState } from "react"
+import DataGridComp from "../../../../components/table/DataGridV2.tsx"
 import { Item } from "../../../../interfaces/Library.tsx"
 import { getItems } from "../../../../services/getCommonData/Library.tsx"
-import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
-import { Box, TextField } from '@mui/material'
-import DataGridComp from "../../../../components/table/DataGridV2.tsx"
+import BookDrawer from "../drawer/Book.tsx"
 import ItemModal from '../modals/Item.tsx'
-import BookDrawer from "../drawer/Book.tsx";
-import IconButton from '@mui/material/IconButton';
-import Autorenew from '@mui/icons-material/AutorenewOutlined';
-import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
-import EditOutlined from '@mui/icons-material/EditOutlined';
-import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 
 
 const Books = (): ReactElement => {
-    const [books, setBooks] = useState<any[]>([])
+    const [books, setBooks] = useState<Item[]>([])
     const [selectedBook, setSelectedBook] = useState<Item | null>(null)
     const [itemModalState, setItemModalState] = useState<boolean>(false)
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
     const [bookFilter, setBookFilter] = useState('');
-    
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const showItemModal = (e: any) => {
@@ -61,11 +61,11 @@ const Books = (): ReactElement => {
     }, [isDrawerOpened]);
 
 
-    const columns: GridColDef[] = [
-        {field: 'itemId', headerName:'Id', flex: 1},
-        {field: 'title', headerName: 'título', flex: 1},
-        {field: 'mainAuthorName', headerName: 'Autor', flex: 1},
-        {field: 'serieName', headerName: 'Série', flex: 1},
+    const columns: GridColDef<Item>[] = [
+        { field: 'itemId', headerName: 'Id', flex: 1 },
+        { field: 'title', headerName: 'título', flex: 1 },
+        { field: 'mainAuthorName', headerName: 'Autor', flex: 1 },
+        { field: 'serieName', headerName: 'Série', flex: 1 },
         {
             field: 'actions',
             headerName: 'Ações',
@@ -73,26 +73,26 @@ const Books = (): ReactElement => {
             sortable: false,
             filterable: false,
             renderCell: (params: GridRenderCellParams) => (
-                <Box 
+                <Box
                     sx={{
                         display: 'flex',
-                        alignItems: 'center', 
+                        alignItems: 'center',
                         justifyContent: 'center',
                         gap: 1,
                         flex: 1,
                         height: '100%',
                     }}
                 >
-                    <IconButton 
+                    <IconButton
                         aria-label="editar"
-                        color="success" 
+                        color="success"
                         onClick={showItemModal.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
-                    <IconButton 
+                    <IconButton
                         aria-label="detalhes"
-                        color="success" 
+                        color="success"
                         onClick={onOpenDrawerClick.bind(null, params)}
                     >
                         <LibraryBooksOutlinedIcon />
@@ -103,13 +103,13 @@ const Books = (): ReactElement => {
     ]
 
     const filterdRows = bookFilter
-    ? books.filter(row => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
-    : books
+        ? books.filter(row => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
+        : books
 
     return (
-        <Box sx={{me: 5}}>
+        <Box sx={{ me: 5 }}>
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'right' }}>
-                <TextField 
+                <TextField
                     label='Filtrar por título'
                     variant='outlined'
                     size='small'
@@ -117,14 +117,14 @@ const Books = (): ReactElement => {
                     onChange={e => setBookFilter(e.target.value)}
                     sx={{ minWidth: 250 }}
                 />
-                <IconButton 
+                <IconButton
                     aria-label="Novo Registro"
                     onClick={showItemModal}
                     disabled={isLoading}
                 >
                     <AddCircleOutline />
                 </IconButton>
-                <IconButton 
+                <IconButton
                     aria-label="Atualizar"
                     onClick={getAvailableBooks}
                     disabled={isLoading}
@@ -132,7 +132,7 @@ const Books = (): ReactElement => {
                     <Autorenew />
                 </IconButton>
             </Box>
-            <DataGridComp 
+            <DataGridComp
                 columns={columns}
                 data={filterdRows}
                 getRowId={(row: any) => row.itemId}

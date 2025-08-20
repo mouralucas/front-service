@@ -1,38 +1,40 @@
 import { useEffect, useState } from "react";
-import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
+import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import DataGrid from "../../../../../components/table/DataGrid.tsx";
+import { Button as Btn, } from 'devextreme-react/data-grid';
 import Button from "devextreme-react/button";
-import { Button as Btn } from "devextreme-react/data-grid";
+import TransactionModal from '../modals/CreditCardTransaction.tsx'
+import UpdateTransactionModal from '../modals/CreditCardTransactionUpdate.tsx'
 import { toast } from "react-toastify";
-import { AccountTransaction } from "../../../../../interfaces/Finance.tsx";
-import { getFinanceData } from "../../../../../services/axios/Get.tsx";
 import { DataGridColumn, DataGridToolBarItem } from "../../../../../assets/core/components/Interfaces.tsx";
-import ModalStatement from '../modals/AccountTransaction.tsx'
+import { getFinanceData } from "../../../../../services/axios/Get.tsx";
+import { CreditCardTransaction, UpdateCreditCardTransaction } from "../../../../../interfaces/Finance.tsx";
 import Loader from '../../../../../components/Loader.tsx'
 import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 import DatePicker from "react-datepicker";
-import {ptBR} from 'date-fns/locale';
+import { ptBR } from 'date-fns/locale';
 
 interface TransactionResponse {
+    success: boolean
     quantity: number
-    transactions: AccountTransaction[]
+    transactions: CreditCardTransaction[]
 }
 
 const App = () => {
-    const [transaction, setTransaction] = useState<AccountTransaction[] | null>();
-    const [selectedTransaction, setSelectedTransaction] = useState<AccountTransaction | null>()
-    const [modalState, setModalState] = useState<boolean>(false)
+    const [creditCardTransaction, setCreditCardTransaction] = useState<CreditCardTransaction[]>();
+    const [selectedCreditCardTransaction, setSelectedCreditCardTransaction] = useState<UpdateCreditCardTransaction | undefined>(undefined)
+    const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
+    const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const [dateRange, setDateRange] = useState<any>([]);
     const [startDate, endDate] = dateRange;
 
-
-
     useEffect(() => {
         setDateRange(getLastPeriods());
-        updateDateRange(getLastPeriods());
+        updateDateRange(getLastPeriods())
     }, []);
+
 
     const updateDateRange = (dates: any) => {
         if (dates[1] !== null) {
@@ -40,35 +42,51 @@ const App = () => {
         }
     }
 
-    const showModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedTransaction(e.row.data);
-        } else {
-            setSelectedTransaction(null);
-        }
-        setModalState(true);
-    }
-
-    const hideModal = () => {
-        setModalState(false);
-        setSelectedTransaction(undefined);
-        updateDateRange(getLastPeriods());
-    }
-
     const getTransactions = (startAt: number, endAt: number) => {
         setIsLoading(true);
 
-        getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
+        getFinanceData(URL_CREDIT_CARD_TRANSACTION, {
             startPeriod: startAt,
             endPeriod: endAt
         }).then((response: TransactionResponse) => {
-            setTransaction(response?.transactions);
+            setCreditCardTransaction(response.transactions);
             setIsLoading(false);
-        }
-        ).catch(err => {
-            toast.error('Houve um erro ao buscar extratos: ' + err)
+        }).catch(response => {
+            toast.error("Erro ao buscar transações")
             setIsLoading(false);
+            return { 'error': response }
         })
+    }
+
+    const showTransactionModal = () => {
+        setTransactionModalState(true);
+    }
+
+    const hideTransactionModal = () => {
+        setTransactionModalState(false);
+        updateDateRange(getLastPeriods());
+    }
+
+
+    const showUpdateTransactionModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedCreditCardTransaction(e.row.data);
+            setUpdateTransactionModalState(true);
+        }
+    }
+
+    const hideUpdateTransactionModal = () => {
+        setUpdateTransactionModalState(false);
+        updateDateRange(getLastPeriods());
+    }
+
+    /**
+     * Custom function to show the installments in the table it shows the current installment and the total in the format xx/xx
+     * @param cellInfo
+     * @returns the installments in xx/xx format
+     */
+    function installmentCustomCell(cellInfo: any) {
+        return cellInfo.currentInstallment + '/' + cellInfo.installments;
     }
 
     function amountCustomCell(cellInfo: any) {
@@ -81,17 +99,30 @@ const App = () => {
         toast('☕ Cafezinho delícia!');
     }
 
+
     const columns: DataGridColumn[] = [
         {
             dataField: "transactionId",
             caption: "Id",
             dataType: "number",
             visible: false,
+            width: 70
         },
         {
-            dataField: "accountNickname",
-            caption: "Conta",
+            dataField: "period",
+            caption: "Período",
             dataType: "string",
+            visible: false,
+        },
+        {
+            dataField: "creditCardId",
+            visible: false
+        },
+        {
+            dataField: "creditCardNickname",
+            caption: "Cartão",
+            dataType: "string",
+            width: 150,
         },
         {
             dataField: "transactionDate",
@@ -101,12 +132,26 @@ const App = () => {
             width: 150,
         },
         {
+            dataField: "dueDate",
+            caption: "Pagamento",
+            dataType: "date",
+            format: 'dd/MM/yyyy',
+            width: 150,
+        },
+        {
             dataField: "amount",
             caption: "Valor",
             dataType: "currency",
-            width: 110,
-            alignment: 'justify',
             calculateCellValue: amountCustomCell,
+            alignment: 'justify',
+            width: 110,
+        },
+        {
+            dataField: "installment",
+            caption: "Parcela",
+            dataType: "string",
+            calculateCellValue: installmentCustomCell,
+            width: 100,
         },
         {
             dataField: "description",
@@ -129,11 +174,11 @@ const App = () => {
                     // icon="/url/to/my/icon.ico"
                     icon="edit"
                     hint="Editar"
-                    onClick={showModal}
+                    onClick={showUpdateTransactionModal}
                 />,
                 <Btn
-                    // text="My Command"
-                    // // icon="/url/to/my/icon.ico"
+                    key={2}
+                    //icon="/url/to/my/icon.ico"
                     icon="coffee"
                     hint="Coffee"
                     onClick={coffeeCommand}
@@ -146,6 +191,10 @@ const App = () => {
         {
             name: 'columnChooserButton',
             location: 'after',
+        },
+        {
+            child: <Button icon={'add'} onClick={showTransactionModal}></Button>,
+            location: "after"
         },
         {
             name: 'exportButton',
@@ -167,10 +216,6 @@ const App = () => {
             />
         },
         {
-            child: <Button icon={'add'} onClick={showModal}></Button>,
-            location: "after"
-        },
-        {
             name: 'searchPanel',
             location: "after",
         },
@@ -178,14 +223,14 @@ const App = () => {
     ]
 
     return (
-        <div>
+        <>
             {isLoading ?
-                <Loader />
+                (<Loader />)
                 :
                 <DataGrid
                     keyExpr={'transactionId'}
                     columns={columns}
-                    data={transaction}
+                    data={creditCardTransaction}
                     toolBar={{
                         visible: true,
                         items: toolBarItems
@@ -194,13 +239,11 @@ const App = () => {
                     searchPanel={{
                         visible: true
                     }}
-                    paging={{
-                        pageSize: 50
-                    }}
                 />
             }
-            <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction} />
-        </div>
+            <TransactionModal modalState={transactionModalState} hideModal={hideTransactionModal} />
+            <UpdateTransactionModal modalState={updateTransactionModalState} hideModal={hideUpdateTransactionModal} creditCardTransaction={selectedCreditCardTransaction} />
+        </>
     );
 }
 

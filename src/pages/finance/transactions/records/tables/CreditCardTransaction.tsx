@@ -1,40 +1,59 @@
-import { useEffect, useState } from "react";
-import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
-import DataGrid from "../../../../../components/table/DataGrid.tsx";
-import { Button as Btn, } from 'devextreme-react/data-grid';
-import Button from "devextreme-react/button";
-import TransactionModal from '../modals/CreditCardTransaction.tsx'
-import UpdateTransactionModal from '../modals/CreditCardTransactionUpdate.tsx'
-import { toast } from "react-toastify";
-import { DataGridColumn, DataGridToolBarItem } from "../../../../../assets/core/components/Interfaces.tsx";
-import { getFinanceData } from "../../../../../services/axios/Get.tsx";
-import { CreditCardTransaction, UpdateCreditCardTransaction } from "../../../../../interfaces/Finance.tsx";
-import Loader from '../../../../../components/Loader.tsx'
-import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime.tsx";
-import DatePicker from "react-datepicker";
-import { ptBR } from 'date-fns/locale';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import { Box, IconButton } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import ptBR from "date-fns/locale/pt-BR";
+import { ReactElement, useEffect, useState } from 'react';
+import DataGrid from '../../../../../components/table/DataGridV2';
+import { CreditCardTransaction } from '../../../../../interfaces/Finance';
+import { GetCreditCardTransactionResponse } from '../../../../../interfaces/FinanceRequest';
+import { URL_CREDIT_CARD_TRANSACTION } from '../../../../../services/axios/ApiUrls';
+import { getFinanceData } from '../../../../../services/axios/Get';
+import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../utils/datetime';
+import CreditCardTransactionModal from '../modals/CreditCardTransaction.tsx';
 
-interface TransactionResponse {
-    success: boolean
-    quantity: number
-    transactions: CreditCardTransaction[]
-}
+const CreditCardTransactionTable = (): ReactElement => {
 
-const App = () => {
-    const [creditCardTransaction, setCreditCardTransaction] = useState<CreditCardTransaction[]>();
+    const [creditCardTransaction, setCreditCardTransaction] = useState<CreditCardTransaction[]>([]);
     const [selectedCreditCardTransaction, setSelectedCreditCardTransaction] = useState<UpdateCreditCardTransaction | undefined>(undefined)
     const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
     const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    const [dateRange, setDateRange] = useState<any>([]);
-    const [startDate, endDate] = dateRange;
+    // Filter date range
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
 
     useEffect(() => {
-        setDateRange(getLastPeriods());
-        updateDateRange(getLastPeriods())
+        const range = getLastPeriods();
+        setStartDate(new Date(range[0]));
+        setEndDate(new Date(range[1]));
+        updateDateRange(getLastPeriods());
     }, []);
 
+    useEffect(() => {
+        if (startDate && endDate) {
+            getTransactions(getPeriodFromDate(startDate), getPeriodFromDate(endDate));
+        }
+    }, [startDate, endDate])
+
+    const showCreditCardTransactionModal = (e: any) => {
+        if (typeof e.row !== 'undefined') {
+            setSelectedCreditCardTransaction(e.row);
+        } else {
+            setSelectedCreditCardTransaction(null);
+        }
+        setTransactionModalState(true);
+    }
+
+    const hideCreditCardTransactionModal = () => {
+        setTransactionModalState(false);
+        setSelectedCreditCardTransaction(undefined);
+        updateDateRange([startDate, endDate]);
+    }
 
     const updateDateRange = (dates: any) => {
         if (dates[1] !== null) {
@@ -48,203 +67,124 @@ const App = () => {
         getFinanceData(URL_CREDIT_CARD_TRANSACTION, {
             startPeriod: startAt,
             endPeriod: endAt
-        }).then((response: TransactionResponse) => {
+        }).then((response: GetCreditCardTransactionResponse) => {
             setCreditCardTransaction(response.transactions);
             setIsLoading(false);
-        }).catch(response => {
-            toast.error("Erro ao buscar transações")
+        }).catch(() => {
+            //toast.error("Erro ao buscar transações")
             setIsLoading(false);
-            return { 'error': response }
         })
     }
 
-    const showTransactionModal = () => {
-        setTransactionModalState(true);
-    }
+    const columns: GridColDef<CreditCardTransaction>[] = [
+        { field: 'transactionId', headerName: 'Id', flex: 1 },
+        { field: 'creditCardNickname', headerName: 'Cartão', flex: 1 },
+        {
+            field: 'transactionDate',
+            headerName: 'Compra',
+            flex: 1,
+            valueFormatter: (value) => {
+                if (!value) return '';
+                return formatDate(value);
+            },
 
-    const hideTransactionModal = () => {
-        setTransactionModalState(false);
-        updateDateRange(getLastPeriods());
-    }
+        },
+        {
+            field: 'dueDate',
+            headerName: 'Pagamento',
+            flex: 1,
+            valueFormatter: (value) => {
+                if (!value) return '';
+                return formatDate(value);
+            },
 
-
-    const showUpdateTransactionModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedCreditCardTransaction(e.row.data);
-            setUpdateTransactionModalState(true);
-        }
-    }
-
-    const hideUpdateTransactionModal = () => {
-        setUpdateTransactionModalState(false);
-        updateDateRange(getLastPeriods());
-    }
-
-    /**
-     * Custom function to show the installments in the table it shows the current installment and the total in the format xx/xx
-     * @param cellInfo
-     * @returns the installments in xx/xx format
-     */
-    function installmentCustomCell(cellInfo: any) {
-        return cellInfo.currentInstallment + '/' + cellInfo.installments;
-    }
-
-    function amountCustomCell(cellInfo: any) {
-        const formattedAmount = cellInfo.amount.toFixed(2)
-
-        return cellInfo.currencySymbol + ' ' + formattedAmount;
-    }
-
-    const coffeeCommand = () => {
-        toast('☕ Cafezinho delícia!');
-    }
-
-
-    const columns: DataGridColumn[] = [
-        {
-            dataField: "transactionId",
-            caption: "Id",
-            dataType: "number",
-            visible: false,
-            width: 70
         },
         {
-            dataField: "period",
-            caption: "Período",
-            dataType: "string",
-            visible: false,
+            field: 'amount',
+            headerName: 'Valor',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number, row) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            }
         },
         {
-            dataField: "creditCardId",
-            visible: false
+            field: 'installments',
+            headerName: 'parcelas',
+            flex: 1,
+            valueFormatter: (value: number, row) => {
+                return `${row.currentInstallment}/${value}`
+            }
         },
-        {
-            dataField: "creditCardNickname",
-            caption: "Cartão",
-            dataType: "string",
-            width: 150,
-        },
-        {
-            dataField: "transactionDate",
-            caption: "Compra",
-            dataType: "date",
-            format: 'dd/MM/yyyy',
-            width: 150,
-        },
-        {
-            dataField: "dueDate",
-            caption: "Pagamento",
-            dataType: "date",
-            format: 'dd/MM/yyyy',
-            width: 150,
-        },
-        {
-            dataField: "amount",
-            caption: "Valor",
-            dataType: "currency",
-            calculateCellValue: amountCustomCell,
-            alignment: 'justify',
-            width: 110,
-        },
-        {
-            dataField: "installment",
-            caption: "Parcela",
-            dataType: "string",
-            calculateCellValue: installmentCustomCell,
-            width: 100,
-        },
-        {
-            dataField: "description",
-            caption: "Descrição",
-            dataType: "string",
-        },
-        {
-            dataField: "categoryName",
-            caption: "Categoria",
-            dataType: "string",
-        },
-        {
-            caption: 'Ações',
-            type: 'buttons',
-            width: 110,
-            child: [
-                <Btn
-                    key={1}
-                    text="Editar"
-                    // icon="/url/to/my/icon.ico"
-                    icon="edit"
-                    hint="Editar"
-                    onClick={showUpdateTransactionModal}
-                />,
-                <Btn
-                    key={2}
-                    //icon="/url/to/my/icon.ico"
-                    icon="coffee"
-                    hint="Coffee"
-                    onClick={coffeeCommand}
-                />
-            ]
-        }
-    ]
-
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
-        },
-        {
-            child: <Button icon={'add'} onClick={showTransactionModal}></Button>,
-            location: "after"
-        },
-        {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
-            child: <DatePicker
-                selectsRange={true}
-                startDate={startDate}
-                endDate={endDate}
-                onChange={(update) => {
-                    updateDateRange(update);
-                    setDateRange(update);
-                }}
-                showMonthYearPicker
-                dateFormat={'MMM/yyyy'}
-                locale={ptBR}
-                className={'form-control'}
-            />
-        },
-        {
-            name: 'searchPanel',
-            location: "after",
-        },
-
-    ]
+        { field: 'description', headerName: 'Descrição', flex: 1 },
+        { field: 'categoryName', headerName: 'Categoria', flex: 1 }
+    ];
 
     return (
-        <>
-            {isLoading ?
-                (<Loader />)
-                :
-                <DataGrid
-                    keyExpr={'transactionId'}
-                    columns={columns}
-                    data={creditCardTransaction}
-                    toolBar={{
-                        visible: true,
-                        items: toolBarItems
-                    }}
-                    showLoadPanel={false}
-                    searchPanel={{
-                        visible: true
-                    }}
-                />
-            }
-            <TransactionModal modalState={transactionModalState} hideModal={hideTransactionModal} />
-            <UpdateTransactionModal modalState={updateTransactionModalState} hideModal={hideUpdateTransactionModal} creditCardTransaction={selectedCreditCardTransaction} />
-        </>
-    );
+        <Box sx={{ display: 'block ' }} >
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+                    <DatePicker
+                        label="Data inicial"
+                        views={["month", "year"]}
+                        value={startDate}
+                        onChange={(newValue) => {
+                            setStartDate(newValue);
+                            if (endDate && newValue && endDate < newValue) {
+                                setEndDate(newValue);
+                            }
+                        }}
+                        maxDate={endDate || undefined}
+                        slotProps={{
+                            textField: {
+                                size: "small",
+                                fullWidth: false
+                            },
+                        }}
+                    />
+                    <DatePicker
+                        label="Data final"
+                        views={["month", "year"]}
+                        value={endDate}
+                        onChange={(newValue) => {
+                            setEndDate(newValue);
+                            if (startDate && newValue && startDate > newValue) {
+                                setStartDate(newValue);
+                            }
+                        }}
+                        minDate={startDate || undefined}
+                        slotProps={{
+                            textField: {
+                                size: "small",
+                                fullWidth: false
+                            },
+                        }}
+                    />
+                </LocalizationProvider>
+                <IconButton
+                    aria-label="Novo Registro"
+                    onClick={showCreditCardTransactionModal}
+                    loading={isLoading}
+                >
+                    <AddCircleOutline />
+                </IconButton>
+                <IconButton
+                    aria-label="Atualizar"
+                    onClick={updateDateRange.bind(null, [startDate, endDate])}
+                    loading={isLoading}
+                >
+                    <AutorenewOutlined />
+                </IconButton>
+            </Box>
+            <DataGrid
+                columns={columns}
+                data={creditCardTransaction}
+                isLoading={isLoading}
+                getRowId={(row) => row.transactionId}
+            />
+            <CreditCardTransactionModal modalState={transactionModalState} hideModal={hideCreditCardTransactionModal} />
+        </Box>
+    )
 }
 
-export default App;
+export default CreditCardTransactionTable;

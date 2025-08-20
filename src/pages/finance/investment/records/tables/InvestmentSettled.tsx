@@ -1,15 +1,16 @@
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { ReactElement, useState, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import DataGridComp from '../../../../../components/table/DataGridV2';
+import { Investment } from '../../../../../interfaces/Finance.tsx';
 import { InvestmentResponse } from '../../../../../interfaces/FinanceRequest.tsx';
 import { URL_FINANCE_INVESTMENT } from '../../../../../services/axios/ApiUrls.tsx';
 import { getFinanceData } from '../../../../../services/axios/Get.tsx';
 import { formatDate } from '../../../../../utils/datetime.tsx';
 import ModalInvestmentPerformance from '../modals/Performance.tsx';
-import { Investment } from '../../../../../interfaces/Finance.tsx';
 
 
 const InvestmentSettledTable = (): ReactElement => {
@@ -42,7 +43,7 @@ const InvestmentSettledTable = (): ReactElement => {
 
     const getInvestment = () => {
         setIsLoading(true);
-        getFinanceData(URL_FINANCE_INVESTMENT, { isLiquidated: true }).then((response: InvestmentResponse) => {
+        getFinanceData(URL_FINANCE_INVESTMENT, { isSettled: true }).then((response: InvestmentResponse) => {
             setInvestments(response.investments);
             setIsLoading(false);
         }).catch(() => {
@@ -51,9 +52,9 @@ const InvestmentSettledTable = (): ReactElement => {
         })
     }
 
-    const columns: GridColDef[] = [
+    const columns: GridColDef<Investment>[] = [
         { field: 'investmentId', headerName: 'Id', flex: 1 },
-        { field: 'name', headerName: 'Nome', flex: 1 },
+        { field: 'name', headerName: 'Nome', flex: 3 },
         {
             field: 'maturityDate',
             headerName: 'Vencimento',
@@ -116,10 +117,20 @@ const InvestmentSettledTable = (): ReactElement => {
 
     return (
         <Box sx={{ display: 'block ' }} >
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
+                <IconButton
+                    aria-label="Atualizar"
+                    onClick={getInvestment}
+                    loading={isLoading}
+                >
+                    <AutorenewOutlined />
+                </IconButton>
+            </Box>
             <DataGridComp
                 columns={columns}
                 data={investments}
                 isLoading={isLoading}
+                pageSize={100}
                 getRowId={(row) => row.investmentId} // Assuming investmentId is unique
             />
             <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName} />

@@ -1,20 +1,20 @@
-import { ReactElement, useState, useEffect } from "react";
-import DataGrid from '../../../../../components/table/DataGridV2';
-import { Box, IconButton } from "@mui/material";
-import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import { Box, IconButton } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import ptBR from "date-fns/locale/pt-BR";
+import { ReactElement, useEffect, useState } from "react";
+import DataGrid from '../../../../../components/table/DataGridV2';
 import { AccountTransaction } from "../../../../../interfaces/Finance";
+import { AccountTransactionResponse } from "../../../../../interfaces/FinanceRequest";
 import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls";
 import { getFinanceData } from "../../../../../services/axios/Get";
 import { formatDate, getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import ptBR from "date-fns/locale/pt-BR";
-import { AccountTransactionResponse } from "../../../../../interfaces/FinanceRequest";
-import EditOutlined from '@mui/icons-material/EditOutlined';
-import ModalStatement from '../modals/AccountTransaction.tsx'
+import ModalStatement from '../modals/AccountTransaction.tsx';
 
 
 const AccountTransactionTable = (): ReactElement => {
@@ -77,7 +77,7 @@ const AccountTransactionTable = (): ReactElement => {
         })
     }
 
-    const columns: GridColDef[] = [
+    const columns: GridColDef<AccountTransaction>[] = [
         { field: 'transactionId', headerName: 'Id', flex: 1 },
         { field: 'accountNickname', headerName: 'Conta', flex: 1 },
         {
@@ -133,43 +133,43 @@ const AccountTransactionTable = (): ReactElement => {
     return (
         <Box sx={{ display: 'block', me: 5 }}>
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
-                <DatePicker
-                    label="Data inicial"
-                    views={["month", "year"]}
-                    value={startDate}
-                    onChange={(newValue) => {
-                        setStartDate(newValue);
-                        if (endDate && newValue && endDate < newValue) {
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+                    <DatePicker
+                        label="Data inicial"
+                        views={["month", "year"]}
+                        value={startDate}
+                        onChange={(newValue) => {
+                            setStartDate(newValue);
+                            if (endDate && newValue && endDate < newValue) {
+                                setEndDate(newValue);
+                            }
+                        }}
+                        maxDate={endDate || undefined}
+                        slotProps={{
+                            textField: {
+                                size: "small",
+                                fullWidth: false
+                            },
+                        }}
+                    />
+                    <DatePicker
+                        label="Data final"
+                        views={["month", "year"]}
+                        value={endDate}
+                        onChange={(newValue) => {
                             setEndDate(newValue);
-                        }
-                    }}
-                    maxDate={endDate || undefined}
-                    slotProps={{
-                        textField: {
-                          size: "small",
-                          fullWidth: false
-                        },
-                      }}
-                />
-                <DatePicker
-                    label="Data final"
-                    views={["month", "year"]}
-                    value={endDate}
-                    onChange={(newValue) => {
-                        setEndDate(newValue);
-                        if (startDate && newValue && startDate > newValue) {
-                            setStartDate(newValue); 
-                        }
-                    }}
-                    minDate={startDate || undefined}
-                    slotProps={{
-                        textField: {
-                          size: "small",
-                          fullWidth: false
-                        },
-                      }}
-                />
+                            if (startDate && newValue && startDate > newValue) {
+                                setStartDate(newValue);
+                            }
+                        }}
+                        minDate={startDate || undefined}
+                        slotProps={{
+                            textField: {
+                                size: "small",
+                                fullWidth: false
+                            },
+                        }}
+                    />
                 </LocalizationProvider>
                 <IconButton
                     aria-label="Novo Registro"

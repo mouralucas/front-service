@@ -1,4 +1,4 @@
-import {Account, AccountTransaction, Bank, BrazilianFundInvestment, BrazilianFunds, Category, CreditCard, CreditCardBill, CreditCardBillHistory, Currency, Indexer, IndexerType, Investment, InvestmentObjective, InvestmentStatement, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
+import {Account, AccountTransaction, Bank, BrazilianFundInvestment, BrazilianFunds, Category, CreditCard, CreditCardBill, CreditCardBillHistory, CreditCardTransaction, Currency, Indexer, IndexerType, Investment, InvestmentObjective, InvestmentStatement, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
 
 
 // Account
@@ -16,6 +16,12 @@ export interface AccountTransactionResponse {
 export interface GetCreditCardsResponse {
     quantity: number;
     creditCards: CreditCard[];
+}
+
+export interface GetCreditCardTransactionResponse {
+    success: boolean
+    quantity: number
+    transactions: CreditCardTransaction[]
 }
 
 export interface GetCreditCardBillHistoryResponse {

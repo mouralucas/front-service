@@ -1,4 +1,10 @@
+import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box, TextField } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
@@ -6,16 +12,10 @@ import { Investment } from "../../../../../interfaces/Finance";
 import { InvestmentResponse } from "../../../../../interfaces/FinanceRequest";
 import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls";
 import { getFinanceData } from "../../../../../services/axios/Get";
-import ModalInvestment from '../modals/Investment';
-import ModalInvestmentStatement from '../modals/Statement';
-import ModalInvestmentPerformance from '../modals/Performance';
-import IconButton from '@mui/material/IconButton';
-import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
-import EditOutlined from '@mui/icons-material/EditOutlined';
-import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
-import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
-import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import { formatDate, isLessThanMonths } from "../../../../../utils/datetime";
+import ModalInvestment from '../modals/Investment';
+import ModalInvestmentPerformance from '../modals/Performance';
+import ModalInvestmentStatement from '../modals/Statement';
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -102,7 +102,7 @@ const InvestmentV2 = (): ReactElement => {
 
     const getInvestment = () => {
         setIsLoading(true);
-        getFinanceData(URL_FINANCE_INVESTMENT, { isLiquidated: false }).then((response: InvestmentResponse) => {
+        getFinanceData(URL_FINANCE_INVESTMENT, { isSettled: false }).then((response: InvestmentResponse) => {
             setInvestments(response.investments);
             setIsLoading(false);
         }).catch(() => {
@@ -112,7 +112,7 @@ const InvestmentV2 = (): ReactElement => {
         })
     }
 
-    const columns: GridColDef[] = [
+    const columns: GridColDef<Investment>[] = [
         { field: 'investmentId', headerName: 'ID', flex: 1 },
         { field: 'name', headerName: 'Nome', flex: 1 },
         {

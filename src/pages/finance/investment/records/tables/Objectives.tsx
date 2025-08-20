@@ -1,17 +1,15 @@
-import { ReactElement, useState, useEffect } from 'react';
-import DataGrid from '../../../../../components/table/DataGridV2';
-import { Box } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
-import { InvestmentObjective } from '../../../../../interfaces/Finance';
-import { formatDate } from '../../../../../utils/datetime';
-import { getInvestmentObjectives } from '../../../../../services/getCommonData/Finance';
-import ObjectiveModal from '../modals/Objectives.tsx'
-import IconButton from '@mui/material/IconButton';
-import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
-import EditOutlined from '@mui/icons-material/EditOutlined';
-import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
-import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import { Box } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import { GridColDef } from '@mui/x-data-grid';
+import { ReactElement, useEffect, useState } from 'react';
+import DataGrid from '../../../../../components/table/DataGridV2';
+import { InvestmentObjective } from '../../../../../interfaces/Finance';
+import { getInvestmentObjectives } from '../../../../../services/getCommonData/Finance';
+import { formatDate } from '../../../../../utils/datetime';
+import ObjectiveModal from '../modals/Objectives.tsx';
 
 
 const InvestmentObjectivesTable = (): ReactElement => {
@@ -44,11 +42,11 @@ const InvestmentObjectivesTable = (): ReactElement => {
     useEffect(() => {
         fetchObjectivesData().then()
     }, [])
-    
-    const columns: GridColDef[] = [
-        {field: 'objectiveId', headerName: 'Id', flex: 1 },
-        {field: 'title', headerName: 'Título', flex: 1 },
-        {field: 'description', headerName: 'Descrição', flex: 3 },
+
+    const columns: GridColDef<InvestmentObjective>[] = [
+        { field: 'objectiveId', headerName: 'Id', flex: 1 },
+        { field: 'title', headerName: 'Título', flex: 1 },
+        { field: 'description', headerName: 'Descrição', flex: 3 },
         {
             field: 'amount',
             headerName: 'Valor',
@@ -63,9 +61,9 @@ const InvestmentObjectivesTable = (): ReactElement => {
             headerName: 'Vaor Atual',
             flex: 1
         },
-        { 
-            field: 'estimatedDeadline', 
-            headerName: 'Prazo Estimado', 
+        {
+            field: 'estimatedDeadline',
+            headerName: 'Prazo Estimado',
             flex: 1,
             valueFormatter: (value) => {
                 if (!value) return '';
@@ -128,7 +126,7 @@ const InvestmentObjectivesTable = (): ReactElement => {
                     objectiveId: false, // Hide the ID column
                 }}
             />
-             <ObjectiveModal modalState={modalObjectivesState} hideModal={hideObjectiveModal} objective={selectedObjective}/>
+            <ObjectiveModal modalState={modalObjectivesState} hideModal={hideObjectiveModal} objective={selectedObjective} />
         </Box>
     )
 }

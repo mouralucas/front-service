@@ -1,13 +1,11 @@
-import { ReactElement, useState, useEffect } from "react";
-import DataGridComp from "../../../../components/table/DataGridV2";
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import Autorenew from '@mui/icons-material/AutorenewOutlined';
+import { Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
+import { ReactElement, useEffect, useState } from "react";
+import DataGridComp from "../../../../components/table/DataGridV2";
 import { Item } from "../../../../interfaces/Library";
 import { getItems } from "../../../../services/getCommonData/Library";
-import { Box, IconButton } from "@mui/material";
-import Autorenew from '@mui/icons-material/AutorenewOutlined';
-import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
-import EditOutlined from '@mui/icons-material/EditOutlined';
-import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import ItemModal from "../modals/Item.tsx";
 
 
@@ -44,7 +42,7 @@ const MangaTable = (): ReactElement => {
         getAvailableMangas().then()
     }
 
-    const columns: GridColDef[] = [
+    const columns: GridColDef<Item>[] = [
         { field: 'itemId', headerName: 'Id', flex: 1 },
         { field: 'mainAuthorName', headerName: 'Autor', flex: 1 },
         { field: 'title', headerName: 'Título', flex: 1 },
@@ -57,14 +55,14 @@ const MangaTable = (): ReactElement => {
     return (
         <Box sx={{ me: 5 }}>
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'right' }}>
-            <IconButton 
+                <IconButton
                     aria-label="Novo Registro"
                     onClick={showItemModal}
                     disabled={isLoading}
                 >
                     <AddCircleOutline />
                 </IconButton>
-                <IconButton 
+                <IconButton
                     aria-label="Atualizar"
                     onClick={getAvailableMangas}
                     disabled={isLoading}
