@@ -3,6 +3,7 @@ import Card from "../../../components/Card";
 import BankTable from './tables/Bank';
 import DefaultCategoriesTable from './tables/DefaultCategories';
 import BrazilianFundsTable from './tables/BrazilianFunds';
+import IpcaTable from './tables/Ipca.tsx'
 
 
 const App = (): ReactElement => {
@@ -38,6 +39,16 @@ const App = (): ReactElement => {
                         </Card.Header>
                         <Card.Body>
                             <DefaultCategoriesTable />
+                        </Card.Body>
+                    </Card>
+                </div>
+                <div className="col-12">
+                    <Card>
+                        <Card.Header>
+                            <b>Histórico IPCA</b>
+                        </Card.Header>
+                        <Card.Body>
+                            <IpcaTable />
                         </Card.Body>
                     </Card>
                 </div>

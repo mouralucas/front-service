@@ -46,6 +46,9 @@ function RolfRoutes(): ReactElement {
                     <Route element={<RequireAuth><LibraryLanding/></RequireAuth>} path={'/library/records'} />
                     <Route element={<RequireAuth><LibraryBackoffice/></RequireAuth>} path={'/library/backoffice'} />
                     <Route element={<RequireAuth><LibraryItem /></RequireAuth>} path={'/library/item'} />
+
+                    {/* Settings */}
+                    <Route element={<RequireAuth><FinanceAdmin/></RequireAuth>} path="/config/financeiro"/>
                 </Route>
                 <Route element={<WithoutNav/>}>
                     <Route element={<Login />} path={'/login'}/>

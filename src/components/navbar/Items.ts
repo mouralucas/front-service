@@ -53,18 +53,27 @@ export const items = [
                 title: 'Transações',
                 url: 'finance/transaction'
             },
+        ]
+    },
+    {
+        title: 'Configurções',
+        submenu: [
             {
-                title: 'Configurações',
-                url: 'finance/admin'
+                title: 'Financeiro',
+                url: 'config/financeiro'
+            },
+            {
+                title: 'Biblioteca',
+                url: 'config/biblioteca'
             }
         ]
     },
     {
-        title: 'About',
-        url: '/about',
+        title: 'Sobre',
+        url: '/sobre',
     },
     {
-        title: 'Testing',
+        title: 'Testes',
         url: '/testing',
     },
 

@@ -44,7 +44,6 @@ export interface CreditCardBill {
     totalAmount: number;
 }
 
-
 export interface CreditCardInstalments {
     currentInstallment: number;
     amount: number;
@@ -259,7 +258,6 @@ export interface BrazilianFunds {
     benchmark: string;
 }
 
-// Other
 export interface Currency {
     currencyId: string
     name: string
@@ -272,4 +270,10 @@ export interface Category {
     description?: string
     fatherId?: string
     fatherName?: string
+}
+
+export interface Ipca {
+    period: number,
+    value: number,
+    periodicity: string,
 }
