@@ -1,14 +1,15 @@
-import DataGrid from "../../../../components/table/DataGrid.tsx";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
-import {useEffect, useState} from "react";
-import {getBrazilianFunds} from "../../../../services/getCommonData/Finance.tsx";
-import Loader from "../../../../components/Loader.tsx";
-import BrazilianFundsModal from '../modals/BrazilianFunds.tsx'
-import {BrazilianFunds} from "../../../../interfaces/Finance.tsx";
-import Button from "devextreme-react/button";
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import { Box, IconButton } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { ReactElement, useEffect, useState } from 'react';
+import DataGridComp from '../../../../components/table/DataGridV2';
+import { BrazilianFunds } from "../../../../interfaces/Finance.tsx";
+import { getBrazilianFunds } from "../../../../services/getCommonData/Finance.tsx";
+import BrazilianFundsModal from '../modals/BrazilianFunds.tsx';
 
 
-const BrazilianFundsTable = () => {
+const BrazilianFundsTable = (): ReactElement => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [brazilianFundsModalState, setBrazilianFundsModalState] = useState<boolean>(false)
 
@@ -37,93 +38,76 @@ const BrazilianFundsTable = () => {
         fetchBrazilianFunds().then();
     }, []);
 
-    const columns: DataGridColumn[] = [
+    const columns: GridColDef = [
+        { field: 'fundId', headerName: 'Id', flex: 1 },
+        { field: 'name', headerName: 'Nme', flex: 3 },
+        { field: 'administrator', headerName: 'Administrador', flex: 1 },
         {
-            dataField: "fundId",
-            caption: "Id",
-            dataType: "number",
-            visible: false,
+            field: 'minimumBalance',
+            headerName: 'Saldo mínimo',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         },
         {
-            dataField: 'name',
-            caption: 'Nome',
-            dataType: 'string'
+            field: 'minimumInvestment',
+            headerName: 'Investmento mínimo',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         },
         {
-            dataField: 'administrator',
-            caption: 'Administrador',
-            dataType: 'string',
-            visible: false
+            field: 'minimumWithdraw',
+            headerName: 'Saque mínimo',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         },
         {
-            dataField: 'minimumBalance',
-            caption: 'Saldo mínimo',
-            dataType: 'number',
+            field: 'initialInvestment',
+            headerName: 'Investimento inicial',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         },
-        {
-            dataField: 'minimumInvestment',
-            caption: 'Investimento mínimo',
-            dataType: 'number',
-        },
-        {
-            dataField: 'minimumWithdraw',
-            caption: 'Saque mínimo',
-            dataType: 'number',
-        },
-        {
-            dataField: 'initialInvestment',
-            caption: 'Investimento inicial',
-            dataType: 'number',
-        },
-        {
-            dataField: 'benchmark',
-            caption: 'Benchmark',
-            dataType: 'number',
-            visible: false
-        },
-    ]
-
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
-        },
-        {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
-            child: <Button icon='refresh' onClick={fetchBrazilianFunds}/>,
-            location: "after"
-        },
-        {
-            child: <Button icon={'add'} onClick={showBrazilianFundsModal}></Button>,
-            location: "after"
-        },
-        {
-            name: 'searchPanel',
-            location: "after",
-        },
+        { field: 'benchmark', headerName: 'Benchmark', flex: 1 }
     ]
 
     return (
-        <>
-            {isLoading ? <Loader/> :
-                <DataGrid
-                    keyExpr={'fundId'}
-                    data={brazilianFunds}
-                    toolBar={
-                        {
-                            visible: true,
-                            items: toolBarItems,
-                        }
-                    }
-                    columns={columns}
-                />
-
-            }
-            <BrazilianFundsModal modalState={brazilianFundsModalState} hideModal={hideBrazilianFundsModal} brazilianFund={selectedBrazilianFund}/>
-        </>
+        <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
+                <IconButton
+                    aria-label="Novo Registro"
+                    onClick={showBrazilianFundsModal}
+                    loading={isLoading}
+                >
+                    <AddCircleOutline />
+                </IconButton>
+                <IconButton
+                    aria-label="Atualizar"
+                    onClick={fetchBrazilianFunds}
+                    loading={isLoading}
+                >
+                    <AutorenewOutlined />
+                </IconButton>
+            </Box>
+            <DataGridComp
+                columns={columns}
+                data={brazilianFunds}
+                isLoading={isLoading}
+                getRowId={(row) => row.fundId}
+                columnVisibilityModel={{ fundId: false, benchmark: false }}
+            />
+            <BrazilianFundsModal modalState={brazilianFundsModalState} hideModal={hideBrazilianFundsModal} brazilianFund={selectedBrazilianFund} />
+        </Box>
     )
 }
 

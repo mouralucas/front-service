@@ -17,6 +17,7 @@ const query = gql`
                 indexer_name
                 period
                 value
+                periodicity_name
               }
             }
         }
@@ -25,13 +26,15 @@ const query = gql`
 const IpcaTable = (): ReactElement => {
     const { data, loading, refetch } = useQuery(query, {
         client: apolloFinanceClient,
+        // pollInterval: 30000,
     });
 
     const columns: GridColDef<Ipca>[] = [
         { field: 'id', headerName: 'ID', flex: 1 },
+        { field: 'indexer_name', headerName: 'Indexador', flex: 1},
         { field: 'period', headerName: 'Período', flex: 1 },
         { field: 'value', headerName: 'Valor (%)', flex: 1, type: 'number' },
-        { field: 'periodicity', headerName: 'Periodicidade', flex: 1 }
+        { field: 'periodicity_name', headerName: 'Periodicidade', flex: 1 }
     ]
 
     /*
@@ -62,6 +65,7 @@ const IpcaTable = (): ReactElement => {
                 data={data?.getIndexerSeries.series}
                 isLoading={loading}
                 getRowId={(row) => row.id}
+                columnVisibilityModel={{id: false}}
             />
         </Box>
     )

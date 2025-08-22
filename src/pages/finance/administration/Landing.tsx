@@ -1,8 +1,8 @@
 import {ReactElement} from "react";
 import Card from "../../../components/Card";
 import BankTable from './tables/Bank';
-import DefaultCategoriesTable from './tables/DefaultCategories';
-import BrazilianFundsTable from './tables/BrazilianFunds';
+import DefaultCategoriesTable from './tables/DefaultCategory.tsx';
+import BrazilianFundsTable from './tables/BrazilianFunds.tsx';
 import IpcaTable from './tables/Ipca.tsx'
 
 
