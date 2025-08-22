@@ -2,19 +2,14 @@
 import { gql } from "@apollo/client";
 import { apolloFinanceClient } from "../apollo/FinanceServiceApollo";
 
-export class UserService {
-    static async helloWorldFinance() {
-        const GET_USER = gql`
-            query helloWorld {
-                helloWorld
-            }
-        `;
-
+export class FinanceGraphQLService {
+    static async getHelloWorldFinance(query: string) {
+        const query_ = gql`${query}`
         const { data } = await apolloFinanceClient.query({
-            query: GET_USER,
+            query: query_,
         });
 
-        return data;
+        return data.getIndexerSeries.series;
     }
 
     // Example: create a user

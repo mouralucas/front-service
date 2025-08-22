@@ -1,1 +1,1 @@
-export const FINANCE_GRAPHQL_BASE_URL = 'http://67.205.180.83:9003/graphql/finance'
+export const FINANCE_GRAPHQL_BASE_URL = 'http://67.205.180.83:9003/graphql'
