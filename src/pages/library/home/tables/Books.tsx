@@ -1,3 +1,4 @@
+import { gql, useQuery } from '@apollo/client'
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
 import Autorenew from '@mui/icons-material/AutorenewOutlined'
 import EditOutlined from '@mui/icons-material/EditOutlined'
@@ -8,20 +9,37 @@ import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
 import { ReactElement, useCallback, useEffect, useState } from "react"
 import DataGridComp from "../../../../components/table/DataGridV2.tsx"
 import { Item } from "../../../../interfaces/Library.tsx"
-import { getItems } from "../../../../services/getCommonData/Library.tsx"
+import { apolloLibraryClient } from '../../../../services/apollo/ApolloLibraryService.tsx'
 import BookDrawer from "../drawer/Book.tsx"
 import ItemModal from '../modals/Item.tsx'
 
+const QUERY = gql`
+                query {
+                    getItems {
+                        quantity
+                        items {
+                            itemId
+                            title
+                            mainAuthorName
+                            serieName
+                            isbn
+                            lastStatusName
+                        }
+                    }
+                }`
 
 const Books = (): ReactElement => {
-    const [books, setBooks] = useState<Item[]>([])
+    const { data, loading, refetch } = useQuery(QUERY, {
+        client: apolloLibraryClient,
+        // pollInterval: 30000,
+    });
+
+
     const [selectedBook, setSelectedBook] = useState<Item | null>(null)
     const [itemModalState, setItemModalState] = useState<boolean>(false)
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
     const [bookFilter, setBookFilter] = useState('');
-
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const showItemModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -36,18 +54,8 @@ const Books = (): ReactElement => {
     const hideItemModal = () => {
         setItemModalState(false);
         setSelectedBook(null);
-        getAvailableBooks().then();
+        refetch();
     }
-
-    const getAvailableBooks: () => Promise<void> = async () => {
-        setIsLoading(true);
-        setBooks(await getItems('book'));
-        setIsLoading(false);
-    }
-
-    useEffect(() => {
-        getAvailableBooks().then()
-    }, []);
 
     const onOpenDrawerClick = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -102,9 +110,13 @@ const Books = (): ReactElement => {
         },
     ]
 
+    useEffect(() =>{
+        console.log(data?.getItems.items)
+    }, [data])
+
     const filterdRows = bookFilter
-        ? books.filter(row => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
-        : books
+        ? data?.getItems.items.filter((row: Item) => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
+        : data?.getItems.items
 
     return (
         <Box sx={{ me: 5 }}>
@@ -120,14 +132,14 @@ const Books = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showItemModal}
-                    disabled={isLoading}
+                    disabled={loading}
                 >
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={getAvailableBooks}
-                    disabled={isLoading}
+                    onClick={refetch}
+                    disabled={loading}
                 >
                     <Autorenew />
                 </IconButton>
@@ -136,7 +148,7 @@ const Books = (): ReactElement => {
                 columns={columns}
                 data={filterdRows}
                 getRowId={(row: any) => row.itemId}
-                isLoading={isLoading}
+                isLoading={loading}
                 columnVisibilityModel={{
                     itemId: false
                 }}

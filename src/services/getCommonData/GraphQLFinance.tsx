@@ -1,6 +1,6 @@
 // UserService.ts
 import { gql } from "@apollo/client";
-import { apolloFinanceClient } from "../apollo/FinanceServiceApollo";
+import { apolloFinanceClient } from "../apollo/ApolloFinanceService";
 
 export class FinanceGraphQLService {
     static async getHelloWorldFinance(query: string) {

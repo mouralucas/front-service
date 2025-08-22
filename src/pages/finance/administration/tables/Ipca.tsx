@@ -1,11 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
+import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from "@mui/material";
 import { GridColDef } from '@mui/x-data-grid';
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Ipca } from "../../../../interfaces/Finance";
-import { apolloFinanceClient } from "../../../../services/apollo/FinanceServiceApollo";
-import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import { apolloFinanceClient } from "../../../../services/apollo/ApolloFinanceService";
 
 
 const query = gql`
