@@ -54,7 +54,7 @@ const IpcaTable = (): ReactElement => {
             <Box>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={() => refetch({}, { fetchPolicy: "network-only" })}
+                    onClick={() => refetch()}
                     loading={loading}
                 >
                     <AutorenewOutlined />

@@ -6,7 +6,7 @@ import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined'
 import { Box, TextField } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
-import { ReactElement, useCallback, useEffect, useState } from "react"
+import { ReactElement, useCallback, useState } from "react"
 import DataGridComp from "../../../../components/table/DataGridV2.tsx"
 import { Item } from "../../../../interfaces/Library.tsx"
 import { apolloLibraryClient } from '../../../../services/apollo/ApolloLibraryService.tsx'
@@ -15,7 +15,7 @@ import ItemModal from '../modals/Item.tsx'
 
 const QUERY = gql`
                 query {
-                    getItems {
+                    getItems(params: {itemType: "book"}) {
                         quantity
                         items {
                             itemId
@@ -110,10 +110,6 @@ const Books = (): ReactElement => {
         },
     ]
 
-    useEffect(() =>{
-        console.log(data?.getItems.items)
-    }, [data])
-
     const filterdRows = bookFilter
         ? data?.getItems.items.filter((row: Item) => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
         : data?.getItems.items
@@ -138,7 +134,7 @@ const Books = (): ReactElement => {
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={refetch}
+                    onClick={() => refetch()}
                     disabled={loading}
                 >
                     <Autorenew />
