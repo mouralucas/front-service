@@ -5,7 +5,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement } from "react";
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Ipca } from "../../../../interfaces/Finance";
-import { apolloFinanceClient } from "../../../../services/apollo/ApolloFinanceService";
+import { apolloFinanceClient } from "../../../../services/apollo/client/ApolloFinanceService";
 
 
 const query = gql`

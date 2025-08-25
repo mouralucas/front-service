@@ -1,7 +1,7 @@
 // apolloFinanceClient.ts
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
-import { getToken } from "../auth/Auth";
+import { getToken } from "../../auth/Auth";
 
 let isRedirecting = false;
 

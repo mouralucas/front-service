@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline'
 import Autorenew from '@mui/icons-material/AutorenewOutlined'
 import EditOutlined from '@mui/icons-material/EditOutlined'
@@ -9,28 +9,22 @@ import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
 import { ReactElement, useCallback, useState } from "react"
 import DataGridComp from "../../../../components/table/DataGridV2.tsx"
 import { Item } from "../../../../interfaces/Library.tsx"
-import { apolloLibraryClient } from '../../../../services/apollo/ApolloLibraryService.tsx'
+import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx'
+import { makeItemsQuery } from '../../../../services/apollo/queries/Library.tsx'
 import BookDrawer from "../drawer/Book.tsx"
 import ItemModal from '../modals/Item.tsx'
 
-const QUERY = gql`
-                query {
-                    getItems(params: {itemType: "book"}) {
-                        quantity
-                        items {
-                            itemId
-                            title
-                            mainAuthorName
-                            serieName
-                            isbn
-                            lastStatusName
-                        }
-                    }
-                }`
+
+const QUERY_BOOK = makeItemsQuery(
+    ['isbn', 'serieId', 'serieName']
+)
 
 const Books = (): ReactElement => {
-    const { data, loading, refetch } = useQuery(QUERY, {
+    const { data, loading, refetch } = useQuery(QUERY_BOOK, {
         client: apolloLibraryClient,
+        variables: {
+            params: { itemType: "book" }
+        }
         // pollInterval: 30000,
     });
 

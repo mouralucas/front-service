@@ -1,30 +1,33 @@
+import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import Autorenew from '@mui/icons-material/AutorenewOutlined';
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, MenuItem, Select, TextField } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Item } from "../../../../interfaces/Library";
-import { getItems } from "../../../../services/getCommonData/Library";
+import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
+import { makeItemsQuery } from '../../../../services/apollo/queries/Library.tsx';
 import ItemModal from "../modals/Item.tsx";
 
 
-const MangaTable = (): ReactElement => {
+const QUERY_MANGA = makeItemsQuery(
+    ['isbn', 'serieId', 'serieName', 'volume', 'collectionId', 'collectionName', 'publisherName']
+)
 
-    const [mangas, setMangas] = useState<Item[]>([]);
+const MangaTable = (): ReactElement => {
+    const {data: mangaData, loading, refetch} = useQuery(QUERY_MANGA, {
+        client: apolloLibraryClient,
+        variables: {
+            params: { itemType: "manga" }
+        }
+        // pollInterval: 30000,
+    });
+
     const [selectedManga, setSelectedManga] = useState<Item | null>(null)
     const [itemModalState, setItemModalState] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    const getAvailableMangas: () => Promise<void> = async () => {
-        setIsLoading(true);
-        setMangas(await getItems('manga'));
-        setIsLoading(false);
-    }
-
-    useEffect(() => {
-        getAvailableMangas().then()
-    }, [])
+    const [mangaFilter, setMangaFilter] = useState('');
 
     const showItemModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -39,7 +42,6 @@ const MangaTable = (): ReactElement => {
     const hideItemModal = () => {
         setItemModalState(false);
         setSelectedManga(null);
-        getAvailableMangas().then()
     }
 
     const columns: GridColDef<Item>[] = [
@@ -52,28 +54,54 @@ const MangaTable = (): ReactElement => {
         { field: 'publisherName', headerName: 'Editora', flex: 1 },
     ]
 
+    const filterdRows = mangaFilter
+    ? mangaData?.getItems.items.filter((row: Item) => row.title.toLowerCase().includes(mangaFilter.toLowerCase()))
+    : mangaData?.getItems.items
+
     return (
         <Box sx={{ me: 5 }}>
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'right' }}>
+                <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    value={10}
+                    label="Age"
+                   // onChange={handleChange}
+                >
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+                <TextField
+                    label='Filtrar por título'
+                    variant='outlined'
+                    size='small'
+                    value={mangaFilter}
+                    onChange={e => setMangaFilter(e.target.value)}
+                    sx={{ minWidth: 250 }}
+                />
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showItemModal}
-                    disabled={isLoading}
+                    disabled={loading}
                 >
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={getAvailableMangas}
-                    disabled={isLoading}
+                    onClick={() => refetch()}
+                    disabled={loading}
                 >
                     <Autorenew />
                 </IconButton>
             </Box>
             <DataGridComp
-                data={mangas}
+                data={filterdRows}
                 columns={columns}
-                isLoading={isLoading}
+                isLoading={loading}
                 getRowId={(row: any) => row.itemId}
                 columnVisibilityModel={{
                     itemId: false,
