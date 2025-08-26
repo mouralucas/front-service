@@ -10,12 +10,12 @@ import { ReactElement, useCallback, useState } from "react"
 import DataGridComp from "../../../../components/table/DataGridV2.tsx"
 import { Item } from "../../../../interfaces/Library.tsx"
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx'
-import { makeItemsQuery } from '../../../../services/apollo/queries/Library.tsx'
+import { itemQueryFactory } from '../../../../services/apollo/queries/Library.tsx'
 import BookDrawer from "../drawer/Book.tsx"
 import ItemModal from '../modals/Item.tsx'
 
 
-const QUERY_BOOK = makeItemsQuery(
+const QUERY_BOOK = itemQueryFactory(
     ['isbn', 'serieId', 'serieName']
 )
 
