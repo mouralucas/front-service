@@ -37,16 +37,8 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
         { field: "investmentStatementId", headerName: "Id", flex: 1 },
         { field: "period", headerName: 'Período', flex: 1 },
         {
-            field: "totalTax",
-            headerName: 'Impostos',
-            flex: 1,
-            valueFormatter: (value: number) => {
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            }
-        },
-        {
-            field: "totalFee",
-            headerName: 'Taxas',
+            field: "previousAmount",
+            headerName: 'Anterior',
             flex: 1,
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -67,6 +59,21 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
+        },
+        {
+            field: "percentageChange",
+            headerName: "Variação %",
+            flex: 1,
+            valueFormatter: (value: number) => {
+                if (value === null) return ''
+                const perc = value.toFixed(2)
+                return `${perc}%`
+            }
+        },
+        {
+            field: "valueChange",
+            headerName: "Variação",
+            flex: 1
         }
     ]
 
