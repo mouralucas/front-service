@@ -54,9 +54,9 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
     };
 
     const body = (
-        <div>
+        <div className="mt-2">
             <form onSubmit={handleSubmit(submitReadingProgress)}>
-                <div className="row ms-2 me-2">
+                <div className="row">
                     <div className="col-6">
                         <Controller
                             name={'readingId'}
@@ -100,7 +100,7 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
                         />
                     </div>
                 </div>
-                <div className="row me-2 ms-2 mt-2">
+                <div className="row mt-2">
                     <div className="col-4">
                         <label htmlFor="">Data do status</label>
                         <Controller
@@ -142,7 +142,7 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
                         />
                     </div>
                 </div>
-                <div className="row me-2 ms-2 mt-2">
+                <div className="row mt-2">
                     <div className="col-12">
                         <label htmlFor="">Comentário</label>
                         <Controller name={'comment'}

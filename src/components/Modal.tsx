@@ -63,7 +63,10 @@ const App = (props: ModalProps): React.ReactElement => {
       onClose={props.hideModal}
       fullWidth
       maxWidth={sizeMapping[props.size ?? ""] ?? "md"}
-      fullScreen={props.size === "modal-fullscreen" || props.fullscreen}
+      fullScreen={props.size === "modal-fullscreen"}
+      // Add this as Props
+      disablePortal={false} 
+      sx={{ zIndex: 1400 }}
     >
       <DialogTitle
         className="custom-modal-header"
