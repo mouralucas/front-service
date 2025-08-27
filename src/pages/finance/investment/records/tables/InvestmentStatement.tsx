@@ -61,19 +61,14 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
             }
         },
         {
-            field: "percentageChange",
-            headerName: "Variação %",
-            flex: 1,
-            valueFormatter: (value: number) => {
-                if (value === null) return ''
-                const perc = value.toFixed(2)
-                return `${perc}%`
-            }
-        },
-        {
             field: "valueChange",
             headerName: "Variação",
-            flex: 1
+            flex: 1,
+            valueFormatter: (value: number, row) => {
+                if (value === null) return ''
+                const perc = row.percentageChange.toFixed(2)
+                return `R$ ${value} (${perc}%)`
+            }
         }
     ]
 

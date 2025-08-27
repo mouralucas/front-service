@@ -182,6 +182,8 @@ export interface InvestmentStatement {
     period: string;
     grossAmount: number;
     netAmount: number;
+    valueChange: number;
+    percentageChange: number;
     taxDetails: TaxFeeDetail[];
     feeDetails: TaxFeeDetail[];
 }
