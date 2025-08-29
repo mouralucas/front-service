@@ -5,7 +5,7 @@ import {toast} from "react-toastify";
 import {Button as Btn,} from 'devextreme-react/data-grid';
 import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
 import Button from "devextreme-react/button";
-import AuthorModal from '../modals/Author'
+import AuthorModal from '../modals/Author.tsx'
 import {Author} from "../../../../interfaces/Library.tsx";
 import Loader from '../../../../components/Loader'
 

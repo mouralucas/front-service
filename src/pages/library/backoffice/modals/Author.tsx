@@ -1,14 +1,17 @@
-import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
+import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
 import Modal from "../../../../components/Modal.tsx";
-import {Author} from "../../../../interfaces/Library.tsx";
-import {Controller, useForm} from "react-hook-form";
-import {format, parseISO} from "date-fns";
-import DatePicker from "react-datepicker";
-import {getCountries, getLanguages} from "../../../../services/getCommonData/Core.tsx";
-import Select from "react-select";
-import {librarySubmit} from "../../../../services/axios/Submit.tsx";
-import {URL_LIBRARY_AUTHOR} from "../../../../services/axios/ApiUrls.tsx";
-import {toast} from "react-toastify";
+import { Author } from "../../../../interfaces/Library.tsx";
+import { Controller, useForm } from "react-hook-form";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { ptBR } from "date-fns/locale";
+import { getCountries, getLanguages } from "../../../../services/getCommonData/Core.tsx";
+import { librarySubmit } from "../../../../services/axios/Submit.tsx";
+import { URL_LIBRARY_AUTHOR } from "../../../../services/axios/ApiUrls.tsx";
+import { toast } from "react-toastify";
+import { FormControl, Box, TextField, MenuItem, Select, InputLabel } from "@mui/material";
+import Grid from '@mui/material/Grid';
 
 interface AuthorModalProps {
     modalState: boolean;
@@ -25,7 +28,7 @@ const DefaultAuthor: Author = {
 }
 
 const App = (props: AuthorModalProps): ReactElement => {
-    const {handleSubmit, control, formState: {errors, dirtyFields}, reset, getValues} = useForm({defaultValues: DefaultAuthor})
+    const { handleSubmit, control, formState: { errors, dirtyFields }, reset, getValues } = useForm({ defaultValues: DefaultAuthor })
 
     const [countries, setCountries] = useState<any[]>([])
     const [languages, setLanguages] = useState<any[]>([])
@@ -77,80 +80,122 @@ const App = (props: AuthorModalProps): ReactElement => {
 
     }
 
-    const body =
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
-                    <div className="col-9">
-                        <label htmlFor="">Nome</label>
-                        <Controller
-                            name={'authorName'}
-                            control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
-                                <input
-                                    type="text"
-                                    {...field}
-                                    className={`form-control input-default ${errors.authorName ? "input-error" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Nascimento</label>
-                        <Controller
-                            name='birthDate'
-                            control={control}
-                            render={({field}) => (
+    const body = (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                <Grid size={{ xs: 12, md: 9 }}>
+                    <Controller
+                        name="authorName"
+                        control={control}
+                        rules={{ required: "Esse campo é obrigatório" }}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Nome"
+                                fullWidth
+                                size="small"
+                                error={!!errors.authorName}
+                                helperText={errors.authorName?.message}
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid size={{ xs: 12, md: 3 }}>
+                    <Controller
+                        name="birthDate"
+                        control={control}
+                        render={({ field }) => (
+                            <LocalizationProvider
+                                dateAdapter={AdapterDateFns}
+                                adapterLocale={ptBR}
+                            >
                                 <DatePicker
-                                    selected={field.value ? parseISO(field.value) : null}
-                                    onChange={(date) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
+                                    label="Nascimento"
+                                    value={field.value ? new Date(field.value) : null}
+                                    onChange={(date) =>
+                                        field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                    }
+                                    slotProps={{
+                                        textField: {
+                                            fullWidth: true,
+                                            size: "small",
+                                        },
                                     }}
-                                    dateFormat="dd/MM/yyyy"
-                                    className="form-control"
-                                    placeholderText="__/__/____"
+                                    sx={{ width: "100%" }}
                                 />
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className='row'>
-                    <div className="col-6">
-                        <label htmlFor="">Páis</label>
-                        <Controller
-                            name={'countryId'}
-                            control={control}
-                            render={({field}) => (
+                            </LocalizationProvider>
+                        )}
+                    />
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 6 }}>
+                    <Controller
+                        name="countryId"
+                        control={control}
+                        render={({ field }) => (
+                            <FormControl fullWidth size="small">
+                                <InputLabel id="country-label">País</InputLabel>
                                 <Select
                                     {...field}
-                                    options={countries}
-                                    value={countries.find((c: any) => c.value === field.value)}
-                                    onChange={(val: any) => field.onChange(val?.value)}
-                                    placeholder={'Selecione'}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-6">
-                        <label htmlFor="">Idioma</label>
-                        <Controller
-                            name={'languageId'}
-                            control={control}
-                            render={({field}) => (
+                                    labelId="country-label"
+                                    value={field.value || ""}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    sx={{ width: "100%" }}
+                                >
+                                    <MenuItem value="1">Brasil</MenuItem>
+                                    <MenuItem value="2">EUA</MenuItem>
+                                    <MenuItem value="3">Alemanha</MenuItem>
+                                </Select>
+                            </FormControl>
+                        )}
+                    />
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 6 }}>
+                    <Controller
+                        name="languageId"
+                        control={control}
+                        render={({ field }) => (
+                            <FormControl fullWidth size="small">
+                                <InputLabel id="language-label">Idioma</InputLabel>
                                 <Select
                                     {...field}
-                                    options={languages}
-                                    value={languages.find((c: any) => c.value === field.value)}
-                                    onChange={(val: any) => field.onChange(val?.value)}
-                                    placeholder={'Selecione'}
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
-            </form>
-        </div>
+                                    labelId="language-label"
+                                    value={field.value || ""}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    sx={{ width: "100%" }}
+                                >
+                                    {languages?.map((user: any) => (
+                                        <MenuItem key={user.languageId} value={user.languageId}>
+                                            {user.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
+                    />
+                </Grid>
+
+                <Grid size={{ xs: 12 }}>
+                    <Controller
+                        name="description"
+                        control={control}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Descrição"
+                                fullWidth
+                                multiline
+                                minRows={3}
+                                size="small"
+                            />
+                        )}
+                    />
+                </Grid>
+            </Grid>
+        </form>
+    );
+
 
     return (
         <div>

@@ -22,7 +22,7 @@ const theme = createTheme({
     palette: ColorPalette as any,
     zIndex: {
         backdrop: 100,
-        modal: 120,
+        modal: 1300,
         floatingElements: 20,
         sidebar: 50,
         verification: 111,
