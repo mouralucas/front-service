@@ -12,6 +12,7 @@ import { TextField } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { toast } from "react-toastify";
 
 
 interface CreateReadingModalProps {
@@ -29,40 +30,42 @@ const DefaultReading: ItemReading ={
 }
 
 const CreateReadingModal = (props: CreateReadingModalProps): ReactElement => {
-    const { handleSubmit, control, formState: { errors, dirtyFields }, reset, getValues } = useForm<ItemReading>({ defaultValues: DefaultReading })
+    const { handleSubmit, control, formState: { errors, dirtyFields }, reset, getValues, setValue } = useForm<ItemReading>({ defaultValues: DefaultReading })
     
     const [createReading] = useMutation(CREATE_READING_MUTATION, {
-        client: apolloLibraryClient
-    });
+        client: apolloLibraryClient,
+        onCompleted: (data) => {
+            toast.success(
+                `Leitura criada com sucesso para "${data.createReading.reading.itemTitle}"`
+            );
+            props.hideCreateReadingModal();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    }); 
 
     useEffect(() => {
         if (props.modalState) {
             // check, eventually, the reading object to load
+            setValue('itemId', props.itemId);
         }  else {
             reset(DefaultReading);
         }
     }, [props.modalState, reset])
 
-    
-    const startNewReading = async () => {
+   
+    const onSubmit = async (data: ItemReading, e: BaseSyntheticEvent<object> | undefined) => {
+        console.log(data, e);
         try {
             await createReading({
                 variables: {
-                    input: {
-                        itemId: props.itemId,
-                        startDate: '2024-10-10', // Exemplo de data, ajustar conforme necessário
-                        finishDate: null,   // opcional
-                        isDropped: false,   // default, pode omitir
-                    },
+                    input: data,
                 },
             });
         } catch (err) {
         console.error("Erro ao criar leitura:", err);
         }
-    }
-    
-    const onSubmit = (data: ItemReading, e: BaseSyntheticEvent<object> | undefined) => {
-        console.log(data, e);
     }
 
     const body = (

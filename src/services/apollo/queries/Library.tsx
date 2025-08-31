@@ -24,13 +24,13 @@ export function itemQueryFactory(fields: string[]) {
 
 export const QUERY_SERIES = gql`
 query {
-    getSeries {
-        quantity
-        series {
-            serieId
-            serieName
-        }
-    }
+  getSeries {
+      quantity
+      series {
+          serieId
+          serieName
+      }
+  }
 }
 ` 
 
@@ -45,3 +45,18 @@ query {
   }
 }
 `
+
+export const QUERY_READING_STATS = gql`
+query GetReadingStats($itemId: Int!) {
+  getReadingStats(params: { itemId: $itemId }) {
+    stats {
+      readingsCount
+      lastReadingDate
+      isCurrentlyReading
+      currentReadindId
+      currentPage
+      currentPercentage
+    }
+  }
+}
+`;

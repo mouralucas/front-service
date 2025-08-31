@@ -5,7 +5,7 @@ export const CREATE_READING_MUTATION = gql`
   mutation CreateReading($input: CreateReadingInput!) {
     createReading(reading: $input) {
       reading {
-        id
+        readingId
         itemId
         itemTitle
         startDate

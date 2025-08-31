@@ -10,9 +10,10 @@ import CreateReadingModal from "../modals/CreateReading.tsx";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { Box, Button } from "@mui/material";
-import { useMutation } from "@apollo/client";``
+import { useMutation, useQuery } from "@apollo/client";``
 import { CREATE_READING_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
+import { QUERY_READING_STATS } from "../../../../services/apollo/queries/Library.tsx";
 
 
 interface BookDrawerProps {
@@ -23,16 +24,19 @@ interface BookDrawerProps {
 
 const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
-    const [stats, setStats] = useState<ItemReadingStats>();
+    // const [stats, setStats] = useState<ItemReadingStats>();
     const [crateReadingProgressModalState, setCrateReadingProgressModalState] = useState<boolean>(false)
     const [createReadingModalState, setCrateReadingModalState] = useState<boolean>(false)
-    
 
-    useEffect(() => {
-        if (props.openDrawerState) {
-            getReadingStats();
-        }
-    }, [props.openDrawerState])
+    const { data: statsData, loading, error, refetch: refetchStats } = useQuery(QUERY_READING_STATS, {
+        client: apolloLibraryClient,
+        variables: { itemId: props.item?.itemId },
+        skip: !props.openDrawerState,
+    });
+
+
+    // Flatten stats data
+    const stats = statsData?.getReadingStats?.stats;
 
     // Create reading progress modal
     const showCreateReadingProgressModal = () => {
@@ -50,17 +54,9 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
     const hideCreateReadingModal = () => {
         setCrateReadingModalState(false);
+        refetchStats();
     }
     
-
-    const getReadingStats = () => {
-        getLibraryData(URL_LIBRARY_READING_STATS, { itemId: props.item.itemId }).then((response: ReadingStatsResponse) => {
-            setStats(response.stats);
-        }).catch((e: any) => {
-            toast.error(`Erro ao buscar estatísticas de leitura: ${e.message}`)
-        });
-    }
-
     const getStatusChipVariant = (): any => {
         if (props.openDrawerState) {
             if (props.item?.lastStatusId == 'lost') {
