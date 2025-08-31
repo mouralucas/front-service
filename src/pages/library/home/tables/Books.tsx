@@ -66,13 +66,13 @@ const Books = (): ReactElement => {
 
     const columns: GridColDef<Item>[] = [
         { field: 'itemId', headerName: 'Id', flex: 1, type: 'number' },
-        { field: 'title', headerName: 'título', flex: 1 },
+        { field: 'title', headerName: 'título', flex: 2 },
         { field: 'mainAuthorName', headerName: 'Autor', flex: 1 },
         { field: 'serieName', headerName: 'Série', flex: 1 },
         {
             field: 'actions',
             headerName: 'Ações',
-            flex: 1,
+            flex: .5,
             sortable: false,
             filterable: false,
             renderCell: (params: GridRenderCellParams) => (
