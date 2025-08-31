@@ -75,6 +75,7 @@ export interface CreditCardTransaction {
     description: string;
     isInstallment: boolean;
     installments: CreditCardInstalments[];
+    totInstallments: number;
     currentInstallment: number
     totalAmount: number;
     parentId: number | null;

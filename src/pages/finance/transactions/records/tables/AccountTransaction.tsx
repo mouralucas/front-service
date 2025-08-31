@@ -6,7 +6,7 @@ import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import ptBR from "date-fns/locale/pt-BR";
+import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { AccountTransaction } from "../../../../../interfaces/Finance";
@@ -71,7 +71,7 @@ const AccountTransactionTable = (): ReactElement => {
             setTransaction(response?.transactions);
             setIsLoading(false);
         }
-        ).catch(err => {
+        ).catch(() => {
             // toast.error('Houve um erro ao buscar extratos: ' + err)
             setIsLoading(false);
         })

@@ -5,7 +5,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import ptBR from "date-fns/locale/pt-BR";
+import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useEffect, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { CreditCardTransaction } from '../../../../../interfaces/Finance';
@@ -18,9 +18,8 @@ import CreditCardTransactionModal from '../modals/CreditCardTransaction.tsx';
 const CreditCardTransactionTable = (): ReactElement => {
 
     const [creditCardTransaction, setCreditCardTransaction] = useState<CreditCardTransaction[]>([]);
-    const [selectedCreditCardTransaction, setSelectedCreditCardTransaction] = useState<UpdateCreditCardTransaction | undefined>(undefined)
     const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
-    const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
+    // const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     // Filter date range
@@ -40,18 +39,12 @@ const CreditCardTransactionTable = (): ReactElement => {
         }
     }, [startDate, endDate])
 
-    const showCreditCardTransactionModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedCreditCardTransaction(e.row);
-        } else {
-            setSelectedCreditCardTransaction(null);
-        }
+    const showCreditCardTransactionModal = () => {
         setTransactionModalState(true);
     }
 
     const hideCreditCardTransactionModal = () => {
         setTransactionModalState(false);
-        setSelectedCreditCardTransaction(undefined);
         updateDateRange([startDate, endDate]);
     }
 

@@ -38,7 +38,7 @@ const BrazilianFundsTable = (): ReactElement => {
         fetchBrazilianFunds().then();
     }, []);
 
-    const columns: GridColDef = [
+    const columns: GridColDef[] = [
         { field: 'fundId', headerName: 'Id', flex: 1 },
         { field: 'name', headerName: 'Nme', flex: 3 },
         { field: 'administrator', headerName: 'Administrador', flex: 1 },
@@ -46,7 +46,6 @@ const BrazilianFundsTable = (): ReactElement => {
             field: 'minimumBalance',
             headerName: 'Saldo mínimo',
             flex: 1,
-            type: 'number',
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
@@ -55,7 +54,6 @@ const BrazilianFundsTable = (): ReactElement => {
             field: 'minimumInvestment',
             headerName: 'Investmento mínimo',
             flex: 1,
-            type: 'number',
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
@@ -64,7 +62,6 @@ const BrazilianFundsTable = (): ReactElement => {
             field: 'minimumWithdraw',
             headerName: 'Saque mínimo',
             flex: 1,
-            type: 'number',
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
@@ -73,7 +70,6 @@ const BrazilianFundsTable = (): ReactElement => {
             field: 'initialInvestment',
             headerName: 'Investimento inicial',
             flex: 1,
-            type: 'number',
             valueFormatter: (value: number) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }

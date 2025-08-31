@@ -26,6 +26,7 @@ const DefaultItem: Item = {
     itemId: null,
     lastStatusId: null,
     lastStatusDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
+    lastStatusName: null,
     mainAuthorId: 0,
     mainAuthorName: '',
     authorsId: [],

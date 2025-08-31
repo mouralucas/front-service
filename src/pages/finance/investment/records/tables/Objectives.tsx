@@ -3,7 +3,7 @@ import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useEffect, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { InvestmentObjective } from '../../../../../interfaces/Finance';

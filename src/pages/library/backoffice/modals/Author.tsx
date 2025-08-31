@@ -142,9 +142,11 @@ const App = (props: AuthorModalProps): ReactElement => {
                                     onChange={(e) => field.onChange(e.target.value)}
                                     sx={{ width: "100%" }}
                                 >
-                                    <MenuItem value="1">Brasil</MenuItem>
-                                    <MenuItem value="2">EUA</MenuItem>
-                                    <MenuItem value="3">Alemanha</MenuItem>
+                                    {countries?.map((country: any) => (
+                                        <MenuItem key={country.countryId} value={country.countryId}>
+                                            {country.countryName}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         )}
@@ -165,9 +167,9 @@ const App = (props: AuthorModalProps): ReactElement => {
                                     onChange={(e) => field.onChange(e.target.value)}
                                     sx={{ width: "100%" }}
                                 >
-                                    {languages?.map((user: any) => (
-                                        <MenuItem key={user.languageId} value={user.languageId}>
-                                            {user.name}
+                                    {languages?.map((language: any) => (
+                                        <MenuItem key={language.languageId} value={language.languageId}>
+                                            {language.name}
                                         </MenuItem>
                                     ))}
                                 </Select>

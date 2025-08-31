@@ -1,19 +1,15 @@
-import { ReactElement, useEffect, useState } from "react";
-import DrawerV2 from "../../../../components/Drawer.tsx";
-import { getLibraryData } from "../../../../services/axios/Get.tsx";
-import { URL_LIBRARY_READING_STATS } from "../../../../services/axios/ApiUrls.tsx";
-import { ReadingStatsResponse } from "../../../../interfaces/LibraryRequest.tsx";
-import { Item, ItemReadingStats } from "../../../../interfaces/Library.tsx";
-import { toast } from "react-toastify";
-import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
-import CreateReadingModal from "../modals/CreateReading.tsx";
+import { useQuery } from "@apollo/client";
+import { Box, Button } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { Box, Button } from "@mui/material";
-import { useMutation, useQuery } from "@apollo/client";``
-import { CREATE_READING_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { ReactElement, useState } from "react";
+import DrawerV2 from "../../../../components/Drawer.tsx";
+import { Item } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { QUERY_READING_STATS } from "../../../../services/apollo/queries/Library.tsx";
+import CreateReadingModal from "../modals/CreateReading.tsx";
+import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
+``
 
 
 interface BookDrawerProps {
@@ -28,7 +24,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
     const [crateReadingProgressModalState, setCrateReadingProgressModalState] = useState<boolean>(false)
     const [createReadingModalState, setCrateReadingModalState] = useState<boolean>(false)
 
-    const { data: statsData, loading, error, refetch: refetchStats } = useQuery(QUERY_READING_STATS, {
+    const { data: statsData, refetch: refetchStats } = useQuery(QUERY_READING_STATS, {
         client: apolloLibraryClient,
         variables: { itemId: props.item?.itemId },
         skip: !props.openDrawerState,

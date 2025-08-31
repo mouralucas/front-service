@@ -45,6 +45,7 @@ const DefaultCreditCardTransaction: CreditCardTransaction = {
     isInstallment: false,
     installments: [{currentInstallment: 1, amount: 0, dueDate: format(new Date().toDateString(), 'yyyy-MM-dd')}],
     totInstallments: 1,
+    currentInstallment: 1,
     totalAmount: 0,
     parentId: null,
     createdAt: undefined,

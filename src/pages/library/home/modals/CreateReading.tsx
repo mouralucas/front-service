@@ -1,18 +1,18 @@
-import { BaseSyntheticEvent, ReactElement, useEffect } from "react";
-import Modal from "../../../../components/Modal.tsx";
 import { useMutation } from "@apollo/client";
-import { CREATE_READING_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
-import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { ItemReading } from "../../../../interfaces/Library.tsx";
-import {format, parseISO} from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Controller, useForm } from "react-hook-form";
-import Grid from '@mui/material/Grid';
 import { TextField } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Grid from '@mui/material/Grid';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { BaseSyntheticEvent, ReactElement, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import Modal from "../../../../components/Modal.tsx";
+import { ItemReading } from "../../../../interfaces/Library.tsx";
+import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
+import { CREATE_READING_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 
 
 interface CreateReadingModalProps {
@@ -30,7 +30,7 @@ const DefaultReading: ItemReading ={
 }
 
 const CreateReadingModal = (props: CreateReadingModalProps): ReactElement => {
-    const { handleSubmit, control, formState: { errors, dirtyFields }, reset, getValues, setValue } = useForm<ItemReading>({ defaultValues: DefaultReading })
+    const { handleSubmit, control, formState: { errors }, reset, setValue } = useForm<ItemReading>({ defaultValues: DefaultReading })
     
     const [createReading] = useMutation(CREATE_READING_MUTATION, {
         client: apolloLibraryClient,

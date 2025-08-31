@@ -1,15 +1,12 @@
-import { ReactElement, useState, useEffect } from 'react';
-import DataGridComp from '../../../../components/table/DataGridV2.tsx';
-import { Box, IconButton } from '@mui/material'
-import { getBrazilianFunds, getCategories } from "../../../../services/getCommonData/Finance.tsx";
-import BrazilianFundsModal from '../modals/BrazilianFunds.tsx'
-import { BrazilianFunds, Category } from "../../../../interfaces/Finance.tsx";
-import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
-import EditOutlined from '@mui/icons-material/EditOutlined';
+import { Box, IconButton } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import CategoryModal from '../modals/Category.tsx'
+import { ReactElement, useEffect, useState } from 'react';
+import DataGridComp from '../../../../components/table/DataGridV2.tsx';
+import { Category } from "../../../../interfaces/Finance.tsx";
+import { getCategories } from "../../../../services/getCommonData/Finance.tsx";
+import CategoryModal from '../modals/Category.tsx';
 
 
 const DefaultCategoryTable = (): ReactElement => {
