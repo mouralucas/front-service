@@ -20,8 +20,10 @@ export interface Item {
     publicationDate: string | null
     originalPublicationDate: string | null
     serieId: number
+    serieName: string
     collectionId: number
     publisherId: number
+    publisherName: string
     formatId: number
     languageId: 'PT'
     coverPrice: number

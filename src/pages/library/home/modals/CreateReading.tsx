@@ -22,6 +22,7 @@ interface CreateReadingModalProps {
 
 const DefaultReading: ItemReading ={
     readingId: null,
+    itemId: 0,
     startDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
     finishDate: null,
     isDropped: false
