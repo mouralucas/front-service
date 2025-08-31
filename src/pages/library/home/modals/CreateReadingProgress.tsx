@@ -47,9 +47,9 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
 
     const submitReadingProgress = (data: ItemReadingProgress, e: BaseSyntheticEvent<object> | undefined) => {
         librarySubmit(e, URL_LIBRARY_READING_PROGRESS, data, 'POST').then(() => {
-            toast.success('Item salvo com sucesso');
+            toast.success('Progresso de leitura salvo com sucesso');
         }).catch(() => {
-            toast.error('Erro ao salvar o item');
+            toast.error('Erro ao salvar o progresso de leitura');
         })
     };
 

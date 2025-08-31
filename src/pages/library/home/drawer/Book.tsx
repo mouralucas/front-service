@@ -3,17 +3,21 @@ import DrawerV2 from "../../../../components/Drawer.tsx";
 import { getLibraryData } from "../../../../services/axios/Get.tsx";
 import { URL_LIBRARY_READING_STATS } from "../../../../services/axios/ApiUrls.tsx";
 import { ReadingStatsResponse } from "../../../../interfaces/LibraryRequest.tsx";
-import { ItemReadingStats } from "../../../../interfaces/Library.tsx";
+import { Item, ItemReadingStats } from "../../../../interfaces/Library.tsx";
 import { toast } from "react-toastify";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
+import CreateReadingModal from "../modals/CreateReading.tsx";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { Box, Button } from "@mui/material";
+import { useMutation } from "@apollo/client";``
+import { CREATE_READING_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
+
 
 interface BookDrawerProps {
     openDrawerState: boolean;
-    itemId?: number;
-    item?: any;
+    item: Item;
     onCloseDrawerClick: (e: any) => void;
 };
 
@@ -21,6 +25,8 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
     const [stats, setStats] = useState<ItemReadingStats>();
     const [crateReadingProgressModalState, setCrateReadingProgressModalState] = useState<boolean>(false)
+    const [createReadingModalState, setCrateReadingModalState] = useState<boolean>(false)
+    
 
     useEffect(() => {
         if (props.openDrawerState) {
@@ -28,6 +34,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
         }
     }, [props.openDrawerState])
 
+    // Create reading progress modal
     const showCreateReadingProgressModal = () => {
         setCrateReadingProgressModalState(true);
     }
@@ -36,32 +43,25 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
         setCrateReadingProgressModalState(false);
     }
 
+    // Create reading modal
+    const showCreateReadingModal = () => {
+        setCrateReadingModalState(true);
+    }
+
+    const hideCreateReadingModal = () => {
+        setCrateReadingModalState(false);
+    }
+    
+
     const getReadingStats = () => {
         getLibraryData(URL_LIBRARY_READING_STATS, { itemId: props.item.itemId }).then((response: ReadingStatsResponse) => {
             setStats(response.stats);
-            //setValue('readingId', response.stats?.currentReadingId || '');
-            console.log(response);
         }).catch((e: any) => {
             toast.error(`Erro ao buscar estatísticas de leitura: ${e.message}`)
         });
     }
 
-    const startReading = () => {
-        // Implementar lógica para iniciar leitura
-        toast.info("Iniciar leitura não implementado ainda. Id do item: " + props.item.itemId);
-        const submitData = {
-            itemId: props.item.itemId,
-        }
-        console.log(submitData)
-        // librarySubmit('undefined', URL_READING, submitData, 'post').then(() => {
-        //     toast.success("Leitura iniciada com sucesso!");
-        //     getReadingStats();
-        // }).catch((e: any) => {
-        //     toast.error(`Erro ao iniciar leitura: ${e.message}`);
-        // });
-    }
-
-    const getStatusChipVariant = (): "danger" | "success" | "alert" | "info" | "undefined" => {
+    const getStatusChipVariant = (): any => {
         if (props.openDrawerState) {
             if (props.item?.lastStatusId == 'lost') {
                 return "danger";
@@ -143,7 +143,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
             {/* Reading stats */}
             <Box flex={1} overflow="auto" px={2} pb={2}>
-                {(stats?.readingsCount !== undefined && stats.readingsCount > 0) ? (
+                {(stats && stats?.readingsCount !== undefined && stats.readingsCount > 0) ? (
                     <>
                         <Stack direction="row" spacing={2}>
                             <Box flex={1}>
@@ -157,6 +157,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                         </Stack>
 
                         {stats?.isCurrentlyReading ? (
+                            // If currently reading, show current page and percentage, and button to add progress
                             <>
                                 <Stack direction="row" spacing={2} mt={2}>
                                     <Box flex={1}>
@@ -179,36 +180,30 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                                 </Box>
                             </>
                         ) :
+                            // If not currently reading, but already read once, show button to start a new reading
                             <Button
                                 fullWidth
                                 variant="outlined"
-                                onClick={startReading}
+                                onClick={showCreateReadingModal}
                             >
                                 Iniciar Nova Leitura
                             </Button>
                         }
                     </>
-                ) : stats?.readingsCount === 0 ? (
-                    <Box mt={2}>
-                        <Button
-                            fullWidth
-                            onClick={startReading}
-                        >
-                            Iniciar Leitura
-                        </Button>
-                    </Box>
-                ) : (
-                    <Box mt={2}>
-                        <span className="text-muted"><b>Leitura em andamento.</b></span>
-                        <Button
-                            fullWidth
-                            variant="outlined"
-                            onClick={startReading}
-                        >
-                            Nova Leitura
-                        </Button>
-                    </Box>
-                )}
+                ) : 
+                    // If no previous reading for the item, then show the button to start the first reading
+                    stats?.readingsCount === 0 && (
+                        <Box mt={2}>
+                            <Button
+                                fullWidth
+                                variant='outlined'
+                                onClick={showCreateReadingModal}
+                            >
+                                Iniciar Leitura
+                            </Button>
+                        </Box>
+                    ) 
+                }
             </Box>
         </Box>
 
@@ -225,6 +220,13 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                 hideCreateReadingProgressModal={hideCreateReadingProgressModal}
                 readingId={stats?.currentReadingId || ''}
             />
+            {props?.item?.itemId &&
+                <CreateReadingModal
+                    modalState={createReadingModalState}
+                    hideCreateReadingModal={hideCreateReadingModal}
+                    itemId={props.item.itemId}
+                />
+            }
         </>
     )
 }

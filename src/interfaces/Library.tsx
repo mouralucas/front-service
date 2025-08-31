@@ -1,7 +1,8 @@
 export interface Item {
-    itemId?: string | null
+    itemId?: number | null
     lastStatusId: string | null
     lastStatusDate: string
+    lastStatusName: string | null
     mainAuthorId: number;
     mainAuthorName: string;
     authorsId?: number[]
@@ -44,6 +45,15 @@ export interface ItemReadingStats {
     currentReadingId: string | null;
     currentPage: number | null;
     currentPercentage: number | null;
+}
+
+
+export interface ItemReading {
+    readingId: string | null;
+    itemId: number;
+    startDate: string;
+    finishDate: string | null;
+    isDropped: boolean;
 }
 
 export interface ItemReadingProgress {

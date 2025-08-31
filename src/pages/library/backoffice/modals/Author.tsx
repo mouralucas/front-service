@@ -28,7 +28,7 @@ const DefaultAuthor: Author = {
 }
 
 const App = (props: AuthorModalProps): ReactElement => {
-    const { handleSubmit, control, formState: { errors, dirtyFields }, reset, getValues } = useForm({ defaultValues: DefaultAuthor })
+    const { handleSubmit, control, formState: { errors, dirtyFields }, reset, getValues } = useForm<Author>({ defaultValues: DefaultAuthor })
 
     const [countries, setCountries] = useState<any[]>([])
     const [languages, setLanguages] = useState<any[]>([])

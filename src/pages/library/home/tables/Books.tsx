@@ -6,7 +6,7 @@ import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined'
 import { Box, TextField } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
-import { ReactElement, useCallback, useState } from "react"
+import { ReactElement, useCallback, useEffect, useState } from "react"
 import DataGridComp from "../../../../components/table/DataGridV2.tsx"
 import { Item } from "../../../../interfaces/Library.tsx"
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx'
@@ -29,7 +29,7 @@ const Books = (): ReactElement => {
     });
 
 
-    const [selectedBook, setSelectedBook] = useState<Item | null>(null)
+    const [selectedBook, setSelectedBook] = useState<Item>()
     const [itemModalState, setItemModalState] = useState<boolean>(false)
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
@@ -37,9 +37,9 @@ const Books = (): ReactElement => {
 
     const showItemModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
-            setSelectedBook(e.row)
+            setSelectedBook(e.row);
         } else {
-            setSelectedBook(null);
+            setSelectedBook(undefined);
         }
 
         setItemModalState(true);
@@ -47,15 +47,16 @@ const Books = (): ReactElement => {
 
     const hideItemModal = () => {
         setItemModalState(false);
-        setSelectedBook(null);
+        setSelectedBook(undefined);
         refetch();
     }
 
     const onOpenDrawerClick = useCallback((e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedBook(e.row)
+        if (e.row !== undefined) {
+            // Nomalize itemId to number
+            setSelectedBook({ ...e.row, itemId: Number(e.row.itemId)});
         } else {
-            setSelectedBook(null);
+            setSelectedBook(undefined);
         }
 
         setIsDrawerOpened(!isDrawerOpened);
@@ -64,7 +65,7 @@ const Books = (): ReactElement => {
 
 
     const columns: GridColDef<Item>[] = [
-        { field: 'itemId', headerName: 'Id', flex: 1 },
+        { field: 'itemId', headerName: 'Id', flex: 1, type: 'number' },
         { field: 'title', headerName: 'título', flex: 1 },
         { field: 'mainAuthorName', headerName: 'Autor', flex: 1 },
         { field: 'serieName', headerName: 'Série', flex: 1 },
@@ -144,7 +145,13 @@ const Books = (): ReactElement => {
                 }}
             />
             <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook} />
-            <BookDrawer openDrawerState={isDrawerOpened} onCloseDrawerClick={onOpenDrawerClick} item={selectedBook} />
+            {selectedBook && (
+                <BookDrawer
+                    openDrawerState={isDrawerOpened}
+                    onCloseDrawerClick={onOpenDrawerClick}
+                    item={selectedBook}
+                />
+            )}
         </Box>
     )
 }
