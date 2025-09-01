@@ -1,117 +1,44 @@
-import DataGrid from "../../../../components/table/DataGrid.tsx";
-import {useEffect, useState} from "react";
-import {getCollections} from "../../../../services/getCommonData/Library.tsx";
-import {toast} from "react-toastify";
-import {Button as Btn,} from 'devextreme-react/data-grid';
-import Button from "devextreme-react/button";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
-import Loader from "../../../../components/Loader.tsx";
+import { ReactElement } from "react";
+import DataGridComp from "../../../../components/table/DataGridV2"
+import { Box, IconButton } from "@mui/material"
+import { GridColDef } from "@mui/x-data-grid";
+import { useQuery } from "@apollo/client"
+import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
+import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
 
+const CollectionsTable = (): ReactElement => {
+    const {data: collectionsData, loading: collectionsLoading, refetch: collectionsRefetch } = useQuery(QUERY_COLLECTION, {
+        client: apolloLibraryClient,
+    })
 
-const App = () => {
-    const [collections, setCollections] = useState<any[]>([])
-
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-
-    const getAvailableCollections = async () => {
-        setIsLoading(true);
-        setCollections(await getCollections(false));
-
-        setIsLoading(false);
-    }
-
-    useEffect(() => {
-        getAvailableCollections().then();
-    }, [])
-
-    const coffeeCommand = () => {
-        toast('☕ Cafezinho delícia!');
-    }
-
-    const columns: DataGridColumn[] = [
-        {
-            dataField: "collectionId",
-            caption: "Id",
-            dataType: "number",
-            width: 70,
-        },
-        {
-            dataField: "collectionName",
-            caption: "Nome",
-            dataType: "string",
-        },
-        {
-            dataField: "description",
-            caption: "Descrição",
-            dataType: "string",
-        },
-        {
-            caption: 'Ações',
-            type: 'buttons',
-            width: 110,
-            child: [
-                // <Btn
-                //     key={1}
-                //     text="Editar"
-                //     // icon="/url/to/my/icon.ico"
-                //     icon="edit"
-                //     hint="Editar"
-                //     onClick={showModal}
-                // />,
-                <Btn
-                    key={2}
-                    //icon="/url/to/my/icon.ico"
-                    icon="coffee"
-                    hint="My Command"
-                    onClick={coffeeCommand}
-                />]
-        }
-    ]
-
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
-        },
-        {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
-            child: <Button icon={'refresh'} onClick={getAvailableCollections}/>,
-            location: "after"
-        },
-        // {
-        //     child: <Button icon={'add'} onClick={showModal}></Button>,
-        //     location: "after"
-        // },
-        {
-            name: 'searchPanel',
-            location: "after",
-        },
+    const columns: GridColDef[] = [
+        { field: "collectionId", headerName: "Id", flex: .5 },
+        { field: "collectionName", headerName: "Nome", flex: 2 },
+        { field: "description", headerName: "Descrição"}
     ]
 
     return (
-        <>
-            {isLoading ?
-                <Loader/>
-                :
-                <DataGrid
-                    keyExpr={'collectionId'}
-                    data={collections}
-                    columns={columns}
-                    toolBar={
-                        {
-                            visible: true,
-                            items: toolBarItems,
-                        }
-                    }
-                />
-            }
-            {/*<AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor}/>*/}
-        </>
+        <Box sx={{ display: "block" }} >
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
+                <IconButton
+                    aria-label="Atualizar"
+                    onClick={collectionsRefetch}
+                    loading={collectionsLoading}
+                >
+                    <AutorenewOutlined />
+                </IconButton>
+            </Box>
+            <DataGridComp 
+                columns={columns}
+                data={collectionsData?.getCollections?.collections}
+                isLoading={collectionsLoading}
+                getRowId={(row) => row.collectionId}
+                columnVisibilityModel={{
+                    collectionId: false
+                }}
+            />
+        </Box>
     )
 }
 
-export default App;
-
+export default CollectionsTable;
