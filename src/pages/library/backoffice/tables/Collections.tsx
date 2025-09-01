@@ -5,10 +5,12 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@apollo/client"
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
+import { QUERY_COLLECTION } from "../../../../services/apollo/queries/Library";
 
 const CollectionsTable = (): ReactElement => {
     const {data: collectionsData, loading: collectionsLoading, refetch: collectionsRefetch } = useQuery(QUERY_COLLECTION, {
         client: apolloLibraryClient,
+        
     })
 
     const columns: GridColDef[] = [
@@ -22,7 +24,7 @@ const CollectionsTable = (): ReactElement => {
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={collectionsRefetch}
+                    onClick={() => collectionsRefetch()}
                     loading={collectionsLoading}
                 >
                     <AutorenewOutlined />

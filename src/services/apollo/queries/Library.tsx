@@ -29,6 +29,9 @@ query {
       series {
           serieId
           serieName
+          originalName
+          description
+          countryName
       }
   }
 }
@@ -45,6 +48,23 @@ query {
   }
 }
 `
+
+export const QUERY_PUBLISHERS = gql`
+  query {
+    getPublishers {
+      quantity
+      publishers {
+          publisherId
+          publisherName
+          description
+          countryId
+          countryName
+          parentId
+      }
+    }
+  }
+`
+
 
 export const QUERY_LANGUAGES = gql`
   query {

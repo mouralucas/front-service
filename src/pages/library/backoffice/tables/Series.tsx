@@ -1,128 +1,47 @@
-import DataGrid from "../../../../components/table/DataGrid.tsx";
-import {useEffect, useState} from "react";
-import {getSeries} from "../../../../services/getCommonData/Library.tsx";
-import {toast} from "react-toastify";
-import {Button as Btn,} from 'devextreme-react/data-grid';
-import Button from "devextreme-react/button";
-import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
-import Loader from "../../../../components/Loader.tsx";
+import { ReactElement } from "react";
+import DataGridComp from "../../../../components/table/DataGridV2"
+import { Box, IconButton } from "@mui/material"
+import { GridColDef } from "@mui/x-data-grid";
+import { useQuery } from "@apollo/client"
+import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
+import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
+import { QUERY_SERIES } from "../../../../services/apollo/queries/Library";
 
+const SeriesTable = (): ReactElement => {
+    const { data: seriesData, loading: seriesLoading, refetch: seriesRefetch } = useQuery(QUERY_SERIES, {
+        client: apolloLibraryClient,
+    })
 
-const App = () => {
-    const [series, setSeries] = useState<any[]>([])
-
-    const [isLoading, setIsLoading] = useState(true);
-
-    const getAvailableSeries = async () => {
-        setIsLoading(true);
-        setSeries(await getSeries(false));
-        setIsLoading(false);
-    }
-
-    useEffect(() => {
-        getAvailableSeries().then();
-    }, [])
-
-    const coffeeCommand = () => {
-        toast('☕ Cafezinho delícia!');
-    }
-
-    const columns: DataGridColumn[] = [
-        {
-            dataField: "serieId",
-            caption: "Id",
-            dataType: "number",
-            width: 70,
-        },
-        {
-            dataField: "serieName",
-            caption: "Nome",
-            dataType: "string",
-        },
-        {
-            dataField: "originalName",
-            caption: "Nome Original",
-            dataType: "date",
-            format: 'shortDate',
-        },
-        {
-            dataField: "description",
-            caption: "Descrição",
-            dataType: "string",
-        },
-        {
-            dataField: "nm_country",
-            caption: "País",
-            dataType: "string"
-        },
-        {
-            caption: 'Ações',
-            type: 'buttons',
-            width: 110,
-            child: [
-                // <Btn
-                //     key={1}
-                //     text="Editar"
-                //     // icon="/url/to/my/icon.ico"
-                //     icon="edit"
-                //     hint="Editar"
-                //     onClick={showModal}
-                // />,
-                <Btn
-                    key={2}
-                    //icon="/url/to/my/icon.ico"
-                    icon="coffee"
-                    hint="My Command"
-                    onClick={coffeeCommand}
-                />]
-        }
-    ]
-
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
-        },
-        {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
-            child: <Button icon={'refresh'} onClick={getAvailableSeries}/>,
-            location: "after"
-        },
-        // {
-        //     child: <Button icon={'add'} onClick={showModal}></Button>,
-        //     location: "after"
-        // },
-        {
-            name: 'searchPanel',
-            location: "after",
-        },
-
+    const columns: GridColDef[] = [
+        { field: "serieId", headerName: "Id", flex: .5 },
+        { field: "serieName", headerName: "Nome", flex: 2 },
+        { field: "originalName", headerName: "Nome Original", flex: 2 },
+        { field: "description", headerName: "Descrição", flex: 1},
+        { field: "countryName", headerName: "País", flex: 1 },
     ]
 
     return (
-        <>
-            {isLoading ?
-                <Loader/>
-                :
-                <DataGrid
-                    keyExpr={'serieId'}
-                    data={series}
-                    columns={columns}
-                    toolBar={
-                        {
-                            visible: true,
-                            items: toolBarItems,
-                        }
-                    }
-                />
-            }
-            {/*<AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor}/>*/}
-        </>
+        <Box sx={{ display: "block" }} >
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
+                <IconButton
+                    aria-label="Atualizar"
+                    onClick={() => seriesRefetch()}
+                    loading={seriesLoading}
+                >
+                    <AutorenewOutlined />
+                </IconButton>
+            </Box>
+            <DataGridComp
+                columns={columns}
+                data={seriesData?.getSeries?.series}
+                isLoading={seriesLoading}
+                getRowId={(row) => row.serieId}
+                columnVisibilityModel={{
+                    seriesId: false
+                }}
+            />
+        </Box>
     )
 }
 
-export default App;
-
+export default SeriesTable;
