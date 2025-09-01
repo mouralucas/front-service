@@ -1,6 +1,23 @@
 import { gql } from "@apollo/client";
 
 
+export const CREATE_AUTHOR_MUTATION = gql`
+  mutation CreateAuthor($input: CreateAuthorInput!) {
+    createAuthor(author: $input) {
+        author {
+            authorId
+            authorName
+            birthDate
+            description
+            countryId
+            countryName
+            languageId
+            languageName
+        }
+    }
+}
+`
+
 export const CREATE_READING_MUTATION = gql`
   mutation CreateReading($input: CreateReadingInput!) {
     createReading(reading: $input) {

@@ -1,23 +1,22 @@
+import { useMutation, useQuery } from "@apollo/client";
 import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale";
-import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Modal from "../../../../components/Modal.tsx";
 import { Author } from "../../../../interfaces/Library.tsx";
-import { URL_LIBRARY_AUTHOR } from "../../../../services/axios/ApiUrls.tsx";
-import { librarySubmit } from "../../../../services/axios/Submit.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { useQuery } from "@apollo/client";
+import { CREATE_AUTHOR_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { GET_COUNTRIES, QUERY_LANGUAGES } from "../../../../services/apollo/queries/Library.tsx";
 
 interface AuthorModalProps {
     modalState: boolean;
-    hideModal: any;
+    hideAuthorModal: any;
     author?: Author;
 }
 
@@ -49,6 +48,18 @@ const App = (props: AuthorModalProps): ReactElement => {
         skip: !props.modalState
     })
 
+    const [createAuthor] = useMutation(CREATE_AUTHOR_MUTATION, {
+        client: apolloLibraryClient,
+         onCompleted: (data) => {
+            toast.success(
+                `Autor "${data.createAuthor.author.authorName}" criado com sucesso`
+            );
+            props.hideAuthorModal();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
 
     useEffect(() => {
         if (!props.modalState) {
@@ -65,34 +76,16 @@ const App = (props: AuthorModalProps): ReactElement => {
         }
     }, [props.modalState, props.author, languageData, countryData, reset]);
 
-    const onSubmit = (data: Author, e: BaseSyntheticEvent<object> | undefined) => {
-        let method;
-        let submitData;
-
-        if (data.authorId !== null) {
-            method = 'patch'
-
-            const currentValues: Author = getValues();
-            const modifiedFields: Partial<Record<keyof Author, Author[keyof Author]>> = {
-                authorId: data.authorId
-            };
-
-            (Object.keys(dirtyFields) as Array<keyof Author>).forEach((key: keyof Author) => {
-                modifiedFields[key] = currentValues[key];
-            });
-
-            submitData = modifiedFields
-        } else {
-            method = 'post'
-            submitData = data
+    const onSubmit = async (authorFormData: Author) => {
+        try {
+            await createAuthor({
+                variables: {
+                    input: authorFormData
+                }
+            })
+        } catch (error) {
+            console.error("Erro ao criar autor " + error)
         }
-
-        librarySubmit(e, URL_LIBRARY_AUTHOR, submitData, method).then(() => {
-            toast.success('Autor salvo com sucesso');
-        }).catch(() => {
-            toast.error('Erro ao salvar o autor');
-        })
-
     }
 
     const body = (
@@ -223,10 +216,10 @@ const App = (props: AuthorModalProps): ReactElement => {
             {props.modalState && (
                 <Modal
                     showModal={props.modalState}
-                    hideModal={props.hideModal}
+                    hideModal={props.hideAuthorModal}
                     title={'Autor'}
                     body={body}
-                    // actionModal={handleSubmit(onSubmit)}
+                    actionModal={handleSubmit(onSubmit)}
                     size={'modal-md'}
                 />
             )}

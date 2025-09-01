@@ -1,16 +1,16 @@
 import { useQuery } from '@apollo/client';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import { Box, IconButton } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
+import { toast } from 'react-toastify';
 import DataGridComp from '../../../../components/table/DataGridV2';
 import { Author } from '../../../../interfaces/Library';
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import { QUERY_AUTHORS } from '../../../../services/apollo/queries/Library';
 import { formatDate } from '../../../../utils/datetime';
 import AuthorModal from '../modals/Author.tsx';
-import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
-import { toast } from 'react-toastify';
 
 const AuthorTable = (): ReactElement => {
     const [authorModalState, setAuthorModalState] = useState<boolean>(false)
@@ -34,7 +34,7 @@ const AuthorTable = (): ReactElement => {
     })
 
     const toggleAuthorModal = useCallback((e: any) => {
-        if (e.row !== undefined) {
+        if (e?.row !== undefined) {
             setSelectedAuthor({ ...e.row, authorId: Number(e.row.authorId) });
         } else {
             setSelectedAuthor(undefined);
@@ -110,7 +110,7 @@ const AuthorTable = (): ReactElement => {
                     authorId: false
                 }}
             />
-            <AuthorModal modalState={authorModalState} hideModal={toggleAuthorModal} author={selectedAuthor} />
+            <AuthorModal modalState={authorModalState} hideAuthorModal={toggleAuthorModal} author={selectedAuthor} />
         </Box>
     );
 };

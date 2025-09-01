@@ -136,7 +136,7 @@ const App = (): ReactElement => {
                     }}
                 />
             }
-            <AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor}/>
+            <AuthorModal modalState={authorModalState} hideAuthorModal={hideAuthorModal} author={selectedAuthor}/>
         </>
     )
 }
