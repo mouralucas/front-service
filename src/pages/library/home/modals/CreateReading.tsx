@@ -6,7 +6,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { BaseSyntheticEvent, ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Modal from "../../../../components/Modal.tsx";
@@ -52,19 +52,18 @@ const CreateReadingModal = (props: CreateReadingModalProps): ReactElement => {
         }  else {
             reset(DefaultReading);
         }
-    }, [props.modalState, reset])
+    }, [props.modalState, reset, setValue, props.itemId])
 
    
-    const onSubmit = async (data: ItemReading, e: BaseSyntheticEvent<object> | undefined) => {
-        console.log(data, e);
+    const onSubmit = async (readingFormData: ItemReading) => {
         try {
             await createReading({
                 variables: {
-                    input: data,
+                    input: readingFormData,
                 },
             });
         } catch (err) {
-        console.error("Erro ao criar leitura:", err);
+            console.error("Erro ao criar leitura:", err);
         }
     }
 

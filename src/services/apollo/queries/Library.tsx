@@ -53,7 +53,7 @@ query GetReadingStats($itemId: Int!) {
       readingsCount
       lastReadingDate
       isCurrentlyReading
-      currentReadindId
+      currentReadingId
       currentPage
       currentPercentage
     }

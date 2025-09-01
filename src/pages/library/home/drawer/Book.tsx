@@ -41,6 +41,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
     const hideCreateReadingProgressModal = () => {
         setCrateReadingProgressModalState(false);
+        refetchStats();
     }
 
     // Create reading modal

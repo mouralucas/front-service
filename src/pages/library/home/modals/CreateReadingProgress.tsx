@@ -1,14 +1,18 @@
-import { BaseSyntheticEvent, useEffect } from "react";
-import { ItemReadingProgress } from "../../../../interfaces/Library";
+import { useMutation } from "@apollo/client";
+import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Select from 'react-select';
-import DateMaskedInput from "../../../../components/form/DateMaskInput.tsx";
-import DatePicker from "react-datepicker";
-import { format, parseISO } from "date-fns";
-import Modal2 from "../../../../components/Modal.tsx";
 import { toast } from "react-toastify";
-import { librarySubmit } from "../../../../services/axios/Submit.tsx";
-import { URL_LIBRARY_READING_PROGRESS } from "../../../../services/axios/ApiUrls.tsx";
+import Modal2 from "../../../../components/Modal.tsx";
+import { ItemReadingProgress } from "../../../../interfaces/Library";
+import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
+import { CREATE_READING_PROGRESS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 
 interface CreateReadingProgressProps {
     modalState: boolean;
@@ -25,143 +29,172 @@ const DefaultReadingProgress: ItemReadingProgress = {
     comment: undefined
 }
 
-const ReadingProgressOptions = [
-    { value: 'page', label: 'Página' },
-    { value: 'percentage', label: 'Porcentagem' },
-]
-
 const CreateReadingProgress = (props: CreateReadingProgressProps) => {
     const { handleSubmit, control, reset, formState: { errors }, setValue } = useForm<ItemReadingProgress>({ defaultValues: DefaultReadingProgress });
+
+    const [createReadingProgress] = useMutation(CREATE_READING_PROGRESS_MUTATION, {
+        client: apolloLibraryClient,
+        onCompleted: (data) => {
+            toast.success(
+                `Progresso criado com sucesso para "${data.createReadingProgress.itemTitle}"`
+            );
+            props.hideCreateReadingProgressModal();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    }); 
+
 
     useEffect(() => {
         if (props.modalState && props.readingId) {
             setValue('readingId', props.readingId);
-        }
-
-        // Clean form when modal closes
-        if (!props.modalState) {
+        } else {
             reset(DefaultReadingProgress);
         }
 
-    }, [props.modalState, props.readingId]);
+    }, [setValue, reset, props.modalState, props.readingId]);
 
-    const submitReadingProgress = (data: ItemReadingProgress, e: BaseSyntheticEvent<object> | undefined) => {
-        librarySubmit(e, URL_LIBRARY_READING_PROGRESS, data, 'POST').then(() => {
-            toast.success('Progresso de leitura salvo com sucesso');
-        }).catch(() => {
-            toast.error('Erro ao salvar o progresso de leitura');
-        })
-    };
+    const submitReadingProgress = async (progressFormData: ItemReadingProgress) => {
+        console.log(progressFormData);
+        const normalizedData = {...progressFormData, value: Number(progressFormData.value)}
+        try {
+            await createReadingProgress({
+                variables: {
+                    input: normalizedData
+                }
+            });
+        } catch (error) {
+            console.error(`Erro ao criar progresso de leitura: ${error}`);
+        }
+    }
 
     const body = (
-        <div className="mt-2">
-            <form onSubmit={handleSubmit(submitReadingProgress)}>
-                <div className="row">
-                    <div className="col-6">
-                        <Controller
-                            name={'readingId'}
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => (
-                                <input
-                                    type={"hidden"}
-                                    {...field}
-                                    className="form-control input-default"
-                                />
-                            )}
-                        />
-                        <Controller
-                            name={'progressType'}
-                            control={control}
-                            rules={{ required: "Este campo é obrigatório" }}
-                            render={({ field }) => (
+        <form onSubmit={handleSubmit(submitReadingProgress)}>
+            <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                <Grid size={{ xs: 12, md: 3 }}>
+                    <Controller 
+                        name={"readingId"}
+                        control={control}
+                        rules={{ required: "Esse campo é obrigatório." }}
+                        defaultValue={props.readingId ?? ""} 
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                type="hidden"
+                            />
+                        )}
+                    />
+                    <Controller
+                        name="progressType"
+                        control={control}
+                        render={({ field }) => (
+                            <FormControl fullWidth size="small">
+                                <InputLabel id="language-label">Tipo</InputLabel>
                                 <Select
                                     {...field}
-                                    options={ReadingProgressOptions}
-                                    value={ReadingProgressOptions.find((c: any) => c.value === field.value)}
-                                    onChange={(e: any) => field.onChange(e?.value)}
-                                    className={`${errors.progressType ? "border border-danger" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-6">
-                        <Controller
-                            name={'value'}
-                            control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
-                            render={({ field }) => (
-                                <input
-                                    type={"text"}
-                                    {...field}
-                                    className={`form-control input-default ${errors.value ? 'input-error' : ''}`}
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className="row mt-2">
-                    <div className="col-4">
-                        <label htmlFor="">Data do status</label>
-                        <Controller
-                            name={'progressDate'}
-                            control={control}
-                            rules={{ required: false }}
-                            render={({ field }) => (
+                                    labelId="language-label"
+                                    value={field.value || ""}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    sx={{ width: "100%" }}
+                                >
+                                    <MenuItem key={'page'} value={'page'}>
+                                        Página
+                                    </MenuItem>
+                                    <MenuItem key={'percentage'} value={'percentage'}>
+                                        Porcentagem
+                                    </MenuItem>
+
+                                </Select>
+                            </FormControl>
+                        )}
+                    />
+                </Grid>
+                <Grid size={{ xs: 12, md: 3 }} >
+                    <Controller 
+                        name={"value"}
+                        control={control}
+                        rules={{ required: "Esse campo é obrigatório." }}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Progresso"
+                                type="number"
+                                fullWidth
+                                size="small"
+                                error={!!errors.value}
+                                helperText={errors.value?.message}
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid size={{ xs: 12, md: 3 }}>
+                    <Controller
+                        name="progressDate"
+                        control={control}
+                        rules={{ required: "Esse campo é obrigatório." }}
+                        render={({ field }) => (
+                            <LocalizationProvider
+                                dateAdapter={AdapterDateFns}
+                                adapterLocale={ptBR}
+                            >
                                 <DatePicker
-                                    selected={parseISO(field.value)}
-                                    onChange={(date) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                    }}
-                                    dateFormat="dd/MM/yyyy" // Exibe no formato brasileiro
-                                    className="form-control"
-                                    placeholderText="Selecione uma data"
-                                    customInput={
-                                        <DateMaskedInput
-                                            placeholder="dd/mm/aaaa"
-                                            className={`form-control ${errors.progressDate ? "input-error" : ""}`}
-                                        />
+                                    label="Início da leitura"
+                                    value={field.value ? new Date(field.value) : null}
+                                    onChange={(date) =>
+                                        field.onChange(date ? date.toISOString().split("T")[0] : null)
                                     }
+                                    slotProps={{
+                                        textField: {
+                                            fullWidth: true,
+                                            size: "small",
+                                            error: !!errors.progressDate,
+                                            helperText: errors.progressDate?.message,
+                                        },
+                                    }}
+                                    sx={{ width: "100%" }}
                                 />
-                            )}
-                        />
-                    </div>
-                    <div className="col-8">
-                        <label htmlFor="">Nota</label>
-                        <Controller
-                            name={'rate'}
-                            control={control}
-                            rules={{ required: false }}
-                            render={({ field }) => (
-                                <input
-                                    type={"number"}
-                                    {...field}
-                                    className="form-control input-default"
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className="row mt-2">
-                    <div className="col-12">
-                        <label htmlFor="">Comentário</label>
-                        <Controller name={'comment'}
-                            control={control}
-                            rules={{ required: false }}
-                            render={({ field }) => (
-                                <textarea
-                                    {...field}
-                                    value={field.value ?? ''}
-                                    onChange={field.onChange}
-                                    rows={5}
-                                    className='form-control'></textarea>
-                            )}
-                        />
-                    </div>
-                </div>
-            </form>
-        </div>
-    );
+                            </LocalizationProvider>
+                        )}
+                    />
+                </Grid>
+                <Grid size={{ xs: 12, md: 3 }}>
+                    <Controller 
+                        // Eventually will by radio with start format
+                        name={"rate"}
+                        control={control}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Nota"
+                                type="number"
+                                fullWidth
+                                size="small"
+                                error={!!errors.rate}
+                                helperText={errors.rate?.message}
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid size={{ xs: 12, md: 12 }}>
+                    <Controller
+                        name={"comment"}
+                        control={control}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Descrição"
+                                fullWidth
+                                multiline
+                                minRows={5}
+                                size="small"
+                            />
+                        )}
+                    />
+                </Grid>
+            </Grid>
+        </form>
+    )
 
     return (
         <div>
@@ -172,7 +205,7 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
                 fullscreen={true}
                 body={body}
                 actionModal={handleSubmit(submitReadingProgress)}
-                size={'modal-sm'}
+                size={'modal-md'}
             />
         </div>
     )
