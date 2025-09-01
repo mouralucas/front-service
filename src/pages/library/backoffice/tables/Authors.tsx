@@ -1,144 +1,118 @@
-import {ReactElement, useEffect, useState} from "react";
-import DataGrid from "../../../../components/table/DataGrid.tsx";
-import {getAuthors} from "../../../../services/getCommonData/Library.tsx";
-import {toast} from "react-toastify";
-import {Button as Btn,} from 'devextreme-react/data-grid';
-import {DataGridColumn, DataGridToolBarItem} from "../../../../assets/core/components/Interfaces.tsx";
-import Button from "devextreme-react/button";
-import AuthorModal from '../modals/Author.tsx'
-import {Author} from "../../../../interfaces/Library.tsx";
-import Loader from '../../../../components/Loader'
+import { useQuery } from '@apollo/client';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import { Box, IconButton } from '@mui/material';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { ReactElement, useCallback, useState } from 'react';
+import DataGridComp from '../../../../components/table/DataGridV2';
+import { Author } from '../../../../interfaces/Library';
+import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
+import { QUERY_AUTHORS } from '../../../../services/apollo/queries/Library';
+import { formatDate } from '../../../../utils/datetime';
+import AuthorModal from '../modals/Author.tsx';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import { toast } from 'react-toastify';
 
-
-const App = (): ReactElement => {
-    const [authors, setAuthors] = useState<any[]>([])
+const AuthorTable = (): ReactElement => {
     const [authorModalState, setAuthorModalState] = useState<boolean>(false)
     const [selectedAuthor, setSelectedAuthor] = useState<Author | undefined>(undefined)
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const { data: authorData, loading: loadingAuthors, refetch: refetchAuthors } = useQuery(QUERY_AUTHORS, {
+        client: apolloLibraryClient,
+        variables: {
+            params: {
+                authorId: null
+            }
+        },
+        onCompleted: () => {
+            toast.success(
+                `Dados de autores carregados com sucesso`
+            );
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
 
-    const showAuthorModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedAuthor(e.row.data);
+    const toggleAuthorModal = useCallback((e: any) => {
+        if (e.row !== undefined) {
+            setSelectedAuthor({ ...e.row, authorId: Number(e.row.authorId) });
+        } else {
+            setSelectedAuthor(undefined);
         }
-        setAuthorModalState(true);
-    }
 
-    const hideAuthorModal = () => {
-        setAuthorModalState(false);
-        setSelectedAuthor(undefined);
-        getAvailableAuthors().then();
-    }
+        setAuthorModalState((prev) => !prev);
+    }, [authorModalState])
 
-    const getAvailableAuthors = async () => {
-        setIsLoading(true);
-        setAuthors(await getAuthors(false));
-        setIsLoading(false);
-    }
 
-    useEffect(() => {
-        getAvailableAuthors().then();
-    }, [])
 
-    const coffeeCommand = () => {
-        toast('☕ Cafezinho delícia!');
-    }
+    const columns: GridColDef<Author>[] = [
+        { field: 'authorId', headerName: 'Id', type: 'number', flex: 2 },
+        { field: "authorName", headerName: 'Nome', flex: 1 },
+        {
+            field: "birthDate",
+            headerName: 'Data de Nascimento',
+            flex: .5,
+            valueFormatter: (value) => {
+                if (!value) return '';
 
-    const columns: DataGridColumn[] = [
-        {
-            dataField: "authorId",
-            caption: "Id",
-            dataType: "number",
-            width: 150,
+                const start = formatDate(value);
+                return start;
+            },
         },
+        { field: "countryName", headerName: 'País', flex: 1 },
+        { field: "languageName", headerName: 'Idioma', flex: 1 },
         {
-            dataField: "authorName",
-            caption: "Nome",
-            dataType: "string",
-        },
-        {
-            dataField: "birthDate",
-            caption: "Nascimento",
-            dataType: "date",
-            format: 'shortDate',
-        },
-        {
-            dataField: "countryName",
-            caption: "Pais",
-            dataType: "string",
-        },
-        {
-            dataField: "languageName",
-            caption: "Idioma",
-            dataType: "string",
-        },
-        {
-            caption: 'Ações',
-            type: 'buttons',
-            width: 110,
-            child: [
-                <Btn
-                    key={1}
-                    text="Editar"
-                    // icon="/url/to/my/icon.ico"
-                    icon="edit"
-                    hint="Editar"
-                    onClick={showAuthorModal}
-                />,
-                <Btn
-                    key={2}
-                    //icon="/url/to/my/icon.ico"
-                    icon="coffee"
-                    hint="Café"
-                    onClick={coffeeCommand}
-                />]
-        }
-    ]
-
-    const toolBarItems: DataGridToolBarItem[] = [
-        {
-            name: 'columnChooserButton',
-            location: 'after',
-        },
-        {
-            name: 'exportButton',
-            location: 'after',
-        },
-        {
-            child: <Button icon={'refresh'} onClick={getAvailableAuthors}/>,
-            location: "after"
-        },
-        {
-            child: <Button icon={'add'} onClick={showAuthorModal}></Button>,
-            location: "after"
-        },
-        {
-            name: 'searchPanel',
-            location: "after",
+            field: 'actions',
+            headerName: 'Ações',
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',      // vertical
+                        justifyContent: 'center',  // horizontal
+                        gap: 1,
+                        flex: 1,                   // ocupa toda a largura da célula
+                        height: '100%',            // ocupa toda a altura
+                    }}
+                >
+                    <IconButton
+                        aria-label="editar"
+                        color="success"
+                        onClick={toggleAuthorModal.bind(null, params)}
+                    >
+                        <EditOutlined />
+                    </IconButton>
+                </Box>
+            ),
         },
     ]
 
     return (
-        <>
-            {isLoading ?
-                <Loader/>
-                :
-                <DataGrid
-                    keyExpr={'authorId'}
-                    data={authors}
-                    columns={columns}
-                    toolBar={{
-                        visible: true,
-                        items: toolBarItems
-                    }}
-                    searchPanel={{
-                        visible: true
-                    }}
-                />
-            }
-            <AuthorModal modalState={authorModalState} hideModal={hideAuthorModal} author={selectedAuthor}/>
-        </>
-    )
-}
+        <Box sx={{ display: "block" }}>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
+                <IconButton
+                    aria-label="Novo Registro"
+                    onClick={toggleAuthorModal}
+                    loading={loadingAuthors}
+                >
+                    <AddCircleOutline />
+                </IconButton>
+            </Box>
+            <DataGridComp
+                data={authorData?.getAuthors?.authors}
+                columns={columns}
+                isLoading={loadingAuthors}
+                getRowId={(row) => row.authorId}
+                columnVisibilityModel={{
+                    authorId: false
+                }}
+            />
+            <AuthorModal modalState={authorModalState} hideModal={toggleAuthorModal} author={selectedAuthor} />
+        </Box>
+    );
+};
 
-export default App;
+export default AuthorTable;

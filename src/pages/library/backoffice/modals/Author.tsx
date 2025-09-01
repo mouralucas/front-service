@@ -11,11 +11,13 @@ import Modal from "../../../../components/Modal.tsx";
 import { Author } from "../../../../interfaces/Library.tsx";
 import { URL_LIBRARY_AUTHOR } from "../../../../services/axios/ApiUrls.tsx";
 import { librarySubmit } from "../../../../services/axios/Submit.tsx";
-import { getCountries, getLanguages } from "../../../../services/getCommonData/Core.tsx";
+import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
+import { useQuery } from "@apollo/client";
+import { GET_COUNTRIES, QUERY_LANGUAGES } from "../../../../services/apollo/queries/Library.tsx";
 
 interface AuthorModalProps {
     modalState: boolean;
-    hideModal: () => void;
+    hideModal: any;
     author?: Author;
 }
 
@@ -24,31 +26,44 @@ const DefaultAuthor: Author = {
     authorName: '',
     birthDate: null,
     languageId: '',
+    countryId: '',
     description: ''
 }
 
 const App = (props: AuthorModalProps): ReactElement => {
     const { handleSubmit, control, formState: { errors, dirtyFields }, reset, getValues } = useForm<Author>({ defaultValues: DefaultAuthor })
 
-    const [countries, setCountries] = useState<any[]>([])
-    const [languages, setLanguages] = useState<any[]>([])
+    const { data: languageData } = useQuery(QUERY_LANGUAGES, {
+        client: apolloLibraryClient,
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+        skip: !props.modalState
+    })
 
-    const getAuthorData = async () => {
-        setCountries(await getCountries(true));
-        setLanguages(await getLanguages(true));
-    }
+    const { data: countryData } = useQuery(GET_COUNTRIES, {
+        client: apolloLibraryClient,
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+        skip: !props.modalState
+    })
+
 
     useEffect(() => {
-        if (props.modalState && props.author) {
-            reset(props.author);
-        } else if (props.modalState && !props.author) {
+        if (!props.modalState) {
             reset(DefaultAuthor);
+            return;
         }
 
-        if (props.modalState) {
-            getAuthorData().then();
+        if (languageData && countryData) {
+            if (props.author) {
+                reset(props.author);
+            } else {
+                reset(DefaultAuthor);
+            }
         }
-    }, [props.author, props.modalState, reset])
+    }, [props.modalState, props.author, languageData, countryData, reset]);
 
     const onSubmit = (data: Author, e: BaseSyntheticEvent<object> | undefined) => {
         let method;
@@ -81,136 +96,142 @@ const App = (props: AuthorModalProps): ReactElement => {
     }
 
     const body = (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
-                <Grid size={{ xs: 12, md: 9 }}>
-                    <Controller
-                        name="authorName"
-                        control={control}
-                        rules={{ required: "Esse campo é obrigatório" }}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Nome"
-                                fullWidth
-                                size="small"
-                                error={!!errors.authorName}
-                                helperText={errors.authorName?.message}
-                            />
-                        )}
-                    />
-                </Grid>
-                <Grid size={{ xs: 12, md: 3 }}>
-                    <Controller
-                        name="birthDate"
-                        control={control}
-                        render={({ field }) => (
-                            <LocalizationProvider
-                                dateAdapter={AdapterDateFns}
-                                adapterLocale={ptBR}
-                            >
-                                <DatePicker
-                                    label="Nascimento"
-                                    value={field.value ? new Date(field.value) : null}
-                                    onChange={(date) =>
-                                        field.onChange(date ? date.toISOString().split("T")[0] : null)
-                                    }
-                                    slotProps={{
-                                        textField: {
-                                            fullWidth: true,
-                                            size: "small",
-                                        },
-                                    }}
-                                    sx={{ width: "100%" }}
+        <>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                    <Grid size={{ xs: 12, md: 9 }}>
+                        <Controller
+                            name="authorName"
+                            control={control}
+                            rules={{ required: "Esse campo é obrigatório" }}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Nome"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.authorName}
+                                    helperText={errors.authorName?.message}
                                 />
-                            </LocalizationProvider>
-                        )}
-                    />
-                </Grid>
-
-                <Grid size={{ xs: 12, md: 6 }}>
-                    <Controller
-                        name="countryId"
-                        control={control}
-                        render={({ field }) => (
-                            <FormControl fullWidth size="small">
-                                <InputLabel id="country-label">País</InputLabel>
-                                <Select
-                                    {...field}
-                                    labelId="country-label"
-                                    value={field.value || ""}
-                                    onChange={(e) => field.onChange(e.target.value)}
-                                    sx={{ width: "100%" }}
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 3 }}>
+                        <Controller
+                            name="birthDate"
+                            control={control}
+                            render={({ field }) => (
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
+                                    adapterLocale={ptBR}
                                 >
-                                    {countries?.map((country: any) => (
-                                        <MenuItem key={country.countryId} value={country.countryId}>
-                                            {country.countryName}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        )}
-                    />
-                </Grid>
+                                    <DatePicker
+                                        label="Nascimento"
+                                        value={field.value ? new Date(field.value) : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
+                            )}
+                        />
+                    </Grid>
 
-                <Grid size={{ xs: 12, md: 6 }}>
-                    <Controller
-                        name="languageId"
-                        control={control}
-                        render={({ field }) => (
-                            <FormControl fullWidth size="small">
-                                <InputLabel id="language-label">Idioma</InputLabel>
-                                <Select
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <Controller
+                            name="countryId"
+                            control={control}
+                            render={({ field }) => (
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="country-label">País</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="country-label"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {countryData?.getCountries?.countries?.map((country: any) => (
+                                            <MenuItem key={country.countryId} value={country.countryId}>
+                                                {country.countryName}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                    </Grid>
+
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <Controller
+                            name="languageId"
+                            control={control}
+                            render={({ field }) => (
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="language-label">Idioma</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="language-label"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {languageData?.getLanguages?.languages?.map((language: any) => (
+                                            <MenuItem key={language.languageId} value={language.languageId}>
+                                                {language.languageName}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                    </Grid>
+
+                    <Grid size={{ xs: 12 }}>
+                        <Controller
+                            name="description"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    labelId="language-label"
-                                    value={field.value || ""}
-                                    onChange={(e) => field.onChange(e.target.value)}
-                                    sx={{ width: "100%" }}
-                                >
-                                    {languages?.map((language: any) => (
-                                        <MenuItem key={language.languageId} value={language.languageId}>
-                                            {language.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        )}
-                    />
+                                    label="Descrição"
+                                    fullWidth
+                                    multiline
+                                    minRows={3}
+                                    size="small"
+                                />
+                            )}
+                        />
+                    </Grid>
                 </Grid>
-
-                <Grid size={{ xs: 12 }}>
-                    <Controller
-                        name="description"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Descrição"
-                                fullWidth
-                                multiline
-                                minRows={3}
-                                size="small"
-                            />
-                        )}
-                    />
-                </Grid>
-            </Grid>
-        </form>
+            </form>
+        </>
     );
 
 
+
     return (
-        <div>
-            <Modal
-                showModal={props.modalState}
-                hideModal={props.hideModal}
-                title={'Autor'}
-                body={body}
-                // actionModal={handleSubmit(onSubmit)}
-                size={'modal-md'}
-            />
-        </div>
-    )
+        <>
+            {props.modalState && (
+                <Modal
+                    showModal={props.modalState}
+                    hideModal={props.hideModal}
+                    title={'Autor'}
+                    body={body}
+                    // actionModal={handleSubmit(onSubmit)}
+                    size={'modal-md'}
+                />
+            )}
+        </>
+    );
 }
 
 export default App;

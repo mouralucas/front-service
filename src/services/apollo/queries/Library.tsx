@@ -46,6 +46,48 @@ query {
 }
 `
 
+export const QUERY_LANGUAGES = gql`
+  query {
+    getLanguages {
+        quantity
+        languages {
+            languageId
+            languageName
+            languageCode
+        }
+    }
+  }`
+
+export const GET_COUNTRIES = gql`
+ query {
+    getCountries {
+      quantity
+      countries {
+          countryId
+          countryName
+          continent
+          description
+      }
+  }
+ }`
+
+export const QUERY_AUTHORS = gql`
+query GetAuthors($params: GetAuthorsRequest) {
+      getAuthors(params: $params) {
+        quantity
+        authors {
+            authorId
+            authorName
+            birthDate
+            description
+            countryId
+            countryName
+            languageId
+            languageName
+        }
+    }
+}`
+
 export const QUERY_READING_STATS = gql`
 query GetReadingStats($itemId: Int!) {
   getReadingStats(params: { itemId: $itemId }) {
