@@ -1,5 +1,11 @@
 
 
+function parseDateOnly(dateString: string): Date {
+  const [year, month, day] = dateString.split('-').map(Number);
+  return new Date(year, month - 1, day); // cria no fuso local, sem shift
+}
+
+
 export const getLastPeriods = (monthsAgo: number = 12) => {
     const today = new Date();
 
@@ -34,6 +40,13 @@ export const isLessThanMonths = (dateStr: string, months: number = 2, compareDat
            (monthsDiff === months && refDate.getDate() < targetDate.getDate());
 }
 
+/**
+ * Formats a date str or object.
+ * - Strings as YYYY-MM-DD (Postgres DATE) are manually parsed,
+ *   avoiding timezone issues in JS.
+ * - Strings with time (TIMESTAMP/ISO) are passed directly to `new Date`.
+ * - Date objects are used as is.
+ */
 export const formatDate = (
     baseDate: Date | string | null, 
     format: string = 'dd/MM/yyyy'
@@ -44,7 +57,11 @@ export const formatDate = (
     if (baseDate instanceof Date) {
         date = baseDate;
     } else {
-        date = new Date(baseDate);
+        if (typeof baseDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(baseDate)) {
+            date = parseDateOnly(baseDate);
+        } else {
+            date = new Date(baseDate);
+        }
     }
 
     const dd = String(date.getDate()).padStart(2, '0');

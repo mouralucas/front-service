@@ -71,10 +71,11 @@ const CreditCardTransactionTable = (): ReactElement => {
 
     const columns: GridColDef<CreditCardTransaction>[] = [
         { field: 'transactionId', headerName: 'Id', flex: 1 },
-        { field: 'creditCardNickname', headerName: 'Cartão', flex: 1 },
+        { field: 'creditCardNickname', headerAlign: "center", headerName: 'Cartão', flex: 1 },
         {
             field: 'transactionDate',
             headerName: 'Compra',
+            headerAlign: "center",
             flex: 1,
             valueFormatter: (value) => {
                 if (!value) return '';
@@ -85,6 +86,7 @@ const CreditCardTransactionTable = (): ReactElement => {
         {
             field: 'dueDate',
             headerName: 'Pagamento',
+            headerAlign: "center",
             flex: 1,
             valueFormatter: (value) => {
                 if (!value) return '';
@@ -97,20 +99,22 @@ const CreditCardTransactionTable = (): ReactElement => {
             headerName: 'Valor',
             flex: 1,
             type: 'number',
+            headerAlign: "center",
             valueFormatter: (value: number, row) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
             }
         },
         {
             field: 'installments',
-            headerName: 'parcelas',
-            flex: 1,
+            headerName: 'Parcelas',
+            headerAlign: "center",
+            flex: .5,
             valueFormatter: (value: number, row) => {
                 return `${row.currentInstallment}/${value}`
             }
         },
-        { field: 'description', headerName: 'Descrição', flex: 1 },
-        { field: 'categoryName', headerName: 'Categoria', flex: 1 }
+        { field: 'description', headerAlign: "center", headerName: 'Descrição', flex: 2 },
+        { field: 'categoryName', headerAlign: "center", headerName: 'Categoria', flex: 1.5 }
     ];
 
     return (
@@ -174,6 +178,9 @@ const CreditCardTransactionTable = (): ReactElement => {
                 data={creditCardTransaction}
                 isLoading={isLoading}
                 getRowId={(row) => row.transactionId}
+                columnVisibilityModel={{
+                    transactionId: false
+                }}
             />
             <CreditCardTransactionModal modalState={transactionModalState} hideModal={hideCreditCardTransactionModal} />
         </Box>
