@@ -1,42 +1,41 @@
 import React, { useEffect, useState } from 'react';
+import { TextField, TextFieldProps } from '@mui/material';
 
-interface CurrencyProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface CurrencyProps extends Omit<TextFieldProps, 'onChange'> {
     prefix?: string;
     suffix?: string;
     decimalPlaces?: number;
     onValueChange?: (values: { rawValue: number; formattedValue: string }) => void;
     defaultValue?: number;
+    label?: string;
+    onChange?: any;
 }
 
 function CurrencyInput({
-                           prefix = '',
-                           suffix = '',
-                           decimalPlaces = 2,
-                           defaultValue = 0,
-                           value,
-                           onValueChange,
-                           onChange,
-                           ...props
-                       }: CurrencyProps) {
+    prefix = '',
+    suffix = '',
+    decimalPlaces = 2,
+    defaultValue = 0,
+    value,
+    onValueChange,
+    onChange,
+    ...props
+}: CurrencyProps) {
     const [internalValue, setInternalValue] = useState<string>('');
     const [signedValue, setSignedValue] = useState<boolean>(false);
 
     const formatValue = (inputValue: string) => {
-        let isNegative = signedValue
+        let isNegative = signedValue;
 
-        // check if the defaultValue is negative
-        // in this case, the sigh will be the first char in the string
         if (/^-/.test(inputValue)) {
             isNegative = true;
         }
 
-        // if the minus sign is typed change the sign of the number
-        // in this case, the sign will be the last char in the string
         if (/-$/.test(inputValue)) {
             isNegative = !signedValue;
         }
 
-        setSignedValue(isNegative)
+        setSignedValue(isNegative);
 
         const numericValue = parseInt(inputValue.replace(/\D/g, '')) || 0;
         const factor = Math.pow(10, decimalPlaces);
@@ -72,22 +71,19 @@ function CurrencyInput({
 
     useEffect(() => {
         if (value !== undefined && typeof value === 'number') {
-            const formatedValue = formatValue(value.toFixed(decimalPlaces));
-            setInternalValue(formatedValue);
+            const formatted = formatValue(value.toFixed(decimalPlaces));
+            setInternalValue(formatted);
         }
     }, [value]);
 
     return (
-        <div>
-            <input
-                type="text"
-                value={value !== undefined ? internalValue : internalValue} // Sempre mostra o valor formatado
-                onChange={handleChange}
-                placeholder="0.00"
-                className="form-control"
-                {...props}
-            />
-        </div>
+        <TextField
+            label={props.label}
+            value={internalValue}
+            onChange={handleChange}
+            placeholder={`0${decimalPlaces > 0 ? '.' + '0'.repeat(decimalPlaces) : ''}`}
+            {...props}
+        />
     );
 }
 
