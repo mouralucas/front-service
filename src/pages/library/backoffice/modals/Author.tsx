@@ -90,7 +90,6 @@ const App = (props: AuthorModalProps): ReactElement => {
 
     const body = (
         <>
-
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
                     <Grid size={{ xs: 12, md: 9 }}>
