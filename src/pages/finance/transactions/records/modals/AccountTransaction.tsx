@@ -10,12 +10,15 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale";
-import { getAccounts, getCategories, getCurrencies } from "../../../../../services/getCommonData/Finance.tsx";
+import { getCategories, getCurrencies } from "../../../../../services/getCommonData/Finance.tsx";
 import { Account, AccountTransaction } from "../../../../../interfaces/Finance.tsx";
 import Loader from "../../../../../components/Loader.tsx";
 import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
 import Grid from "@mui/material/Grid";
 import { FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField } from "@mui/material";
+import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
+import { useQuery } from "@apollo/client";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 
 /**
  *
@@ -51,42 +54,48 @@ const DefaultTransaction: AccountTransaction = {
 }
 
 const App = (props: AccountStatementProps) => {
-    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues } = useForm<AccountTransaction>({ defaultValues: DefaultTransaction });
+    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, setValue } = useForm<AccountTransaction>({ defaultValues: DefaultTransaction });
+    const { data: accountData } = useQuery(QUERY_ACCOUNTS, {
+        client: apolloFinanceClient,
+        variables: { params: {} },
+        skip: !props.modalState,
+    })
 
-    const [accounts, setAccounts] = useState<any[]>()
-    const [categories, setCategories] = useState<any[]>()
-    const [currencies, setCurrencies] = useState<any[]>()
+    const { data: categoriesData } = useQuery(QUERY_CATEGORIES, {
+        client: apolloFinanceClient,
+        skip: !props.modalState,
+    })
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const { data: currenciesData } = useQuery(QUERY_CURRENCY, {
+        client: apolloFinanceClient,
+        skip: !props.modalState,
+    })
 
-    const fetchAccountTransactionData: () => Promise<void> = async () => {
-        setAccounts(await getAccounts());
-        setCategories(await getCategories(true));
-        setCurrencies(await getCurrencies());
+    // const [currencies, setCurrencies] = useState<any[]>()
 
-        setIsLoading(false);
-    }
+    // const fetchAccountTransactionData: () => Promise<void> = async () => {
+    //     setCurrencies(await getCurrencies());
+    // }
 
     const updateCurrency = () => {
         // TODO: find a way to get currency from account
-        const account_id: string = getValues('accountId');
-        const account: Account = accounts.find((account) => account.value === account_id);
+        const accountId: string = getValues('accountId');
+        const account: Account = accountData?.getAccounts?.accounts?.find((a: any) => a.accountId === accountId);
+        if (account){
+            setValue('currencyId', account?.currencyId);
+        }
     }
 
     useEffect(() => {
         // Set initial value if provided
-        if (props.modalState && props.transaction && accounts && categories && currencies) {
+        if (props.modalState && props.transaction && accountData && categoriesData && currenciesData) {
             reset(props.transaction);
-        } else if (props.modalState && !props.transaction) {
+        } else if (props.modalState && !props.transaction && accountData && categoriesData && currenciesData) {
             reset(DefaultTransaction);
         }
 
-        // Load necessary information
-        if (props.modalState) {
-            fetchAccountTransactionData().then()
-        }
         // Clean form when modal closes
-        if (!props.modalState) {
+        if (!props.modalState && accountData && categoriesData && currenciesData) {
             reset(DefaultTransaction);
         }
     }, [props.modalState, props.transaction, reset]);
@@ -174,9 +183,9 @@ const App = (props: AccountStatementProps) => {
                                         }}
                                         sx={{ width: "100%" }}
                                     >
-                                        {accounts?.map((account: any) => (
-                                            <MenuItem key={account.value} value={account.value}>
-                                                {account.label}
+                                        {accountData?.getAccounts.accounts.map((account: any) => (
+                                            <MenuItem key={account.accountId} value={account.accountId}>
+                                                {account.nickname}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -202,9 +211,9 @@ const App = (props: AccountStatementProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {currencies?.map((currency: any) => (
-                                            <MenuItem key={currency?.value} value={currency?.value}>
-                                                {currency?.label}
+                                        {currenciesData?.getCurrencies?.currencies?.map((currency: any) => (
+                                            <MenuItem key={currency?.currencyId} value={currency?.currencyId}>
+                                                {currency?.symbol}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -245,9 +254,9 @@ const App = (props: AccountStatementProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {categories?.map((category: any) => (
-                                            <MenuItem key={category?.value} value={category?.value}>
-                                                {category?.label}
+                                        {categoriesData?.getCategories?.categories?.map((category: any) => (
+                                            <MenuItem key={category?.categoryId} value={category?.categoryId}>
+                                                {category?.categoryName}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -281,136 +290,9 @@ const App = (props: AccountStatementProps) => {
         </>
     );
 
-    const body_2: ReactElement = isLoading ? <Loader /> :
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row mt-2">
-                    <div className="col-4">
-                        <label htmlFor="">Conta</label>
-                        <Controller name={'accountId'}
-                            control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
-                            render={({ field }) => (
-                                <Select
-                                    key={field.value}
-                                    {...field}
-                                    options={accounts}
-                                    value={accounts.find((c: any) => c.value === field.value)}
-                                    onChange={(val: any) => {
-                                        field.onChange(val?.value)
-                                        updateCurrency()
-                                    }}
-                                    className={`${errors.accountId ? "border border-danger" : ""}`}
-                                    placeholder={'Selecione'}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-2">
-                        <label htmlFor=""></label>
-                        <Controller
-                            name="currencyId"
-                            control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
-                            render={({ field }) => (
-                                <Select
-                                    key={field.value}
-                                    {...field}
-                                    options={currencies}
-                                    value={currencies.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${errors.currencyId ? "input-error" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Valor</label>
-                        <Controller name={'amount'}
-                            control={control}
-                            rules={{
-                                validate: (value) => value !== 0 || "Este campo não deve ser zero",
-                            }}
-                            render={({ field }) => (
-                                <CurrencyInput
-                                    prefix="R$ "
-                                    value={field.value}
-                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                    className={`form-control input-default ${errors.amount ? 'input-error' : ''}`}
-                                />
-                            )}
-
-                        />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Data da compra</label>
-                        <Controller
-                            name={'transactionDate'}
-                            control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
-                            render={({ field }) => (
-                                <DatePicker
-                                    selected={parseISO(field.value)}
-                                    onChange={(date) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                    }}
-                                    dateFormat="dd/MM/yyyy"
-                                    placeholderText="Selecione uma data"
-                                    className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
-                                    customInput={
-                                        <DateMaskedInput
-                                            placeholder="dd/mm/aaaa"
-                                            className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
-                                        />
-                                    }
-                                />
-
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-6">
-                        <label htmlFor="">Categoria</label>
-                        <Controller name={'categoryId'}
-                            control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
-                            render={({ field }) => (
-                                <Select
-                                    key={field.value}
-                                    {...field}
-                                    options={categories}
-                                    value={categories.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${errors.categoryId ? "input-error" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <label htmlFor="">Descrição</label>
-                        <Controller name={'description'}
-                            control={control}
-                            rules={{ required: false }}
-                            render={({ field }) => (
-                                <textarea
-                                    {...field}
-                                    value={field.value ?? ''}
-                                    onChange={field.onChange}
-                                    rows={5}
-                                    className='form-control'></textarea>
-                            )}
-                        />
-                    </div>
-                </div>
-            </form>
-        </div>
-
     return (
         <>
-            {props.modalState && (
+            {props.modalState && accountData && categoriesData && currenciesData && (
                 <Modal
                     showModal={props.modalState}
                     hideModal={props.hideModal}

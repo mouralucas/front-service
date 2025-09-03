@@ -1,11 +1,12 @@
 // Account interfaces
 export interface Account {
-    accountId: string
-    nickname: string
-    branch: string
-    number: string
-    openAt: string
-    closeAt: string
+    accountId: string;
+    nickname: string;
+    currencyId: string;
+    branch: string;
+    number: string;
+    openAt: string;
+    closeAt: string;
 }
 
 export interface AccountTransaction {
