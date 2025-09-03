@@ -5,14 +5,17 @@ import { format, parseISO } from 'date-fns';
 import { Controller, useForm } from "react-hook-form";
 import Modal from "../../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
-import DatePicker from "react-datepicker";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ptBR } from "date-fns/locale";
 import { getAccounts, getCategories, getCurrencies } from "../../../../../services/getCommonData/Finance.tsx";
 import { Account, AccountTransaction } from "../../../../../interfaces/Finance.tsx";
 import Loader from "../../../../../components/Loader.tsx";
 import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
 import Grid from "@mui/material/Grid";
-import { FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField } from "@mui/material";
 
 /**
  *
@@ -28,7 +31,7 @@ interface AccountStatementProps {
 
 const DefaultTransaction: AccountTransaction = {
     transactionId: null,
-    amount: 3.50,
+    amount: 0,
     accountId: '',
     categoryId: '',
     currencyId: 'BRL',
@@ -41,7 +44,7 @@ const DefaultTransaction: AccountTransaction = {
     spread: 0,
     effectiveRate: 0,
     transactionDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
-    description: undefined,
+    description: "",
     ownerId: '',
     createdAt: null,
     lastEditedAt: null,
@@ -50,9 +53,9 @@ const DefaultTransaction: AccountTransaction = {
 const App = (props: AccountStatementProps) => {
     const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues } = useForm<AccountTransaction>({ defaultValues: DefaultTransaction });
 
-    const [accounts, setAccounts] = useState<any[]>([])
-    const [categories, setCategories] = useState<any[]>([])
-    const [currencies, setCurrencies] = useState<any[]>([])
+    const [accounts, setAccounts] = useState<any[]>()
+    const [categories, setCategories] = useState<any[]>()
+    const [currencies, setCurrencies] = useState<any[]>()
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -72,7 +75,7 @@ const App = (props: AccountStatementProps) => {
 
     useEffect(() => {
         // Set initial value if provided
-        if (props.modalState && props.transaction) {
+        if (props.modalState && props.transaction && accounts && categories && currencies) {
             reset(props.transaction);
         } else if (props.modalState && !props.transaction) {
             reset(DefaultTransaction);
@@ -111,6 +114,7 @@ const App = (props: AccountStatementProps) => {
         }
 
         console.log(submitData);
+        reset(DefaultTransaction);
 
         // financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submitData, method).then(() => {
         //     toast.success('Transação salva com sucesso');
@@ -124,6 +128,33 @@ const App = (props: AccountStatementProps) => {
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                    <Grid size={{ sm: 12, md: 3 }} >
+                        <Controller
+                            name="transactionDate"
+                            control={control}
+                            render={({ field }) => (
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Data da Transação"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
+                            )}
+                        />
+                    </Grid>
                     <Grid size={{ sm: 12, md: 4 }} >
                         <Controller name={'accountId'}
                             control={control}
@@ -134,6 +165,8 @@ const App = (props: AccountStatementProps) => {
                                     <Select
                                         {...field}
                                         labelId="account-label"
+                                        variant="outlined"
+                                        label="Conta"
                                         value={field.value || ''}
                                         onChange={(e) => {
                                             field.onChange(e.target.value)
@@ -154,7 +187,7 @@ const App = (props: AccountStatementProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} >
+                    <Grid size={{ sm: 12, md: 2 }} >
                         <Controller name={'currencyId'}
                             control={control}
                             rules={{ required: 'Esse campo é obrigatório' }}
@@ -164,6 +197,7 @@ const App = (props: AccountStatementProps) => {
                                     <Select
                                         {...field}
                                         labelId="currency-label"
+                                        label="Moeda"
                                         value={field.value || ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
@@ -181,7 +215,7 @@ const App = (props: AccountStatementProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} >
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name="amount"
                             control={control}
@@ -192,7 +226,52 @@ const App = (props: AccountStatementProps) => {
                                     prefix="R$ "
                                     value={field.value}
                                     onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                    className={`form-control input-default ${errors.amount ? 'input-error' : ''}`}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 12 }}>
+                        <Controller name={'categoryId'}
+                            control={control}
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => (
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="category-label">Categoria</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="category-label"
+                                        value={field.value || ''}
+                                        label="Categoria"
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {categories?.map((category: any) => (
+                                            <MenuItem key={category?.value} value={category?.value}>
+                                                {category?.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors.categoryId && (
+                                        <FormHelperText>{errors.categoryId.message}</FormHelperText>
+                                    )}
+                                </FormControl>
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 12 }}>
+                        <Controller
+                            name="description"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Descrição"
+                                    multiline
+                                    rows={4}
+                                    variant="outlined"
+                                    fullWidth
+                                    error={!!errors.description}
+                                    helperText={errors.description?.message}
                                 />
                             )}
                         />
@@ -330,17 +409,19 @@ const App = (props: AccountStatementProps) => {
         </div>
 
     return (
-        <div>
-            <Modal
-                showModal={props.modalState}
-                hideModal={props.hideModal}
-                title={'Transação'}
-                body={body}
-                actionModal={handleSubmit(onSubmit)}
-                disableAction={!isDirty}
-                size={'modal-md'}
-            />
-        </div>
+        <>
+            {props.modalState && (
+                <Modal
+                    showModal={props.modalState}
+                    hideModal={props.hideModal}
+                    title={'Transação'}
+                    body={body}
+                    actionModal={handleSubmit(onSubmit)}
+                    disableAction={!isDirty}
+                    size={'modal-md'}
+                />
+            )}
+        </>
     );
 }
 

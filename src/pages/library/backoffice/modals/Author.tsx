@@ -120,7 +120,7 @@ const App = (props: AuthorModalProps): ReactElement => {
                                 >
                                     <DatePicker
                                         label="Nascimento"
-                                        value={field.value ? new Date(field.value) : null}
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
                                         onChange={(date) =>
                                             field.onChange(date ? date.toISOString().split("T")[0] : null)
                                         }

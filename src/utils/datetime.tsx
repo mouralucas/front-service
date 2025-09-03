@@ -60,6 +60,7 @@ export const formatDate = (
         if (typeof baseDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(baseDate)) {
             date = parseDateOnly(baseDate);
         } else {
+
             date = new Date(baseDate);
         }
     }
@@ -72,6 +73,8 @@ export const formatDate = (
         return `${dd}/${mm}/${yy}`;
     } else if (format === 'MM/yy') {  
         return `${mm}/${yy}`;
+    } else if (format === 'yyyy-MM-dd') {
+        return `${date.getFullYear()}-${mm}-${dd}`;
     }
 
     // Default format
