@@ -1,24 +1,22 @@
-import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
-import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
-import { toast, ToastOptions } from "react-toastify";
-import { format, parseISO } from 'date-fns';
-import { Controller, useForm } from "react-hook-form";
-import Modal from "../../../../../components/Modal.tsx";
-import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
-import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { useQuery } from "@apollo/client";
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { format } from 'date-fns';
 import { ptBR } from "date-fns/locale";
-import { getCategories, getCurrencies } from "../../../../../services/getCommonData/Finance.tsx";
-import { Account, AccountTransaction } from "../../../../../interfaces/Finance.tsx";
+import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast, ToastOptions } from "react-toastify";
 import Loader from "../../../../../components/Loader.tsx";
-import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
-import Grid from "@mui/material/Grid";
-import { FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField } from "@mui/material";
-import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
-import { useQuery } from "@apollo/client";
+import Modal from "../../../../../components/Modal.tsx";
+import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
+import { Account, AccountTransaction } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
+import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
+import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 
 /**
  *
@@ -38,6 +36,7 @@ const DefaultTransaction: AccountTransaction = {
     accountId: '',
     categoryId: '',
     currencyId: 'BRL',
+    currencySymbol: "R$",
     transactionCurrencyId: '',
     period: 0,
     exchangeRate: 0,
@@ -54,7 +53,9 @@ const DefaultTransaction: AccountTransaction = {
 }
 
 const App = (props: AccountStatementProps) => {
+    const [currencySymbol, setCurrencySymbol] = useState<string>("R$")
     const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, setValue } = useForm<AccountTransaction>({ defaultValues: DefaultTransaction });
+
     const { data: accountData, loading: accountsLoading } = useQuery(QUERY_ACCOUNTS, {
         client: apolloFinanceClient,
         variables: { params: {} },
@@ -81,6 +82,8 @@ const App = (props: AccountStatementProps) => {
         if (account) {
             setValue('currencyId', account?.currencyId);
         }
+        console.log(account)
+        setCurrencySymbol(account?.currencySymbol);
     }
 
     useEffect(() => {
@@ -122,12 +125,12 @@ const App = (props: AccountStatementProps) => {
         console.log(submitData);
         reset(DefaultTransaction);
 
-        // financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submitData, method).then(() => {
-        //     toast.success('Transação salva com sucesso');
-        //     reset(DefaultTransaction);
-        // }).catch((err: string | ToastOptions) => {
-        //     toast.error('Erro ao salvar a transação da conta ' + err);
-        // })
+        financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submitData, method).then(() => {
+            toast.success('Transação salva com sucesso');
+            reset(DefaultTransaction);
+        }).catch((err: string | ToastOptions) => {
+            toast.error('Erro ao salvar a transação da conta ' + err);
+        })
     };
 
     const body: ReactElement = isLoading || !hasData ? <Loader /> : (
@@ -222,19 +225,21 @@ const App = (props: AccountStatementProps) => {
                         />
                     </Grid>
                     <Grid size={{ sm: 12, md: 3 }} >
-                        <Controller
-                            name="amount"
-                            control={control}
-                            rules={{ required: "Campo obrigatório" }}
-                            render={({ field }) => (
-                                <CurrencyInput
-                                    label="Valor"
-                                    prefix="R$ "
-                                    value={field.value}
-                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                />
-                            )}
-                        />
+                        <div key={currencySymbol}>
+                            <Controller
+                                name="amount"
+                                control={control}
+                                rules={{ required: "Campo obrigatório" }}
+                                render={({ field }) => (
+                                    <CurrencyInput
+                                        label="Valor"
+                                        prefix={currencySymbol + " "}
+                                        value={field.value}
+                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    />
+                                )}
+                            />
+                        </div>
                     </Grid>
                     <Grid size={{ sm: 12, md: 12 }}>
                         <Controller name={'categoryId'}

@@ -43,6 +43,7 @@ query GetAccounts($params: GetAccountsInput) {
             closeDate
             typeId
             currencyId
+            currencySymbol
         }
     }
 }`
