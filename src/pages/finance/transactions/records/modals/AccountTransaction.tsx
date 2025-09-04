@@ -55,33 +55,30 @@ const DefaultTransaction: AccountTransaction = {
 
 const App = (props: AccountStatementProps) => {
     const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, setValue } = useForm<AccountTransaction>({ defaultValues: DefaultTransaction });
-    const { data: accountData } = useQuery(QUERY_ACCOUNTS, {
+    const { data: accountData, loading: accountsLoading } = useQuery(QUERY_ACCOUNTS, {
         client: apolloFinanceClient,
         variables: { params: {} },
         skip: !props.modalState,
     })
 
-    const { data: categoriesData } = useQuery(QUERY_CATEGORIES, {
+    const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_CATEGORIES, {
         client: apolloFinanceClient,
         skip: !props.modalState,
     })
 
-    const { data: currenciesData } = useQuery(QUERY_CURRENCY, {
+    const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
         client: apolloFinanceClient,
         skip: !props.modalState,
     })
 
-    // const [currencies, setCurrencies] = useState<any[]>()
-
-    // const fetchAccountTransactionData: () => Promise<void> = async () => {
-    //     setCurrencies(await getCurrencies());
-    // }
+    const isLoading = accountsLoading || categoriesLoading || currenciesLoading
+    const hasData = accountData && categoriesData && currenciesData
 
     const updateCurrency = () => {
         // TODO: find a way to get currency from account
         const accountId: string = getValues('accountId');
         const account: Account = accountData?.getAccounts?.accounts?.find((a: any) => a.accountId === accountId);
-        if (account){
+        if (account) {
             setValue('currencyId', account?.currencyId);
         }
     }
@@ -133,7 +130,7 @@ const App = (props: AccountStatementProps) => {
         // })
     };
 
-    const body: ReactElement = (
+    const body: ReactElement = isLoading || !hasData ? <Loader /> : (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
@@ -292,17 +289,15 @@ const App = (props: AccountStatementProps) => {
 
     return (
         <>
-            {props.modalState && accountData && categoriesData && currenciesData && (
-                <Modal
-                    showModal={props.modalState}
-                    hideModal={props.hideModal}
-                    title={'Transação'}
-                    body={body}
-                    actionModal={handleSubmit(onSubmit)}
-                    disableAction={!isDirty}
-                    size={'modal-md'}
-                />
-            )}
+            <Modal
+                showModal={props.modalState}
+                hideModal={props.hideModal}
+                title={'Transação'}
+                body={body}
+                actionModal={handleSubmit(onSubmit)}
+                disableAction={!isDirty}
+                size={'modal-md'}
+            />
         </>
     );
 }
