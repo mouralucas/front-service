@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -17,6 +17,7 @@ import { apolloFinanceClient } from "../../../../../services/apollo/client/Apoll
 import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { CREATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance.tsx";
 
 /**
  *
@@ -27,7 +28,7 @@ import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 interface AccountStatementProps {
     transaction: AccountTransaction | undefined | null,
     modalState: boolean,
-    hideModal: any
+    hideAccountTransactionModal: any
 }
 
 const DefaultTransaction: AccountTransaction = {
@@ -55,6 +56,19 @@ const DefaultTransaction: AccountTransaction = {
 const App = (props: AccountStatementProps) => {
     const [currencySymbol, setCurrencySymbol] = useState<string>("R$")
     const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, setValue } = useForm<AccountTransaction>({ defaultValues: DefaultTransaction });
+
+    const [createAccountTransaction] = useMutation(CREATE_ACCOUNT_TRANSACTION, {
+        client: apolloFinanceClient,
+        onCompleted: () => {
+            toast.success(
+                `Transação criada com sucesso!`
+            );
+            props.hideAccountTransactionModal();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
 
     const { data: accountData, loading: accountsLoading } = useQuery(QUERY_ACCOUNTS, {
         client: apolloFinanceClient,
@@ -98,39 +112,53 @@ const App = (props: AccountStatementProps) => {
         if (!props.modalState && accountData && categoriesData && currenciesData) {
             reset(DefaultTransaction);
         }
-    }, [props.modalState, props.transaction, reset]);
+    }, [props.modalState, props.transaction, reset, accountData, currenciesData, categoriesData]);
 
-    const onSubmit = (data: AccountTransaction, e: BaseSyntheticEvent<object> | undefined) => {
-        let method;
-        let submitData;
-
-        if (data.transactionId !== null) {
-            method = 'patch'
-
-            const currentValues: AccountTransaction = getValues();
-            const modifiedFields: Partial<Record<keyof AccountTransaction, AccountTransaction[keyof AccountTransaction]>> = {
-                transactionId: data.transactionId
-            };
-
-            (Object.keys(dirtyFields) as Array<keyof AccountTransaction>).forEach((key: keyof AccountTransaction) => {
-                modifiedFields[key] = currentValues[key];
-            });
-
-            submitData = modifiedFields
+    const onSubmit = async (transactionFormData: AccountTransaction) => {
+        if (transactionFormData.transactionId !== null) {
+            toast.info("Pendente de atualziação para GraphQL");
         } else {
-            method = 'post'
-            submitData = data
+            try {
+                await createAccountTransaction({
+                    variables: {
+                        input: transactionFormData
+                    }
+                })
+            } catch (err) {
+                console.log("Erro ao salvar transação: ", err)
+            }
         }
 
-        console.log(submitData);
-        reset(DefaultTransaction);
+        // let method;
+        // let submitData;
 
-        financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submitData, method).then(() => {
-            toast.success('Transação salva com sucesso');
-            reset(DefaultTransaction);
-        }).catch((err: string | ToastOptions) => {
-            toast.error('Erro ao salvar a transação da conta ' + err);
-        })
+        // if (data.transactionId !== null) {
+        //     method = 'patch'
+
+        //     const currentValues: AccountTransaction = getValues();
+        //     const modifiedFields: Partial<Record<keyof AccountTransaction, AccountTransaction[keyof AccountTransaction]>> = {
+        //         transactionId: data.transactionId
+        //     };
+
+        //     (Object.keys(dirtyFields) as Array<keyof AccountTransaction>).forEach((key: keyof AccountTransaction) => {
+        //         modifiedFields[key] = currentValues[key];
+        //     });
+
+        //     submitData = modifiedFields
+        // } else {
+        //     method = 'post'
+        //     submitData = data
+        // }
+
+        // console.log(submitData);
+        // reset(DefaultTransaction);
+
+        // financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submitData, method).then(() => {
+        //     toast.success('Transação salva com sucesso');
+        //     reset(DefaultTransaction);
+        // }).catch((err: string | ToastOptions) => {
+        //     toast.error('Erro ao salvar a transação da conta ' + err);
+        // })
     };
 
     const body: ReactElement = isLoading || !hasData ? <Loader /> : (
@@ -296,7 +324,7 @@ const App = (props: AccountStatementProps) => {
         <>
             <Modal
                 showModal={props.modalState}
-                hideModal={props.hideModal}
+                hideModal={props.hideAccountTransactionModal}
                 title={'Transação'}
                 body={body}
                 actionModal={handleSubmit(onSubmit)}

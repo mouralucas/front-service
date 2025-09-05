@@ -195,7 +195,7 @@ const AccountTransactionTable = (): ReactElement => {
                     transactionId: false
                 }}
             />
-            <ModalStatement modalState={modalState} hideModal={hideModal} transaction={selectedTransaction} />
+            <ModalStatement modalState={modalState} hideAccountTransactionModal={hideModal} transaction={selectedTransaction} />
         </Box>
     )
 }
