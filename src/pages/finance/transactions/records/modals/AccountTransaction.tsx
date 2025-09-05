@@ -12,7 +12,7 @@ import { toast, ToastOptions } from "react-toastify";
 import Loader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
-import { Account, AccountTransaction } from "../../../../../interfaces/Finance.tsx";
+import { Account, AccountTransaction, CreateAccountTransactionInput } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
@@ -31,15 +31,13 @@ interface AccountStatementProps {
     hideAccountTransactionModal: any
 }
 
-const DefaultTransaction: AccountTransaction = {
+const DefaultTransaction: CreateAccountTransactionInput = {
     transactionId: null,
     amount: 0,
     accountId: '',
     categoryId: '',
     currencyId: 'BRL',
-    currencySymbol: "R$",
     transactionCurrencyId: '',
-    period: 0,
     exchangeRate: 0,
     taxPerc: 0,
     tax: 0,
@@ -48,14 +46,11 @@ const DefaultTransaction: AccountTransaction = {
     effectiveRate: 0,
     transactionDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
     description: "",
-    ownerId: '',
-    createdAt: null,
-    lastEditedAt: null,
 }
 
 const App = (props: AccountStatementProps) => {
     const [currencySymbol, setCurrencySymbol] = useState<string>("R$")
-    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, setValue } = useForm<AccountTransaction>({ defaultValues: DefaultTransaction });
+    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, setValue } = useForm<CreateAccountTransactionInput>({ defaultValues: DefaultTransaction });
 
     const [createAccountTransaction] = useMutation(CREATE_ACCOUNT_TRANSACTION, {
         client: apolloFinanceClient,
@@ -90,7 +85,6 @@ const App = (props: AccountStatementProps) => {
     const hasData = accountData && categoriesData && currenciesData
 
     const updateCurrency = () => {
-        // TODO: find a way to get currency from account
         const accountId: string = getValues('accountId');
         const account: Account = accountData?.getAccounts?.accounts?.find((a: any) => a.accountId === accountId);
         if (account) {
@@ -114,7 +108,7 @@ const App = (props: AccountStatementProps) => {
         }
     }, [props.modalState, props.transaction, reset, accountData, currenciesData, categoriesData]);
 
-    const onSubmit = async (transactionFormData: AccountTransaction) => {
+    const onSubmit = async (transactionFormData: CreateAccountTransactionInput) => {
         if (transactionFormData.transactionId !== null) {
             toast.info("Pendente de atualziação para GraphQL");
         } else {

@@ -32,6 +32,11 @@ export interface AccountTransaction {
     lastEditedAt: Date | null;
 }
 
+export type CreateAccountTransactionInput = Omit<
+  AccountTransaction,
+  "currencySymbol" | "createdAt" | "lastEditedAt" | "period" | "ownerId"
+>;
+
 // Credit card interfaces
 export interface CreditCard {
     creditCardId: string
