@@ -17,7 +17,7 @@ import { apolloFinanceClient } from "../../../../../services/apollo/client/Apoll
 import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
-import { CREATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance.tsx";
+import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance.tsx";
 
 /**
  *
@@ -57,6 +57,19 @@ const App = (props: AccountStatementProps) => {
         onCompleted: () => {
             toast.success(
                 `Transação criada com sucesso!`
+            );
+            props.hideAccountTransactionModal();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
+
+    const [updateAccountTransaction] = useMutation(UPDATE_ACCOUNT_TRANSACTION, {
+        client: apolloFinanceClient,
+        onCompleted: () => {
+            toast.success(
+                `Transação atualizada com sucesso!`
             );
             props.hideAccountTransactionModal();
         },
@@ -110,7 +123,27 @@ const App = (props: AccountStatementProps) => {
 
     const onSubmit = async (transactionFormData: CreateAccountTransactionInput) => {
         if (transactionFormData.transactionId !== null) {
-            toast.info("Pendente de atualziação para GraphQL");
+            try {
+                const currentValues: CreateAccountTransactionInput = getValues();
+                console.log(typeof transactionFormData.transactionId)
+                const modifiedFields: Partial<Record<keyof CreateAccountTransactionInput, CreateAccountTransactionInput[keyof CreateAccountTransactionInput]>> = {
+                    transactionId: transactionFormData.transactionId
+                };
+
+                (Object.keys(dirtyFields) as Array<keyof CreateAccountTransactionInput>).forEach((key: keyof CreateAccountTransactionInput) => {
+                    modifiedFields[key] = currentValues[key];
+                });
+
+                // submitData = modifiedFields
+                console.log(modifiedFields.transactionId);
+                await updateAccountTransaction({
+                    variables: {
+                        input: modifiedFields
+                    }
+                })
+            } catch (err) {
+                console.log("Erro ao salvar transação: ", err)
+            }
         } else {
             try {
                 await createAccountTransaction({
