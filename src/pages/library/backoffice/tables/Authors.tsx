@@ -16,7 +16,7 @@ const AuthorTable = (): ReactElement => {
     const [authorModalState, setAuthorModalState] = useState<boolean>(false)
     const [selectedAuthor, setSelectedAuthor] = useState<Author | undefined>(undefined)
 
-    const { data: authorData, loading: loadingAuthors, refetch: refetchAuthors } = useQuery(QUERY_AUTHORS, {
+    const { data: authorData, loading: loadingAuthors } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
         variables: {
             params: {

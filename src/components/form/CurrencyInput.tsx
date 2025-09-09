@@ -4,6 +4,7 @@ import { TextField, TextFieldProps } from "@mui/material";
 interface CurrencyProps extends Omit<TextFieldProps, "onChange"> {
     prefix?: string;
     suffix?: string;
+    value: number | undefined;
     decimalPlaces?: number;
     onValueChange?: (values: { rawValue: number; formattedValue: string }) => void;
     defaultValue?: number;
@@ -51,7 +52,7 @@ function CurrencyInput({
         const rawValue = e.target.value;
         const formattedValue = formatValue(rawValue);
 
-        // dispara callback com valor bruto
+        // Trigger callback for raw value
         if (onValueChange) {
             onValueChange({
                 rawValue: parseFloat(formattedValue.replace(prefix, "").replace(suffix, "")),
@@ -59,12 +60,12 @@ function CurrencyInput({
             });
         }
 
-        // dispara o onChange do MUI
+        // Trigger MUI onChange
         if (onChange) {
             onChange(e);
         }
 
-        // atualiza o estado interno se não for controlled
+        // Update the internal state if not controlled
         if (value === undefined) {
             setInternalValue(formattedValue);
         }

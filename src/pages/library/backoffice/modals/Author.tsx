@@ -30,7 +30,7 @@ const DefaultAuthor: Author = {
 }
 
 const App = (props: AuthorModalProps): ReactElement => {
-    const { handleSubmit, control, formState: { errors, dirtyFields }, reset, getValues } = useForm<Author>({ defaultValues: DefaultAuthor })
+    const { handleSubmit, control, formState: { errors }, reset } = useForm<Author>({ defaultValues: DefaultAuthor })
 
     const { data: languageData } = useQuery(QUERY_LANGUAGES, {
         client: apolloLibraryClient,
