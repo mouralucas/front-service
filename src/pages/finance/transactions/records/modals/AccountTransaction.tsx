@@ -6,18 +6,16 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from 'date-fns';
 import { ptBR } from "date-fns/locale";
-import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { toast, ToastOptions } from "react-toastify";
+import { toast } from "react-toastify";
 import Loader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import { Account, AccountTransaction, CreateAccountTransactionInput } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
-import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
-import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance.tsx";
+import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
 
 /**
  *
@@ -155,37 +153,6 @@ const App = (props: AccountStatementProps) => {
                 console.log("Erro ao salvar transação: ", err)
             }
         }
-
-        // let method;
-        // let submitData;
-
-        // if (data.transactionId !== null) {
-        //     method = 'patch'
-
-        //     const currentValues: AccountTransaction = getValues();
-        //     const modifiedFields: Partial<Record<keyof AccountTransaction, AccountTransaction[keyof AccountTransaction]>> = {
-        //         transactionId: data.transactionId
-        //     };
-
-        //     (Object.keys(dirtyFields) as Array<keyof AccountTransaction>).forEach((key: keyof AccountTransaction) => {
-        //         modifiedFields[key] = currentValues[key];
-        //     });
-
-        //     submitData = modifiedFields
-        // } else {
-        //     method = 'post'
-        //     submitData = data
-        // }
-
-        // console.log(submitData);
-        // reset(DefaultTransaction);
-
-        // financeSubmit(e, URL_FINANCE_ACCOUNT_TRANSACTION, submitData, method).then(() => {
-        //     toast.success('Transação salva com sucesso');
-        //     reset(DefaultTransaction);
-        // }).catch((err: string | ToastOptions) => {
-        //     toast.error('Erro ao salvar a transação da conta ' + err);
-        // })
     };
 
     const body: ReactElement = isLoading || !hasData ? <Loader /> : (

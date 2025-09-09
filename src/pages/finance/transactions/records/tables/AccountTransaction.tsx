@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import EditOutlined from '@mui/icons-material/EditOutlined';
@@ -10,22 +11,30 @@ import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { AccountTransaction } from "../../../../../interfaces/Finance";
-import { AccountTransactionResponse } from "../../../../../interfaces/FinanceRequest";
-import { URL_FINANCE_ACCOUNT_TRANSACTION } from "../../../../../services/axios/ApiUrls";
-import { getFinanceData } from "../../../../../services/axios/Get";
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
+import { QUERY_ACCOUNT_TRANSACTIONS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate, getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
 import ModalStatement from '../modals/AccountTransaction.tsx';
 
 
 const AccountTransactionTable = (): ReactElement => {
-    const [transaction, setTransaction] = useState<AccountTransaction[]>([]);
     const [selectedTransaction, setSelectedTransaction] = useState<AccountTransaction | null>()
     const [modalState, setModalState] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     // Filter date range
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
+
+    const { data: transactionData, loading, refetch } = useQuery(QUERY_ACCOUNT_TRANSACTIONS, {
+        client: apolloFinanceClient,
+        variables: {
+            params: {
+                startPeriod: getPeriodFromDate(startDate),
+                endPeriod: getPeriodFromDate(endDate)
+            }
+        },
+        skip: !startDate || !endDate
+    })
 
     useEffect(() => {
         const range = getLastPeriods();
@@ -36,7 +45,7 @@ const AccountTransactionTable = (): ReactElement => {
 
     useEffect(() => {
         if (startDate && endDate) {
-            getTransactions(getPeriodFromDate(startDate), getPeriodFromDate(endDate));
+            refetch()
         }
     }, [startDate, endDate])
 
@@ -57,24 +66,8 @@ const AccountTransactionTable = (): ReactElement => {
 
     const updateDateRange = (dates: any) => {
         if (dates[1] !== null) {
-            getTransactions(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
+            refetch()
         }
-    }
-
-    const getTransactions = (startAt: number, endAt: number) => {
-        setIsLoading(true);
-
-        getFinanceData(URL_FINANCE_ACCOUNT_TRANSACTION, {
-            startPeriod: startAt,
-            endPeriod: endAt
-        }).then((response: AccountTransactionResponse) => {
-            setTransaction(response?.transactions);
-            setIsLoading(false);
-        }
-        ).catch(() => {
-            // toast.error('Houve um erro ao buscar extratos: ' + err)
-            setIsLoading(false);
-        })
     }
 
     const columns: GridColDef<AccountTransaction>[] = [
@@ -174,22 +167,22 @@ const AccountTransactionTable = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showAccountTransactionModal}
-                    loading={isLoading}
+                    loading={loading}
                 >
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
                     onClick={updateDateRange.bind(null, [startDate, endDate])}
-                    loading={isLoading}
+                    loading={loading}
                 >
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
             <DataGrid
                 columns={columns}
-                data={transaction}
-                isLoading={isLoading}
+                data={transactionData?.getAccountTransactions?.transactions}
+                isLoading={loading}
                 getRowId={(row) => row.transactionId}
                 columnVisibilityModel={{
                     transactionId: false
