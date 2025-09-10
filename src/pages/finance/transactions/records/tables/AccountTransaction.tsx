@@ -71,11 +71,12 @@ const AccountTransactionTable = (): ReactElement => {
     }
 
     const columns: GridColDef<AccountTransaction>[] = [
-        { field: 'transactionId', headerName: 'Id', flex: 1 },
-        { field: 'accountNickname', headerName: 'Conta', flex: 1 },
+        { field: 'transactionId', headerName: 'Id', headerAlign: "center", flex: 1 },
+        { field: 'accountNickname', headerName: 'Conta', headerAlign: "center", flex: 1 },
         {
             field: 'transactionDate',
             headerName: 'Data',
+            headerAlign: "center",
             flex: 1,
             valueFormatter: (value) => {
                 if (!value) return '';
@@ -87,16 +88,18 @@ const AccountTransactionTable = (): ReactElement => {
         {
             field: 'amount',
             headerName: 'Valor',
+            headerAlign: "center",
             flex: 1,
             valueFormatter: (value: number, row) => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
             }
         },
-        { field: 'description', headerName: 'Descrição', flex: 1 },
-        { field: 'categoryName', headerName: 'Categoria', flex: 1 },
+        { field: 'description', headerName: 'Descrição', headerAlign: "center",flex: 1 },
+        { field: 'categoryName', headerName: 'Categoria', headerAlign: "center",flex: 1 },
         {
             field: 'actions',
             headerName: 'Ações',
+            headerAlign: "center",
             flex: 1,
             sortable: false,
             filterable: false,

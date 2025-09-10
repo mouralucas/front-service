@@ -142,6 +142,7 @@ export interface Investment {
     quantity: number;
     price: number;
     amount: number;
+    grossAmount: number;
     contractedRate: string;
     currencyId: string;
     indexerTypeId: string;
