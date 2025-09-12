@@ -4,22 +4,21 @@ import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import '../../../../../assets/core/icons.css';
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
+import Loader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 import TaxArray from "../../../../../components/TaxFeeArray.tsx";
 import { Investment, InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
-import { getTaxFee } from "../../../../../services/getCommonData/Finance.tsx";
-import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls.tsx";
-import { toast } from "react-toastify";
-import Loader from "../../../../../components/Loader.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { getTaxFee } from "../../../../../services/getCommonData/Finance.tsx";
 
 interface InvestmentStatementProps {
     modalState: boolean,
@@ -187,11 +186,9 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                         <Controller
                             name="referenceDate"
                             control={control}
+                            rules={{ required: "Esse campo é obrigatório" }}
                             render={({ field }) => (
-                                <LocalizationProvider
-                                    dateAdapter={AdapterDateFns}
-                                    adapterLocale={ptBR}
-                                >
+                                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
                                     <DatePicker
                                         label="Referência"
                                         value={field.value ? new Date(field.value + "T00:00") : null}
@@ -202,6 +199,8 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                             textField: {
                                                 fullWidth: true,
                                                 size: "small",
+                                                error: !!errors.referenceDate,
+                                                helperText: errors.referenceDate?.message,
                                             },
                                         }}
                                         sx={{ width: "100%" }}
@@ -241,6 +240,8 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                         prefix={"R$ "}
                                         value={field.value}
                                         onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        error={!!errors?.grossAmount}
+                                        helperText={errors?.grossAmount?.message}
                                     />
                                 )}
                             />
@@ -260,6 +261,8 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                         prefix={"R$ "}
                                         value={field.value}
                                         onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        error={!!errors?.netAmount}
+                                        helperText={errors?.netAmount?.message}
                                     />
                                 )}
                             />
