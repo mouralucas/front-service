@@ -40,6 +40,12 @@ export interface Item {
     lastEditedAt?: Date | null
 }
 
+export type CreateItemInput = Omit<
+  Item,
+  "lastStatusName" | "mainAuthorName" | "serieName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId"
+>;
+
+
 export interface ItemReadingStats {
     readingsCount: number;
     lastReadingDate: string | null;

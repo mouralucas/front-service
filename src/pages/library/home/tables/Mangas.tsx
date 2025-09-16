@@ -219,7 +219,7 @@ const MangaTable = (): ReactElement => {
                     itemId: false,
                 }}
             />
-            <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedManga} />
+            <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedManga} />
         </Box>
     )
 }

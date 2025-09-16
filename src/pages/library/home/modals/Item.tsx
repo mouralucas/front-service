@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import {format, parseISO} from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
-import {Item} from '../../../../interfaces/Library.tsx'
+import {CreateItemInput, Item} from '../../../../interfaces/Library.tsx'
 import {getAuthors, getCollections, getPublishers, getSeries, getStatuses} from "../../../../services/getCommonData/Library.tsx";
 import {getLanguages} from "../../../../services/getCommonData/Core.tsx";
 import Modal from "../../../../components/Modal.tsx";
@@ -14,21 +14,22 @@ import {URL_LIBRARY_ITEM} from "../../../../services/axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 import Loader from "../../../../components/Loader.tsx";
 import DateMaskedInput from "../../../../components/form/DateMaskInput.tsx";
+import { useMutation } from "@apollo/client";
+import { CREATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 
 export interface ItemModalProps {
     item: Item | undefined | null
     modalState: boolean
-    hideModalItem: any
+    hideItemModal: any
 }
 
 
-const DefaultItem: Item = {
+const DefaultItem: CreateItemInput = {
     itemId: null,
     lastStatusId: null,
     lastStatusDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
-    lastStatusName: null,
     mainAuthorId: 0,
-    mainAuthorName: '',
     authorsId: [],
     translatorId: 0,
     title: '',
@@ -37,18 +38,16 @@ const DefaultItem: Item = {
     subtitleOriginal: '',
     isbn: '',
     isbn10: '',
-    itemTypeId: 0,
+    itemTypeId: '',
     pages: 0,
     volume: 1,
     edition: 1,
     publicationDate: null,
     originalPublicationDate: null,
     serieId: 0,
-    serieName: '',
     collectionId: 0,
     publisherId: 0,
-    publisherName: '',
-    formatId: 0,
+    formatId: '',
     languageId: 'PT',
     coverPrice: 0,
     paidPrice: 0,
@@ -58,10 +57,6 @@ const DefaultItem: Item = {
     thickness: 0,
     summary: '',
     observation: '',
-    createdBy: null,
-    createdAt: null,
-    lastEditedBy: null,
-    lastEditedAt: null
 }
 
 const itemTypes = [
@@ -92,7 +87,7 @@ const itemFormats = [
 
 
 const App = (props: ItemModalProps) => {
-    const {handleSubmit, control, reset, formState: {isDirty, dirtyFields, errors}, getValues} = useForm<Item>({defaultValues: DefaultItem});
+    const {handleSubmit, control, reset, formState: {isDirty, dirtyFields, errors}, getValues} = useForm<CreateItemInput>({defaultValues: DefaultItem});
 
     const [authors, setAuthors] = useState<any[]>([]);
     const [statuses, setStatuses] = useState<any[]>([])
@@ -114,6 +109,19 @@ const App = (props: ItemModalProps) => {
         setIsLoading(false);
     }
 
+    const [createItem] = useMutation(CREATE_ITEM_MUTATION, {
+            client: apolloLibraryClient,
+             onCompleted: (data) => {
+                toast.success(
+                    `Item "${data.createItem.item.itemTitle}" criado com sucesso`
+                );
+                props.hideItemModal();
+            },
+            onError: (error) => {
+                toast.error(`Erro: ${error.message}`);
+            },
+        })
+
     useEffect(() => {
         // Set initial values
         if (props.modalState && props.item) {
@@ -133,29 +141,37 @@ const App = (props: ItemModalProps) => {
         }
     }, [props.modalState, props.item, reset]);
 
-    const onSubmit = (data: Item, e: BaseSyntheticEvent<object> | undefined) => {
-        let method;
-        let submitData;
+    const onSubmit = async (data: CreateItemInput, e: BaseSyntheticEvent<object> | undefined) => {
+        // let method;
+        // let submitData;
 
-        if (data.itemId !== null){
-            method = 'patch'
+        // if (data.itemId !== null){
+        //     method = 'patch'
 
-            const currentValues: Item = getValues();
-            const modifiedFields: Partial<Record<keyof Item, Item[keyof Item]>> = {
-                itemId: data.itemId
-            };
+        //     const currentValues: Item = getValues();
+        //     const modifiedFields: Partial<Record<keyof Item, Item[keyof Item]>> = {
+        //         itemId: data.itemId
+        //     };
 
-            (Object.keys(dirtyFields) as Array<keyof Item>).forEach((key: keyof Item) => {
-                modifiedFields[key] = currentValues[key];
-            });
+        //     (Object.keys(dirtyFields) as Array<keyof Item>).forEach((key: keyof Item) => {
+        //         modifiedFields[key] = currentValues[key];
+        //     });
 
-            submitData = modifiedFields
-        } else {
-            method = 'post'
-            submitData = data
+        //     submitData = modifiedFields
+        // } else {
+        //     method = 'post'
+        //     submitData = data
+        // }
+
+        try {
+            await createItem({
+                variables: {
+                    input: data
+                }
+            })
+        } catch (error) {
+            console.error("Erro ao criar autor " + error)
         }
-
-        console.log(submitData);
         // librarySubmit(e, URL_LIBRARY_ITEM, submitData, method).then(() => {
         //     toast.success('Item salvo com sucesso');
         // }).catch(() => {
@@ -649,7 +665,7 @@ const App = (props: ItemModalProps) => {
         <div>
             <Modal
                 showModal={props.modalState}
-                hideModal={props.hideModalItem}
+                hideModal={props.hideItemModal}
                 title={'Item Beta'}
                 fullscreen={true}
                 body={body}

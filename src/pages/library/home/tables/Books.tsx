@@ -144,7 +144,7 @@ const Books = (): ReactElement => {
                     itemId: false
                 }}
             />
-            <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedBook} />
+            <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedBook} />
             {selectedBook && (
                 <BookDrawer
                     openDrawerState={isDrawerOpened}

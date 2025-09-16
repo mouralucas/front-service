@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 
 
-export const MUTATION_ITEM = gql`
+export const CREATE_ITEM_MUTATION = gql`
   mutation CreateItem($input: CreateItemInput) {
     createItem(item: $input) {
       item {
