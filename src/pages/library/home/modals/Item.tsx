@@ -37,7 +37,7 @@ const DefaultItem: Item = {
     subtitleOriginal: '',
     isbn: '',
     isbn10: '',
-    itemType: 0,
+    itemTypeId: 0,
     pages: 0,
     volume: 1,
     edition: 1,
@@ -155,11 +155,12 @@ const App = (props: ItemModalProps) => {
             submitData = data
         }
 
-        librarySubmit(e, URL_LIBRARY_ITEM, submitData, method).then(() => {
-            toast.success('Item salvo com sucesso');
-        }).catch(() => {
-            toast.error('Erro ao salvar o item');
-        })
+        console.log(submitData);
+        // librarySubmit(e, URL_LIBRARY_ITEM, submitData, method).then(() => {
+        //     toast.success('Item salvo com sucesso');
+        // }).catch(() => {
+        //     toast.error('Erro ao salvar o item');
+        // })
     };
 
     const body: ReactElement = isLoading ? <Loader /> :
@@ -334,7 +335,7 @@ const App = (props: ItemModalProps) => {
                     <div className="col-3">
                         <label htmlFor="">Tipo</label>
                         <Controller
-                            name={'itemType'}
+                            name={'itemTypeId'}
                             control={control}
                             render={({field}) => (
                                 <Select

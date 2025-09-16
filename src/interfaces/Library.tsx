@@ -13,7 +13,7 @@ export interface Item {
     subtitleOriginal?: string
     isbn?: string
     isbn10?: string
-    itemType: number
+    itemTypeId: string
     pages?: number
     volume?: number
     edition?: number
@@ -24,7 +24,7 @@ export interface Item {
     collectionId: number
     publisherId: number
     publisherName: string
-    formatId: number
+    formatId: string;
     languageId: 'PT'
     coverPrice: number
     paidPrice: number

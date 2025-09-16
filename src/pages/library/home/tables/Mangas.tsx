@@ -2,13 +2,14 @@ import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import Autorenew from '@mui/icons-material/AutorenewOutlined';
 import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useState } from "react";
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
 import { QUERY_COLLECTION, QUERY_SERIES, itemQueryFactory } from '../../../../services/apollo/queries/Library.tsx';
 import ItemModal from "../modals/Item.tsx";
+import { EditOutlined } from '@mui/icons-material';
 
 
 const QUERY_MANGA = itemQueryFactory(
@@ -69,6 +70,33 @@ const MangaTable = (): ReactElement => {
         { field: 'volume', headerName: 'Volume', flex: 0.5 },
         { field: 'collectionName', headerName: 'Coleção', flex: 1 },
         { field: 'publisherName', headerName: 'Editora', flex: 1 },
+        {
+            field: 'actions',
+            headerName: 'Ações',
+            flex: .5,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 1,
+                        flex: 1,
+                        height: '100%',
+                    }}
+                >
+                    <IconButton
+                        aria-label="editar"
+                        color="success"
+                        onClick={showItemModal.bind(null, params)}
+                    >
+                        <EditOutlined />
+                    </IconButton>
+                </Box>
+            ),
+        },
     ]
 
     const handleSerieChange = (event: React.ChangeEvent<{ value: unknown }>) => {

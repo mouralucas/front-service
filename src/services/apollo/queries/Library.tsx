@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client";
 
 export function itemQueryFactory(fields: string[]) {
-    const selectionSet = fields.join("\n");
+  const selectionSet = fields.join("\n");
 
-    return gql`
+  return gql`
      query GetItems($params: GetItemRequest!) {
         getItems(params: $params) {
           quantity
@@ -35,7 +35,7 @@ query {
       }
   }
 }
-` 
+`
 
 export const QUERY_COLLECTION = gql`
 query {
@@ -64,7 +64,6 @@ export const QUERY_PUBLISHERS = gql`
     }
   }
 `
-
 
 export const QUERY_LANGUAGES = gql`
   query {
