@@ -34,7 +34,6 @@ export const isLessThanMonths = (dateStr: string, months: number = 2, compareDat
     const monthsDiff = 
         (targetDate.getFullYear() - refDate.getFullYear()) * 12 +
         (targetDate.getMonth() - refDate.getMonth());
-        console.log('Current ' + dateStr  + ' Diff: ' + monthsDiff + ' months ' + months);
 
     return monthsDiff <= months || 
            (monthsDiff === months && refDate.getDate() < targetDate.getDate());

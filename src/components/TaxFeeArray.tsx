@@ -1,62 +1,103 @@
-import { Controller } from 'react-hook-form';
-import Select from 'react-select';
-import CurrencyInput from '../components/form/CurrencyInput';
+import { Controller } from "react-hook-form";
+import {
+    Grid,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    FormHelperText,
+    IconButton,
+    Stack,
+} from "@mui/material";
+import { AddCircleOutline, RemoveCircleOutline } from "@mui/icons-material";
+import CurrencyInput from "../components/form/CurrencyInput";
+import { Currency } from "../interfaces/Finance";
 
 interface TaxFeeArrayProps {
-    control: any,
-    errors: any,
-    taxFeeFields: any,
-    appendTaxFee: any,
-    removeTaxFee: any,
-    currencies: any[],
-    taxFeeList: any[]
-    type: 'taxDetails' | 'feeDetails'
-    taxFeeTitile: string
+    control: any;
+    errors: any;
+    taxFeeFields: any;
+    appendTaxFee: any;
+    removeTaxFee: any;
+    currencies: Currency[];
+    taxFeeList: any[];
+    type: "taxDetails" | "feeDetails";
+    taxFeeTitile: string;
 }
 
-const App = (props: TaxFeeArrayProps) => {
-    const title = props.type === 'taxDetails' ? 'Imposto' : 'Taxa';
+const TaxArray = (props: TaxFeeArrayProps) => {
+    const title = props.type === "taxDetails" ? "Imposto" : "Taxa";
 
     return (
         <>
-            {props.taxFeeFields.map((taxField: any, taxIndex: any) => (
-                <div className="row" key={taxField.id}>
-                    <div className="col-3">
-                        <label htmlFor=""></label>
-                        <Controller
-                            name={`${props.type}.${taxIndex}.currencyId`}
-                            control={props.control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
-                            render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    options={props.currencies}
-                                    value={props.currencies.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${props.errors[props.type]?.[taxIndex]?.currencyId ? "input-error" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">{title}</label>
-                        <Controller
-                            name={`${props.type}.${taxIndex}.taxFeeId`}
-                            control={props.control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
-                            render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    options={props.taxFeeList}
-                                    value={props.taxFeeList.find((c) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${props.errors[props.type]?.[taxIndex]?.taxFeeId ? "input-error" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">Valor</label>
+            {props.taxFeeFields.map((taxField: any, taxIndex: number) => (
+                <Grid container rowSpacing={4} columnSpacing={2} key={taxField.id} sx={{ mt: 4 }} >
+                    {/* Currency */}
+                    <Grid size={{ sm: 12, md: 3 }}>
+                        <FormControl
+                            fullWidth
+                            error={!!props.errors[props.type]?.[taxIndex]?.currencyId}
+                            size="small"
+                        >
+                            <InputLabel>Moeda</InputLabel>
+                            <Controller
+                                name={`${props.type}.${taxIndex}.currencyId`}
+                                control={props.control}
+                                rules={{ required: "Esse campo é obrigatório" }}
+                                render={({ field }) => (
+                                    <Select
+                                        {...field}
+                                        labelId="currency-label"
+                                        label="Moeda"
+                                        value={field.value || ""}>
+                                        {props.currencies?.map((c) => (
+                                            <MenuItem key={c.currencyId} value={c.currencyId}>
+                                                {c.symbol}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                )}
+                            />
+                            <FormHelperText>
+                                {props.errors[props.type]?.[taxIndex]?.currencyId?.message}
+                            </FormHelperText>
+                        </FormControl>
+                    </Grid>
+
+                    {/* Tax/Fee type */}
+                    <Grid size={{ sm: 12, md: 4 }}>
+                        <FormControl
+                            fullWidth
+                            error={!!props.errors[props.type]?.[taxIndex]?.taxFeeId}
+                            size="small"
+                        >
+                            <InputLabel id="taxFeeType-label">{title}</InputLabel>
+                            <Controller
+                                name={`${props.type}.${taxIndex}.taxFeeId`}
+                                control={props.control}
+                                rules={{ required: "Esse campo é obrigatório" }}
+                                render={({ field }) => (
+                                    <Select
+                                        {...field}
+                                        labelId="taxFeeType-label"
+                                        label={title}
+                                        value={field.value || ""}>
+                                        {props.taxFeeList.map((c) => (
+                                            <MenuItem key={c.value} value={c.value}>
+                                                {c.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                )}
+                            />
+                            <FormHelperText>
+                                {props.errors[props.type]?.[taxIndex]?.taxFeeId?.message}
+                            </FormHelperText>
+                        </FormControl>
+                    </Grid>
+
+                    {/* Amount */}
+                    <Grid size={{ sm: 12, md: 4 }}>
                         <Controller
                             name={`${props.type}.${taxIndex}.amount`}
                             control={props.control}
@@ -65,33 +106,52 @@ const App = (props: TaxFeeArrayProps) => {
                             }}
                             render={({ field }) => (
                                 <CurrencyInput
-                                    prefix={'R$ '}
+                                    label="Valor"
+                                    prefix="R$ "
                                     value={field.value}
-                                    onValueChange={(values) => field.onChange(values.rawValue)}
-                                    className={`form-control input-default ${props.errors[props.type]?.[taxIndex]?.amount ? "input-error" : ""}`}
+                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    // garante consistência visual
+                                    fullWidth
+                                    size="small"
+                                    error={!!props.errors[props.type]?.[taxIndex]?.amount}
+                                    helperText={props.errors[props.type]?.[taxIndex]?.amount?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-1">
-                        <label htmlFor=""></label>
-                        <div className="d-flex align-items-center justify-content-center">
-                            {taxIndex === props.taxFeeFields.length - 1 &&
-                                <button
-                                    className='btn btn-plus-sign btn-outline-primary'
-                                    onClick={() => props.appendTaxFee({ currencyId: 'BRL', taxFeeId: '', amount: 0 })}
-                                ></button>
-                            }
-                                <button
-                                    className='btn btn-minus-sign btn-outline-primary m-lg-2'
-                                    onClick={() => props.removeTaxFee(taxIndex)}
-                                ></button>
-                        </div>
-                    </div>
-                </div>
+                    </Grid>
+
+                    {/* Add/Remove Buttons */}
+                    <Grid size={{ sm: 12, md: 1 }}>
+                        <Stack
+                            direction="row"
+                            sx={{ alignItems: 'center' }}
+                        >
+                            {taxIndex === props.taxFeeFields.length - 1 && (
+                                <IconButton
+                                    color="primary"
+                                    onClick={() =>
+                                        props.appendTaxFee({
+                                            currencyId: "BRL",
+                                            taxFeeId: "",
+                                            amount: 0,
+                                        })
+                                    }
+                                >
+                                    <AddCircleOutline />
+                                </IconButton>
+                            )}
+                            <IconButton
+                                color="error"
+                                onClick={() => props.removeTaxFee(taxIndex)}
+                            >
+                                <RemoveCircleOutline />
+                            </IconButton>
+                        </Stack>
+                    </Grid>
+                </Grid>
             ))}
         </>
     );
 };
 
-export default App;
+export default TaxArray;

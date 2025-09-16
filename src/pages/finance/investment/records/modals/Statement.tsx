@@ -1,16 +1,24 @@
-import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
-import Modal from "../../../../../components/Modal.tsx";
-import {Investment, InvestmentStatement} from "../../../../../interfaces/Finance.tsx";
-import {Controller, useFieldArray, useForm} from "react-hook-form";
-import DatePicker from "react-datepicker";
-import {format, parseISO} from "date-fns";
+import { useQuery } from "@apollo/client";
+import { Button, Divider, TextField } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ptBR } from "date-fns/locale";
+import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import '../../../../../assets/core/icons.css';
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
-import {getCurrencies, getTaxFee} from "../../../../../services/getCommonData/Finance.tsx";
-import '../../../../../assets/core/icons.css'
+import Loader from "../../../../../components/Loader.tsx";
+import Modal from "../../../../../components/Modal.tsx";
 import TaxArray from "../../../../../components/TaxFeeArray.tsx";
-import {financeSubmit} from "../../../../../services/axios/Submit.tsx";
-import {URL_FINANCE_INVESTMENT_STATEMENT} from "../../../../../services/axios/ApiUrls.tsx";
-import {toast} from "react-toastify";
+import { Investment, InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
+import { QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
+import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { getTaxFee } from "../../../../../services/getCommonData/Finance.tsx";
 
 interface InvestmentStatementProps {
     modalState: boolean,
@@ -32,27 +40,34 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
-    const {handleSubmit, control, getValues, reset, formState: {errors},} = useForm<InvestmentStatement>({defaultValues: DefaultInvestmentStatement})
+    const { handleSubmit, control, getValues, reset, formState: { errors }, } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
 
-    const {fields: taxFields, append: appendTax, remove: removeTax} = useFieldArray({
+    const { fields: taxFields, append: appendTax, remove: removeTax } = useFieldArray({
         control,
         name: 'taxDetails',
     });
 
-    const {fields: feeFields, append: appendFee, remove: removeFee} = useFieldArray({
+    const { fields: feeFields, append: appendFee, remove: removeFee } = useFieldArray({
         control,
         name: 'feeDetails',
     });
 
-    const [currencies, setCurrencies] = useState<any[]>([])
+    const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
+        client: apolloFinanceClient,
+        skip: !props.modalState,
+    })
+
     const [taxes, setTaxes] = useState<any[]>([])
     const [fees, setFees] = useState<any[]>([])
 
     const fetchTransactionData: () => Promise<void> = async () => {
-        setCurrencies(await getCurrencies());
         setTaxes(await getTaxFee('BR', 'tax'))
         setFees(await getTaxFee('BR', 'fee'))
     };
+
+
+    const isLoading = currenciesLoading
+    const hasData = taxes && fees && currenciesData
 
     useEffect(() => {
         // TODO: add fetch to get last statement and set the data and period automatically
@@ -79,7 +94,6 @@ const App = (props: InvestmentStatementProps): ReactElement => {
 
         if (data.investmentStatementId !== null) {
             method = 'patch'
-            //TODO: implement correctly
             submitData = data
         } else {
             method = 'post'
@@ -95,164 +109,240 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         })
     }
 
-    const body: ReactElement =
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="row mt-2">
-                <div className="col-6">
-                    <label htmlFor="">InvestmentID</label>
-                    <Controller
-                        name={'name'}
-                        control={control}
-                        render={({field}) => (
-                            <input type={'text'}
-                                   {...field}
-                                   disabled={true}
-                                   className={'form-control input-default'}
-                            />
-                        )}
-                    />
-                </div>
-                <div className="col-3">
-                    <label htmlFor="">Data</label>
-                    <Controller
-                        name={'transactionDate'}
-                        control={control}
-                        render={({field}) => (
-                            <DatePicker
-                                selected={field.value ? parseISO(field.value) : null}
-                                onChange={(date) => {
-                                    field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
+
+    const body: ReactElement = isLoading || !hasData ? <Loader /> : (
+        <>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                    <Grid size={{ sm: 12, md: 6 }} > {/* Investment name */}
+                        <Controller
+                            name="name"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Investmento"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    error={!!errors.name}
+                                    helperText={errors.name?.message}
+                                    disabled={true}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} > {/* Transaction date */}
+                        <Controller
+                            name="transactionDate"
+                            control={control}
+                            render={({ field }) => (
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Transação"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                        disabled={true}
+                                    />
+                                </LocalizationProvider>
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} > {/* Maturity date */}
+                        <Controller
+                            name="maturityDate"
+                            control={control}
+                            render={({ field }) => (
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Vencimento"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                        disabled={true}
+                                    />
+                                </LocalizationProvider>
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} > {/* Reference date */}
+                        <Controller
+                            name="referenceDate"
+                            control={control}
+                            rules={{ required: "Esse campo é obrigatório" }}
+                            render={({ field }) => (
+                                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+                                    <DatePicker
+                                        label="Referência"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                                error: !!errors.referenceDate,
+                                                helperText: errors.referenceDate?.message,
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} > {/* Period */}
+                        <Controller
+                            name="period"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Período"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    error={!!errors.period}
+                                    helperText={errors.period?.message}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} > {/* Gross amout */}
+                        <div key={"R$"}>
+                            <Controller
+                                name="grossAmount"
+                                control={control}
+                                rules={{
+                                    validate: (value) => value !== 0 || "Este campo não deve ser zero",
                                 }}
-                                dateFormat="dd/MM/yyyy"
-                                className="form-control"
-                                disabled={true}
+                                render={({ field }) => (
+                                    <CurrencyInput
+                                        label="Valor bruto"
+                                        prefix={"R$ "}
+                                        value={field.value}
+                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        error={!!errors?.grossAmount}
+                                        helperText={errors?.grossAmount?.message}
+                                    />
+                                )}
                             />
-                        )}
-                    />
-                </div>
-                <div className="col-3">
-                    <label htmlFor="">Vencimento</label>
-                    <Controller
-                        name={'maturityDate'}
-                        control={control}
-                        render={({field}) => (
-                            <DatePicker
-                                selected={field.value ? parseISO(field.value) : null}
-                                onChange={(date) => {
-                                    field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                }}
-                                dateFormat="dd/MM/yyyy"
-                                className="form-control"
-                                placeholderText="__/__/____"
-                                disabled={true}
-                            />
-                        )}
-                    />
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-3">
-                    <label htmlFor="">Referência</label>
-                    <Controller
-                        name={'referenceDate'}
-                        control={control}
-                        rules={{required: 'Esse campo é obrigatório'}}
-                        render={({field}) => (
-                            <DatePicker
-                                selected={field.value ? parseISO(field.value) : null}
-                                onChange={(date) => {
-                                    field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                }}
-                                dateFormat="dd/MM/yyyy"
-                                className={`form-control ${errors.referenceDate ? "input-error" : ""}`}
-                                placeholderText="__/__/____"
-                            />
-                        )}
-                    />
-                </div>
-                <div className="col-3">
-                    <label htmlFor="">Período</label>
-                    <Controller
-                        name={'period'}
-                        control={control}
-                        render={({field}) => (
-                            <input type={'text'}
-                                   {...field}
-                                   className={'form-control input-default'}
-                            />
-                        )}
-                    />
-                </div>
-                <div className="col-3">
-                    <label htmlFor="">Valor bruto</label>
-                    <Controller
-                        name={'grossAmount'}
-                        control={control}
-                        rules={{
-                            validate: (value) => value !== 0 || "Este campo não deve ser zero",
-                        }}
-                        render={({field}) => (
-                            <CurrencyInput
-                                prefix={'R$ '}
-                                value={field.value}
-                                onValueChange={(values) => field.onChange(values.rawValue)}
-                                className={`form-control input-default ${errors.grossAmount ? 'input-error' : ''}`}
-                            />
-                        )}
-                    />
-                </div>
-                <div className="col-3">
-                    <label htmlFor="">Valor líquido</label>
-                    <Controller
-                        name={'netAmount'}
-                        control={control}
-                        rules={{
-                            validate: (value) => value !== 0 || "Este campo não deve ser zero",
-                        }}
-                        render={({field}) => (
-                            <CurrencyInput
-                                prefix={'R$ '}
-                                value={field.value}
-                                onValueChange={(values) => field.onChange(values.rawValue)}
-                                className={`form-control input-default ${errors.netAmount ? 'input-error' : ''}`}
-                            />
-                        )}
-                    />
-                </div>
-            </div>
-            <hr/>
-            <div className="row">
-                {taxFields.length === 0 &&
-                    <>
-                        <div className="col-9"></div>
-                        <div className="col-3">
-                            <button className={'btn btn-outline-secondary text-center w-100'} onClick={() => appendTax([{currencyId: 'BRL', taxFeeId: '', amount: 0}])}>Adicionar imposto</button>
                         </div>
-                    </>
-                }
-                {taxFields.length > 0 &&
-                    <TaxArray taxFeeTitile={'Imposto'} type={'taxDetails'} control={control} taxFeeList={taxes}
-                              errors={errors} taxFeeFields={taxFields}
-                              appendTaxFee={appendTax} removeTaxFee={removeTax} currencies={currencies}/>
-                }
-            </div>
-            <hr/>
-            <div className="row">
-                {feeFields.length === 0 &&
-                    <>
-                        <div className="col-9"></div>
-                        <div className="col-3">
-                            <button className={'btn btn-outline-secondary text-center w-100'} onClick={() => appendFee([{currencyId: 'BRL', taxFeeId: '', amount: 0}])}>Adicionar taxa</button>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} > {/* Net amount */}
+                        <div key={"R$"}>
+                            <Controller
+                                name="netAmount"
+                                control={control}
+                                rules={{
+                                    validate: (value) => value !== 0 || "Este campo não deve ser zero",
+                                }}
+                                render={({ field }) => (
+                                    <CurrencyInput
+                                        label="Valor líquido"
+                                        prefix={"R$ "}
+                                        value={field.value}
+                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        error={!!errors?.netAmount}
+                                        helperText={errors?.netAmount?.message}
+                                    />
+                                )}
+                            />
                         </div>
-                    </>
-                }
-                {feeFields.length > 0 &&
-                    <TaxArray taxFeeTitile={'Taxa'} type={'feeDetails'} control={control} taxFeeList={fees}
-                              errors={errors} taxFeeFields={feeFields}
-                              appendTaxFee={appendFee} removeTaxFee={removeFee} currencies={currencies}/>
-                }
-            </div>
-        </form>
+                    </Grid>
+                    {/* --- TAX --- */}
+                    <Divider sx={{ my: 2 }} />
+                    <Grid size={12}>
+                        {taxFields.length === 0 ? (
+                            <>
+                                <Grid size={{ xs: 12, md: 2 }} />
+                                <Grid size={{ xs: 12, md: 10 }} >
+                                    <Button
+                                        fullWidth
+                                        variant="outlined"
+                                        onClick={() =>
+                                            appendTax([{ currencyId: "BRL", taxFeeId: "", amount: 0 }])
+                                        }
+                                    >
+                                        Adicionar imposto
+                                    </Button>
+                                </Grid>
+                            </>
+                        ) : (
+                            <Grid size={{ xs: 12, md: 12 }}>
+                                <TaxArray
+                                    taxFeeTitile="Imposto"
+                                    type="taxDetails"
+                                    control={control}
+                                    taxFeeList={taxes}
+                                    errors={errors}
+                                    taxFeeFields={taxFields}
+                                    appendTaxFee={appendTax}
+                                    removeTaxFee={removeTax}
+                                    currencies={currenciesData?.getCurrencies?.currencies}
+                                />
+                            </Grid>
+                        )}
+                    </Grid>
+
+                    {/* --- FEE --- */}
+                    <Divider sx={{ my: 2 }} />
+
+                    <Grid size={{ md: 12 }}>
+                        {feeFields.length === 0 ? (
+                            <>
+                                <Grid size={{ xs: 12, md: 2 }} />
+                                <Grid size={{ xs: 12, md: 10 }}>
+                                    <Button
+                                        fullWidth
+                                        variant="outlined"
+                                        onClick={() =>
+                                            appendFee([{ currencyId: "BRL", taxFeeId: "", amount: 0 }])
+                                        }
+                                    >
+                                        Adicionar taxa
+                                    </Button>
+                                </Grid>
+                            </>
+                        ) : (
+                            <Grid size={{ xs: 12, md: 12 }}>
+                                <TaxArray
+                                    taxFeeTitile="Taxa"
+                                    type="feeDetails"
+                                    control={control}
+                                    taxFeeList={fees}
+                                    errors={errors}
+                                    taxFeeFields={feeFields}
+                                    appendTaxFee={appendFee}
+                                    removeTaxFee={removeFee}
+                                    currencies={currenciesData?.getCurrencies?.currencies}
+                                />
+                            </Grid>
+                        )}
+                    </Grid>
+
+                </Grid>
+            </form>
+        </>
+    );
 
     return (
         <Modal
@@ -261,7 +351,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
             title={'Investimento'}
             actionModal={handleSubmit(onSubmit)}
             body={body}
-            size={'modal-xl'}
+            size={'modal-md'}
         />
     )
 }
