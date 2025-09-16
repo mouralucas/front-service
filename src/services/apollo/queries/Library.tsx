@@ -4,7 +4,7 @@ export function itemQueryFactory(fields: string[]) {
     const selectionSet = fields.join("\n");
 
     return gql`
-     query GetItems($params: GetItemRequest!) {
+     query GetItems($params: GetItemInput!) {
         getItems(params: $params) {
           quantity
           items {

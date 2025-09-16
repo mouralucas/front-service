@@ -26,7 +26,21 @@ const MangaTable = (): ReactElement => {
     const { data: mangaData, loading, refetch } = useQuery(QUERY_MANGA, {
         client: apolloLibraryClient,
         variables: {
-            params: { itemType: "manga" }
+            params: { 
+                itemTypeId: "manga",
+                orderBy: [
+                    {
+                        field: 'serie_id'
+                    },
+                    {
+                        field: 'collection_id'
+                    },
+                    {
+                        field: "volume",
+                        direction: "ASC"
+                    }
+                ]
+            }
         }
         // pollInterval: 30000,
     });
