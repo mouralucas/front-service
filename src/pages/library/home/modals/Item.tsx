@@ -1,22 +1,21 @@
-import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
-import {Controller, useForm} from 'react-hook-form';
-import Select from 'react-select';
-import DatePicker from "react-datepicker";
-import {format, parseISO} from "date-fns";
-import "react-datepicker/dist/react-datepicker.css";
-import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
-import {CreateItemInput, Item} from '../../../../interfaces/Library.tsx'
-import {getAuthors, getCollections, getPublishers, getSeries, getStatuses} from "../../../../services/getCommonData/Library.tsx";
-import {getLanguages} from "../../../../services/getCommonData/Core.tsx";
-import Modal from "../../../../components/Modal.tsx";
-import {librarySubmit} from "../../../../services/axios/Submit.tsx";
-import {URL_LIBRARY_ITEM} from "../../../../services/axios/ApiUrls.tsx";
-import {toast} from "react-toastify";
-import Loader from "../../../../components/Loader.tsx";
-import DateMaskedInput from "../../../../components/form/DateMaskInput.tsx";
 import { useMutation } from "@apollo/client";
-import { CREATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { ReactElement, useEffect, useState } from "react";
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from "react-toastify";
+import Loader from "../../../../components/Loader.tsx";
+import Modal from "../../../../components/Modal.tsx";
+import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
+import { CreateItemInput, Item } from '../../../../interfaces/Library.tsx';
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
+import { CREATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { getLanguages } from "../../../../services/getCommonData/Core.tsx";
+import { getAuthors, getCollections, getPublishers, getSeries, getStatuses } from "../../../../services/getCommonData/Library.tsx";
 
 export interface ItemModalProps {
     item: Item | undefined | null
@@ -141,28 +140,7 @@ const App = (props: ItemModalProps) => {
         }
     }, [props.modalState, props.item, reset]);
 
-    const onSubmit = async (data: CreateItemInput, e: BaseSyntheticEvent<object> | undefined) => {
-        // let method;
-        // let submitData;
-
-        // if (data.itemId !== null){
-        //     method = 'patch'
-
-        //     const currentValues: Item = getValues();
-        //     const modifiedFields: Partial<Record<keyof Item, Item[keyof Item]>> = {
-        //         itemId: data.itemId
-        //     };
-
-        //     (Object.keys(dirtyFields) as Array<keyof Item>).forEach((key: keyof Item) => {
-        //         modifiedFields[key] = currentValues[key];
-        //     });
-
-        //     submitData = modifiedFields
-        // } else {
-        //     method = 'post'
-        //     submitData = data
-        // }
-
+    const onSubmit = async (data: CreateItemInput) => {
         try {
             await createItem({
                 variables: {
@@ -172,491 +150,575 @@ const App = (props: ItemModalProps) => {
         } catch (error) {
             console.error("Erro ao criar autor " + error)
         }
-        // librarySubmit(e, URL_LIBRARY_ITEM, submitData, method).then(() => {
-        //     toast.success('Item salvo com sucesso');
-        // }).catch(() => {
-        //     toast.error('Erro ao salvar o item');
-        // })
     };
 
     const body: ReactElement = isLoading ? <Loader /> :
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
-                    <div className="col-4">
-                        <label htmlFor="">Autor</label>
+                <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                    <Grid size={{ sm: 12, md: 4}} >
                         <Controller
                             name={'mainAuthorId'}
                             control={control}
                             rules={{required: true}}
                             render={({field}) => (
-                                <Select
-                                    {...field}
-                                    options={authors}
-                                    value={authors.find((c: any) => c.value === field.value)}
-                                    onChange={(e: any) => field.onChange(e?.value)}
-                                />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="main-author-label">Autor</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="main-author-label"
+                                        label="Autor"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {authors.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             )}
                         />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">Outros autores</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 4}} >
                         <Controller
                             name={'authorsId'}
                             control={control}
-                            rules={{required: false}}
+                            rules={{required: true}}
                             render={({field}) => (
-                                <Select
-                                    {...field}
-                                    isMulti
-                                    options={authors}
-                                    value={authors.filter((author: any) => field.value?.includes(author.value) || false)}
-                                    onChange={(selectedOptions: any) => {
-                                        const values = selectedOptions?.map((option: any) => option.value) || [];
-                                        field.onChange(values);
-                                    }}
-                                />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="authors-label">Outros autores</InputLabel>
+                                    <Select
+                                        {...field}
+                                        multiple
+                                        labelId="authors-label"
+                                        label="Outros Autores"
+                                        value={field.value ?? []}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {authors.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             )}
                         />
-                    </div>
-                    <div className="col-2">
-                        <label htmlFor="">Status</label>
+                    </Grid>
+                    <Grid size={{ sm: 6, md: 2}} >
                         <Controller
                             name={'lastStatusId'}
                             control={control}
                             rules={{required: true}}
                             render={({field}) => (
-                                <Select
-                                    // key={field.value}
-                                    {...field}
-                                    options={statuses}
-                                    value={statuses.find((c: any) => c.value === field.value)}
-                                    onChange={(e: any) => field.onChange(e?.value)}
-                                />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="last_status-label">Status</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="last_status-label"
+                                        label="Status"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {statuses.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             )}
                         />
-                    </div>
-                    <div className="col-2">
-                        <label htmlFor="">Data do status</label>
+                    </Grid>
+                    <Grid size={{ sm: 6, md: 2}} >
                         <Controller
-                            name={'lastStatusDate'}
+                            name="lastStatusDate"
                             control={control}
-                            render={({field}) => (
-                                <DatePicker
-                                    selected={parseISO(field.value)}
-                                    onChange={(date) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                    }}
-                                    dateFormat="dd/MM/yyyy" // Exibe no formato brasileiro
-                                    className="form-control"
-                                    placeholderText="Selecione uma data"
-                                    customInput={
-                                        <DateMaskedInput
-                                            placeholder="dd/mm/aaaa"
-                                            className={`form-control ${errors.lastStatusDate ? "input-error" : ""}`}
-                                        />
-                                    }
-                                />
+                            render={({ field }) => (
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}    
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Data"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-6">
-                        <label htmlFor="">Título</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 6 }} >
                         <Controller
-                            name={'title'}
+                            name="title"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type={"text"}
+                            rules={{ required: "Esse campo é obrigatório" }}
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Título"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.title}
+                                    helperText={errors.title?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-6">
-                        <label htmlFor="">Subtítulo</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 6 }} >
                         <Controller
-                            name={'subtitle'}
+                            name="subtitle"
                             control={control}
-                            render={({field}) => (
-                                <input
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Subtítulo"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-6">
-                        <label htmlFor="">Título original</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 6 }} >
                         <Controller
-                            name={'titleOriginal'}
+                            name="titleOriginal"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type={"text"}
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Título original"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-6">
-                        <label htmlFor="">Subtítulo original</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 6 }} >
                         <Controller
-                            name={'subtitleOriginal'}
+                            name="subtitleOriginal"
                             control={control}
-                            render={({field}) => (
-                                <input
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Subtítulo original"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-3">
-                        <label htmlFor="">ISBN</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
-                            name={'isbn'}
+                            name="isbn"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="ISBN"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">ISBN 10</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
-                            name={'isbn10'}
+                            name="isbn10"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="ISBN 10"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Tipo</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3}} >
                         <Controller
                             name={'itemTypeId'}
                             control={control}
+                            rules={{required: true}}
                             render={({field}) => (
-                                <Select
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="item-type-label">Tipo</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="item-type-label"
+                                        label="Tipo"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {itemTypes.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 4, md: 1 }} >
+                        <Controller
+                            name="pages"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    options={itemTypes}
-                                    value={itemTypes.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
+                                    label="Páginas"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-1">
-                        <label htmlFor="">Pages</label>
+                    </Grid>
+                    <Grid size={{ sm: 4, md: 1 }} >
                         <Controller
-                            name={'pages'}
+                            name="volume"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Volume"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-1">
-                        <label htmlFor="">Volume</label>
+                    </Grid>
+                    <Grid size={{ sm: 4, md: 1 }} >
                         <Controller
-                            name={'volume'}
+                            name="edition"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Edição"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-1">
-                        <label htmlFor="">Edição</label>
+                    </Grid>
+                    <Grid size={{ sm: 6, md: 2}} >
                         <Controller
-                            name={'edition'}
+                            name="publicationDate"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
-                                    {...field}
-                                    className="form-control input-default"
-                                />
+                            render={({ field }) => (
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}    
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Lançamento"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-2">
-                        <label htmlFor="">Lançamento</label>
+                    </Grid>
+                    <Grid size={{ sm: 6, md: 2}} >
                         <Controller
-                            name={'publicationDate'}
+                            name="originalPublicationDate"
                             control={control}
-                            render={({field}) => (
-                                <DatePicker
-                                    selected={field.value ? parseISO(field.value) : null}
-                                    onChange={(date) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                    }}
-                                    dateFormat="dd/MM/yyyy"
-                                    className="form-control"
-                                    placeholderText="__/__/____"
-                                    isClearable
-                                    customInput={
-                                        <DateMaskedInput
-                                            placeholder="dd/mm/aaaa"
-                                            className={`form-control ${errors.publicationDate ? "input-error" : ""}`}
-                                        />
-                                    }
-                                />
+                            render={({ field }) => (
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}    
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Lançamento original"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
                             )}
                         />
-                    </div>
-                    <div className="col-2">
-                        <label htmlFor="">Lançamento original</label>
-                        <Controller
-                            name={'originalPublicationDate'}
-                            control={control}
-                            render={({field}) => (
-                                <DatePicker
-                                    selected={field.value ? parseISO(field.value) : null}
-                                    onChange={(date) => {
-                                        // Verifica se a data é `null`
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                    }}
-                                    dateFormat="dd/MM/yyyy" // Exibe no formato brasileiro
-                                    className="form-control"
-                                    placeholderText="__/__/____"
-                                    customInput={
-                                        <DateMaskedInput
-                                            placeholder="dd/mm/aaaa"
-                                            className={`form-control ${errors.originalPublicationDate ? "input-error" : ""}`}
-                                        />
-                                    }
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">Série</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 4}} >
                         <Controller
                             name={'serieId'}
                             control={control}
+                            rules={{required: true}}
                             render={({field}) => (
-                                <Select
-                                    {...field}
-                                    options={itemSeries}
-                                    value={itemSeries.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="serie-label">Série</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="serie-label"
+                                        label="Série"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {itemSeries.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             )}
                         />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">Coleção</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 4}} >
                         <Controller
                             name={'collectionId'}
                             control={control}
+                            rules={{required: true}}
                             render={({field}) => (
-                                <Select
-                                    {...field}
-                                    options={itemCollections}
-                                    value={itemCollections.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="collections-label">Coleção</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="collection-label"
+                                        label="Coleção"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {itemCollections.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-4">
-                        <label htmlFor="">Editora</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 4}} >
                         <Controller
                             name={'publisherId'}
                             control={control}
+                            rules={{required: true}}
                             render={({field}) => (
-                                <Select
-                                    {...field}
-                                    options={publishers}
-                                    value={publishers.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="publishers-label">Editora</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="publishers-label"
+                                        label="Editora"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {publishers.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             )}
                         />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">Formato</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 4}} >
                         <Controller
                             name={'formatId'}
                             control={control}
+                            rules={{required: true}}
                             render={({field}) => (
-                                <Select
-                                    {...field}
-                                    options={itemFormats}
-                                    value={itemFormats.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="format-label">Formato</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="format-label"
+                                        label="Formato"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {itemFormats.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             )}
                         />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">Idioma</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 4}} >
                         <Controller
                             name={'languageId'}
                             control={control}
+                            rules={{required: true}}
                             render={({field}) => (
-                                <Select
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="langiuages-label">Idioma</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="languages-label"
+                                        label="Idioma"
+                                        value={field.value || ''}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                        sx={{ width: "100%" }}
+                                    >
+                                        {languages.map((author: any) => (
+                                            <MenuItem key={author.value} value={author.value}>
+                                                {author.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
+                            <Controller
+                                name="coverPrice"
+                                control={control}
+                                render={({ field }) => (
+                                    <CurrencyInput
+                                        label="Preço de capa"
+                                        prefix={"R$ "}
+                                        value={field.value}
+                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    />
+                                )}
+                            />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
+                            <Controller
+                                name="paidPrice"
+                                control={control}
+                                render={({ field }) => (
+                                    <CurrencyInput
+                                        label="Preço pago"
+                                        prefix={"R$ "}
+                                        value={field.value}
+                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    />
+                                )}
+                            />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 6 }} ></Grid>
+                    <Grid size={{ sm: 6, md: 3 }} >
+                        <Controller
+                            name="dimensions"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    options={languages}
-                                    value={languages.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
+                                    label="Dimensões"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-3">
-                        <label htmlFor="">Preço de capa</label>
+                    </Grid>      
+                    <Grid size={{ sm: 6, md: 3 }} >
                         <Controller
-                            name={'coverPrice'}
+                            name="height"
                             control={control}
-                            render={({field}) => (
-                                <CurrencyInput
-                                    prefix="R$ "
-                                    value={field.value}
-                                    onValueChange={(values) => field.onChange(values.rawValue)}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Preço pago</label>
-                        <Controller
-                            name={'paidPrice'}
-                            control={control}
-                            render={({field}) => (
-                                <CurrencyInput
-                                    prefix="R$ "
-                                    value={field.value}
-                                    onValueChange={(values) => field.onChange(values.rawValue)}
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-3">
-                        <label htmlFor="">Dimensões</label>
-                        <Controller
-                            name={'dimensions'}
-                            control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Altura"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Altura</label>
+                    </Grid>    
+                    <Grid size={{ sm: 6, md: 3 }} >
                         <Controller
-                            name={'height'}
+                            name="width"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Largura"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">largura</label>
+                    </Grid>               
+                    <Grid size={{ sm: 6, md: 3 }} >
                         <Controller
-                            name={'width'}
+                            name="thickness"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Profundidade"
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Profundidade</label>
+                    </Grid>     
+                    <Grid size={{ sm: 12, md: 12 }} >
                         <Controller
-                            name={'thickness'}
+                            name="summary"
                             control={control}
-                            render={({field}) => (
-                                <input
-                                    type="text"
+                            render={({ field }) => (
+                                <TextField
                                     {...field}
-                                    className="form-control input-default"
+                                    label="Descrição"
+                                    multiline
+                                    minRows={6}
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-12">
-                        <label htmlFor="">Descrição</label>
-                        <Controller name={'summary'}
-                                    control={control}
-                                    rules={{required: false}}
-                                    render={({field}) => (
-                                        <textarea
-                                            {...field}
-                                            value={field.value ?? ''}
-                                            onChange={field.onChange}
-                                            rows={15}
-                                            className='form-control'></textarea>
-                                    )}
+                    </Grid>     
+                    <Grid size={{ sm: 12, md: 12 }} >
+                        <Controller
+                            name="observation"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Observações"
+                                    multiline
+                                    minRows={6}
+                                    fullWidth
+                                    size="small"
+                                />
+                            )}
                         />
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <div className="col-12">
-                        <label htmlFor="">Observações</label>
-                        <Controller name={'observation'}
-                                    control={control}
-                                    rules={{required: false}}
-                                    render={({field}) => (
-                                        <textarea
-                                            {...field}
-                                            value={field.value ?? ''}
-                                            onChange={field.onChange}
-                                            rows={15}
-                                            className='form-control'></textarea>
-                                    )}
-                        />
-                    </div>
-                </div>
+                    </Grid>  
+                </Grid>
             </form>
         </div>
 
@@ -666,12 +728,12 @@ const App = (props: ItemModalProps) => {
             <Modal
                 showModal={props.modalState}
                 hideModal={props.hideItemModal}
-                title={'Item Beta'}
+                title={'Item'}
                 fullscreen={true}
                 body={body}
                 actionModal={handleSubmit(onSubmit)}
                 disableAction={!isDirty}
-                size={'modal-fullscreen'}
+                size={'modal-lg'}
             />
         </div>
     )
