@@ -16,7 +16,7 @@ import ItemModal from '../modals/Item.tsx'
 
 
 const QUERY_BOOK = itemQueryFactory(
-    ['isbn', 'serieId', 'serieName']
+    ['']
 )
 
 const Books = (): ReactElement => {

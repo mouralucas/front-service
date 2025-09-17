@@ -132,8 +132,6 @@ const App = (props: AccountStatementProps) => {
                     modifiedFields[key] = currentValues[key];
                 });
 
-                // submitData = modifiedFields
-                console.log(modifiedFields.transactionId);
                 await updateAccountTransaction({
                     variables: {
                         input: modifiedFields

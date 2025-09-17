@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -28,7 +28,7 @@ const DefaultItem: CreateItemInput = {
     itemId: null,
     lastStatusId: null,
     lastStatusDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
-    mainAuthorId: 0,
+    mainAuthorId: null,
     authorsId: [],
     translatorId: 0,
     title: '',
@@ -45,7 +45,7 @@ const DefaultItem: CreateItemInput = {
     originalPublicationDate: null,
     serieId: 0,
     collectionId: 0,
-    publisherId: 0,
+    publisherId: null,
     formatId: '',
     languageId: 'PT',
     coverPrice: 0,
@@ -86,7 +86,7 @@ const itemFormats = [
 
 
 const App = (props: ItemModalProps) => {
-    const {handleSubmit, control, reset, formState: {isDirty, dirtyFields, errors}, getValues} = useForm<CreateItemInput>({defaultValues: DefaultItem});
+    const {handleSubmit, control, reset, formState: {isDirty, errors}} = useForm<CreateItemInput>({defaultValues: DefaultItem});
 
     const [authors, setAuthors] = useState<any[]>([]);
     const [statuses, setStatuses] = useState<any[]>([])
@@ -160,15 +160,15 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'mainAuthorId'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: "Campo obrigatório"}}
                             render={({field}) => (
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.mainAuthorId} >
                                     <InputLabel id="main-author-label">Autor</InputLabel>
                                     <Select
                                         {...field}
                                         labelId="main-author-label"
                                         label="Autor"
-                                        value={field.value || ''}
+                                        value={field.value ?? ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
@@ -178,6 +178,9 @@ const App = (props: ItemModalProps) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors.mainAuthorId && (
+                                        <FormHelperText>{errors.mainAuthorId.message}</FormHelperText>
+                                    )}
                                 </FormControl>
                             )}
                         />
@@ -186,7 +189,6 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'authorsId'}
                             control={control}
-                            rules={{required: true}}
                             render={({field}) => (
                                 <FormControl fullWidth size="small">
                                     <InputLabel id="authors-label">Outros autores</InputLabel>
@@ -213,9 +215,9 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'lastStatusId'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: "Campo obrigatório"}}
                             render={({field}) => (
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.lastStatusId} >
                                     <InputLabel id="last_status-label">Status</InputLabel>
                                     <Select
                                         {...field}
@@ -231,6 +233,9 @@ const App = (props: ItemModalProps) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors.lastStatusId && (
+                                        <FormHelperText>{errors.lastStatusId.message}</FormHelperText>
+                                    )}
                                 </FormControl>
                             )}
                         />
@@ -239,6 +244,7 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name="lastStatusDate"
                             control={control}
+                            rules={{required: "Campo obrigatório"}}
                             render={({ field }) => (
                                 <LocalizationProvider
                                     dateAdapter={AdapterDateFns}    
@@ -254,6 +260,8 @@ const App = (props: ItemModalProps) => {
                                             textField: {
                                                 fullWidth: true,
                                                 size: "small",
+                                                error: !!errors.lastStatusDate,
+                                                helperText: errors.lastStatusDate?.message, 
                                             },
                                         }}
                                         sx={{ width: "100%" }}
@@ -353,9 +361,9 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'itemTypeId'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: "Campo obrigatório"}}
                             render={({field}) => (
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.itemTypeId} >
                                     <InputLabel id="item-type-label">Tipo</InputLabel>
                                     <Select
                                         {...field}
@@ -371,6 +379,9 @@ const App = (props: ItemModalProps) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors.itemTypeId && (
+                                        <FormHelperText>{errors.itemTypeId?.message}</FormHelperText>
+                                    )}
                                 </FormControl>
                             )}
                         />
@@ -475,24 +486,27 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'serieId'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: "Campo obrigatório"}}
                             render={({field}) => (
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.serieId} >
                                     <InputLabel id="serie-label">Série</InputLabel>
                                     <Select
                                         {...field}
                                         labelId="serie-label"
                                         label="Série"
-                                        value={field.value || ''}
+                                        value={field.value ?? ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {itemSeries.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
+                                        {itemSeries.map((serie: any) => (
+                                            <MenuItem key={serie.value} value={serie.value}>
+                                                {serie.label}
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors.serieId && (
+                                        <FormHelperText>{errors.serieId.message}</FormHelperText>
+                                    )}
                                 </FormControl>
                             )}
                         />
@@ -501,15 +515,15 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'collectionId'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: "Campo obrigatório"}}
                             render={({field}) => (
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.collectionId} >
                                     <InputLabel id="collections-label">Coleção</InputLabel>
                                     <Select
                                         {...field}
                                         labelId="collection-label"
                                         label="Coleção"
-                                        value={field.value || ''}
+                                        value={field.value ?? ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
@@ -519,6 +533,9 @@ const App = (props: ItemModalProps) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors.collectionId && (
+                                        <FormHelperText>{errors.collectionId.message}</FormHelperText>
+                                    )}
                                 </FormControl>
                             )}
                         />
@@ -527,15 +544,15 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'publisherId'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: "Campo obrigatório"}}
                             render={({field}) => (
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.publisherId} >
                                     <InputLabel id="publishers-label">Editora</InputLabel>
                                     <Select
                                         {...field}
                                         labelId="publishers-label"
                                         label="Editora"
-                                        value={field.value || ''}
+                                        value={field.value ?? ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
@@ -545,6 +562,9 @@ const App = (props: ItemModalProps) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors.publisherId && (
+                                        <FormHelperText>{errors.publisherId.message}</FormHelperText>
+                                    )}
                                 </FormControl>
                             )}
                         />
@@ -553,9 +573,13 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'formatId'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: "Campo obrigatório"}}
                             render={({field}) => (
-                                <FormControl fullWidth size="small">
+                                <FormControl 
+                                fullWidth
+                                 size="small"
+                                 error={!!errors.formatId} 
+                                 >
                                     <InputLabel id="format-label">Formato</InputLabel>
                                     <Select
                                         {...field}
@@ -571,6 +595,9 @@ const App = (props: ItemModalProps) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors.formatId && (
+                                        <FormHelperText>{errors.formatId.message}</FormHelperText>
+                                    )}
                                 </FormControl>
                             )}
                         />
@@ -579,7 +606,7 @@ const App = (props: ItemModalProps) => {
                         <Controller
                             name={'languageId'}
                             control={control}
-                            rules={{required: true}}
+                            rules={{required: "Campo obrigatório"}}
                             render={({field}) => (
                                 <FormControl fullWidth size="small">
                                     <InputLabel id="langiuages-label">Idioma</InputLabel>
@@ -597,6 +624,9 @@ const App = (props: ItemModalProps) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors.languageId && (
+                                        <FormHelperText>{errors.languageId.message}</FormHelperText>
+                                    )}
                                 </FormControl>
                             )}
                         />
@@ -729,7 +759,6 @@ const App = (props: ItemModalProps) => {
                 showModal={props.modalState}
                 hideModal={props.hideItemModal}
                 title={'Item'}
-                fullscreen={true}
                 body={body}
                 actionModal={handleSubmit(onSubmit)}
                 disableAction={!isDirty}

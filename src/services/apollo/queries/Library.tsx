@@ -1,20 +1,45 @@
 import { gql } from "@apollo/client";
 
 export function itemQueryFactory(fields: string[]) {
-  const selectionSet = fields.join("\n");
-
     return gql`
      query GetItems($params: GetItemInput!) {
         getItems(params: $params) {
           quantity
           items {
             itemId
-            title
-            lastStatusId
-            lastStatusName
             mainAuthorId
             mainAuthorName
-            ${selectionSet}
+            lastStatusId
+            lastStatusName
+            lastStatusDate
+            title
+            subtitle
+            titleOriginal
+            subtitleOriginal
+            isbn
+            isbn10
+            itemTypeId
+            pages
+            volume
+            edition
+            publicationDate
+            originalPublicationDate
+            serieId
+            serieName
+            collectionId
+            collectionName
+            publisherId
+            publisherName
+            formatId
+            languageId
+            coverPrice
+            paidPrice
+            dimensions
+            height
+            width
+            thickness
+            summary
+            
           }
         }
       }

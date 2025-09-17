@@ -13,7 +13,7 @@ import { EditOutlined } from '@mui/icons-material';
 
 
 const QUERY_MANGA = itemQueryFactory(
-    ['isbn', 'serieId', 'serieName', 'volume', 'collectionId', 'collectionName', 'publisherName']
+    ['volume', 'collectionId', 'collectionName', 'publisherName']
 )
 
 type ItemFilters = {
