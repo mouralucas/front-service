@@ -11,14 +11,14 @@ import { toast } from "react-toastify";
 import Loader from "../../../../components/Loader.tsx";
 import Modal from "../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
-import { CreateItemInput, Item } from '../../../../interfaces/Library.tsx';
+import { CreateItemInput } from '../../../../interfaces/Library.tsx';
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { CREATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { CREATE_ITEM_MUTATION, UPDATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { getLanguages } from "../../../../services/getCommonData/Core.tsx";
 import { getAuthors, getCollections, getPublishers, getSeries, getStatuses } from "../../../../services/getCommonData/Library.tsx";
 
 export interface ItemModalProps {
-    item: Item | undefined | null
+    item: CreateItemInput | undefined | null
     modalState: boolean
     hideItemModal: any
 }
@@ -86,7 +86,7 @@ const itemFormats = [
 
 
 const App = (props: ItemModalProps) => {
-    const {handleSubmit, control, reset, formState: {isDirty, errors}} = useForm<CreateItemInput>({defaultValues: DefaultItem});
+    const {handleSubmit, control, reset, formState: {isDirty, errors, dirtyFields}, getValues} = useForm<CreateItemInput>({defaultValues: DefaultItem});
 
     const [authors, setAuthors] = useState<any[]>([]);
     const [statuses, setStatuses] = useState<any[]>([])
@@ -110,9 +110,22 @@ const App = (props: ItemModalProps) => {
 
     const [createItem] = useMutation(CREATE_ITEM_MUTATION, {
             client: apolloLibraryClient,
-             onCompleted: (data) => {
+            onCompleted: (data) => {
                 toast.success(
-                    `Item "${data.createItem.item.itemTitle}" criado com sucesso`
+                    `Item "${data.createItem.item.title}" criado com sucesso`
+                );
+                props.hideItemModal();
+            },
+            onError: (error) => {
+                toast.error(`Erro: ${error.message}`);
+            },
+        })
+
+    const [updateItem] = useMutation(UPDATE_ITEM_MUTATION, {
+            client: apolloLibraryClient,
+            onCompleted: (data) => {
+                toast.success(
+                    `Item "${data.updateItem.item.title}" atualizado com sucesso`
                 );
                 props.hideItemModal();
             },
@@ -140,15 +153,39 @@ const App = (props: ItemModalProps) => {
         }
     }, [props.modalState, props.item, reset]);
 
-    const onSubmit = async (data: CreateItemInput) => {
-        try {
-            await createItem({
-                variables: {
-                    input: data
-                }
-            })
-        } catch (error) {
-            console.error("Erro ao criar autor " + error)
+    const onSubmit = async (itemFormData: CreateItemInput) => {
+        if (itemFormData.itemId) {
+            try {
+                const currentValues: CreateItemInput = getValues();
+                const modifiedFields: Partial<Record<keyof CreateItemInput, CreateItemInput[keyof CreateItemInput]>> = {
+                    itemId: itemFormData.itemId
+                };
+
+                (Object.keys(dirtyFields) as Array<keyof CreateItemInput>).forEach((key: keyof CreateItemInput) => {
+                    modifiedFields[key] = currentValues[key];
+                });
+                
+                console.log(modifiedFields);
+                console.log(itemFormData)
+
+                await updateItem({
+                    variables: {
+                        input: modifiedFields
+                    }
+                })
+            }catch (error) {
+                console.error("Erro ao atualizar o item " + error)
+            }
+        } else {
+            try {
+                await createItem({
+                    variables: {
+                        input: itemFormData
+                    }
+                })
+            } catch (error) {
+                console.error("Erro ao criar item " + error)
+            }
         }
     };
 

@@ -123,7 +123,7 @@ const App = (props: AccountStatementProps) => {
         if (transactionFormData.transactionId !== null) {
             try {
                 const currentValues: CreateAccountTransactionInput = getValues();
-                console.log(typeof transactionFormData.transactionId)
+                
                 const modifiedFields: Partial<Record<keyof CreateAccountTransactionInput, CreateAccountTransactionInput[keyof CreateAccountTransactionInput]>> = {
                     transactionId: transactionFormData.transactionId
                 };
@@ -138,7 +138,7 @@ const App = (props: AccountStatementProps) => {
                     }
                 })
             } catch (err) {
-                console.log("Erro ao salvar transação: ", err)
+                console.log("Erro ao atualizar transação: ", err)
             }
         } else {
             try {

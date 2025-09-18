@@ -7,6 +7,18 @@ export const CREATE_ITEM_MUTATION = gql`
     createItem(item: $input) {
       item {
         itemId
+        title
+      }
+    }
+  }
+`
+
+export const UPDATE_ITEM_MUTATION = gql`
+  mutation UpdateItem($input: UpdateItemInput) {
+    updateItem(item: $input) {
+      item {
+        itemId
+        title
       }
     }
   }
