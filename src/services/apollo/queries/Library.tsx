@@ -130,6 +130,22 @@ query GetAuthors($params: GetAuthorsRequest) {
     }
 }`
 
+
+export const QUERY_STATUS = gql`
+query GetStatus ($params: GetStatusInput) {
+    getStatus(params: $params) {
+        statuses {
+            statusId
+            name
+            description
+            order
+            statusType
+        }
+        quantity
+    }
+}
+`
+
 export const QUERY_READING_STATS = gql`
 query GetReadingStats($itemId: Int!) {
   getReadingStats(params: { itemId: $itemId }) {
@@ -144,3 +160,4 @@ query GetReadingStats($itemId: Int!) {
   }
 }
 `;
+

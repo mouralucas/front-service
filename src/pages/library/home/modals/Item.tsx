@@ -1,11 +1,11 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect } from "react";
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
 import Loader from "../../../../components/Loader.tsx";
@@ -14,8 +14,7 @@ import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
 import { CreateItemInput } from '../../../../interfaces/Library.tsx';
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_ITEM_MUTATION, UPDATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
-import { getLanguages } from "../../../../services/getCommonData/Core.tsx";
-import { getAuthors, getCollections, getPublishers, getSeries, getStatuses } from "../../../../services/getCommonData/Library.tsx";
+import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_LANGUAGES, QUERY_PUBLISHERS, QUERY_SERIES, QUERY_STATUS } from "../../../../services/apollo/queries/Library.tsx";
 
 export interface ItemModalProps {
     item: CreateItemInput | undefined | null
@@ -88,26 +87,53 @@ const itemFormats = [
 const App = (props: ItemModalProps) => {
     const {handleSubmit, control, reset, formState: {isDirty, errors, dirtyFields}, getValues} = useForm<CreateItemInput>({defaultValues: DefaultItem});
 
-    const [authors, setAuthors] = useState<any[]>([]);
-    const [statuses, setStatuses] = useState<any[]>([])
-    const [itemSeries, setItemSeries] = useState<any[]>([])
-    const [itemCollections, setItemCollections] = useState<any[]>([])
-    const [publishers, setPublishers] = useState<any[]>([])
-    const [languages, setLanguages] = useState<any[]>([])
+    const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
+        client: apolloLibraryClient,
+        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        variables: { params: {} },
+        skip: !props.modalState
+    })
 
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { data: statusesData, loading: statusesLoading } = useQuery(QUERY_STATUS, {
+        client: apolloLibraryClient,
+        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        variables: { params: {
+            statusType: "ITEM.STATUS"
+        } },
+        skip: !props.modalState
+    })
 
-    const fetchItemData: () => Promise<void> = async () => {
-        setAuthors(await getAuthors(true));
-        setStatuses(await getStatuses('ITEM.STATUS', true));
-        setItemSeries(await getSeries(true));
-        setItemCollections(await getCollections(true));
-        setPublishers(await getPublishers(true));
-        setLanguages(await getLanguages(true));
+    const { data: seriesData, loading: seriesLoading } = useQuery(QUERY_SERIES, {
+        client: apolloLibraryClient,
+        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        variables: { params: {} },
+        skip: !props.modalState
+    })
 
-        setIsLoading(false);
-    }
+    const { data: collectionsData, loading: collectionsLoading } = useQuery(QUERY_COLLECTION, {
+        client: apolloLibraryClient,
+        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        variables: { params: {} },
+        skip: !props.modalState
+    })
 
+    const { data: publishersData, loading: publishersLoading } = useQuery(QUERY_PUBLISHERS, {
+        client: apolloLibraryClient,
+        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        variables: { params: {} },
+        skip: !props.modalState
+    })
+
+    const { data: languageData, loading: languageLoading } = useQuery(QUERY_LANGUAGES, {
+        client: apolloLibraryClient,
+        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        skip: !props.modalState
+    })
+
+    const isLoading = authorsLoading || statusesLoading || seriesLoading || collectionsLoading || publishersLoading || languageLoading
+    const hasData = authorsData && statusesData && seriesData && collectionsData && publishersData && languageData
+
+    
     const [createItem] = useMutation(CREATE_ITEM_MUTATION, {
             client: apolloLibraryClient,
             onCompleted: (data) => {
@@ -140,11 +166,6 @@ const App = (props: ItemModalProps) => {
             reset(props.item);
         } else if (props.modalState && !props.item) {
             reset(DefaultItem);
-        }
-
-        // Load necessary information
-        if (props.modalState) {
-            fetchItemData().then();
         }
 
         // Clean form when modal closes
@@ -189,7 +210,7 @@ const App = (props: ItemModalProps) => {
         }
     };
 
-    const body: ReactElement = isLoading ? <Loader /> :
+    const body: ReactElement = isLoading || !hasData ? <Loader /> :
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
@@ -209,9 +230,9 @@ const App = (props: ItemModalProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {authors.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
+                                        {authorsData?.getAuthors?.authors?.map((author: any) => (
+                                            <MenuItem key={author.authorId} value={author.authorId}>
+                                                {author.authorName}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -238,9 +259,9 @@ const App = (props: ItemModalProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {authors.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
+                                        {authorsData?.getAuthors?.authors?.map((author: any) => (
+                                            <MenuItem key={author.authorId} value={author.authorId}>
+                                                {author.authorName}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -264,9 +285,9 @@ const App = (props: ItemModalProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {statuses.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
+                                        {statusesData?.getStatus?.statuses.map((author: any) => (
+                                            <MenuItem key={author.statusId} value={author.statusId}>
+                                                {author.name}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -535,9 +556,9 @@ const App = (props: ItemModalProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {itemSeries.map((serie: any) => (
-                                            <MenuItem key={serie.value} value={serie.value}>
-                                                {serie.label}
+                                        {seriesData?.getSeries?.series.map((serie: any) => (
+                                            <MenuItem key={serie.serieId} value={serie.serieId}>
+                                                {serie.serieName}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -564,9 +585,9 @@ const App = (props: ItemModalProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {itemCollections.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
+                                        {collectionsData?.getCollections?.collections.map((collection: any) => (
+                                            <MenuItem key={collection.collectionId} value={collection.collectionId}>
+                                                {collection.collectionName}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -593,9 +614,9 @@ const App = (props: ItemModalProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {publishers.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
+                                        {publishersData?.getPublishers?.publishers.map((publisher: any) => (
+                                            <MenuItem key={publisher.publisherId} value={publisher.publisherId}>
+                                                {publisher.publisherName}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -655,9 +676,9 @@ const App = (props: ItemModalProps) => {
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
-                                        {languages.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
+                                        {languageData?.getLanguages?.languages?.map((language: any) => (
+                                            <MenuItem key={language.languageId} value={language.languageId}>
+                                                {language.languageName}
                                             </MenuItem>
                                         ))}
                                     </Select>
