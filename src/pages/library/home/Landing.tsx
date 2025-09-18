@@ -5,7 +5,7 @@ import MangaTable from "./tables/Mangas.tsx";
 
 const App = (): ReactElement => {
     useEffect(() => {
-        document.title = 'Registro de informações';
+        document.title = 'Biblioteca';
     }, [])
 
     return (

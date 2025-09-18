@@ -7,14 +7,10 @@ import { ReactElement, useState } from "react";
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
-import { QUERY_COLLECTION, QUERY_SERIES, itemQueryFactory } from '../../../../services/apollo/queries/Library.tsx';
+import { QUERY_COLLECTION, QUERY_SERIES, QUERY_ITEMS } from '../../../../services/apollo/queries/Library.tsx';
 import ItemModal from "../modals/Item.tsx";
 import { EditOutlined } from '@mui/icons-material';
 
-
-const QUERY_MANGA = itemQueryFactory(
-    ['volume', 'collectionId', 'collectionName', 'publisherName']
-)
 
 type ItemFilters = {
     text?: string;
@@ -24,7 +20,7 @@ type ItemFilters = {
 };
 
 const MangaTable = (): ReactElement => {
-    const { data: mangaData, loading, refetch } = useQuery(QUERY_MANGA, {
+    const { data: mangaData, loading, refetch } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
             params: { 
