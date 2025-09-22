@@ -454,6 +454,11 @@ const App = (props: ItemModalProps) => {
                                     label="Páginas"
                                     fullWidth
                                     size="small"
+                                    value={field.value ?? ''}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        field.onChange(value === '' ? null : Number(value));
+                                    }}
                                 />
                             )}
                         />
@@ -468,6 +473,10 @@ const App = (props: ItemModalProps) => {
                                     label="Volume"
                                     fullWidth
                                     size="small"
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        field.onChange(value === '' ? null : Number(value));
+                                    }}
                                 />
                             )}
                         />
@@ -482,6 +491,10 @@ const App = (props: ItemModalProps) => {
                                     label="Edição"
                                     fullWidth
                                     size="small"
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        field.onChange(value === '' ? null : Number(value));
+                                    }}
                                 />
                             )}
                         />
@@ -581,7 +594,7 @@ const App = (props: ItemModalProps) => {
                                         {...field}
                                         labelId="collection-label"
                                         label="Coleção"
-                                        value={field.value ?? ''}
+                                        value={Number(field.value) ?? ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                         sx={{ width: "100%" }}
                                     >
