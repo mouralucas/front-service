@@ -65,18 +65,18 @@ const App = () => {
         getPerformance(filters.selectedIndexer, filters.selectedPeriod);
     }
 
-    const customToolTip = (pointInfo: any) => {
-        const period: string = pointInfo.point.data.period
-        const series: string = pointInfo.points.map(
-            (p: { seriesName: any; valueText: any; }) =>
-                `<b>${p.seriesName}</b>: ${parseFloat(p.valueText).toFixed(2)}%`
-        ).join('<br/>')
+    // const customToolTip = (pointInfo: any) => {
+    //     const period: string = pointInfo.point.data.period
+    //     const series: string = pointInfo.points.map(
+    //         (p: { seriesName: any; valueText: any; }) =>
+    //             `<b>${p.seriesName}</b>: ${parseFloat(p.valueText).toFixed(2)}%`
+    //     ).join('<br/>')
 
-        const formattedString = `<b>Período</b> ${period}<br/>${series}`
-        return {
-            text: formattedString,
-        };
-    }
+    //     const formattedString = `<b>Período</b> ${period}<br/>${series}`
+    //     return {
+    //         text: formattedString,
+    //     };
+    // }
 
     return (
         <>

@@ -197,7 +197,10 @@ const App = (props: AccountStatementProps) => {
                                     options={accountData?.getAccounts.accounts || []}
                                     getOptionLabel={(option) => option.nickname}
                                     getOptionValue={(option) => option.accountId}
-                                    onChange={field.onChange}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                        updateCurrency();
+                                    }}
                                     error={errors.accountId?.message}
                                 />
                             )}

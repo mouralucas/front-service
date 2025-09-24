@@ -41,20 +41,20 @@ const App = (props: InvestmentPerformanceProps) => {
         })
     }
 
-    const testTooltip = (pointInfo: any) => {
-        return <div className="state-tooltip">
-            <div className="state-tooltip">
-                {pointInfo.points.map((p: { seriesName: string; valueText: string; }) => (
-                    <div key={p.seriesName}>
-                        <strong>{p.seriesName}</strong>
-                        <br/>
-                        {`${parseFloat(p.valueText).toFixed(2)}%`}
-                        <br/>
-                    </div>
-                ))}
-            </div>
-        </div>;
-    }
+    // const testTooltip = (pointInfo: any) => {
+    //     return <div className="state-tooltip">
+    //         <div className="state-tooltip">
+    //             {pointInfo.points.map((p: { seriesName: string; valueText: string; }) => (
+    //                 <div key={p.seriesName}>
+    //                     <strong>{p.seriesName}</strong>
+    //                     <br/>
+    //                     {`${parseFloat(p.valueText).toFixed(2)}%`}
+    //                     <br/>
+    //                 </div>
+    //             ))}
+    //         </div>
+    //     </div>;
+    // }
 
     return (
         <>
