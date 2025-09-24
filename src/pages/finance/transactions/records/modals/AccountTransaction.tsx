@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import Loader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import { Account, AccountTransaction, CreateAccountTransactionInput } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance.tsx";
@@ -123,7 +124,7 @@ const App = (props: AccountStatementProps) => {
         if (transactionFormData.transactionId !== null) {
             try {
                 const currentValues: CreateAccountTransactionInput = getValues();
-                
+
                 const modifiedFields: Partial<Record<keyof CreateAccountTransactionInput, CreateAccountTransactionInput[keyof CreateAccountTransactionInput]>> = {
                     transactionId: transactionFormData.transactionId
                 };
@@ -185,34 +186,20 @@ const App = (props: AccountStatementProps) => {
                         />
                     </Grid>
                     <Grid size={{ sm: 12, md: 4 }} >
-                        <Controller name={'accountId'}
+                        <Controller
+                            name="accountId"
                             control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
+                            rules={{ required: "Esse campo é obrigatório" }}
                             render={({ field }) => (
-                                <FormControl fullWidth size="small">
-                                    <InputLabel id="account-label">Conta</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="account-label"
-                                        variant="outlined"
-                                        label="Conta"
-                                        value={field.value || ''}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value)
-                                            updateCurrency()
-                                        }}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {accountData?.getAccounts.accounts.map((account: any) => (
-                                            <MenuItem key={account.accountId} value={account.accountId}>
-                                                {account.nickname}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.accountId && (
-                                        <FormHelperText>{errors.accountId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                                <SelectAutocomplete
+                                    label="Conta"
+                                    value={field.value}
+                                    options={accountData?.getAccounts.accounts || []}
+                                    getOptionLabel={(option) => option.nickname}
+                                    getOptionValue={(option) => option.accountId}
+                                    onChange={field.onChange}
+                                    error={errors.accountId?.message}
+                                />
                             )}
                         />
                     </Grid>
@@ -221,26 +208,15 @@ const App = (props: AccountStatementProps) => {
                             control={control}
                             rules={{ required: 'Esse campo é obrigatório' }}
                             render={({ field }) => (
-                                <FormControl fullWidth size="small">
-                                    <InputLabel id="currency-label">Moeda</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="currency-label"
-                                        label="Moeda"
-                                        value={field.value || ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {currenciesData?.getCurrencies?.currencies?.map((currency: any) => (
-                                            <MenuItem key={currency?.currencyId} value={currency?.currencyId}>
-                                                {currency?.symbol}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.currencyId && (
-                                        <FormHelperText>{errors.currencyId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                                <SelectAutocomplete
+                                    label="Moeda"
+                                    value={field.value}
+                                    options={currenciesData?.getCurrencies?.currencies || []}
+                                    getOptionLabel={(option) => option.symbol}
+                                    getOptionValue={(option) => option.currencyId}
+                                    onChange={field.onChange}
+                                    error={errors.accountId?.message}
+                                />
                             )}
                         />
                     </Grid>
@@ -266,26 +242,15 @@ const App = (props: AccountStatementProps) => {
                             control={control}
                             rules={{ required: 'Esse campo é obrigatório' }}
                             render={({ field }) => (
-                                <FormControl fullWidth size="small">
-                                    <InputLabel id="category-label">Categoria</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="category-label"
-                                        value={field.value || ''}
-                                        label="Categoria"
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {categoriesData?.getCategories?.categories?.map((category: any) => (
-                                            <MenuItem key={category?.categoryId} value={category?.categoryId}>
-                                                {category?.categoryName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.categoryId && (
-                                        <FormHelperText>{errors.categoryId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                                <SelectAutocomplete
+                                    label="Categoria"
+                                    value={field.value}
+                                    options={categoriesData?.getCategories?.categories || []}
+                                    getOptionLabel={(option) => option.categoryName}
+                                    getOptionValue={(option) => option.categoryId}
+                                    onChange={field.onChange}
+                                    error={errors.accountId?.message}
+                                />
                             )}
                         />
                     </Grid>

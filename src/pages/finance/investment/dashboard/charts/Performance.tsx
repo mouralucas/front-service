@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import Line from "../../../../../components/chart/LineOld.tsx"
+import Line from "../../../../../components/chart/Line.tsx"
 import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../../services/axios/ApiUrls.tsx";
 import {toast, ToastOptions} from "react-toastify";
@@ -101,21 +101,9 @@ const App = () => {
             </div>
             <div className="row">
                 <div className="col-12">
-                    <Line
-                        id={'investment_performance_chart'}
-                        data={performance?.data}
-                        series={performance?.series}
-                        argumentField={'period'}
-                        title={"Evolução do investimento"}
-                        subtitle={"Evolução, em %, dos investimentos comparados ao CDI"}
-                        type={'spline'}
-                        toolTip={
-                            {
-                                enabled: true,
-                                shared: true,
-                                customizeTooltip: customToolTip,
-                            }
-                        }
+                    <Line 
+                        series={performance.data}
+                        xLabels={performance.xLabel}
                     />
                 </div>
             </div>

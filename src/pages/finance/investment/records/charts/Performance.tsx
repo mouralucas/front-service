@@ -1,13 +1,13 @@
-import Line from "../../../../../components/chart/LineOld.tsx"
+import Line from "../../../../../components/chart/Line.tsx";
 
 // Import this css to test tooltip style
-import '../../../../../assets/core/components/tooltip.css'
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../../services/axios/ApiUrls.tsx";
-import {GetInvestmentPerformanceResponse} from "../../../../../interfaces/FinanceRequest.tsx";
-import {toast, ToastOptions} from "react-toastify";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import { toast, ToastOptions } from "react-toastify";
+import '../../../../../assets/core/components/tooltip.css';
 import Loader from "../../../../../components/Loader.tsx";
+import { GetInvestmentPerformanceResponse } from "../../../../../interfaces/FinanceRequest.tsx";
+import { URL_FINANCE_INVESTMENT_PERFORMANCE } from "../../../../../services/axios/ApiUrls.tsx";
+import { getFinanceData } from "../../../../../services/axios/Get.tsx";
 
 interface InvestmentPerformanceProps {
     investmentId: string;
@@ -61,23 +61,11 @@ const App = (props: InvestmentPerformanceProps) => {
             {isLoading ?
                 <Loader/>
                 :
-                <Line
-                    id={'investment_performance_chart'}
-                    data={performance?.data}
-                    series={performance?.series}
-                    argumentField={'period'}
-                    title={"Evolução do investimento"}
+                <Line 
+                    series={performance.data}
+                    xLabels={performance.xLabel}
+                    title="Evolução do investimento"
                     subtitle={`Evolução, em %, dos investimentos comparados ao ${indexerName}`}
-                    type={'spline'}
-                    toolTip={
-                        {
-                            enabled: true,
-                            shared: true,
-                            zIndex: 3,
-                            // customizeTooltip: customToolTip
-                            contentRender: testTooltip
-                        }
-                    }
                 />
             }
         </>
