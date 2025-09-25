@@ -32,6 +32,7 @@ function SelectAutocomplete<T, ReturnValue extends "id" | "object" = "id">({
         options={options}
         getOptionLabel={getOptionLabel}
         value={selectedOption}
+        autoHighlight
         onChange={(_, newValue) => {
           if (!newValue) {
             onChange(null as any);

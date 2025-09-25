@@ -8,6 +8,7 @@ interface LineChartProps {
   series: any
   title?: string
   subtitle?: string
+  customAxisTooltip?: any
 }
 
 const  Chart = (props: LineChartProps): ReactElement => {
@@ -25,6 +26,8 @@ const  Chart = (props: LineChartProps): ReactElement => {
         xAxis={[{ scaleType: 'point', data: props.xLabels ?? []}]}
         yAxis={[{ width: 50 }]}
         margin={margin}
+        slots={{ tooltip: props.customAxisTooltip }}
+        slotProps={{ tooltip: { trigger: 'axis' } }}
       />
     </Box>
   );

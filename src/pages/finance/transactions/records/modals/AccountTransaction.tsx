@@ -195,8 +195,8 @@ const App = (props: AccountStatementProps) => {
                                     label="Conta"
                                     value={field.value}
                                     options={accountData?.getAccounts.accounts || []}
-                                    getOptionLabel={(option) => option.nickname}
-                                    getOptionValue={(option) => option.accountId}
+                                    getOptionLabel={(option: any) => option.nickname}
+                                    getOptionValue={(option: any) => option.accountId}
                                     onChange={(value) => {
                                         field.onChange(value);
                                         updateCurrency();
@@ -215,8 +215,8 @@ const App = (props: AccountStatementProps) => {
                                     label="Moeda"
                                     value={field.value}
                                     options={currenciesData?.getCurrencies?.currencies || []}
-                                    getOptionLabel={(option) => option.symbol}
-                                    getOptionValue={(option) => option.currencyId}
+                                    getOptionLabel={(option: any) => option.symbol}
+                                    getOptionValue={(option: any) => option.currencyId}
                                     onChange={field.onChange}
                                     error={errors.accountId?.message}
                                 />
@@ -249,8 +249,8 @@ const App = (props: AccountStatementProps) => {
                                     label="Categoria"
                                     value={field.value}
                                     options={categoriesData?.getCategories?.categories || []}
-                                    getOptionLabel={(option) => option.categoryName}
-                                    getOptionValue={(option) => option.categoryId}
+                                    getOptionLabel={(option: any) => option.categoryName}
+                                    getOptionValue={(option: any) => option.categoryId}
                                     onChange={field.onChange}
                                     error={errors.accountId?.message}
                                 />
