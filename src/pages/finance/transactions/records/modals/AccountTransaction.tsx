@@ -218,7 +218,7 @@ const App = (props: AccountStatementProps) => {
                                     getOptionLabel={(option: any) => option.symbol}
                                     getOptionValue={(option: any) => option.currencyId}
                                     onChange={field.onChange}
-                                    error={errors.accountId?.message}
+                                    error={errors.currencyId?.message}
                                 />
                             )}
                         />
@@ -252,7 +252,7 @@ const App = (props: AccountStatementProps) => {
                                     getOptionLabel={(option: any) => option.categoryName}
                                     getOptionValue={(option: any) => option.categoryId}
                                     onChange={field.onChange}
-                                    error={errors.accountId?.message}
+                                    error={errors.categoryId?.message}
                                 />
                             )}
                         />

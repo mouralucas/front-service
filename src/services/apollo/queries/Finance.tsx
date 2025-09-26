@@ -27,6 +27,19 @@ query {
     }
 }`
 
+
+export const QUERY_CREDIT_CARDS = gql`
+    query GetCreditCards($params: GetCreditCardsInput) {
+        getCreditCards(params: $params) {
+            quantity
+            creditCards {
+                creditCardId
+                nickname
+            }
+        }
+    }
+`
+
 export const QUERY_ACCOUNTS = gql`
 query GetAccounts($params: GetAccountsInput) {
     getAccounts(params: $params) {

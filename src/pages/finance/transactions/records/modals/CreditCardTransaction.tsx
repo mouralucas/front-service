@@ -1,19 +1,24 @@
-import {BaseSyntheticEvent, ReactElement, useEffect, useState} from "react";
-
-import Modal from '../../../../../components/Modal.tsx'
-import {Controller, useFieldArray, useForm} from "react-hook-form";
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {URL_CREDIT_CARD_INSTALLMENT_DUE_DATES, URL_CREDIT_CARD_TRANSACTION} from "../../../../../services/axios/ApiUrls.tsx";
-import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
-import DatePicker from "react-datepicker"
-import Select from "react-select";
-import {format, parseISO} from "date-fns";
-import {financeSubmit} from "../../../../../services/axios/Submit.tsx";
-import {toast, ToastOptions} from "react-toastify";
-import {getCategories, getCreditCards, getCurrencies} from "../../../../../services/getCommonData/Finance.tsx";
-import {CreditCardTransaction} from "../../../../../interfaces/Finance.tsx";
+import { useQuery } from "@apollo/client";
+import { Checkbox, Divider, FormControlLabel, TextField } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import React, { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { toast, ToastOptions } from "react-toastify";
 import Loader from "../../../../../components/Loader.tsx";
-import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
+import Modal from '../../../../../components/Modal.tsx';
+import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
+import { CreditCardTransaction } from "../../../../../interfaces/Finance.tsx";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
+import { QUERY_CATEGORIES, QUERY_CREDIT_CARDS, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
+import { URL_CREDIT_CARD_INSTALLMENT_DUE_DATES, URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
+import { getFinanceData } from "../../../../../services/axios/Get.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 
 interface CreditCardBillProps {
     modalState: boolean;
@@ -43,7 +48,7 @@ const DefaultCreditCardTransaction: CreditCardTransaction = {
 
     description: '',
     isInstallment: false,
-    installments: [{currentInstallment: 1, amount: 0, dueDate: format(new Date().toDateString(), 'yyyy-MM-dd')}],
+    installments: [{ currentInstallment: 1, amount: 0, dueDate: format(new Date().toDateString(), 'yyyy-MM-dd') }],
     totInstallments: 1,
     currentInstallment: 1,
     totalAmount: 0,
@@ -53,41 +58,38 @@ const DefaultCreditCardTransaction: CreditCardTransaction = {
 }
 
 const App = (props: CreditCardBillProps): ReactElement => {
-    const {handleSubmit, control, reset, formState: {isDirty, dirtyFields, errors}, getValues, watch} = useForm<CreditCardTransaction>({defaultValues: DefaultCreditCardTransaction})
+    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, watch } = useForm<CreditCardTransaction>({ defaultValues: DefaultCreditCardTransaction })
 
-    const [creditCards, setCreditCards] = useState<any[]>([])
-    const [categories, setCategories] = useState<any[]>([])
-    const [currencies, setCurrencies] = useState<any[]>([])
-    const [qtdInstallments] = useState<any[]>(Array.from({length: 12}, (_, i) => ({value: i + 1, label: i + 1})))
-
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [qtdInstallments] = useState<any[]>(Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: String(i + 1) })))
 
     const showInternationalTransaction: boolean = watch('isInternationalTransaction')
 
-    const {fields, append, remove, update} = useFieldArray({
+    const { fields, append, remove, update } = useFieldArray({
         control,
         name: "installments",
     });
 
-    const fetchTransactionData: () => Promise<void> = async () => {
-        setCreditCards(await getCreditCards());
-        setCategories(await getCategories(true));
-        setCurrencies(await getCurrencies());
+    const { data: creditCardsData, loading: creditCardsLoading } = useQuery(QUERY_CREDIT_CARDS, {
+        client: apolloFinanceClient,
+        skip: !props.modalState,
+        variables: { params: {active: true} },
+    })
 
-        setIsLoading(false);
-    };
+    const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_CATEGORIES, {
+        client: apolloFinanceClient,
+        skip: !props.modalState,
+    })
+
+    const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
+        client: apolloFinanceClient,
+        skip: !props.modalState,
+    })
+
+    const isLoading = creditCardsLoading || categoriesLoading || currenciesLoading
+    const hasData = creditCardsData && categoriesData && currenciesData
 
     useEffect(() => {
         reset(DefaultCreditCardTransaction);
-
-        if (props.modalState) {
-            fetchTransactionData().then();
-        }
-
-        if (!props.modalState) {
-            reset(DefaultCreditCardTransaction);
-        }
-
     }, [props.modalState, reset]);
 
     const updateInstallmentList = () => {
@@ -118,7 +120,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
 
                 if (totInstallment > currentLength) {
                     for (let i = currentLength; i < totInstallment; i++) {
-                        append({currentInstallment: i + 1, amount: installmentAmount, dueDate: response.dueDates.find(d => d.currentInstallment === i + 1)?.dueDate || format(new Date().toDateString(), 'yyyy-MM-dd')});
+                        append({ currentInstallment: i + 1, amount: installmentAmount, dueDate: response.dueDates.find(d => d.currentInstallment === i + 1)?.dueDate || format(new Date().toDateString(), 'yyyy-MM-dd') });
                     }
                 } else if (totInstallment < currentLength) {
                     for (let i = currentLength - 1; i >= totInstallment; i--) {
@@ -131,7 +133,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
 
     const onSubmit = (data: CreditCardTransaction, e: BaseSyntheticEvent<object> | undefined) => {
         let method;
-        let submit_data;
+        let submitData;
         if (data.transactionId !== null) {
             method = 'patch'
 
@@ -144,13 +146,14 @@ const App = (props: CreditCardBillProps): ReactElement => {
             (Object.keys(dirtyFields) as Array<keyof CreditCardTransaction>).forEach((key: keyof CreditCardTransaction) => {
                 modifiedFields[key] = currentValues[key];
             });
-            submit_data = modifiedFields
+            submitData = modifiedFields
         } else {
             method = 'post'
-            submit_data = data
+            submitData = data
         }
 
-        financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submit_data, method).then(() => {
+        console.log(submitData);
+        financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submitData, method).then(() => {
             toast.success('Transação em crédito salva com sucesso');
             reset(DefaultCreditCardTransaction);
         }).catch((err: string | ToastOptions) => {
@@ -158,348 +161,331 @@ const App = (props: CreditCardBillProps): ReactElement => {
         })
     }
 
-    const body: ReactElement = isLoading ? <Loader /> :
-        <div>
+    const body: ReactElement = isLoading || !hasData ? <Loader /> :
+        <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row mt-2">
-                    <div className="col-6">
-                        <label htmlFor="">Cartão</label>
+                <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                    <Grid size={{ sm: 12, md: 6 }} >
                         <Controller
-                            name={'creditCardId'}
+                            name="creditCardId"
                             control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
-                                <Select
-                                    key={field.value}
-                                    {...field}
-                                    options={creditCards}
-                                    value={creditCards.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => {
-                                        field.onChange(val?.value);
-                                        updateInstallmentList();
-                                    }}
-                                    placeholder={'Selecione'}
-                                    className={`${errors.creditCardId ? "input-error" : ""}`}
+                            rules={{ required: "Esse campo é obrigatório" }}
+                            render={({ field }) => {
+                                return (
+                                    <SelectAutocomplete
+                                        label="Cartão"
+                                        value={field.value}
+                                        options={creditCardsData?.getCreditCards.creditCards || []}
+                                        getOptionLabel={(option: any) => option.nickname}
+                                        getOptionValue={(option: any) => option.creditCardId}
+                                        onChange={(val: any) => {
+                                            const newVal = val ? (val.value ?? val) : null;
+                                            field.onChange(newVal);
+                                            updateInstallmentList();
+                                        }}
+                                        error={errors.creditCardId?.message}
+                                    />
+                                );
+                            }}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 6, md: 2 }} >
+                        <Controller name={'currencyId'}
+                            control={control}
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Moeda"
+                                    value={field.value}
+                                    options={currenciesData?.getCurrencies?.currencies || []}
+                                    getOptionLabel={(option: any) => option.symbol}
+                                    getOptionValue={(option: any) => option.currencyId}
+                                    onChange={field.onChange}
+                                    error={errors.currencyId?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-2">
-                        <label htmlFor=""></label>
+                    </Grid>
+                    <Grid size={{ sm: 6, md: 4 }} >
                         <Controller
-                            name="currencyId"
+                            name="totalAmount"
                             control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
-                                <Select
-                                    {...field}
-                                    options={currencies}
-                                    value={currencies.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${errors.currencyId ? "input-error" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-4">
-                        <label htmlFor="">Valor total</label>
-                        <Controller name={'totalAmount'}
-                                    control={control}
-                                    rules={{
-                                        validate: (value) => value !== 0 || "Este campo não deve ser zero",
-                                    }}
-                                    render={({field}) => (
-                                        <CurrencyInput
-                                            prefix="R$ "
-                                            value={field.value}
-                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                            onBlur={updateInstallmentList}
-                                            className={`form-control input-default ${errors.totalAmount ? "input-error" : ""}`}
-                                        />
-                                    )}
-                        />
-                    </div>
-
-                </div>
-                <div className="row">
-                    <div className="col-3">
-                        <label htmlFor="">Data compra</label>
-                        <Controller
-                            name={'transactionDate'}
-                            control={control}
-                            rules={{required: 'Esse campo é obrigatório'}}
-                            render={({field}) => (
-                                <DatePicker
-                                    selected={parseISO(field.value)}
-                                    onChange={(date) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                    }}
-                                    dateFormat="dd/MM/yyyy"
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <CurrencyInput
+                                    label="Valor"
+                                    prefix={"R$ "}
+                                    value={field.value}
                                     onBlur={updateInstallmentList}
-                                    className={`form-control input-default ${errors.transactionDate ? "input-error" : ""}`}
-                                    placeholderText="Selecione uma data"
-                                    customInput={
-                                        <DateMaskedInput
-                                            placeholder="dd/mm/aaaa"
-                                            className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
-                                        />
-                                    }
+                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-6">
-                        <label htmlFor="">Categoria</label>
-                        <Controller name={'categoryId'}
-                                    control={control}
-                                    rules={{required: 'Esse campo é obrigatório'}}
-                                    render={({field}) => (
-                                        <Select
-                                            key={field.value}
-                                            {...field}
-                                            options={categories}
-                                            value={categories.find((c: any) => c.value === field.value)}
-                                            onChange={(val: any) => field.onChange(val?.value)}
-                                            placeholder={'Selecione'}
-                                            className={`${errors.categoryId ? "input-error" : ""}`}
-                                        />
-                                    )}
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
+                        <Controller
+                            name="transactionDate"
+                            control={control}
+                            render={({ field }) => (
+                                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+                                    <DatePicker
+                                        label="Data da Transação"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) => {
+                                            const newDate = date ? date.toISOString().split("T")[0] : null;
+                                            field.onChange(newDate);
+                                            updateInstallmentList();
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            }
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
+                            )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Parcelas</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 6 }} >
+                        <Controller name={'categoryId'}
+                            control={control}
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Categoria"
+                                    value={field.value}
+                                    options={categoriesData?.getCategories?.categories || []}
+                                    getOptionLabel={(option: any) => option.categoryName}
+                                    getOptionValue={(option: any) => option.categoryId}
+                                    onChange={field.onChange}
+                                    error={errors.categoryId?.message}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'totInstallments'}
                             control={control}
-                            render={({field}) => (
-                                <Select
-                                    {...field}
-                                    options={qtdInstallments}
-                                    value={qtdInstallments.find((c: any) => c.value === field.value)}
-                                    onChange={(val: any) => {
-                                        field.onChange(val?.value);
-                                        updateInstallmentList();
-                                    }}
-                                    placeholder={'Selecione'}
+                            rules={{ required: 'Esse campo é obrigatório' }}
+                            render={({ field }) => {
+                                const selectedOption = qtdInstallments.find((o: any) => o.value === field.value) || null;
+                                return (
+                                    <SelectAutocomplete
+                                        label="Parcelas"
+                                        value={selectedOption}
+                                        options={qtdInstallments}
+                                        getOptionLabel={(option: any) => option.label}
+                                        getOptionValue={(option: any) => option.value}
+                                        onChange={(val: any) => {
+                                            const newVal = val ? (val.value ?? val) : null;
+                                            field.onChange(newVal);
+                                            updateInstallmentList();
+                                        }}
+                                        error={errors.totInstallments?.message}
+                                    />
+                                );
+                            }}
+                        />
+                    </Grid>
+
+                    <Divider />
+
+                    <Grid size={{ sm: 12, md: 12 }} >
+                        <Controller
+                            name="isInternationalTransaction"
+                            control={control}
+                            render={({ field }) => (
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            {...field}
+                                            checked={!!field.value}
+                                            size="small"
+                                        />
+                                    }
+                                    label="Compra internacional"
                                 />
                             )}
                         />
-                    </div>
-                </div>
-
-                <hr/>
-                <h4>
-                    <Controller
-                        name={"isInternationalTransaction"}
-                        control={control}
-                        render={({field}) => (
-                            <input
-                                {...field}
-                                type={'checkbox'}
-                                value={'on'}
-                                checked={field.value}
-                                // disabled={true}
-                                // className={'form-control'}
-                            />
-                        )}
-                    />
-                    Compra internacional
-                </h4>
-
-                {showInternationalTransaction && (
-                    <div>
-                        <div className="row">
-                            <div className="col-3">
-                                <label htmlFor="">Moeda original</label>
-                                <Controller
-                                    name={'transactionCurrencyId'}
+                    </Grid>
+                    {showInternationalTransaction && (
+                        <>
+                            <Grid size={{ sm: 6, md: 3 }} >
+                                <Controller name={'transactionCurrencyId'}
                                     control={control}
-                                    rules={{
-                                        required: showInternationalTransaction ? 'Campo obrigatório' : false,
-                                    }}
-                                    render={({field}) => (
-                                        <Select
-                                            {...field}
-                                            options={currencies}
-                                            value={currencies.find((c: any) => c.value === field.value)}
-                                            onChange={(val: any) => field.onChange(val?.value)}
-                                            placeholder={'Selecione'}
-                                            className={`${errors.transactionCurrencyId ? "input-error" : ""}`}
-                                        />
-                                    )}
-                                />
-                            </div>
-                            <div className="col-3">
-                                <label htmlFor="">Valor original</label>
-                                <Controller
-                                    name={'transactionAmount'}
-                                    control={control}
-                                    rules={{
-                                        validate: (value) => {
-                                            if (showInternationalTransaction) {
-                                                return value !== 0 || 'Este campo não deve ser zero';
-                                            }
-                                            return true; // Se não for uma compra internacional, o campo não precisa ser validado
-                                        },
-                                    }}
-                                    render={({field}) => (
-                                        <CurrencyInput
-                                            prefix="R$ "
+                                    rules={{ required: 'Esse campo é obrigatório' }}
+                                    render={({ field }) => (
+                                        <SelectAutocomplete
+                                            label="Moeda da compra"
                                             value={field.value}
-                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                            className={`form-control input-default ${errors.transactionAmount ? "input-error" : ""}`}
+                                            options={currenciesData?.getCurrencies?.currencies || []}
+                                            getOptionLabel={(option: any) => option.symbol}
+                                            getOptionValue={(option: any) => option.currencyId}
+                                            onChange={field.onChange}
+                                            error={errors.currencyId?.message}
                                         />
                                     )}
                                 />
-                            </div>
-                            <div className="col-3">
-                                <label htmlFor="">Dólar</label>
+                            </Grid>
+                            <Grid size={{ sm: 12, md: 12 }}> </Grid>
+                            <Grid size={{ sm: 6, md: 3 }} >
                                 <Controller
-                                    name={'dollarExchangeRate'}
+                                    name="transactionAmount"
                                     control={control}
-                                    rules={{
-                                        validate: (value) => {
-                                            if (showInternationalTransaction) {
-                                                return value !== 0 || 'Este campo não deve ser zero';
-                                            }
-                                            return true;
-                                        },
-                                    }}
-                                    render={({field}) => (
+                                    rules={{ required: "Campo obrigatório" }}
+                                    render={({ field }) => (
                                         <CurrencyInput
-                                            prefix="R$ "
-                                            value={field.value}
-                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                            className={`form-control input-default ${errors.dollarExchangeRate ? "input-error" : ""}`}
-                                        />
-                                    )}
-                                />
-                            </div>
-                            <div className="col-3">
-                                <label htmlFor="">Moéda para Dólar</label>
-                                <Controller
-                                    name={'currencyDollarExchangeRate'}
-                                    control={control}
-                                    rules={{
-                                        validate: (value) => {
-                                            if (showInternationalTransaction) {
-                                                return value !== 0 || 'Este campo não deve ser zero';
-                                            }
-                                            return true; // Se não for uma compra internacional, o campo não precisa ser validado
-                                        },
-                                    }}
-                                    render={({field}) => (
-                                        <CurrencyInput
-                                            prefix="R$ "
-                                            value={field.value}
-                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                            className={`form-control input-default ${errors.currencyDollarExchangeRate ? "input-error" : ""}`}
-                                        />
-                                    )}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col-3">
-                                <label htmlFor="">Total de imposto</label>
-                                <Controller
-                                    name={'totalTax'}
-                                    control={control}
-                                    render={({field}) => (
-                                        <CurrencyInput
+                                            label="Valor original da compra"
                                             prefix={"R$ "}
                                             value={field.value}
                                             onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                            className={`form-control input-default`}
                                         />
                                     )}
                                 />
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                <hr/>
-                <h4>Parcelas</h4>
-                {/*// TODO: only show this block if it is a installment purchase, otherwise just send the basic list with one element*/}
-                {fields.map((field, index) => (
-                    <div className="row" key={field.id}>
-                        <div className={'col-3'}>
-                            <label>Nº parcela</label>
-                            <Controller
-                                name={`installments.${index}.currentInstallment`}
-                                control={control}
-                                render={({field}) => (
-                                    <input type={'text'}
-                                           {...field}
-                                           disabled={true}
-                                           className={'form-control'}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="col-3">
-                            <label htmlFor="">Valor</label>
-                            <Controller
-                                name={`installments.${index}.amount`}
-                                control={control}
-                                render={({field}) => (
-                                    <CurrencyInput
-                                        prefix="R$ "
-                                        value={field.value}
-                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                        className={`form-control input-default ${errors.totalAmount ? "input-error" : ""}`}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="col-3">
-                            <label htmlFor="">Pagamento</label>
-                            <Controller
-                                name={`installments.${index}.dueDate`}
-                                control={control}
-                                render={({field}) => (
-                                    <DatePicker
-                                        selected={parseISO(field.value)}
-                                        onChange={(date) => {
-                                            field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                        }}
-                                        dateFormat="dd/MM/yyyy"
-                                        className={'form-control'}
-                                    />
-                                )}
-                            />
-                        </div>
-
-                    </div>
-                ))}
-
-                <div className="row">
-                    <div className="col-12">
-                        <label htmlFor="">Descrição</label>
-                        <Controller name={'description'}
+                            </Grid>
+                            <Grid size={{ sm: 6, md: 3 }} >
+                                <Controller
+                                    name="dollarExchangeRate"
                                     control={control}
-                                    render={({field}) => (
-                                        <textarea
-                                            {...field}
-                                            rows={5}
-                                            className='form-control'
+                                    rules={{ required: "Campo obrigatório" }}
+                                    render={({ field }) => (
+                                        <CurrencyInput
+                                            label="Valor do dólar"
+                                            prefix={"R$ "}
+                                            value={field.value}
+                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
                                         />
-                                    )}/>
-                    </div>
-                </div>
+                                    )}
+                                />
+                            </Grid>
+                            <Grid size={{ sm: 6, md: 3 }} >
+                                <Controller
+                                    name="currencyDollarExchangeRate"
+                                    control={control}
+                                    rules={{ required: "Campo obrigatório" }}
+                                    render={({ field }) => (
+                                        <CurrencyInput
+                                            label="Valor dólar/moeda"
+                                            prefix={"R$ "}
+                                            value={field.value}
+                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid size={{ sm: 6, md: 3 }} >
+                                <Controller
+                                    name="totalTax"
+                                    control={control}
+                                    rules={{ required: "Campo obrigatório" }}
+                                    render={({ field }) => (
+                                        <CurrencyInput
+                                            label="Total de imposto"
+                                            prefix={"R$ "}
+                                            value={field.value}
+                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                        </>
+                    )}
+                    {fields.map((field, index) => (
+                        <React.Fragment key={field.id}>
+                            <Grid size={{ sm: 6, md: 3 }} >
+                                <Controller
+                                    name={`installments.${index}.currentInstallment`}
+                                    control={control}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            label="Nº parcela"
+                                            fullWidth
+                                            size="small"
+                                            disabled
+                                        />
+                                    )}
+                                />
+                            </Grid>
+
+                            <Grid size={{ sm: 6, md: 3 }} >
+                                <Controller
+                                    name={`installments.${index}.amount`}
+                                    control={control}
+                                    rules={{ required: "Campo obrigatório" }}
+                                    render={({ field }) => (
+                                        <CurrencyInput
+                                            label="Valor da parcela"
+                                            prefix={"R$ "}
+                                            value={field.value}
+                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+
+
+                            <Grid size={{ sm: 6, md: 3 }} >
+                                <Controller
+                                    name={`installments.${index}.dueDate`}
+                                    control={control}
+                                    render={({ field }) => (
+                                        <LocalizationProvider
+                                            dateAdapter={AdapterDateFns}
+                                            adapterLocale={ptBR}
+                                        >
+                                            <DatePicker
+                                                label="Data do Pagamento"
+                                                value={field.value ? new Date(field.value + "T00:00") : null}
+                                                onChange={(date) =>
+                                                    field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                                }
+                                                slotProps={{
+                                                    textField: {
+                                                        fullWidth: true,
+                                                        size: "small",
+                                                    },
+                                                }}
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </LocalizationProvider>
+                                    )}
+                                />
+                            </Grid>
+                            <Grid size={{ sm: 6, md: 3 }} ></Grid>
+                        </React.Fragment>
+                    ))}
+                    <Grid size={{ sm: 12, md: 12 }} >
+                        <Controller
+                            name={"description"}
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Descrição"
+                                    multiline
+                                    minRows={4}
+                                    fullWidth
+                                    size="small"
+                                />
+                            )}
+                        />
+                    </Grid>
+                </Grid>
             </form>
-        </div>
+        </>
 
     return (
         <Modal showModal={props.modalState}
-               hideModal={props.hideModal}
-               title={'Transação'}
-               body={body}
-               actionModal={handleSubmit(onSubmit)}
-               disableAction={!isDirty}
-               size={'modal-md'}
+            hideModal={props.hideModal}
+            title={'Transação'}
+            body={body}
+            actionModal={handleSubmit(onSubmit)}
+            disableAction={!isDirty}
+            size={'modal-md'}
         />
     )
 }
