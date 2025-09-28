@@ -16,20 +16,12 @@ import SelectAutocomplete from "../../../../../components/form/SelectAutocomplet
 import { CreditCardTransaction } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_CATEGORIES, QUERY_CREDIT_CARDS, QUERY_CURRENCY, QUERY_INSTALLMENT_DUE_DATE } from "../../../../../services/apollo/queries/Finance.tsx";
-import { URL_CREDIT_CARD_INSTALLMENT_DUE_DATES, URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
-import { getFinanceData } from "../../../../../services/axios/Get.tsx";
+import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 
 interface CreditCardBillProps {
     modalState: boolean;
     hideModal: any;
-}
-
-interface GetDueDatesResponse {
-    dueDates: [{
-        currentInstallment: number;
-        dueDate: string;
-    }];
 }
 
 const DefaultCreditCardTransaction: CreditCardTransaction = {
@@ -118,7 +110,6 @@ const App = (props: CreditCardBillProps): ReactElement => {
             });
 
             const dueDates = data?.getCreditCardInstallmentDueDates.dueDates ?? [];
-            console.log(dueDates);
 
             fields.forEach((_, index) => {
                 const dueDate =
@@ -413,8 +404,14 @@ const App = (props: CreditCardBillProps): ReactElement => {
                     )}
 
                     {loadingIntallmentDueDate ? (
-                        <Box display="flex" justifyContent="center" alignItems="center" py={3}>
-                            <CircularProgress size={24} />
+                        <Box
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            width="100%"
+                            py={4}
+                        >
+                            <CircularProgress size={30} />
                         </Box>
                     ) : (
                         fields.map((field, index) => (
