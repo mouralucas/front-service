@@ -1,5 +1,5 @@
-import { useQuery } from "@apollo/client";
-import { Checkbox, Divider, FormControlLabel, TextField } from "@mui/material";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { Box, Checkbox, CircularProgress, Divider, FormControlLabel, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -15,7 +15,7 @@ import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import { CreditCardTransaction } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_CATEGORIES, QUERY_CREDIT_CARDS, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
+import { QUERY_CATEGORIES, QUERY_CREDIT_CARDS, QUERY_CURRENCY, QUERY_INSTALLMENT_DUE_DATE } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_CREDIT_CARD_INSTALLMENT_DUE_DATES, URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import { getFinanceData } from "../../../../../services/axios/Get.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
@@ -72,7 +72,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
     const { data: creditCardsData, loading: creditCardsLoading } = useQuery(QUERY_CREDIT_CARDS, {
         client: apolloFinanceClient,
         skip: !props.modalState,
-        variables: { params: {active: true} },
+        variables: { params: { active: true } },
     })
 
     const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_CATEGORIES, {
@@ -85,6 +85,11 @@ const App = (props: CreditCardBillProps): ReactElement => {
         skip: !props.modalState,
     })
 
+    const [fetchInstallmentDueDates, { loading: loadingIntallmentDueDate }] = useLazyQuery(QUERY_INSTALLMENT_DUE_DATE, {
+        client: apolloFinanceClient,
+        fetchPolicy: "no-cache",
+    });
+
     const isLoading = creditCardsLoading || categoriesLoading || currenciesLoading
     const hasData = creditCardsData && categoriesData && currenciesData
 
@@ -92,44 +97,58 @@ const App = (props: CreditCardBillProps): ReactElement => {
         reset(DefaultCreditCardTransaction);
     }, [props.modalState, reset]);
 
-    const updateInstallmentList = () => {
-        const totInstallment: number = getValues('totInstallments');
-        const totAmount: number = getValues('totalAmount')
-        const creditCardId: string = getValues('creditCardId')
-        const transactionDate: string = getValues('transactionDate')
+    const updateInstallmentList = async () => {
+        const totInstallments: number = getValues("totInstallments");
+        const totAmount: number = getValues("totalAmount");
+        const creditCardId: string = getValues("creditCardId");
+        const transactionDate: string = getValues("transactionDate");
 
         if (creditCardId !== "" && totAmount !== 0) {
-            // The minimum information needed to calculate the due date is the credit card.
-            const installmentAmount = totAmount / totInstallment
-
+            const installmentAmount = totAmount / totInstallments;
             const currentLength = fields.length;
 
-            getFinanceData(URL_CREDIT_CARD_INSTALLMENT_DUE_DATES, {
-                creditCardId: creditCardId,
-                totInstallments: totInstallment,
-                transactionDate: transactionDate
-            }).then((response: GetDueDatesResponse) => {
-                fields.forEach((_, index) => {
-                    const dueDate = response.dueDates.find(d => d.currentInstallment === index + 1)?.dueDate || format(new Date().toDateString(), 'yyyy-MM-dd');
-                    update(index, {
-                        ...fields[index],
-                        amount: installmentAmount,
-                        dueDate: dueDate
-                    });
-                });
-
-                if (totInstallment > currentLength) {
-                    for (let i = currentLength; i < totInstallment; i++) {
-                        append({ currentInstallment: i + 1, amount: installmentAmount, dueDate: response.dueDates.find(d => d.currentInstallment === i + 1)?.dueDate || format(new Date().toDateString(), 'yyyy-MM-dd') });
+            const { data } = await fetchInstallmentDueDates({
+                variables: {
+                    params: {
+                        creditCardId,
+                        totInstallments,
+                        transactionDate
                     }
-                } else if (totInstallment < currentLength) {
-                    for (let i = currentLength - 1; i >= totInstallment; i--) {
-                        remove(i);
-                    }
-                }
+                },
             });
+
+            const dueDates = data?.getCreditCardInstallmentDueDates.dueDates ?? [];
+            console.log(dueDates);
+
+            fields.forEach((_, index) => {
+                const dueDate =
+                    dueDates.find((d: any) => d.currentInstallment === index + 1)?.dueDate ||
+                    format(new Date().toDateString(), "yyyy-MM-dd");
+
+                update(index, {
+                    ...fields[index],
+                    amount: installmentAmount,
+                    dueDate,
+                });
+            });
+
+            if (totInstallments > currentLength) {
+                for (let i = currentLength; i < totInstallments; i++) {
+                    append({
+                        currentInstallment: i + 1,
+                        amount: installmentAmount,
+                        dueDate:
+                            dueDates.find((d: any) => d.currentInstallment === i + 1)?.dueDate ||
+                            format(new Date().toDateString(), "yyyy-MM-dd"),
+                    });
+                }
+            } else if (totInstallments < currentLength) {
+                for (let i = currentLength - 1; i >= totInstallments; i--) {
+                    remove(i);
+                }
+            }
         }
-    }
+    };
 
     const onSubmit = (data: CreditCardTransaction, e: BaseSyntheticEvent<object> | undefined) => {
         let method;
@@ -152,7 +171,6 @@ const App = (props: CreditCardBillProps): ReactElement => {
             submitData = data
         }
 
-        console.log(submitData);
         financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submitData, method).then(() => {
             toast.success('Transação em crédito salva com sucesso');
             reset(DefaultCreditCardTransaction);
@@ -393,71 +411,80 @@ const App = (props: CreditCardBillProps): ReactElement => {
                             </Grid>
                         </>
                     )}
-                    {fields.map((field, index) => (
-                        <React.Fragment key={field.id}>
-                            <Grid size={{ sm: 6, md: 3 }} >
-                                <Controller
-                                    name={`installments.${index}.currentInstallment`}
-                                    control={control}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            label="Nº parcela"
-                                            fullWidth
-                                            size="small"
-                                            disabled
-                                        />
-                                    )}
-                                />
-                            </Grid>
 
-                            <Grid size={{ sm: 6, md: 3 }} >
-                                <Controller
-                                    name={`installments.${index}.amount`}
-                                    control={control}
-                                    rules={{ required: "Campo obrigatório" }}
-                                    render={({ field }) => (
-                                        <CurrencyInput
-                                            label="Valor da parcela"
-                                            prefix={"R$ "}
-                                            value={field.value}
-                                            onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                        />
-                                    )}
-                                />
-                            </Grid>
-
-
-                            <Grid size={{ sm: 6, md: 3 }} >
-                                <Controller
-                                    name={`installments.${index}.dueDate`}
-                                    control={control}
-                                    render={({ field }) => (
-                                        <LocalizationProvider
-                                            dateAdapter={AdapterDateFns}
-                                            adapterLocale={ptBR}
-                                        >
-                                            <DatePicker
-                                                label="Data do Pagamento"
-                                                value={field.value ? new Date(field.value + "T00:00") : null}
-                                                onChange={(date) =>
-                                                    field.onChange(date ? date.toISOString().split("T")[0] : null)
-                                                }
-                                                slotProps={{
-                                                    textField: {
-                                                        fullWidth: true,
-                                                        size: "small",
-                                                    },
-                                                }}
-                                                sx={{ width: "100%" }}
+                    {loadingIntallmentDueDate ? (
+                        <Box display="flex" justifyContent="center" alignItems="center" py={3}>
+                            <CircularProgress size={24} />
+                        </Box>
+                    ) : (
+                        fields.map((field, index) => (
+                            <React.Fragment key={field.id}>
+                                <Grid size={{ sm: 6, md: 3 }}>
+                                    <Controller
+                                        name={`installments.${index}.currentInstallment`}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <TextField
+                                                {...field}
+                                                label="Nº parcela"
+                                                fullWidth
+                                                size="small"
+                                                disabled
                                             />
-                                        </LocalizationProvider>
-                                    )}
-                                />
-                            </Grid>
-                            <Grid size={{ sm: 6, md: 3 }} ></Grid>
-                        </React.Fragment>
-                    ))}
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid size={{ sm: 6, md: 3 }}>
+                                    <Controller
+                                        name={`installments.${index}.amount`}
+                                        control={control}
+                                        rules={{ required: "Campo obrigatório" }}
+                                        render={({ field }) => (
+                                            <CurrencyInput
+                                                label="Valor da parcela"
+                                                prefix={"R$ "}
+                                                value={field.value}
+                                                onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                            />
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid size={{ sm: 6, md: 3 }}>
+                                    <Controller
+                                        name={`installments.${index}.dueDate`}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <LocalizationProvider
+                                                dateAdapter={AdapterDateFns}
+                                                adapterLocale={ptBR}
+                                            >
+                                                <DatePicker
+                                                    label="Data do Pagamento"
+                                                    value={field.value ? new Date(field.value + "T00:00") : null}
+                                                    onChange={(date) =>
+                                                        field.onChange(
+                                                            date ? date.toISOString().split("T")[0] : null
+                                                        )
+                                                    }
+                                                    slotProps={{
+                                                        textField: {
+                                                            fullWidth: true,
+                                                            size: "small",
+                                                        },
+                                                    }}
+                                                    sx={{ width: "100%" }}
+                                                />
+                                            </LocalizationProvider>
+                                        )}
+                                    />
+                                </Grid>
+
+                                <Grid size={{ sm: 6, md: 3 }}></Grid>
+                            </React.Fragment>
+                        ))
+                    )}
                     <Grid size={{ sm: 12, md: 12 }} >
                         <Controller
                             name={"description"}

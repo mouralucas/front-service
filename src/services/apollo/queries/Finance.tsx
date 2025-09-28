@@ -90,3 +90,14 @@ query GetAccountTransactions($params: GetAccountTransactionInput) {
     }
 }
 `
+
+export const QUERY_INSTALLMENT_DUE_DATE = gql`
+    query GetInstallmentDueDates($params: GetInstallmentsDueDatesInput) {
+        getCreditCardInstallmentDueDates(params: $params) {
+            dueDates {
+                currentInstallment
+                dueDate
+            }
+        }
+    }
+`
