@@ -1,13 +1,17 @@
-import {InvestmentObjective} from "../../../../../interfaces/Finance.tsx";
-import {Controller, useForm} from "react-hook-form";
-import {BaseSyntheticEvent, useEffect} from "react";
-import DatePicker from "react-datepicker";
-import {format, parseISO} from "date-fns";
+import { InvestmentObjective } from "../../../../../interfaces/Finance.tsx";
+import { Controller, useForm } from "react-hook-form";
+import { BaseSyntheticEvent, useEffect } from "react";
+import { format, parseISO } from "date-fns";
 import Modal from "../../../../../components/Modal.tsx";
-import {financeSubmit} from "../../../../../services/axios/Submit.tsx";
-import {URL_FINANCE_INVESTMENT_OBJECTIVE} from "../../../../../services/axios/ApiUrls.tsx";
-import {toast} from "react-toastify";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { URL_FINANCE_INVESTMENT_OBJECTIVE } from "../../../../../services/axios/ApiUrls.tsx";
+import { toast } from "react-toastify";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
+import { Grid, TextField } from "@mui/material";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ptBR } from "date-fns/locale";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 interface ObjectivesProps {
     modalState: boolean;
@@ -24,7 +28,7 @@ const DefaultObjective: InvestmentObjective = {
 }
 
 const App = (props: ObjectivesProps) => {
-    const {handleSubmit, control, reset, formState: {errors, dirtyFields}, getValues} = useForm<InvestmentObjective>({defaultValues: DefaultObjective});
+    const { handleSubmit, control, reset, formState: { errors, dirtyFields }, getValues } = useForm<InvestmentObjective>({ defaultValues: DefaultObjective });
 
     useEffect(() => {
         if (props.modalState && props.objective) {
@@ -69,78 +73,85 @@ const App = (props: ObjectivesProps) => {
 
     const body =
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="row mt-2">
-                <div className="col-4">
-                    <label htmlFor="">Título</label>
+            <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                <Grid size={{ sm: 12, md: 12 }} >
                     <Controller
-                        name={'title'}
+                        name="title"
                         control={control}
-                        rules={{required: "Este campo é obrigatório"}}
-                        render={({field}) => (
-                            <input
-                                type="text"
+                        render={({ field }) => (
+                            <TextField
                                 {...field}
-                                className={`form-control input-default ${errors.title ? "input-error" : ""}`}
+                                label="Título"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                error={!!errors.title}
+                                helperText={errors.title?.message}
                             />
                         )}
                     />
-                </div>
-                <div className="col-5">
-                    <label htmlFor="">Valor</label>
+                </Grid>
+                <Grid size={{ sm: 6, md: 6 }} >
                     <Controller
-                        name={'amount'}
+                        name="amount"
                         control={control}
-                        rules={{
-                            validate: (value) => value !== 0 || "Este campo não deve ser zero",
-                        }}
-                        render={({field}) => (
+                        rules={{ required: "Campo obrigatório" }}
+                        render={({ field }) => (
                             <CurrencyInput
-                                prefix={'R$ '}
+                                label="Valor"
+                                prefix={"R$ "}
                                 value={field.value}
-                                onValueChange={(values) => field.onChange(values.rawValue)}
-                                className={`form-control input-default ${errors.amount ? 'input-error' : ''}`}
+                                onValueChange={(values: any) => field.onChange(values.rawValue)}
                             />
                         )}
                     />
-                </div>
-                <div className="col-3">
-                    <label htmlFor="">Data</label>
+                </Grid>
+                <Grid size={{ sm: 6, md: 6 }} >
                     <Controller
-                        name={'estimatedDeadline'}
+                        name="estimatedDeadline"
                         control={control}
-                        rules={{required: 'Esse campo é obrigatório'}}
-                        render={({field}) => (
-                            <DatePicker
-                                selected={parseISO(field.value)}
-                                onChange={(date: Date | null) => {
-                                    field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                }}
-                                dateFormat="dd/MM/yyyy"
-                                className={`form-control ${errors.estimatedDeadline} ? 'input-error' : ''`}
-                                placeholderText="Selecione uma data"
-                            />
+                        render={({ field }) => (
+                            <LocalizationProvider
+                                dateAdapter={AdapterDateFns}
+                                adapterLocale={ptBR}
+                            >
+                                <DatePicker
+                                    label="Data da Transação"
+                                    value={field.value ? new Date(field.value + "T00:00") : null}
+                                    onChange={(date) =>
+                                        field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                    }
+                                    slotProps={{
+                                        textField: {
+                                            fullWidth: true,
+                                            size: "small",
+                                        },
+                                    }}
+                                    sx={{ width: "100%" }}
+                                />
+                            </LocalizationProvider>
                         )}
                     />
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-12">
-                    <label htmlFor="">Descrição</label>
+                </Grid>
+                <Grid size={{ sm: 12, md: 12 }}>
                     <Controller
-                        name={'description'}
+                        name="description"
                         control={control}
-                        render={({field}) => (
-                            <textarea
+                        render={({ field }) => (
+                            <TextField
                                 {...field}
-                                value={field.value ?? ''}
-                                onChange={field.onChange}
-                                rows={5}
-                                className='form-control'
+                                label="Descrição"
+                                multiline
+                                rows={4}
+                                variant="outlined"
+                                fullWidth
+                                error={!!errors.description}
+                                helperText={errors.description?.message}
                             />
                         )}
                     />
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         </form>
 
     return (
