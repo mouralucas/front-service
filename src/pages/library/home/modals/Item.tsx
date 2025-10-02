@@ -15,6 +15,7 @@ import { CreateItemInput } from '../../../../interfaces/Library.tsx';
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_ITEM_MUTATION, UPDATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_LANGUAGES, QUERY_PUBLISHERS, QUERY_SERIES, QUERY_STATUS } from "../../../../services/apollo/queries/Library.tsx";
+import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 
 export interface ItemModalProps {
     item: CreateItemInput | undefined | null
@@ -85,80 +86,82 @@ const itemFormats = [
 
 
 const App = (props: ItemModalProps) => {
-    const {handleSubmit, control, reset, formState: {isDirty, errors, dirtyFields}, getValues} = useForm<CreateItemInput>({defaultValues: DefaultItem});
+    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
 
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
-        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        onError: (error) => { toast.error(`Erro: ${error.message}`); },
         variables: { params: {} },
         skip: !props.modalState
     })
 
     const { data: statusesData, loading: statusesLoading } = useQuery(QUERY_STATUS, {
         client: apolloLibraryClient,
-        onError: (error) => {toast.error(`Erro: ${error.message}`);},
-        variables: { params: {
-            statusType: "ITEM.STATUS"
-        } },
+        onError: (error) => { toast.error(`Erro: ${error.message}`); },
+        variables: {
+            params: {
+                statusType: "ITEM.STATUS"
+            }
+        },
         skip: !props.modalState
     })
 
     const { data: seriesData, loading: seriesLoading } = useQuery(QUERY_SERIES, {
         client: apolloLibraryClient,
-        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        onError: (error) => { toast.error(`Erro: ${error.message}`); },
         variables: { params: {} },
         skip: !props.modalState
     })
 
     const { data: collectionsData, loading: collectionsLoading } = useQuery(QUERY_COLLECTION, {
         client: apolloLibraryClient,
-        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        onError: (error) => { toast.error(`Erro: ${error.message}`); },
         variables: { params: {} },
         skip: !props.modalState
     })
 
     const { data: publishersData, loading: publishersLoading } = useQuery(QUERY_PUBLISHERS, {
         client: apolloLibraryClient,
-        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        onError: (error) => { toast.error(`Erro: ${error.message}`); },
         variables: { params: {} },
         skip: !props.modalState
     })
 
     const { data: languageData, loading: languageLoading } = useQuery(QUERY_LANGUAGES, {
         client: apolloLibraryClient,
-        onError: (error) => {toast.error(`Erro: ${error.message}`);},
+        onError: (error) => { toast.error(`Erro: ${error.message}`); },
         skip: !props.modalState
     })
 
     const isLoading = authorsLoading || statusesLoading || seriesLoading || collectionsLoading || publishersLoading || languageLoading
     const hasData = authorsData && statusesData && seriesData && collectionsData && publishersData && languageData
 
-    
+
     const [createItem] = useMutation(CREATE_ITEM_MUTATION, {
-            client: apolloLibraryClient,
-            onCompleted: (data) => {
-                toast.success(
-                    `Item "${data.createItem.item.title}" criado com sucesso`
-                );
-                props.hideItemModal();
-            },
-            onError: (error) => {
-                toast.error(`Erro: ${error.message}`);
-            },
-        })
+        client: apolloLibraryClient,
+        onCompleted: (data) => {
+            toast.success(
+                `Item "${data.createItem.item.title}" criado com sucesso`
+            );
+            props.hideItemModal();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
 
     const [updateItem] = useMutation(UPDATE_ITEM_MUTATION, {
-            client: apolloLibraryClient,
-            onCompleted: (data) => {
-                toast.success(
-                    `Item "${data.updateItem.item.title}" atualizado com sucesso`
-                );
-                props.hideItemModal();
-            },
-            onError: (error) => {
-                toast.error(`Erro: ${error.message}`);
-            },
-        })
+        client: apolloLibraryClient,
+        onCompleted: (data) => {
+            toast.success(
+                `Item "${data.updateItem.item.title}" atualizado com sucesso`
+            );
+            props.hideItemModal();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
 
     useEffect(() => {
         // Set initial values
@@ -185,7 +188,7 @@ const App = (props: ItemModalProps) => {
                 (Object.keys(dirtyFields) as Array<keyof CreateItemInput>).forEach((key: keyof CreateItemInput) => {
                     modifiedFields[key] = currentValues[key];
                 });
-                
+
                 console.log(modifiedFields);
                 console.log(itemFormData)
 
@@ -194,7 +197,7 @@ const App = (props: ItemModalProps) => {
                         input: modifiedFields
                     }
                 })
-            }catch (error) {
+            } catch (error) {
                 console.error("Erro ao atualizar o item " + error)
             }
         } else {
@@ -214,98 +217,74 @@ const App = (props: ItemModalProps) => {
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
-                    <Grid size={{ sm: 12, md: 4}} >
+                    <Grid size={{ sm: 12, md: 4 }} >
                         <Controller
                             name={'mainAuthorId'}
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
-                            render={({field}) => (
-                                <FormControl fullWidth size="small" error={!!errors.mainAuthorId} >
-                                    <InputLabel id="main-author-label">Autor</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="main-author-label"
-                                        label="Autor"
-                                        value={field.value ?? ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {authorsData?.getAuthors?.authors?.map((author: any) => (
-                                            <MenuItem key={author.authorId} value={author.authorId}>
-                                                {author.authorName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.mainAuthorId && (
-                                        <FormHelperText>{errors.mainAuthorId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Autor"
+                                    value={field.value}
+                                    options={authorsData?.getAuthors?.authors || []}
+                                    getOptionLabel={(option: any) => option.authorName}
+                                    getOptionValue={(option: any) => option.authorId}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.mainAuthorId?.message}
+                                />
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4}} >
+                    <Grid size={{ sm: 12, md: 4 }} >
                         <Controller
                             name={'authorsId'}
                             control={control}
-                            render={({field}) => (
-                                <FormControl fullWidth size="small">
-                                    <InputLabel id="authors-label">Outros autores</InputLabel>
-                                    <Select
-                                        {...field}
-                                        multiple
-                                        labelId="authors-label"
-                                        label="Outros Autores"
-                                        value={field.value ?? []}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {authorsData?.getAuthors?.authors?.map((author: any) => (
-                                            <MenuItem key={author.authorId} value={author.authorId}>
-                                                {author.authorName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Outros autores"
+                                    value={Array.isArray(field.value) ? field.value : []}
+                                    multiple
+                                    options={authorsData?.getAuthors?.authors || []}
+                                    getOptionLabel={(option: any) => option.authorName}
+                                    getOptionValue={(option: any) => option.authorId}
+                                    onChange={(value) => {
+                                        field.onChange(Array.isArray(value) ? value : []);
+                                    }}
+                                    error={errors.authorsId?.message}
+                                />
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 6, md: 2}} >
+                    <Grid size={{ sm: 6, md: 2 }} >
                         <Controller
                             name={'lastStatusId'}
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
-                            render={({field}) => (
-                                <FormControl fullWidth size="small" error={!!errors.lastStatusId} >
-                                    <InputLabel id="last_status-label">Status</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="last_status-label"
-                                        label="Status"
-                                        value={field.value || ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {statusesData?.getStatus?.statuses.map((author: any) => (
-                                            <MenuItem key={author.statusId} value={author.statusId}>
-                                                {author.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.lastStatusId && (
-                                        <FormHelperText>{errors.lastStatusId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Status"
+                                    value={field.value}
+                                    options={statusesData?.getStatus?.statuses || []}
+                                    getOptionLabel={(option: any) => option.name}
+                                    getOptionValue={(option: any) => option.statusId}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.lastStatusId?.message}
+                                />
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 6, md: 2}} >
+                    <Grid size={{ sm: 6, md: 2 }} >
                         <Controller
                             name="lastStatusDate"
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
                                 <LocalizationProvider
-                                    dateAdapter={AdapterDateFns}    
+                                    dateAdapter={AdapterDateFns}
                                     adapterLocale={ptBR}
                                 >
                                     <DatePicker
@@ -319,7 +298,7 @@ const App = (props: ItemModalProps) => {
                                                 fullWidth: true,
                                                 size: "small",
                                                 error: !!errors.lastStatusDate,
-                                                helperText: errors.lastStatusDate?.message, 
+                                                helperText: errors.lastStatusDate?.message,
                                             },
                                         }}
                                         sx={{ width: "100%" }}
@@ -415,32 +394,23 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3}} >
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'itemTypeId'}
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
-                            render={({field}) => (
-                                <FormControl fullWidth size="small" error={!!errors.itemTypeId} >
-                                    <InputLabel id="item-type-label">Tipo</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="item-type-label"
-                                        label="Tipo"
-                                        value={field.value || ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {itemTypes.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.itemTypeId && (
-                                        <FormHelperText>{errors.itemTypeId?.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Tipo"
+                                    value={field.value}
+                                    options={itemTypes || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.itemTypeId?.message}
+                                />
                             )}
                         />
                     </Grid>
@@ -499,13 +469,13 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 6, md: 2}} >
+                    <Grid size={{ sm: 6, md: 2 }} >
                         <Controller
                             name="publicationDate"
                             control={control}
                             render={({ field }) => (
                                 <LocalizationProvider
-                                    dateAdapter={AdapterDateFns}    
+                                    dateAdapter={AdapterDateFns}
                                     adapterLocale={ptBR}
                                 >
                                     <DatePicker
@@ -526,13 +496,13 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 6, md: 2}} >
+                    <Grid size={{ sm: 6, md: 2 }} >
                         <Controller
                             name="originalPublicationDate"
                             control={control}
                             render={({ field }) => (
                                 <LocalizationProvider
-                                    dateAdapter={AdapterDateFns}    
+                                    dateAdapter={AdapterDateFns}
                                     adapterLocale={ptBR}
                                 >
                                     <DatePicker
@@ -553,182 +523,133 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4}} >
+                    <Grid size={{ sm: 12, md: 4 }} >
                         <Controller
                             name={'serieId'}
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
-                            render={({field}) => (
-                                <FormControl fullWidth size="small" error={!!errors.serieId} >
-                                    <InputLabel id="serie-label">Série</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="serie-label"
-                                        label="Série"
-                                        value={field.value ?? ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {seriesData?.getSeries?.series.map((serie: any) => (
-                                            <MenuItem key={serie.serieId} value={serie.serieId}>
-                                                {serie.serieName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.serieId && (
-                                        <FormHelperText>{errors.serieId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Série"
+                                    value={field.value}
+                                    options={seriesData?.getSeries?.series || []}
+                                    getOptionLabel={(option: any) => option.serieName}
+                                    getOptionValue={(option: any) => option.serieId}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.serieId?.message}
+                                />
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4}} >
+                    <Grid size={{ sm: 12, md: 4 }} >
                         <Controller
                             name={'collectionId'}
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
-                            render={({field}) => (
-                                <FormControl fullWidth size="small" error={!!errors.collectionId} >
-                                    <InputLabel id="collections-label">Coleção</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="collection-label"
-                                        label="Coleção"
-                                        value={Number(field.value) ?? ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {collectionsData?.getCollections?.collections.map((collection: any) => (
-                                            <MenuItem key={collection.collectionId} value={collection.collectionId}>
-                                                {collection.collectionName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.collectionId && (
-                                        <FormHelperText>{errors.collectionId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Coleção"
+                                    value={field.value}
+                                    options={collectionsData?.getCollections?.collections || []}
+                                    getOptionLabel={(option: any) => option.collectionName}
+                                    getOptionValue={(option: any) => option.collectionId}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.collectionId?.message}
+                                />
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4}} >
+                    <Grid size={{ sm: 12, md: 4 }} >
                         <Controller
                             name={'publisherId'}
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
-                            render={({field}) => (
-                                <FormControl fullWidth size="small" error={!!errors.publisherId} >
-                                    <InputLabel id="publishers-label">Editora</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="publishers-label"
-                                        label="Editora"
-                                        value={field.value ?? ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {publishersData?.getPublishers?.publishers.map((publisher: any) => (
-                                            <MenuItem key={publisher.publisherId} value={publisher.publisherId}>
-                                                {publisher.publisherName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.publisherId && (
-                                        <FormHelperText>{errors.publisherId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Editora"
+                                    value={field.value}
+                                    options={publishersData?.getPublishers?.publishers || []}
+                                    getOptionLabel={(option: any) => option.publisherName}
+                                    getOptionValue={(option: any) => option.publisherId}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.publisherId?.message}
+                                />
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4}} >
+                    <Grid size={{ sm: 12, md: 4 }} >
                         <Controller
                             name={'formatId'}
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
-                            render={({field}) => (
-                                <FormControl 
-                                fullWidth
-                                 size="small"
-                                 error={!!errors.formatId} 
-                                 >
-                                    <InputLabel id="format-label">Formato</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="format-label"
-                                        label="Formato"
-                                        value={field.value || ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {itemFormats.map((author: any) => (
-                                            <MenuItem key={author.value} value={author.value}>
-                                                {author.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.formatId && (
-                                        <FormHelperText>{errors.formatId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Formato"
+                                    value={field.value}
+                                    options={itemFormats || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.formatId?.message}
+                                />
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4}} >
+                    <Grid size={{ sm: 12, md: 4 }} >
                         <Controller
                             name={'languageId'}
                             control={control}
-                            rules={{required: "Campo obrigatório"}}
-                            render={({field}) => (
-                                <FormControl fullWidth size="small">
-                                    <InputLabel id="langiuages-label">Idioma</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="languages-label"
-                                        label="Idioma"
-                                        value={field.value || ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {languageData?.getLanguages?.languages?.map((language: any) => (
-                                            <MenuItem key={language.languageId} value={language.languageId}>
-                                                {language.languageName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.languageId && (
-                                        <FormHelperText>{errors.languageId.message}</FormHelperText>
-                                    )}
-                                </FormControl>
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Idioma"
+                                    value={field.value}
+                                    options={languageData?.getLanguages?.languages || []}
+                                    getOptionLabel={(option: any) => option.languageName}
+                                    getOptionValue={(option: any) => option.languageId}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.languageId?.message}
+                                />
                             )}
                         />
                     </Grid>
                     <Grid size={{ sm: 12, md: 3 }} >
-                            <Controller
-                                name="coverPrice"
-                                control={control}
-                                render={({ field }) => (
-                                    <CurrencyInput
-                                        label="Preço de capa"
-                                        prefix={"R$ "}
-                                        value={field.value}
-                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                    />
-                                )}
-                            />
+                        <Controller
+                            name="coverPrice"
+                            control={control}
+                            render={({ field }) => (
+                                <CurrencyInput
+                                    label="Preço de capa"
+                                    prefix={"R$ "}
+                                    value={field.value}
+                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                />
+                            )}
+                        />
                     </Grid>
                     <Grid size={{ sm: 12, md: 3 }} >
-                            <Controller
-                                name="paidPrice"
-                                control={control}
-                                render={({ field }) => (
-                                    <CurrencyInput
-                                        label="Preço pago"
-                                        prefix={"R$ "}
-                                        value={field.value}
-                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                    />
-                                )}
-                            />
+                        <Controller
+                            name="paidPrice"
+                            control={control}
+                            render={({ field }) => (
+                                <CurrencyInput
+                                    label="Preço pago"
+                                    prefix={"R$ "}
+                                    value={field.value}
+                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                />
+                            )}
+                        />
                     </Grid>
                     <Grid size={{ sm: 12, md: 6 }} ></Grid>
                     <Grid size={{ sm: 6, md: 3 }} >
@@ -744,7 +665,7 @@ const App = (props: ItemModalProps) => {
                                 />
                             )}
                         />
-                    </Grid>      
+                    </Grid>
                     <Grid size={{ sm: 6, md: 3 }} >
                         <Controller
                             name="height"
@@ -758,7 +679,7 @@ const App = (props: ItemModalProps) => {
                                 />
                             )}
                         />
-                    </Grid>    
+                    </Grid>
                     <Grid size={{ sm: 6, md: 3 }} >
                         <Controller
                             name="width"
@@ -772,7 +693,7 @@ const App = (props: ItemModalProps) => {
                                 />
                             )}
                         />
-                    </Grid>               
+                    </Grid>
                     <Grid size={{ sm: 6, md: 3 }} >
                         <Controller
                             name="thickness"
@@ -786,7 +707,7 @@ const App = (props: ItemModalProps) => {
                                 />
                             )}
                         />
-                    </Grid>     
+                    </Grid>
                     <Grid size={{ sm: 12, md: 12 }} >
                         <Controller
                             name="summary"
@@ -802,7 +723,7 @@ const App = (props: ItemModalProps) => {
                                 />
                             )}
                         />
-                    </Grid>     
+                    </Grid>
                     <Grid size={{ sm: 12, md: 12 }} >
                         <Controller
                             name="observation"
@@ -818,7 +739,7 @@ const App = (props: ItemModalProps) => {
                                 />
                             )}
                         />
-                    </Grid>  
+                    </Grid>
                 </Grid>
             </form>
         </div>
