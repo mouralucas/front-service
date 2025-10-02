@@ -1,16 +1,16 @@
 import { useQuery } from '@apollo/client';
+import { EditOutlined } from '@mui/icons-material';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import Autorenew from '@mui/icons-material/AutorenewOutlined';
-import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Box, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useState } from "react";
+import SelectAutocomplete from '../../../../components/form/SelectAutocomplete.tsx';
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
-import { QUERY_COLLECTION, QUERY_SERIES, QUERY_ITEMS } from '../../../../services/apollo/queries/Library.tsx';
+import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../../services/apollo/queries/Library.tsx';
 import ItemModal from "../modals/Item.tsx";
-import { EditOutlined } from '@mui/icons-material';
-import SelectAutocomplete from '../../../../components/form/SelectAutocomplete.tsx';
 
 
 type ItemFilters = {

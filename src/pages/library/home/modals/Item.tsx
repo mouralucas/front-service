@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -11,11 +11,11 @@ import { toast } from "react-toastify";
 import Loader from "../../../../components/Loader.tsx";
 import Modal from "../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
+import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 import { CreateItemInput } from '../../../../interfaces/Library.tsx';
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_ITEM_MUTATION, UPDATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_LANGUAGES, QUERY_PUBLISHERS, QUERY_SERIES, QUERY_STATUS } from "../../../../services/apollo/queries/Library.tsx";
-import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 
 export interface ItemModalProps {
     item: CreateItemInput | undefined | null
