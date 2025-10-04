@@ -12,6 +12,10 @@ import Modal from "../../../../../components/Modal.tsx";
 import { InvestmentObjective } from "../../../../../interfaces/Finance.tsx";
 import { URL_FINANCE_INVESTMENT_OBJECTIVE } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { useQuery } from "@apollo/client";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
+import { QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 
 interface ObjectivesProps {
     modalState: boolean;
@@ -24,11 +28,17 @@ const DefaultObjective: InvestmentObjective = {
     title: '',
     description: '',
     amount: 0,
+    currencyId: "BRL",
     estimatedDeadline: format(new Date().toDateString(), 'yyyy-MM-dd')
 }
 
 const App = (props: ObjectivesProps) => {
     const { handleSubmit, control, reset, formState: { errors, dirtyFields }, getValues } = useForm<InvestmentObjective>({ defaultValues: DefaultObjective });
+
+    const { data: currenciesData } = useQuery(QUERY_CURRENCY, {
+        client: apolloFinanceClient,
+        skip: !props.modalState,
+    })
 
     useEffect(() => {
         if (props.modalState && props.objective) {
@@ -91,22 +101,43 @@ const App = (props: ObjectivesProps) => {
                         )}
                     />
                 </Grid>
-                <Grid size={{ sm: 6, md: 6 }} >
+                <Grid size={{ sm: 12, md: 4 }} >
+                    <Controller name={'currencyId'}
+                        control={control}
+                        rules={{ required: 'Esse campo é obrigatório' }}
+                        render={({ field }) => (
+                            <SelectAutocomplete
+                                label="Moeda"
+                                value={field.value}
+                                options={currenciesData?.getCurrencies?.currencies || []}
+                                getOptionLabel={(option: any) => option.symbol}
+                                getOptionValue={(option: any) => option.currencyId}
+                                onChange={field.onChange}
+                                error={errors.currencyId?.message}
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid size={{ sm: 12, md: 4 }} >
                     <Controller
                         name="amount"
                         control={control}
-                        rules={{ required: "Campo obrigatório" }}
+                        rules={{
+                            validate: (value) => value !== 0 || "Este campo deve ser maior que zero",
+                        }}
                         render={({ field }) => (
                             <CurrencyInput
                                 label="Valor"
                                 prefix={"R$ "}
                                 value={field.value}
                                 onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                error={!!errors.amount}
+                                helperText={errors.amount?.message}
                             />
                         )}
                     />
                 </Grid>
-                <Grid size={{ sm: 6, md: 6 }} >
+                <Grid size={{ sm: 12, md: 4 }} >
                     <Controller
                         name="estimatedDeadline"
                         control={control}

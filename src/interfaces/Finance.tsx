@@ -204,6 +204,7 @@ export interface InvestmentObjective {
     title: string;
     description: string;
     amount: number;
+    currencyId: string;
     estimatedDeadline: string;
 }
 

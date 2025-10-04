@@ -52,6 +52,7 @@ const AccountTransactionTable = (): ReactElement => {
 
     const showAccountTransactionModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
+            console.log(e.row)
             setSelectedTransaction(e.row);
         } else {
             setSelectedTransaction(null);
@@ -72,7 +73,7 @@ const AccountTransactionTable = (): ReactElement => {
     }
 
     const columns: GridColDef<AccountTransaction>[] = [
-        { field: 'transactionId', headerName: 'Id', headerAlign: "center", flex: 1 },
+        { field: 'transactionId', headerName: 'Id', headerAlign: "center", flex: 1, type: 'number' },
         { field: 'accountNickname', headerName: 'Conta', headerAlign: "center", flex: 1 },
         {
             field: 'transactionDate',

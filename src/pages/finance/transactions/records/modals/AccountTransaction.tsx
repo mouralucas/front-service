@@ -47,7 +47,7 @@ const DefaultTransaction: CreateAccountTransactionInput = {
     description: "",
 }
 
-const App = (props: AccountStatementProps) => {
+const AccountTransactionModal = (props: AccountStatementProps) => {
     const [currencySymbol, setCurrencySymbol] = useState<string>("R$")
     const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, setValue } = useForm<CreateAccountTransactionInput>({ defaultValues: DefaultTransaction });
 
@@ -102,7 +102,6 @@ const App = (props: AccountStatementProps) => {
         if (account) {
             setValue('currencyId', account?.currencyId);
         }
-        console.log(account)
         setCurrencySymbol(account?.currencySymbol);
     }
 
@@ -228,13 +227,17 @@ const App = (props: AccountStatementProps) => {
                             <Controller
                                 name="amount"
                                 control={control}
-                                rules={{ required: "Campo obrigatório" }}
+                                rules={{
+                                    validate: (value) => value !== 0 || "Este campo deve ser maior que zero",
+                                }}
                                 render={({ field }) => (
                                     <CurrencyInput
                                         label="Valor"
                                         prefix={currencySymbol + " "}
                                         value={field.value}
                                         onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        error={!!errors.amount}
+                                        helperText={errors.amount?.message}
                                     />
                                 )}
                             />
@@ -295,4 +298,4 @@ const App = (props: AccountStatementProps) => {
     );
 }
 
-export default App;
+export default AccountTransactionModal;
