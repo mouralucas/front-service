@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Divider, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { ReactElement, useState } from "react";
@@ -53,7 +53,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
         setCrateReadingModalState(false);
         refetchStats();
     }
-    
+
     const getStatusChipVariant = (): any => {
         if (props.openDrawerState) {
             if (props.item?.lastStatusId == 'lost') {
@@ -64,6 +64,25 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
         }
 
         return "undefined";
+    }
+
+
+    function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+        return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ width: '100%', mr: 1 }}>
+                    <LinearProgress variant="determinate" {...props} />
+                </Box>
+                <Box sx={{ minWidth: 35 }}>
+                    <Typography
+                        variant="body2"
+                        sx={{ color: 'text.secondary' }}
+                    >
+                        {`${Math.round(props.value)}%`}
+                    </Typography>
+                </Box>
+            </Box>
+        );
     }
 
     const content: ReactElement =
@@ -162,6 +181,10 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                                         <div>{stats?.currentPercentage}</div>
                                     </Box>
                                 </Stack>
+                                <Box >
+                                    <LinearProgressWithLabel value={stats?.currentPercentage} />
+                                </Box>
+                                <Divider />
                                 <Box mt={2}>
                                     <Button
                                         fullWidth
@@ -183,7 +206,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                             </Button>
                         }
                     </>
-                ) : 
+                ) :
                     // If no previous reading for the item, then show the button to start the first reading
                     stats?.readingsCount === 0 && (
                         <Box mt={2}>
@@ -195,7 +218,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                                 Iniciar Leitura
                             </Button>
                         </Box>
-                    ) 
+                    )
                 }
             </Box>
         </Box>

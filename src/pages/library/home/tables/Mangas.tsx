@@ -1,20 +1,17 @@
 import { useQuery } from '@apollo/client';
+import { EditOutlined } from '@mui/icons-material';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import Autorenew from '@mui/icons-material/AutorenewOutlined';
-import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Box, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useState } from "react";
+import SelectAutocomplete from '../../../../components/form/SelectAutocomplete.tsx';
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
-import { QUERY_COLLECTION, QUERY_SERIES, itemQueryFactory } from '../../../../services/apollo/queries/Library.tsx';
+import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../../services/apollo/queries/Library.tsx';
 import ItemModal from "../modals/Item.tsx";
-import { EditOutlined } from '@mui/icons-material';
 
-
-const QUERY_MANGA = itemQueryFactory(
-    ['isbn', 'serieId', 'serieName', 'volume', 'collectionId', 'collectionName', 'publisherName']
-)
 
 type ItemFilters = {
     text?: string;
@@ -24,10 +21,10 @@ type ItemFilters = {
 };
 
 const MangaTable = (): ReactElement => {
-    const { data: mangaData, loading, refetch } = useQuery(QUERY_MANGA, {
+    const { data: mangaData, loading, refetch } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
-            params: { 
+            params: {
                 itemTypeId: "manga",
                 orderBy: [
                     {
@@ -74,6 +71,7 @@ const MangaTable = (): ReactElement => {
     const hideItemModal = () => {
         setItemModalState(false);
         setSelectedManga(null);
+        refetch();
     }
 
     const columns: GridColDef<Item>[] = [
@@ -113,14 +111,14 @@ const MangaTable = (): ReactElement => {
         },
     ]
 
-    const handleSerieChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedSerie(event.target.value as number);
+    const handleSerieChange = (event: number) => {
+        setSelectedSerie(event);
     };
 
-    const handleCollectionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedCollection(event.target.value as number);
-    };
+    const handleCollectionChange = (event: any) => {
+        setSelectedCollection(event as number);
 
+    };
 
     const items = mangaData?.getItems.items
 
@@ -132,7 +130,7 @@ const MangaTable = (): ReactElement => {
 
     function filterItems(items: Item[] | undefined, filters: ItemFilters): Item[] {
         if (!items) return [];
-        if (filters.serieId === -1 && filters.collectionId === -1 && !filters.text) return items;
+        if (filters.serieId === null && filters.collectionId === null && !filters.text) return items;
 
         return items.filter((row) => {
             if (filters.text && !row.title.toLowerCase().includes(filters.text.toLowerCase())) {
@@ -157,40 +155,25 @@ const MangaTable = (): ReactElement => {
         <Box sx={{ me: 5 }}>
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'right' }}>
                 <Stack direction="row" spacing={2} alignItems="center">
-                    {/* Select */}
-                    <FormControl size="small" sx={{ minWidth: 120 }}>
-                        <InputLabel id="serie-label">Série</InputLabel>
-                        <Select
-                            labelId="serie-label"
-                            value={selectedSerie}
-                            onChange={(e: any) => handleSerieChange(e)}
-                            label="Série"
-                        >
-                            <MenuItem value={-1}><em>Série</em></MenuItem>
-                            {seriesData?.getSeries.series?.map((user: any) => (
-                                <MenuItem key={user.serieId} value={user.serieId}>
-                                    {user.serieName}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
 
-                    <FormControl size="small" sx={{ minWidth: 120 }}>
-                        <InputLabel id="collection-label">Coleção</InputLabel>
-                        <Select
-                            labelId="collection-label"
-                            value={selectedCollection}
-                            onChange={(e: any) => handleCollectionChange(e)}
-                            label="Coleção"
-                        >
-                            <MenuItem value={-1}><em>Coleção</em></MenuItem>
-                            {collectionsData?.getCollections.collections?.map((user: any) => (
-                                <MenuItem key={user.collectionId} value={user.collectionId}>
-                                    {user.collectionName}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <SelectAutocomplete
+                        label="Série"
+                        value={selectedSerie}
+                        options={seriesData?.getSeries.series || []}
+                        getOptionLabel={(option: any) => option.serieName}
+                        getOptionValue={(option: any) => option.serieId}
+                        onChange={(e: any) => handleSerieChange(e)}
+                        width={200} 
+                    />
+                    <SelectAutocomplete
+                        label="Coleção"
+                        value={selectedCollection}
+                        options={collectionsData?.getCollections.collections || []}
+                        getOptionLabel={(option: any) => option.collectionName}
+                        getOptionValue={(option: any) => option.collectionId}
+                        onChange={(e: any) => handleCollectionChange(e)}
+                        width={200}
+                    />
 
                     <TextField
                         label="Filtrar por título"
@@ -219,7 +202,7 @@ const MangaTable = (): ReactElement => {
                     itemId: false,
                 }}
             />
-            <ItemModal modalState={itemModalState} hideModalItem={hideItemModal} item={selectedManga} />
+            <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedManga} />
         </Box>
     )
 }

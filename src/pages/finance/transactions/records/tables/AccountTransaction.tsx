@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import EditOutlined from '@mui/icons-material/EditOutlined';
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -22,6 +22,7 @@ const AccountTransactionTable = (): ReactElement => {
     const [modalState, setModalState] = useState<boolean>(false)
 
     // Filter date range
+    const [accountFilter, setAccountFilter] = useState('');
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -51,6 +52,7 @@ const AccountTransactionTable = (): ReactElement => {
 
     const showAccountTransactionModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
+            console.log(e.row)
             setSelectedTransaction(e.row);
         } else {
             setSelectedTransaction(null);
@@ -71,7 +73,7 @@ const AccountTransactionTable = (): ReactElement => {
     }
 
     const columns: GridColDef<AccountTransaction>[] = [
-        { field: 'transactionId', headerName: 'Id', headerAlign: "center", flex: 1 },
+        { field: 'transactionId', headerName: 'Id', headerAlign: "center", flex: 1, type: 'number' },
         { field: 'accountNickname', headerName: 'Conta', headerAlign: "center", flex: 1 },
         {
             field: 'transactionDate',
@@ -94,8 +96,8 @@ const AccountTransactionTable = (): ReactElement => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
             }
         },
-        { field: 'description', headerName: 'Descrição', headerAlign: "center",flex: 1 },
-        { field: 'categoryName', headerName: 'Categoria', headerAlign: "center",flex: 1 },
+        { field: 'description', headerName: 'Descrição', headerAlign: "center", flex: 1 },
+        { field: 'categoryName', headerName: 'Categoria', headerAlign: "center", flex: 1 },
         {
             field: 'actions',
             headerName: 'Ações',
@@ -107,11 +109,11 @@ const AccountTransactionTable = (): ReactElement => {
                 <Box
                     sx={{
                         display: 'flex',
-                        alignItems: 'center',      // vertical
-                        justifyContent: 'center',  // horizontal
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         gap: 1,
-                        flex: 1,                   // ocupa toda a largura da célula
-                        height: '100%',            // ocupa toda a altura
+                        flex: 1,
+                        height: '100%',
                     }}
                 >
                     <IconButton
@@ -125,6 +127,12 @@ const AccountTransactionTable = (): ReactElement => {
             ),
         },
     ]
+
+    // Filtra as transações pelo accountName usando accountFilter
+    const filteredTransactions = transactionData?.getAccountTransactions?.transactions?.filter(
+        (transaction: AccountTransaction) =>
+            transaction.accountNickname?.toLowerCase().includes(accountFilter.toLowerCase())
+    ) ?? transactionData?.getAccountTransactions?.transactions;
 
     return (
         <Box sx={{ display: 'block', me: 5 }}>
@@ -167,6 +175,14 @@ const AccountTransactionTable = (): ReactElement => {
                         }}
                     />
                 </LocalizationProvider>
+                <TextField
+                    label="Filtrar por conta"
+                    variant="outlined"
+                    size="small"
+                    value={accountFilter}
+                    onChange={e => setAccountFilter(e.target.value)}
+                    sx={{ minWidth: 250 }}
+                />
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showAccountTransactionModal}
@@ -184,7 +200,7 @@ const AccountTransactionTable = (): ReactElement => {
             </Box>
             <DataGrid
                 columns={columns}
-                data={transactionData?.getAccountTransactions?.transactions}
+                data={filteredTransactions}
                 isLoading={loading}
                 getRowId={(row) => row.transactionId}
                 columnVisibilityModel={{

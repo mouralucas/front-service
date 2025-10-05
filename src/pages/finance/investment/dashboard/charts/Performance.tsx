@@ -1,12 +1,14 @@
-import {useEffect, useState} from "react";
-import Line from "../../../../../components/chart/LineOld.tsx"
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {URL_FINANCE_INVESTMENT_PERFORMANCE} from "../../../../../services/axios/ApiUrls.tsx";
-import {toast, ToastOptions} from "react-toastify";
-import {GetInvestmentPerformanceResponse} from "../../../../../interfaces/FinanceRequest.tsx";
+import { useEffect, useState } from "react";
+import Line from "../../../../../components/chart/Line.tsx"
+import { getFinanceData } from "../../../../../services/axios/Get.tsx";
+import { URL_FINANCE_INVESTMENT_PERFORMANCE } from "../../../../../services/axios/ApiUrls.tsx";
+import { toast, ToastOptions } from "react-toastify";
+import { GetInvestmentPerformanceResponse } from "../../../../../interfaces/FinanceRequest.tsx";
 import Select from "react-select";
-import {Indexer} from "../../../../../interfaces/Finance.tsx";
-import {getIndexers} from "../../../../../services/getCommonData/Finance.tsx";
+import { Indexer } from "../../../../../interfaces/Finance.tsx";
+import { getIndexers } from "../../../../../services/getCommonData/Finance.tsx";
+import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
+import { Divider, Paper, Typography } from "@mui/material";
 
 const periodsRange = [
     {
@@ -65,17 +67,53 @@ const App = () => {
         getPerformance(filters.selectedIndexer, filters.selectedPeriod);
     }
 
-    const customToolTip = (pointInfo: any) => {
-        const period: string = pointInfo.point.data.period
-        const series: string = pointInfo.points.map(
-            (p: { seriesName: any; valueText: any; }) =>
-                `<b>${p.seriesName}</b>: ${parseFloat(p.valueText).toFixed(2)}%`
-        ).join('<br/>')
+    // const customToolTip = (pointInfo: any) => {
+    //     const period: string = pointInfo.point.data.period
+    //     const series: string = pointInfo.points.map(
+    //         (p: { seriesName: any; valueText: any; }) =>
+    //             `<b>${p.seriesName}</b>: ${parseFloat(p.valueText).toFixed(2)}%`
+    //     ).join('<br/>')
 
-        const formattedString = `<b>Período</b> ${period}<br/>${series}`
-        return {
-            text: formattedString,
-        };
+    //     const formattedString = `<b>Período</b> ${period}<br/>${series}`
+    //     return {
+    //         text: formattedString,
+    //     };
+    // }
+    function CustomAxisTooltip() {
+        const tooltipData = useAxesTooltip();
+        const firstAxisData: any = tooltipData?.[0];
+
+        if (!firstAxisData) return null;
+
+        return (
+            <ChartsTooltipContainer>
+                <Paper sx={{ p: 2, minWidth: 160 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                        {firstAxisData.axisValue}
+                    </Typography>
+
+                    <Divider />
+
+                    {firstAxisData.seriesItems.map((s: any) => (
+                        <div key={s.seriesId} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+                            <div
+                                style={{
+                                    width: 10,
+                                    height: 10,
+                                    borderRadius: 2,
+                                    backgroundColor: s.color,
+                                    marginRight: 8,
+                                }}
+                            />
+                            <Typography variant="body2" sx={{ flex: 1 }}>
+                                {s.formattedLabel}:
+                            </Typography>
+                            <Typography variant="body2" sx={{ ml: 2 }}>{s.formattedValue}%</Typography>
+                        </div>
+                    ))}
+                </Paper>
+            </ChartsTooltipContainer>
+        );
     }
 
     return (
@@ -102,20 +140,9 @@ const App = () => {
             <div className="row">
                 <div className="col-12">
                     <Line
-                        id={'investment_performance_chart'}
-                        data={performance?.data}
-                        series={performance?.series}
-                        argumentField={'period'}
-                        title={"Evolução do investimento"}
-                        subtitle={"Evolução, em %, dos investimentos comparados ao CDI"}
-                        type={'spline'}
-                        toolTip={
-                            {
-                                enabled: true,
-                                shared: true,
-                                customizeTooltip: customToolTip,
-                            }
-                        }
+                        series={performance.data}
+                        xLabels={performance.xLabel}
+                        customAxisTooltip={CustomAxisTooltip}
                     />
                 </div>
             </div>

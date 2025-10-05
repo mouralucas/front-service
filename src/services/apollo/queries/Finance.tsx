@@ -27,6 +27,19 @@ query {
     }
 }`
 
+
+export const QUERY_CREDIT_CARDS = gql`
+    query GetCreditCards($params: GetCreditCardsInput) {
+        getCreditCards(params: $params) {
+            quantity
+            creditCards {
+                creditCardId
+                nickname
+            }
+        }
+    }
+`
+
 export const QUERY_ACCOUNTS = gql`
 query GetAccounts($params: GetAccountsInput) {
     getAccounts(params: $params) {
@@ -76,4 +89,15 @@ query GetAccountTransactions($params: GetAccountTransactionInput) {
         }
     }
 }
+`
+
+export const QUERY_INSTALLMENT_DUE_DATE = gql`
+    query GetInstallmentDueDates($params: GetInstallmentsDueDatesInput) {
+        getCreditCardInstallmentDueDates(params: $params) {
+            dueDates {
+                currentInstallment
+                dueDate
+            }
+        }
+    }
 `

@@ -1,5 +1,5 @@
-import {ArgumentAxis, Chart, CommonSeriesSettings, Export, Grid, Legend, Margin, Point, Series, Subtitle, Title, Tooltip,} from 'devextreme-react/chart';
-import {ReactElement} from "react";
+import { ArgumentAxis, Chart, CommonSeriesSettings, Export, Grid, Legend, Margin, Point, Series, Subtitle, Title, Tooltip, } from 'devextreme-react/chart';
+import { ReactElement } from "react";
 
 interface LineChartProps {
     id: string

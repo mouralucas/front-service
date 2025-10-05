@@ -14,6 +14,7 @@ export interface AccountTransaction {
     transactionId?: number | null;
     ownerId: string;
     accountId: string;
+    accountNickname: string;
     period: number;
     currencyId: string;
     currencySymbol: string;
@@ -34,7 +35,7 @@ export interface AccountTransaction {
 
 export type CreateAccountTransactionInput = Omit<
   AccountTransaction,
-  "currencySymbol" | "createdAt" | "lastEditedAt" | "period" | "ownerId"
+  "currencySymbol" | "accountNickname" | "createdAt" | "lastEditedAt" | "period" | "ownerId"
 >;
 
 // Credit card interfaces
@@ -203,6 +204,7 @@ export interface InvestmentObjective {
     title: string;
     description: string;
     amount: number;
+    currencyId: string;
     estimatedDeadline: string;
 }
 

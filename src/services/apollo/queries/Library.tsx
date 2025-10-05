@@ -1,25 +1,48 @@
 import { gql } from "@apollo/client";
 
-export function itemQueryFactory(fields: string[]) {
-  const selectionSet = fields.join("\n");
-
-    return gql`
-     query GetItems($params: GetItemInput!) {
-        getItems(params: $params) {
-          quantity
-          items {
-            itemId
-            title
-            lastStatusId
-            lastStatusName
-            mainAuthorId
-            mainAuthorName
-            ${selectionSet}
-          }
-        }
+export const QUERY_ITEMS = gql`
+  query GetItems($params: GetItemInput!) {
+    getItems(params: $params) {
+      quantity
+      items {
+        itemId
+        mainAuthorId
+        mainAuthorName
+        lastStatusId
+        lastStatusName
+        lastStatusDate
+        title
+        subtitle
+        titleOriginal
+        subtitleOriginal
+        isbn
+        isbn10
+        itemTypeId
+        pages
+        volume
+        edition
+        publicationDate
+        originalPublicationDate
+        serieId
+        serieName
+        collectionId
+        collectionName
+        publisherId
+        publisherName
+        formatId
+        languageId
+        coverPrice
+        paidPrice
+        dimensions
+        height
+        width
+        thickness
+        summary
+        
       }
-    `;
-}
+    }
+  }
+`;
 
 
 export const QUERY_SERIES = gql`
@@ -107,6 +130,22 @@ query GetAuthors($params: GetAuthorsRequest) {
     }
 }`
 
+
+export const QUERY_STATUS = gql`
+query GetStatus ($params: GetStatusInput) {
+    getStatus(params: $params) {
+        statuses {
+            statusId
+            name
+            description
+            order
+            statusType
+        }
+        quantity
+    }
+}
+`
+
 export const QUERY_READING_STATS = gql`
 query GetReadingStats($itemId: Int!) {
   getReadingStats(params: { itemId: $itemId }) {
@@ -121,3 +160,4 @@ query GetReadingStats($itemId: Int!) {
   }
 }
 `;
+

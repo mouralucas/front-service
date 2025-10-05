@@ -1,5 +1,7 @@
 FROM node:22.12.0-alpine AS builder
 
+RUN npm install -g npm@latest
+
 WORKDIR /app
 
 COPY package.json .

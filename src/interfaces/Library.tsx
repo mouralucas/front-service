@@ -3,7 +3,7 @@ export interface Item {
     lastStatusId: string | null
     lastStatusDate: string
     lastStatusName?: string | null
-    mainAuthorId: number;
+    mainAuthorId: number | null;
     mainAuthorName: string;
     authorsId?: number[]
     translatorId?: number
@@ -22,7 +22,7 @@ export interface Item {
     serieId: number
     serieName: string
     collectionId: number
-    publisherId: number
+    publisherId: number | null
     publisherName: string
     formatId: string;
     languageId: 'PT'
@@ -39,6 +39,12 @@ export interface Item {
     lastEditedBy?: string | null
     lastEditedAt?: Date | null
 }
+
+export type CreateItemInput = Omit<
+  Item,
+  "lastStatusName" | "mainAuthorName" | "serieName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId"
+>;
+
 
 export interface ItemReadingStats {
     readingsCount: number;
