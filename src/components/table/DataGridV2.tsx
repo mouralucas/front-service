@@ -14,6 +14,7 @@ interface DataGridProps {
     onRowClick?: () => null;
     getRowId?: GridRowIdGetter<any>;
     getRowClassName?: any;
+    getRowHeight?: any;
     columnVisibilityModel?: any;
     getTreeDataPath?: any;
     density?: GridDensity;
@@ -41,7 +42,9 @@ const DataGridComp = (props: DataGridProps) => {
                 onRowClick={props.onRowClick}
                 getRowId={props.getRowId ?? ((row: any) => row.id)}
                 getRowClassName={props.getRowClassName ?? ''}
+                getRowHeight={props.getRowHeight ?? (() => 'auto')}
                 columnVisibilityModel={props.columnVisibilityModel ?? {}}
+
             />
         </Box>
     );

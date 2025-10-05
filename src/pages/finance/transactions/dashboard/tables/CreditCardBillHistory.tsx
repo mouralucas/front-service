@@ -1,15 +1,16 @@
-import {ReactElement, useEffect, useState} from "react";
-import DataGrid from "../../../../../components/table/DataGrid";
-import {DataGridColumn} from "../../../../../assets/core/components/Interfaces.tsx";
-import {getFinanceData} from "../../../../../services/axios/Get.tsx";
-import {URL_FINANCE_CREDIT_CARD_BILL_HISTORY} from "../../../../../services/axios/ApiUrls.tsx";
-import {toast} from "react-toastify";
-import {GetCreditCardBillHistoryResponse} from "../../../../../interfaces/FinanceRequest.tsx";
-import Loader from "../../../../../components/Loader.tsx";
-import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import DataGrid from '../../../../../components/table/DataGridV2';
+import { ReactElement, useEffect, useState } from "react";
+import { getFinanceData } from "../../../../../services/axios/Get";
+import { toast } from "react-toastify";
+import { GetCreditCardBillHistoryResponse } from "../../../../../interfaces/FinanceRequest";
+import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
+import { URL_FINANCE_CREDIT_CARD_BILL_HISTORY } from "../../../../../services/axios/ApiUrls";
+import { Stack } from "@mui/material";
 
 
-const App = (): ReactElement => {
+
+const BillHistoryTable = (): ReactElement => {
     const [creditCardBillHistory, setCreditCardBillHistory] = useState<any[]>([])
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -34,76 +35,53 @@ const App = (): ReactElement => {
         })
     }
 
-    const cardCustomCell = (cellInfo: any): ReactElement => {
-        return (
-            <div>
-                {cellInfo.data.creditCards.map((account: any, index: number) => (
-                    <div key={index}>
-                        <b>{account.nickname}</b>:{" "}
-                        {account.currencySymbol}
-                        {account.total.toFixed(2)} ({account.currencySymbol}{account.totalInstallments.toFixed(2)})
-                    </div>
-                ))}
-            </div>
-        )
-    }
+    console.log(creditCardBillHistory);
 
-    const totalAmountCustomCell = (cellInfo: any) => {
-        return (
-            <div>
-                {cellInfo.data.totalAmount.map((account: any, index: number) => (
-                    <div key={index}>
-                        {account.currency_symbol}{" "}{account.total.toFixed(2)}
-                    </div>
-                ))}
-            </div>
-        )
-    }
-
-    const columns: DataGridColumn[] = [
+    const columns: GridColDef[] = [
+        { field: "period", headerName: "Período", flex: 1 },
         {
-            dataField: "period",
-            caption: "Período",
-            dataType: "string",
-            width: 80,
+            field: "totalAmount",
+            headerName: "Total",
+            align: "center",
+            flex: 1,
+            renderCell: (params: GridRenderCellParams) => (
+                <div>
+                    {params.value?.map((account: any, index: number) => (
+                        <div key={index}>
+                            {account.currency_symbol} {account.total.toFixed(2)}
+                        </div>
+                    ))}
+                </div>
+            ),
         },
         {
-            dataField: "totalAmount",
-            caption: "Total",
-            cellRender: totalAmountCustomCell,
-            width: 110
-        },
-        {
-            dataField: "creditCard",
-            caption: "Total por cartão (Tot. parcelas)",
-            cellRender: cardCustomCell,
+            field: "creditCards",
+            headerName: "Total por cartão (Tot. parcelas)",
+            flex: 2,
+            renderCell: (params: GridRenderCellParams) => (
+                <Stack direction="column" spacing={1}>
+                    {params.value?.map((account: any, index: number) => (
+                        <span key={index}>
+                            <b>{account.nickname}</b>: {account.currencySymbol} {account.total.toFixed(2)} (
+                            {account.currencySymbol} {account.totalInstallments.toFixed(2)})
+                        </span>
+                    ))}
+                </Stack>
+            ),
         }
     ]
 
 
     return (
-        <>
-            {isLoading ? <Loader/> :
-                <DataGrid
-                    keyExpr={'id'}
-                    data={creditCardBillHistory}
-                    columns={columns}
-                    wordWrapEnabled={true}
-                    paging={
-                        {
-                            enabled: true,
-                            pageSize: 12
-                        }
-                    }
-                    pager={
-                        {
-                            visible: false
-                        }
-                    }
-                />
-            }
-        </>
+        <DataGrid
+            columns={columns}
+            data={creditCardBillHistory}
+            isLoading={isLoading}
+            pageSizeOptions={[12]}
+            getRowHeight={() => 'auto'}
+            pageSize={12}
+        />
     )
 }
 
-export default App;
+export default BillHistoryTable;
