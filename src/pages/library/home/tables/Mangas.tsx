@@ -4,13 +4,16 @@ import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import Autorenew from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { ReactElement, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 import SelectAutocomplete from '../../../../components/form/SelectAutocomplete.tsx';
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
 import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../../services/apollo/queries/Library.tsx';
 import ItemModal from "../modals/Item.tsx";
+import MangaDrawer from "../drawer/Manga.tsx"
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined'
+import { is } from 'date-fns/locale';
 
 
 type ItemFilters = {
@@ -21,6 +24,27 @@ type ItemFilters = {
 };
 
 const MangaTable = (): ReactElement => {
+    const [selectedManga, setSelectedManga] = useState<Item>()
+    const [itemModalState, setItemModalState] = useState<boolean>(false)
+
+    const [mangaFilter, setMangaFilter] = useState('');
+    const [selectedSerie, setSelectedSerie] = useState<number>(-1)
+    const [selectedCollection, setSelectedCollection] = useState<number>(-1)
+
+    const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
+
+    const onOpenDrawerClick = useCallback((e: any) => {
+        if (e.row !== undefined) {
+            // Nomalize itemId to number
+            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
+        } else {
+            setSelectedManga(undefined);
+        }
+
+        setIsDrawerOpened(!isDrawerOpened);
+
+    }, [isDrawerOpened]);
+
     const { data: mangaData, loading, refetch } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
@@ -51,18 +75,13 @@ const MangaTable = (): ReactElement => {
         client: apolloLibraryClient
     })
 
-    const [selectedManga, setSelectedManga] = useState<Item | null>(null)
-    const [itemModalState, setItemModalState] = useState<boolean>(false)
 
-    const [mangaFilter, setMangaFilter] = useState('');
-    const [selectedSerie, setSelectedSerie] = useState<number>(-1)
-    const [selectedCollection, setSelectedCollection] = useState<number>(-1)
 
     const showItemModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
             setSelectedManga(e.row)
         } else {
-            setSelectedManga(null);
+            setSelectedManga(undefined);
         }
 
         setItemModalState(true);
@@ -70,7 +89,7 @@ const MangaTable = (): ReactElement => {
 
     const hideItemModal = () => {
         setItemModalState(false);
-        setSelectedManga(null);
+        setSelectedManga(undefined);
         refetch();
     }
 
@@ -105,6 +124,13 @@ const MangaTable = (): ReactElement => {
                         onClick={showItemModal.bind(null, params)}
                     >
                         <EditOutlined />
+                    </IconButton>
+                    <IconButton
+                        aria-label="detalhes"
+                        color="success"
+                        onClick={onOpenDrawerClick.bind(null, params)}
+                    >
+                        <LibraryBooksOutlinedIcon />
                     </IconButton>
                 </Box>
             ),
@@ -163,7 +189,7 @@ const MangaTable = (): ReactElement => {
                         getOptionLabel={(option: any) => option.serieName}
                         getOptionValue={(option: any) => option.serieId}
                         onChange={(e: any) => handleSerieChange(e)}
-                        width={200} 
+                        width={200}
                     />
                     <SelectAutocomplete
                         label="Coleção"
@@ -203,6 +229,13 @@ const MangaTable = (): ReactElement => {
                 }}
             />
             <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedManga} />
+            {selectedManga && (
+                <MangaDrawer
+                    openDrawerState={isDrawerOpened}
+                    onCloseDrawerClick={onOpenDrawerClick}
+                    item={selectedManga}
+                />
+            )}
         </Box>
     )
 }

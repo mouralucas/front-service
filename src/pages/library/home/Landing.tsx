@@ -1,4 +1,4 @@
-import {ReactElement, useEffect} from 'react'
+import { ReactElement, useEffect } from 'react'
 import Card from "../../../components/Card.tsx";
 import BookTable from './tables/Books.tsx'
 import MangaTable from "./tables/Mangas.tsx";
@@ -13,7 +13,11 @@ const App = (): ReactElement => {
             <div className="App">
                 <div className="row">
                     <div className="col-12">
-                        <BookTable/>
+                        <Card>
+                            <Card.Body>
+                                <BookTable />
+                            </Card.Body>
+                        </Card>
                     </div>
                 </div>
                 <div className="row">
