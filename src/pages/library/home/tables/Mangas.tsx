@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import { EditOutlined } from '@mui/icons-material';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import Autorenew from '@mui/icons-material/AutorenewOutlined';
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import { Box, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
@@ -10,10 +11,8 @@ import DataGridComp from "../../../../components/table/DataGridV2";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
 import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../../services/apollo/queries/Library.tsx';
+import MangaDrawer from "../drawer/Manga.tsx";
 import ItemModal from "../modals/Item.tsx";
-import MangaDrawer from "../drawer/Manga.tsx"
-import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined'
-import { is } from 'date-fns/locale';
 
 
 type ItemFilters = {

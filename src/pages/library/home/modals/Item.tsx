@@ -46,7 +46,6 @@ const DefaultItem: CreateItemInput = {
     serieId: 0,
     collectionId: 0,
     publisherId: 0,
-    publisherName: '',
     formatId: '',
     languageId: 'PT',
     coverPrice: 0,
