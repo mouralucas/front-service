@@ -13,6 +13,7 @@ import { Author } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_AUTHOR_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { GET_COUNTRIES, QUERY_LANGUAGES } from "../../../../services/apollo/queries/Library.tsx";
+import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 
 interface AuthorModalProps {
     modalState: boolean;
@@ -50,7 +51,7 @@ const App = (props: AuthorModalProps): ReactElement => {
 
     const [createAuthor] = useMutation(CREATE_AUTHOR_MUTATION, {
         client: apolloLibraryClient,
-         onCompleted: (data) => {
+        onCompleted: (data) => {
             toast.success(
                 `Autor "${data.createAuthor.author.authorName}" criado com sucesso`
             );
@@ -142,22 +143,15 @@ const App = (props: AuthorModalProps): ReactElement => {
                             name="countryId"
                             control={control}
                             render={({ field }) => (
-                                <FormControl fullWidth size="small">
-                                    <InputLabel id="country-label">País</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="country-label"
-                                        value={field.value || ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {countryData?.getCountries?.countries?.map((country: any) => (
-                                            <MenuItem key={country.countryId} value={country.countryId}>
-                                                {country.countryName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                                <SelectAutocomplete
+                                    label="País"
+                                    value={field.value || ''}
+                                    options={countryData?.getCountries?.countries || []}
+                                    getOptionLabel={(option: any) => option.countryName}
+                                    getOptionValue={(option: any) => option.countryId}
+                                    onChange={field.onChange}
+                                    error={errors.countryId?.message}
+                                />
                             )}
                         />
                     </Grid>
@@ -167,22 +161,31 @@ const App = (props: AuthorModalProps): ReactElement => {
                             name="languageId"
                             control={control}
                             render={({ field }) => (
-                                <FormControl fullWidth size="small">
-                                    <InputLabel id="language-label">Idioma</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="language-label"
-                                        value={field.value || ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                        sx={{ width: "100%" }}
-                                    >
-                                        {languageData?.getLanguages?.languages?.map((language: any) => (
-                                            <MenuItem key={language.languageId} value={language.languageId}>
-                                                {language.languageName}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                                <SelectAutocomplete
+                                    label="Idioma"
+                                    value={field.value || ''}
+                                    options={languageData?.getLanguages?.languages || []}
+                                    getOptionLabel={(option: any) => option.languageName}
+                                    getOptionValue={(option: any) => option.languageId}
+                                    onChange={field.onChange}
+                                    error={errors.languageId?.message}
+                                />
+                                // <FormControl fullWidth size="small">
+                                //     <InputLabel id="language-label">Idioma</InputLabel>
+                                //     <Select
+                                //         {...field}
+                                //         labelId="language-label"
+                                //         value={field.value || ''}
+                                //         onChange={(e) => field.onChange(e.target.value)}
+                                //         sx={{ width: "100%" }}
+                                //     >
+                                //         {languageData?.getLanguages?.languages?.map((language: any) => (
+                                //             <MenuItem key={language.languageId} value={language.languageId}>
+                                //                 {language.languageName}
+                                //             </MenuItem>
+                                //         ))}
+                                //     </Select>
+                                // </FormControl>
                             )}
                         />
                     </Grid>

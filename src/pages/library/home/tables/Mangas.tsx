@@ -94,16 +94,17 @@ const MangaTable = (): ReactElement => {
 
     const columns: GridColDef<Item>[] = [
         { field: 'itemId', headerName: 'Id', flex: 1 },
-        { field: 'mainAuthorName', headerName: 'Autor', flex: 1 },
+        { field: 'mainAuthorName', headerName: 'Autor', flex: 1.5 },
         { field: 'title', headerName: 'Título', flex: 2.5 },
         { field: 'serieName', headerName: 'Série', flex: 2 },
         { field: 'volume', headerName: 'Volume', flex: 0.5 },
         { field: 'collectionName', headerName: 'Coleção', flex: 1 },
         { field: 'publisherName', headerName: 'Editora', flex: 1 },
+        { field: 'lastStatusName', headerName: 'Status', flex: 1 },
         {
             field: 'actions',
             headerName: 'Ações',
-            flex: .5,
+            flex: .8,
             sortable: false,
             filterable: false,
             renderCell: (params: GridRenderCellParams) => (

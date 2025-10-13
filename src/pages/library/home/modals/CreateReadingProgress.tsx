@@ -13,6 +13,7 @@ import Modal2 from "../../../../components/Modal.tsx";
 import { ItemReadingProgress } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_READING_PROGRESS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 
 interface CreateReadingProgressProps {
     modalState: boolean;
@@ -29,6 +30,11 @@ const DefaultReadingProgress: ItemReadingProgress = {
     comment: undefined
 }
 
+const progressType = [
+    { value: 'page', label: 'Página' },
+    { value: 'percentage', label: 'Porcentagem' }
+]
+
 const CreateReadingProgress = (props: CreateReadingProgressProps) => {
     const { handleSubmit, control, reset, formState: { errors }, setValue } = useForm<ItemReadingProgress>({ defaultValues: DefaultReadingProgress });
 
@@ -43,7 +49,7 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
         },
-    }); 
+    });
 
 
     useEffect(() => {
@@ -57,7 +63,7 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
 
     const submitReadingProgress = async (progressFormData: ItemReadingProgress) => {
         console.log(progressFormData);
-        const normalizedData = {...progressFormData, value: Number(progressFormData.value)}
+        const normalizedData = { ...progressFormData, value: Number(progressFormData.value) }
         try {
             await createReadingProgress({
                 variables: {
@@ -73,45 +79,24 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
         <form onSubmit={handleSubmit(submitReadingProgress)}>
             <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
                 <Grid size={{ xs: 12, md: 3 }}>
-                    <Controller 
-                        name={"readingId"}
-                        control={control}
-                        rules={{ required: "Esse campo é obrigatório." }}
-                        defaultValue={props.readingId ?? ""} 
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                type="hidden"
-                            />
-                        )}
-                    />
                     <Controller
                         name="progressType"
                         control={control}
                         render={({ field }) => (
-                            <FormControl fullWidth size="small">
-                                <InputLabel id="language-label">Tipo</InputLabel>
-                                <Select
-                                    {...field}
-                                    labelId="language-label"
-                                    value={field.value || ""}
-                                    onChange={(e) => field.onChange(e.target.value)}
-                                    sx={{ width: "100%" }}
-                                >
-                                    <MenuItem key={'page'} value={'page'}>
-                                        Página
-                                    </MenuItem>
-                                    <MenuItem key={'percentage'} value={'percentage'}>
-                                        Porcentagem
-                                    </MenuItem>
-
-                                </Select>
-                            </FormControl>
+                            <SelectAutocomplete
+                                label="Tipo"
+                                value={field.value || ''}
+                                options={progressType}
+                                getOptionLabel={(option: any) => option.label}
+                                getOptionValue={(option: any) => option.value}
+                                onChange={field.onChange}
+                                error={errors.progressType?.message}
+                            />
                         )}
                     />
                 </Grid>
                 <Grid size={{ xs: 12, md: 3 }} >
-                    <Controller 
+                    <Controller
                         name={"value"}
                         control={control}
                         rules={{ required: "Esse campo é obrigatório." }}
@@ -159,7 +144,7 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
                     />
                 </Grid>
                 <Grid size={{ xs: 12, md: 3 }}>
-                    <Controller 
+                    <Controller
                         // Eventually will by radio with start format
                         name={"rate"}
                         control={control}
