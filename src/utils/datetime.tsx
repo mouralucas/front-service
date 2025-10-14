@@ -6,12 +6,12 @@ function parseDateOnly(dateString: string): Date {
 }
 
 
-export const getLastPeriods = (monthsAgo: number = 12) => {
+export const getLastPeriods = (pastMonths: number = 12, futureMonts: number = 0) => {
     const today = new Date();
 
-    const currentPeriod = new Date(today.getFullYear(), today.getMonth(), 2);
+    const currentPeriod = new Date(today.getFullYear(), today.getMonth() + futureMonts, 2);
 
-    const pastPeriod = new Date(today.getFullYear(), today.getMonth() - monthsAgo, 2);
+    const pastPeriod = new Date(today.getFullYear(), today.getMonth() - pastMonths, 2);
 
     const formatDate = (date: any) => date.toISOString().split('T')[0];
 

@@ -21,7 +21,7 @@ const BillHistoryTable = (): ReactElement => {
 
     const getCreditCardBillHistory = () => {
         setIsLoading(true);
-        const dates = getLastPeriods(11);
+        const dates = getLastPeriods(11, 1);
 
         getFinanceData(URL_FINANCE_CREDIT_CARD_BILL_HISTORY, {
             startPeriod: getPeriodFromDate(dates[0]),
@@ -80,6 +80,12 @@ const BillHistoryTable = (): ReactElement => {
             pageSizeOptions={[12]}
             getRowHeight={() => 'auto'}
             pageSize={12}
+            sx={{
+                "& .MuiDataGrid-cell": {
+                    display: "flex",
+                    alignItems: "center", // centraliza verticalmente
+                },
+            }}
         />
     )
 }
