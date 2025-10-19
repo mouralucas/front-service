@@ -156,20 +156,35 @@ const MangaTable = (): ReactElement => {
 
     function filterItems(items: Item[] | undefined, filters: ItemFilters): Item[] {
         if (!items) return [];
-        if (filters.serieId === null && filters.collectionId === null && !filters.text) return items;
+
+        const { serieId, collectionId, text } = filters;
+
+        // Se nenhum filtro estiver ativo, retorna tudo
+        const hasNoFilters =
+            (serieId == null || serieId === -1) &&
+            (collectionId == null || collectionId === -1) &&
+            (!text || text.trim() === "");
+        if (hasNoFilters) return items;
 
         return items.filter((row) => {
-            if (filters.text && !row.title.toLowerCase().includes(filters.text.toLowerCase())) {
+            // Filtro por texto
+            if (text && text.trim() !== "") {
+                const normalizedText = text.toLowerCase();
+                const titleMatches = row.title.toLowerCase().includes(normalizedText);
+                const subtitleMatches = row.subtitle?.toLowerCase().includes(normalizedText);
+                const originalTitleMatches = row.titleOriginal?.toLowerCase().includes(normalizedText);
+                if (!titleMatches && !subtitleMatches && !originalTitleMatches) {
+                    return false;
+                }
+            }
+
+            // Filtro por série
+            if (serieId != null && serieId !== -1 && row.serieId !== serieId) {
                 return false;
             }
 
-            // Serie filter
-            if (filters.serieId !== -1 && row.serieId !== filters.serieId) {
-                return false;
-            }
-
-            // Collection filter
-            if (filters.collectionId !== -1 && row.collectionId !== filters.collectionId) {
+            // Filtro por coleção
+            if (collectionId != null && collectionId !== -1 && row.collectionId !== collectionId) {
                 return false;
             }
 
