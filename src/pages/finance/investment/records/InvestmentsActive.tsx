@@ -15,8 +15,11 @@ const ActiveInvestments = (): React.ReactElement => {
                 <div className="row">
                     <div className="col-12">
                         <Card>
+                            <Card.Header>
+                                <b>Investimentos</b>
+                            </Card.Header>
                             <Card.Body>
-                                <BrazilianFundInvestmentTable/>
+                                <InvestmentTable />
                             </Card.Body>
                         </Card>
                     </div>
@@ -24,11 +27,8 @@ const ActiveInvestments = (): React.ReactElement => {
                 <div className="row">
                     <div className="col-12">
                         <Card>
-                            <Card.Header>
-                                <b>Investimentos</b>
-                            </Card.Header>
                             <Card.Body>
-                                <InvestmentTable />
+                                <BrazilianFundInvestmentTable/>
                             </Card.Body>
                         </Card>
                     </div>

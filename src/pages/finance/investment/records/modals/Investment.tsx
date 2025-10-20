@@ -1,21 +1,21 @@
-import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
-import Modal from '../../../../../components/Modal.tsx'
-import { Investment } from "../../../../../interfaces/Finance.tsx";
-import { Controller, useForm } from "react-hook-form";
-import { format, parseISO } from "date-fns";
-import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx'
-import { getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentObjectives, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
-import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
-import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
-import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
-import { toast } from "react-toastify";
-import Loader from "../../../../../components/Loader.tsx";
 import { Grid, TextField } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { ptBR } from "date-fns/locale";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx';
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
+import Loader from "../../../../../components/Loader.tsx";
+import Modal from '../../../../../components/Modal.tsx';
+import { Investment } from "../../../../../interfaces/Finance.tsx";
+import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
+import { getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentObjectives, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
 
 
 interface InvestmentProps {
@@ -477,7 +477,7 @@ const App = (props: InvestmentProps): ReactElement => {
                             control={control}
                             render={({ field }) => (
                                 <CurrencyInput
-                                    label="Total"
+                                    label="Total liquidado"
                                     value={field.value}
                                     prefix={'R$ '}
                                     onValueChange={(values: any) => field.onChange(values.rawValue)}

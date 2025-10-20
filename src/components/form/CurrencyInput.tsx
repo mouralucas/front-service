@@ -27,6 +27,12 @@ function CurrencyInput({
     const [signedValue, setSignedValue] = useState<boolean>(false);
 
     const formatValue = (inputValue: string) => {
+        // If empty, return zero value
+        if (inputValue.trim() === "" || inputValue === null || inputValue === undefined) {
+            setSignedValue(false);
+            return `${prefix}0${decimalPlaces > 0 ? "." + "0".repeat(decimalPlaces) : ""}${suffix}`;
+        }
+
         // Check the sign
         let isNegative = signedValue;
         if (/^-/.test(inputValue)) isNegative = true;
@@ -84,7 +90,7 @@ function CurrencyInput({
 
     // Sync when parent passes value
     useEffect(() => {
-        if (value !== undefined) {
+        if (value !== undefined && value !== null) {
             const formatted = typeof value === "number"
                 ? formatValue(value.toFixed(decimalPlaces))
                 : formatValue(value);
