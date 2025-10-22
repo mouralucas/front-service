@@ -1,10 +1,11 @@
-import {lazy, ReactElement, FC} from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { lazy, ReactElement, FC, Suspense } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import WithoutNav from './WithoutNav'
 import Landing from '../pages/Landing'
 import WithNav from "./WithNav";
 import Login from '../pages/user/Login'
 import RequireAuth from "../services/auth/RequireAuth";
+import Loader from "../components/Loader.tsx";
 
 const Error404: FC = lazy(() => import('../pages/errors/404'))
 
@@ -26,35 +27,37 @@ const DesignTesting: FC = lazy(() => import('../pages/DesignTests.tsx'))
 function RolfRoutes(): ReactElement {
     return (
         <BrowserRouter>
-            <Routes>
-                <Route element={<WithNav/>}>
-                    {/* Default page */}
-                    <Route element={<Landing/>} path={'/'}></Route>
+            <Suspense fallback={<Loader />}>
+                <Routes>
+                    <Route element={<WithNav />}>
+                        {/* Default page */}
+                        <Route element={<Landing />} path={'/'}></Route>
 
-                    {/* Design Testing */}
-                    <Route element={<DesignTesting></DesignTesting>} path={'/testing'}/>
+                        {/* Design Testing */}
+                        <Route element={<DesignTesting></DesignTesting>} path={'/testing'} />
 
-                    {/* Finance */}
-                    <Route element={<RequireAuth><InvestmentDashboard/></RequireAuth>} path="/finance/investment"/>
-                    <Route element={<RequireAuth><InvestmentActive/></RequireAuth>} path="/finance/investment/active" />
-                    <Route element={<RequireAuth><InvestmentSettled/></RequireAuth>} path="/finance/investment/settled" />
-                    <Route element={<RequireAuth><FinanceTransactions/></RequireAuth>} path="/finance/transaction"/>
-                    <Route element={<RequireAuth><FinanceTransactionsDashboard/></RequireAuth>} path="/finance/transaction/dashboard"/>
-                    <Route element={<RequireAuth><FinanceAdmin/></RequireAuth>} path="/finance/admin"/>
+                        {/* Finance */}
+                        <Route element={<RequireAuth><InvestmentDashboard /></RequireAuth>} path="/finance/investment" />
+                        <Route element={<RequireAuth><InvestmentActive /></RequireAuth>} path="/finance/investment/active" />
+                        <Route element={<RequireAuth><InvestmentSettled /></RequireAuth>} path="/finance/investment/settled" />
+                        <Route element={<RequireAuth><FinanceTransactions /></RequireAuth>} path="/finance/transaction" />
+                        <Route element={<RequireAuth><FinanceTransactionsDashboard /></RequireAuth>} path="/finance/transaction/dashboard" />
+                        <Route element={<RequireAuth><FinanceAdmin /></RequireAuth>} path="/finance/admin" />
 
-                    {/* Library */}
-                    <Route element={<RequireAuth><LibraryLanding/></RequireAuth>} path={'/library/records'} />
-                    <Route element={<RequireAuth><LibraryBackoffice/></RequireAuth>} path={'/library/backoffice'} />
-                    <Route element={<RequireAuth><LibraryItem /></RequireAuth>} path={'/library/item'} />
+                        {/* Library */}
+                        <Route element={<RequireAuth><LibraryLanding /></RequireAuth>} path={'/library/records'} />
+                        <Route element={<RequireAuth><LibraryBackoffice /></RequireAuth>} path={'/library/backoffice'} />
+                        <Route element={<RequireAuth><LibraryItem /></RequireAuth>} path={'/library/item'} />
 
-                    {/* Settings */}
-                    <Route element={<RequireAuth><FinanceAdmin/></RequireAuth>} path="/config/financeiro"/>
-                </Route>
-                <Route element={<WithoutNav/>}>
-                    <Route element={<Login />} path={'/login'}/>
-                    <Route element={<Error404/>} path="*"/>
-                </Route>
-            </Routes>
+                        {/* Settings */}
+                        <Route element={<RequireAuth><FinanceAdmin /></RequireAuth>} path="/config/financeiro" />
+                    </Route>
+                    <Route element={<WithoutNav />}>
+                        <Route element={<Login />} path={'/login'} />
+                        <Route element={<Error404 />} path="*" />
+                    </Route>
+                </Routes>
+            </Suspense>
         </BrowserRouter>
     )
 }
