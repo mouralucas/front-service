@@ -229,6 +229,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                     {...field}
                                     label="Período"
                                     variant="outlined"
+                                    type="number"
                                     size="small"
                                     fullWidth
                                     error={!!errors.period}
