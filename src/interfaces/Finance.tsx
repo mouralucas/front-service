@@ -190,7 +190,7 @@ export interface InvestmentStatement {
     transactionDate: string;
     maturityDate: string | null;
     referenceDate: string | null;
-    period: string;
+    period: number;
     grossAmount: number;
     netAmount: number;
     valueChange: number;
