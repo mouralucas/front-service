@@ -9,7 +9,6 @@ import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLi
 import { QUERY_READING_STATS } from "../../../../services/apollo/queries/Library.tsx";
 import CreateReadingModal from "../modals/CreateReading.tsx";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
-``
 
 
 interface BookDrawerProps {

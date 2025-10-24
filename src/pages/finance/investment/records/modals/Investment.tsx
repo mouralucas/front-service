@@ -1,18 +1,21 @@
+import { Grid, TextField } from "@mui/material";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
-import Modal from '../../../../../components/Modal.tsx'
-import { Investment } from "../../../../../interfaces/Finance.tsx";
 import { Controller, useForm } from "react-hook-form";
-import DatePicker from "react-datepicker";
-import Select from "react-select";
-import { format, parseISO } from "date-fns";
-import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx'
-import { getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentObjectives, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
-import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
-import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
-import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { toast } from "react-toastify";
+import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx';
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import Loader from "../../../../../components/Loader.tsx";
-import DateMaskedInput from "../../../../../components/form/DateMaskInput.tsx";
+import Modal from '../../../../../components/Modal.tsx';
+import { Investment } from "../../../../../interfaces/Finance.tsx";
+import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
+import { getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentObjectives, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
 
 
 interface InvestmentProps {
@@ -131,354 +134,376 @@ const App = (props: InvestmentProps): ReactElement => {
     const body: ReactElement = isLoading ? <Loader /> :
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row mt-2">
-                    <div className="col-3">
-                        <label htmlFor="">Data</label>
+                <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
-                            name={'transactionDate'}
+                            name="transactionDate"
                             control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
-                                <DatePicker
-                                    selected={parseISO(field.value)}
-                                    onChange={(date: Date | null) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                    }}
-                                    dateFormat="dd/MM/yyyy"
-                                    className={`form-control ${errors.transactionDate} ? 'input-error' : ''`}
-                                    placeholderText="Selecione uma data"
-                                    customInput={
-                                        <DateMaskedInput
-                                            placeholder="dd/mm/aaaa"
-                                            className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
-                                        />
-                                    }
-                                />
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Data"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                                error: !!errors.transactionDate,
+                                                helperText: errors.transactionDate?.message,
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Conta</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'accountId'}
                             control={control}
-                            rules={{ required: "Este campo é obrigatório" }}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    key={field.value}
-                                    options={accounts}
-                                    value={accounts.find((c: any) => c.value === field.value)}
-                                    onChange={(val: any) => field.onChange(val?.value)}
-                                    className={`${errors.accountId ? "border border-danger" : ""}`}
-                                    placeholder={'Selecione'}
+                                <SelectAutocomplete
+                                    label="Conta"
+                                    value={field.value}
+                                    options={accounts || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.accountId?.message}
                                 />
                             )}
                         />
-                        {errors.accountId && (
-                            <div className="text-danger mt-1">{errors.accountId.message}</div>
-                        )}
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Tipo de investimento</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'investmentTypeId'}
                             control={control}
-                            rules={{ required: true }}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    key={field.value}
-                                    options={investmentTypes}
-                                    value={investmentTypes.find((c: any) => c.value === field.value)}
-                                    onChange={(val: any) => field.onChange(val?.value)}
-                                    className={`${errors.investmentTypeId ? "border border-danger" : ""}`}
-                                    placeholder={'Selecione'}
+                                <SelectAutocomplete
+                                    label="Tipo de Investimento"
+                                    value={field.value}
+                                    options={investmentTypes || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.investmentTypeId?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Objetivo</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'objectiveId'}
                             control={control}
                             render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    key={field.value}
-                                    options={objectives}
-                                    value={objectives.find((c: any) => c.value === field.value)}
-                                    onChange={(val: any) => field.onChange(val?.value)}
-                                    placeholder={'Selecione'}
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-6">
-                        <label htmlFor="">Nome do investimento</label>
-                        <Controller
-                            name={'name'}
-                            control={control}
-                            rules={{ required: "Este campo é obrigatório" }}
-                            render={({ field }) => (
-                                <input
-                                    type="text"
-                                    {...field}
-                                    className={`form-control input-default ${errors.name ? "input-error" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-6">
-                        <label htmlFor="">Taxa contratada</label>
-                        <Controller
-                            name={'contractedRate'}
-                            control={control}
-                            rules={{ required: "Este campo é obrigatório" }}
-                            render={({ field }) => (
-                                <input
-                                    type="text"
-                                    {...field}
-                                    className={`form-control input-default ${errors.contractedRate ? "input-error" : ""}`}
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-3">
-                        <label htmlFor="">Vencimento</label>
-                        <Controller
-                            name={'maturityDate'}
-                            control={control}
-                            render={({ field }) => (
-                                <DatePicker
-                                    selected={field.value ? parseISO(field.value) : null}
-                                    onChange={(date: Date | null) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
+                                <SelectAutocomplete
+                                    label="Objetivo"
+                                    value={field.value || null}
+                                    options={objectives || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
                                     }}
-                                    dateFormat="dd/MM/yyyy"
-                                    className={`form-control ${errors.transactionDate} ? 'input-error' : ''`}
-                                    placeholderText="Selecione uma data"
-                                    customInput={
-                                        <DateMaskedInput
-                                            placeholder="dd/mm/aaaa"
-                                            className={`form-control ${errors.transactionDate ? "input-error" : ""}`}
-                                        />
-                                    }
+                                    error={errors.objectiveId?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Quantidade</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 6 }} >
                         <Controller
-                            name={'quantity'}
+                            name="name"
+                            control={control}
+                            rules={{ required: "Esse campo é obrigatório" }}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Título"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.name}
+                                    helperText={errors.name?.message}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 6 }} >
+                        <Controller
+                            name="contractedRate"
+                            control={control}
+                            rules={{ required: "Esse campo é obrigatório" }}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Taxa contratada"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.contractedRate}
+                                    helperText={errors.contractedRate?.message}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 6, md: 3 }} >
+                        <Controller
+                            name="maturityDate"
+                            control={control}
+                            render={({ field }) => (
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Vencimento"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
+                        <Controller
+                            name="quantity"
                             control={control}
                             rules={{
-                                validate: (value) => value !== 0 || "Este campo não deve ser zero",
+                                validate: (value) => value !== 0 || "Este campo deve ser maior que zero",
                             }}
                             render={({ field }) => (
                                 <CurrencyInput
+                                    label="Quantidade"
                                     value={field.value}
-                                    onValueChange={(values) => field.onChange(values.rawValue)}
-                                    className={`form-control input-default ${errors.quantity ? 'input-error' : ''}`}
+                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    error={!!errors.quantity}
+                                    helperText={errors.quantity?.message}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
+                        <Controller
+                            name="price"
+                            control={control}
+                            rules={{
+                                validate: (value) => value !== 0 || "Este campo deve ser maior que zero",
+                            }}
+                            render={({ field }) => (
+                                <CurrencyInput
+                                    label="Preço"
+                                    value={field.value}
+                                    prefix={'R$ '}
+                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    error={!!errors.price}
+                                    helperText={errors.price?.message}
                                     onBlur={calculateTotalAmount}
                                 />
                             )}
                         />
-                        {errors.quantity && (<div className="text-danger mt-1">{errors.quantity.message}</div>)}
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Preço</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
-                            name={'price'}
+                            name="amount"
                             control={control}
                             rules={{
-                                validate: (value) => value !== 0 || "Este campo não deve ser zero",
+                                validate: (value) => value !== 0 || "Este campo deve ser maior que zero",
                             }}
                             render={({ field }) => (
                                 <CurrencyInput
-                                    prefix={'R$ '}
-                                    decimalPlaces={5}
+                                    label="Total"
                                     value={field.value}
-                                    onValueChange={(values) => field.onChange(values.rawValue)}
-                                    className={`form-control input-default ${errors.price ? 'input-error' : ''}`}
-                                    onBlur={calculateTotalAmount}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Total</label>
-                        <Controller
-                            name={'amount'}
-                            control={control}
-                            rules={{
-                                validate: (value) => value !== 0 || "Este campo não deve ser zero",
-                            }}
-                            render={({ field }) => (
-                                <CurrencyInput
                                     prefix={'R$ '}
-                                    value={field.value}
-                                    onValueChange={(values) => field.onChange(values.rawValue)}
-                                    className={`form-control input-default ${errors.amount ? 'input-error' : ''}`}
+                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    error={!!errors.amount}
+                                    helperText={errors.amount?.message}
                                     disabled={true}
+                                    onBlur={calculateTotalAmount}
                                 />
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-2">
-                        <label htmlFor="">Moeda</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 2 }} >
                         <Controller
                             name={'currencyId'}
                             control={control}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    key={field.value}
-                                    options={currencies}
-                                    value={currencies.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${errors.currencyId ? "border border-danger" : ""}`}
+                                <SelectAutocomplete
+                                    label="Moeda"
+                                    value={field.value}
+                                    options={currencies || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.currencyId?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-5">
-                        <label htmlFor="">Tipo indexador</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 5 }} >
                         <Controller
                             name={'indexerTypeId'}
                             control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    key={field.value}
-                                    options={indexerTypes}
-                                    value={indexerTypes.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${errors.indexerTypeId ? "border border-danger" : ""}`}
-                                    placeholder={'Selecione'}
+                                <SelectAutocomplete
+                                    label="Tipo indexador"
+                                    value={field.value}
+                                    options={indexerTypes || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.indexerTypeId?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-5">
-                        <label htmlFor="">Indexador</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 5 }} >
                         <Controller
                             name={'indexerId'}
                             control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    key={field.value}
-                                    options={indexers}
-                                    value={indexers.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${errors.indexerId ? "border border-danger" : ""}`}
-                                    placeholder={'Selecione'}
+                                <SelectAutocomplete
+                                    label="Indexador"
+                                    value={field.value}
+                                    options={indexers || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.indexerId?.message}
                                 />
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-3">
-                        <label htmlFor="">Liquidez</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'liquidityId'}
                             control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    key={field.value}
-                                    options={liquidity}
-                                    value={liquidity.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${errors.liquidityId ? "border border-danger" : ""}`}
-                                    placeholder={'Selecione'}
+                                <SelectAutocomplete
+                                    label="Liquidez"
+                                    value={field.value}
+                                    options={liquidity || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.liquidityId?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">País</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'countryId'}
                             control={control}
-                            rules={{ required: 'Esse campo é obrigatório' }}
+                            rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    key={field.value}
-                                    options={countries}
-                                    value={countries.find((c: any) => c.value === field.value)}
-                                    onChange={(val) => field.onChange(val?.value)}
-                                    className={`${errors.liquidityId ? "border border-danger" : ""}`}
+                                <SelectAutocomplete
+                                    label="País"
+                                    value={field.value}
+                                    options={countries || []}
+                                    getOptionLabel={(option: any) => option.label}
+                                    getOptionValue={(option: any) => option.value}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.countryId?.message}
                                 />
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Liquidado em</label>
+                    </Grid>
+                    <Grid size={{ sm: 6, md: 3 }} >
                         <Controller
-                            name={'settlementDate'}
+                            name="settlementDate"
                             control={control}
                             render={({ field }) => (
-                                <DatePicker
-                                    selected={field.value ? parseISO(field.value) : null}
-                                    onChange={(date) => {
-                                        field.onChange(date ? format(date, 'yyyy-MM-dd') : field.value);
-                                    }}
-                                    dateFormat="dd/MM/yyyy"
-                                    className="form-control"
-                                    placeholderText="__/__/____"
-                                />
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
+                                    adapterLocale={ptBR}
+                                >
+                                    <DatePicker
+                                        label="Liquidado em"
+                                        value={field.value ? new Date(field.value + "T00:00") : null}
+                                        onChange={(date) =>
+                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: "small",
+                                            },
+                                        }}
+                                        sx={{ width: "100%" }}
+                                    />
+                                </LocalizationProvider>
                             )}
                         />
-                    </div>
-                    <div className="col-3">
-                        <label htmlFor="">Valor líquido</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
-                            name={'settlementAmount'}
+                            name="settlementAmount"
                             control={control}
                             render={({ field }) => (
                                 <CurrencyInput
-                                    prefix={'R$ '}
+                                    label="Total liquidado"
                                     value={field.value}
-                                    onValueChange={(values) => field.onChange(values.rawValue)}
-                                    className={`form-control input-default`}
+                                    prefix={'R$ '}
+                                    onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    error={!!errors.settlementAmount}
+                                    helperText={errors.settlementAmount?.message}
                                 />
                             )}
                         />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <label htmlFor="">Observações</label>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 12 }} >
                         <Controller
-                            name={'observation'}
+                            name="observation"
                             control={control}
                             render={({ field }) => (
-                                <textarea
+                                <TextField
                                     {...field}
-                                    value={field.value ?? ''}
-                                    onChange={field.onChange}
-                                    rows={5}
-                                    className='form-control'
+                                    label="Observações"
+                                    multiline
+                                    minRows={6}
+                                    fullWidth
+                                    size="small"
                                 />
                             )}
                         />
-                    </div>
-                </div>
+                    </Grid>
+                </Grid>
             </form>
         </>
 
@@ -489,7 +514,7 @@ const App = (props: InvestmentProps): ReactElement => {
             title={'Investimento'}
             actionModal={handleSubmit(onSubmit)}
             body={body}
-            size={'modal-xl'}
+            size={'modal-lg'}
         />
     )
 }

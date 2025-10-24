@@ -62,7 +62,6 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
     }, [setValue, reset, props.modalState, props.readingId]);
 
     const submitReadingProgress = async (progressFormData: ItemReadingProgress) => {
-        console.log(progressFormData);
         const normalizedData = { ...progressFormData, value: Number(progressFormData.value) }
         try {
             await createReadingProgress({
@@ -117,15 +116,15 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
                     <Controller
                         name="progressDate"
                         control={control}
-                        rules={{ required: "Esse campo é obrigatório." }}
+                        rules={{ required: "Campo obrigatório" }}
                         render={({ field }) => (
                             <LocalizationProvider
                                 dateAdapter={AdapterDateFns}
                                 adapterLocale={ptBR}
                             >
                                 <DatePicker
-                                    label="Início da leitura"
-                                    value={field.value ? new Date(field.value) : null}
+                                    label="Data"
+                                    value={field.value ? new Date(field.value + "T00:00") : null}
                                     onChange={(date) =>
                                         field.onChange(date ? date.toISOString().split("T")[0] : null)
                                     }
