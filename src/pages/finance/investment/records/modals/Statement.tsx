@@ -19,6 +19,7 @@ import { QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.t
 import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getTaxFee } from "../../../../../services/getCommonData/Finance.tsx";
+import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 
 interface InvestmentStatementProps {
     modalState: boolean,
@@ -40,7 +41,7 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
-    const { handleSubmit, control, getValues, reset, formState: { errors }, } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
+    const { handleSubmit, control, getValues, reset, formState: { errors }, setValue} = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
 
     const { fields: taxFields, append: appendTax, remove: removeTax } = useFieldArray({
         control,
@@ -88,6 +89,15 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         }
     }, [getValues, props.investment, props.modalState, reset]);
 
+
+    const updatePeriod = () => {
+        const selectedDate = getValues('referenceDate');
+        if (!selectedDate) return;
+
+        const period = getPeriodFromDate(selectedDate);
+        setValue('period', period);
+    }
+
     const onSubmit = (data: InvestmentStatement, e: BaseSyntheticEvent<object> | undefined) => {
         let method: string;
         let submitData: InvestmentStatement;
@@ -108,7 +118,6 @@ const App = (props: InvestmentStatementProps): ReactElement => {
             toast.error('Erro ao salvar extrato');
         })
     }
-
 
     const body: ReactElement = isLoading || !hasData ? <Loader /> : (
         <>
@@ -192,9 +201,11 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                     <DatePicker
                                         label="Referência"
                                         value={field.value ? new Date(field.value + "T00:00") : null}
-                                        onChange={(date) =>
-                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
-                                        }
+                                        onChange={(date) => {
+                                            const newDate = date ? date.toISOString().split("T")[0] : null;
+                                            field.onChange(newDate);
+                                            updatePeriod();
+                                        }}
                                         slotProps={{
                                             textField: {
                                                 fullWidth: true,
@@ -218,10 +229,12 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                     {...field}
                                     label="Período"
                                     variant="outlined"
+                                    type="number"
                                     size="small"
                                     fullWidth
                                     error={!!errors.period}
                                     helperText={errors.period?.message}
+                                    disabled={true}
                                 />
                             )}
                         />
