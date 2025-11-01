@@ -95,7 +95,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         if (!selectedDate) return;
 
         const period = getPeriodFromDate(selectedDate);
-        setValue('period', period);
+        setValue('period', String(period));
     }
 
     const onSubmit = (data: InvestmentStatement, e: BaseSyntheticEvent<object> | undefined) => {

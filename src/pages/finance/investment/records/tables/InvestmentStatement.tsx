@@ -35,13 +35,16 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
 
     const columns: GridColDef<InvestmentStatement>[] = [
         { field: "investmentStatementId", headerName: "Id", flex: 1 },
-        { field: "period", headerName: 'Período', flex: 1 },
+        { field: "period", headerName: 'Período', flex: 0.5 },
         {
             field: "previousAmount",
-            headerName: 'Anterior',
+            headerName: 'Anterior (aportes)',
             flex: 1,
-            valueFormatter: (value: number) => {
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            valueFormatter: (value: number, row) => {
+                const previousAmount = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const contribution = row.contribution.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const formattedValue = `${previousAmount} (${contribution})`;
+                return formattedValue;
             }
         },
         {

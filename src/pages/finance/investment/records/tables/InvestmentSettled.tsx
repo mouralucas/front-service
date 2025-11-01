@@ -131,7 +131,10 @@ const InvestmentSettledTable = (): ReactElement => {
                 data={investments}
                 isLoading={isLoading}
                 pageSize={100}
-                getRowId={(row) => row.investmentId} // Assuming investmentId is unique
+                getRowId={(row) => row.investmentId}
+                columnVisibilityModel={{
+                    investmentId: false,
+                }}
             />
             <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName} />
         </Box>
