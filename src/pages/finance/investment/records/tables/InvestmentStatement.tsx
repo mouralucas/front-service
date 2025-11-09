@@ -81,6 +81,7 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
             data={statements}
             isLoading={isLoading}
             getRowId={(row) => row.investmentStatementId}
+            pageSize={100}
             columnVisibilityModel={{
                 investmentStatementId: false
             }}
