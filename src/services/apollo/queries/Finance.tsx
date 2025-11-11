@@ -101,3 +101,12 @@ export const QUERY_INSTALLMENT_DUE_DATE = gql`
         }
     }
 `
+
+export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
+    query GetStatementMetadata($params: GetStatementMetadataInput) {
+        getStatementMetadata(params: $params) {
+            period
+            referenceDate
+        }
+    }
+`

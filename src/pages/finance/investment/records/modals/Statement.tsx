@@ -15,7 +15,7 @@ import Modal from "../../../../../components/Modal.tsx";
 import TaxArray from "../../../../../components/TaxFeeArray.tsx";
 import { Investment, InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
+import { QUERY_CURRENCY, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getTaxFee } from "../../../../../services/getCommonData/Finance.tsx";
@@ -41,7 +41,7 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
-    const { handleSubmit, control, getValues, reset, formState: { errors }, setValue} = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
+    const { handleSubmit, control, getValues, reset, formState: { errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
 
     const { fields: taxFields, append: appendTax, remove: removeTax } = useFieldArray({
         control,
@@ -58,6 +58,12 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         skip: !props.modalState,
     })
 
+    const { data: metadata, loading: metadataLoading } = useQuery(QUERY_INVESTMENT_STATEMENT_METADATA, {
+        client: apolloFinanceClient,
+        skip: !props.modalState,
+        variables: { params: { investmentId: props.investment?.investmentId } },
+    })
+
     const [taxes, setTaxes] = useState<any[]>([])
     const [fees, setFees] = useState<any[]>([])
 
@@ -67,7 +73,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     };
 
 
-    const isLoading = currenciesLoading
+    const isLoading = currenciesLoading || metadataLoading
     const hasData = taxes && fees && currenciesData
 
     useEffect(() => {
@@ -89,6 +95,10 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         }
     }, [getValues, props.investment, props.modalState, reset]);
 
+    useEffect(() => {
+        setValue("referenceDate", metadata?.getStatementMetadata?.referenceDate);
+        setValue("period", metadata?.getStatementMetadata?.period)
+    }, [metadata])
 
     const updatePeriod = () => {
         const selectedDate = getValues('referenceDate');
