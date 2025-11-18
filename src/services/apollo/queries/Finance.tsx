@@ -14,18 +14,19 @@ export const QUERY_CURRENCY = gql`
 }`
 
 export const QUERY_CATEGORIES = gql`
-query {
-    getCategories {
-        quantity
-        categories {
-            categoryId
-            categoryName
-            comment
-            order
-            description
+    query {
+        getCategories {
+            quantity
+            categories {
+                categoryId
+                categoryName
+                comment
+                order
+                description
+            }
         }
-    }
-}`
+}
+`
 
 
 export const QUERY_CREDIT_CARDS = gql`
@@ -107,6 +108,7 @@ export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
         getStatementMetadata(params: $params) {
             period
             referenceDate
+            contribution
         }
     }
 `

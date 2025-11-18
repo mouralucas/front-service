@@ -61,6 +61,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     const { data: metadata, loading: metadataLoading } = useQuery(QUERY_INVESTMENT_STATEMENT_METADATA, {
         client: apolloFinanceClient,
         skip: !props.modalState,
+        fetchPolicy: "no-cache",
         variables: { params: { investmentId: props.investment?.investmentId } },
     })
 
@@ -98,6 +99,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     useEffect(() => {
         setValue("referenceDate", metadata?.getStatementMetadata?.referenceDate);
         setValue("period", metadata?.getStatementMetadata?.period)
+        setValue("contribution", metadata?.getStatementMetadata?.contribution)
     }, [metadata])
 
     const updatePeriod = () => {
@@ -133,7 +135,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
-                    <Grid size={{ sm: 12, md: 6 }} > {/* Investment name */}
+                    <Grid size={{ sm: 12, md: 3 }} > {/* Investment name */}
                         <Controller
                             name="name"
                             control={control}
@@ -248,6 +250,24 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                 />
                             )}
                         />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} > {/* Contribution */}
+                        <div key={"R$"}>
+                            <Controller
+                                name="contribution"
+                                control={control}
+                                render={({ field }) => (
+                                    <CurrencyInput
+                                        label="Aportes"
+                                        prefix={"R$ "}
+                                        value={field.value}
+                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        error={!!errors?.grossAmount}
+                                        helperText={errors?.grossAmount?.message}
+                                    />
+                                )}
+                            />
+                        </div>
                     </Grid>
                     <Grid size={{ sm: 12, md: 3 }} > {/* Gross amout */}
                         <div key={"R$"}>
