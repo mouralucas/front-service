@@ -58,7 +58,7 @@ export interface GetInvestmentPerformanceResponse {
 
 export interface GetInvestmentStatementResponse {
     quantity: number;
-    statement: InvestmentStatement[];
+    statements: InvestmentStatement[];
 }
 
 export interface GetInvestmentObjectivesResponse {

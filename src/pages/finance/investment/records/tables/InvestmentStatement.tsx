@@ -25,7 +25,7 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
         setIsLoading(true);
 
         getFinanceData(URL_FINANCE_INVESTMENT_STATEMENT, { investmentId: props.investmentId }).then((response: GetInvestmentStatementResponse) => {
-            setStatements(response.statement)
+            setStatements(response.statements)
             setIsLoading(false);
         }).catch(() => {
             // toast.error('Erro ao buscar os extratos do investimento')
