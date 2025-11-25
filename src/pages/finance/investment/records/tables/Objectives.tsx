@@ -58,8 +58,12 @@ const InvestmentObjectivesTable = (): ReactElement => {
         },
         {
             field: 'currentAmount',
-            headerName: 'Vaor Atual',
-            flex: 1
+            headerName: 'Valor Atual',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number, row) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            }
         },
         {
             field: 'estimatedDeadline',
