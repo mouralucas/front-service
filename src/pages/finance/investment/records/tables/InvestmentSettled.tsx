@@ -84,7 +84,6 @@ const InvestmentSettledTable = (): ReactElement => {
             }
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
-        { field: 'custodianName', headerName: 'Custódia', flex: 1 },
         {
             field: 'actions',
             headerName: 'Ações',
