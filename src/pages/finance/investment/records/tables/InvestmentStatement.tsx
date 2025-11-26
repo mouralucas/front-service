@@ -42,7 +42,7 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
             flex: 1,
             valueFormatter: (value: number, row) => {
                 const previousAmount = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                const incoming = row.incoming.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const incoming = row.contribution.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const formattedValue = `${previousAmount} (${incoming})`;
                 return formattedValue;
             }

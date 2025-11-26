@@ -269,7 +269,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             />
                         </div>
                     </Grid>
-                     <Grid size={{ sm: 12, md: 4 }} > {/* Outgoing */}
+                     <Grid size={{ sm: 12, md: 4 }} > {/* Withdrawn */}
                         <div key={"R$"}>
                             <Controller
                                 name="withdrawn"
@@ -280,8 +280,8 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                         prefix={"R$ "}
                                         value={field.value}
                                         onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                        error={!!errors?.outgoing}
-                                        helperText={errors?.outgoing?.message}
+                                        error={!!errors?.withdrawn}
+                                        helperText={errors?.withdrawn?.message}
                                     />
                                 )}
                             />
