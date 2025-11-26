@@ -251,6 +251,7 @@ const InvestmentV2 = (): ReactElement => {
                 columnVisibilityModel={{
                     investmentId: false,
                 }}
+                pageSize={50}
             />
             <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment} />
             <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment} />
