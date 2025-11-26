@@ -108,7 +108,7 @@ export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
         getStatementMetadata(params: $params) {
             period
             referenceDate
-            contribution
+            incoming
         }
     }
 `

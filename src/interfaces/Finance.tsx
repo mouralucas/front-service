@@ -143,6 +143,8 @@ export interface Investment {
     quantity: number;
     price: number;
     amount: number;
+    totalIncoming: number;
+    totalOutgoing: number;
     grossAmount: number;
     contractedRate: string;
     currencyId: string;
@@ -191,7 +193,8 @@ export interface InvestmentStatement {
     maturityDate: string | null;
     referenceDate: string | null;
     period: string;
-    contribution: number;
+    incoming: number;
+    outgoing: number;
     grossAmount: number;
     netAmount: number;
     valueChange: number;

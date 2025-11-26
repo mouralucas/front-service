@@ -129,7 +129,25 @@ const InvestmentV2 = (): ReactElement => {
         },
         {
             field: 'amount',
-            headerName: 'Valor',
+            headerName: 'Valor Inicial',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number, row) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            }
+        },
+        {
+            field: 'totalIncoming',
+            headerName: 'Aportes',
+            flex: 1,
+            type: 'number',
+            valueFormatter: (value: number, row) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            }
+        },
+        {
+            field: 'totalOutgoing',
+            headerName: 'Retiradas',
             flex: 1,
             type: 'number',
             valueFormatter: (value: number, row) => {
@@ -144,7 +162,7 @@ const InvestmentV2 = (): ReactElement => {
             valueFormatter: (value: string, row) => {
                 if (!value) return '0.00 (0.00%)';
                 const percentageChange: number = !row.percentageChange ? 0.00 : row.percentageChange;
-     
+
                 const formattedValue = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
                 const formattedPercChange: string = percentageChange.toFixed(2);
                 return `${formattedValue} (${formattedPercChange}%)`;

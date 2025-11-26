@@ -99,7 +99,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     useEffect(() => {
         setValue("referenceDate", metadata?.getStatementMetadata?.referenceDate);
         setValue("period", metadata?.getStatementMetadata?.period)
-        setValue("contribution", metadata?.getStatementMetadata?.contribution)
+        setValue("incoming", metadata?.getStatementMetadata?.incoming)
     }, [metadata])
 
     const updatePeriod = () => {
@@ -135,7 +135,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
-                    <Grid size={{ sm: 12, md: 3 }} > {/* Investment name */}
+                    <Grid size={{ sm: 12, md: 6 }} > {/* Investment name */}
                         <Controller
                             name="name"
                             control={control}
@@ -203,7 +203,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3 }} > {/* Reference date */}
+                    <Grid size={{ sm: 12, md: 4 }} > {/* Reference date */}
                         <Controller
                             name="referenceDate"
                             control={control}
@@ -232,7 +232,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3 }} > {/* Period */}
+                    <Grid size={{ sm: 12, md: 4 }} > {/* Period */}
                         <Controller
                             name="period"
                             control={control}
@@ -251,25 +251,43 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3 }} > {/* Contribution */}
+                    <Grid size={{ sm: 12, md: 4 }} > {/* Incoming */}
                         <div key={"R$"}>
                             <Controller
-                                name="contribution"
+                                name="incoming"
                                 control={control}
                                 render={({ field }) => (
                                     <CurrencyInput
-                                        label="Aportes"
+                                        label="Entradas"
                                         prefix={"R$ "}
                                         value={field.value}
                                         onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                        error={!!errors?.grossAmount}
-                                        helperText={errors?.grossAmount?.message}
+                                        error={!!errors?.incoming}
+                                        helperText={errors?.incoming?.message}
                                     />
                                 )}
                             />
                         </div>
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3 }} > {/* Gross amout */}
+                     <Grid size={{ sm: 12, md: 4 }} > {/* Outgoing */}
+                        <div key={"R$"}>
+                            <Controller
+                                name="outgoing"
+                                control={control}
+                                render={({ field }) => (
+                                    <CurrencyInput
+                                        label="Saídas"
+                                        prefix={"R$ "}
+                                        value={field.value}
+                                        onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                        error={!!errors?.outgoing}
+                                        helperText={errors?.outgoing?.message}
+                                    />
+                                )}
+                            />
+                        </div>
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 4 }} > {/* Gross amout */}
                         <div key={"R$"}>
                             <Controller
                                 name="grossAmount"
@@ -290,7 +308,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             />
                         </div>
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3 }} > {/* Net amount */}
+                    <Grid size={{ sm: 12, md: 4 }} > {/* Net amount */}
                         <div key={"R$"}>
                             <Controller
                                 name="netAmount"
