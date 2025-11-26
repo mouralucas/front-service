@@ -34,6 +34,8 @@ const DefaultInvestment: Investment = {
     quantity: 0,
     price: 0,
     amount: 0,
+    totalContribution: 0,
+    totalWithdrawn: 0,
     grossAmount: 0,
     contractedRate: '',
     currencyId: 'BRL',

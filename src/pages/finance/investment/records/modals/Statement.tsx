@@ -99,7 +99,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     useEffect(() => {
         setValue("referenceDate", metadata?.getStatementMetadata?.referenceDate);
         setValue("period", metadata?.getStatementMetadata?.period)
-        setValue("incoming", metadata?.getStatementMetadata?.incoming)
+        setValue("contribution", metadata?.getStatementMetadata?.contribution)
     }, [metadata])
 
     const updatePeriod = () => {
@@ -251,10 +251,10 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} > {/* Incoming */}
+                    <Grid size={{ sm: 12, md: 4 }} > {/* Contribution */}
                         <div key={"R$"}>
                             <Controller
-                                name="incoming"
+                                name="contribution"
                                 control={control}
                                 render={({ field }) => (
                                     <CurrencyInput
@@ -262,8 +262,8 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                         prefix={"R$ "}
                                         value={field.value}
                                         onValueChange={(values: any) => field.onChange(values.rawValue)}
-                                        error={!!errors?.incoming}
-                                        helperText={errors?.incoming?.message}
+                                        error={!!errors?.contribution}
+                                        helperText={errors?.contribution?.message}
                                     />
                                 )}
                             />
@@ -272,7 +272,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                      <Grid size={{ sm: 12, md: 4 }} > {/* Outgoing */}
                         <div key={"R$"}>
                             <Controller
-                                name="outgoing"
+                                name="withdrawn"
                                 control={control}
                                 render={({ field }) => (
                                     <CurrencyInput

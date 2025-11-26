@@ -137,7 +137,7 @@ const InvestmentV2 = (): ReactElement => {
             }
         },
         {
-            field: 'totalIncoming',
+            field: 'totalContribution',
             headerName: 'Aportes',
             flex: 1,
             type: 'number',
@@ -146,7 +146,7 @@ const InvestmentV2 = (): ReactElement => {
             }
         },
         {
-            field: 'totalOutgoing',
+            field: 'totalWithdrawn',
             headerName: 'Retiradas',
             flex: 1,
             type: 'number',
