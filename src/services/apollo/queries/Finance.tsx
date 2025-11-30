@@ -103,6 +103,41 @@ export const QUERY_INSTALLMENT_DUE_DATE = gql`
     }
 `
 
+// Investment Queries
+export const QUERY_BRAZILIAN_FUND_INVESTMENTS = gql`
+    query GetBrazilianFundInvestments($params: GetInvestmentBrazilianFundsInput) {
+        getInvestmentsBrazilianFunds(params: $params) {
+            quantity
+            investments {
+                investmentId
+                ownerId
+                custodianId
+                accountId
+                name
+                price
+                quantity
+                amount
+                transactionDate
+                investmentTypeId
+                countryId
+                currencyId
+                currencySymbol
+                objectiveId
+                objectiveName
+                isSettled
+                observation
+                fundId
+                fundName
+                investmentQuotationDate
+                investmentSettlementDate
+                redemptionQuotationDate
+                redemptionSettlementDate
+            }
+        }
+    }
+`
+
+
 export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
     query GetStatementMetadata($params: GetStatementMetadataInput) {
         getStatementMetadata(params: $params) {
@@ -111,4 +146,8 @@ export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
             contribution
         }
     }
+`
+
+export const QUERY_INVESTMENT_OBJECTIVES = gql`
+    query 
 `

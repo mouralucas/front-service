@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from "@mui/material";
@@ -5,22 +6,30 @@ import { GridColDef } from "@mui/x-data-grid";
 import { ReactElement, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { BrazilianFundInvestment } from "../../../../../interfaces/Finance";
-import { GetBrazilianFundInvestmentResponse } from "../../../../../interfaces/FinanceRequest";
-import { URL_FINANCE_BRAZILIAN_FUND_INVESTMENT } from "../../../../../services/axios/ApiUrls";
-import { getFinanceData } from "../../../../../services/axios/Get";
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
+import { QUERY_ACCOUNTS, QUERY_BRAZILIAN_FUND_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate } from "../../../../../utils/datetime";
 import BrazilianFundInvestmentModal from "../modals/BrazilianFundInvestment.tsx";
 
 
 const BrazilianFundInvestmentTable = (): ReactElement => {
-    const [brFundInvestments, setBrFundInvestments] = useState<BrazilianFundInvestment[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-
     // Modal states
     const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false)
 
+    const {data: brFundsData, loading: brFundsIsLoading, refetch: refetchBrFunds} = useQuery(
+        QUERY_BRAZILIAN_FUND_INVESTMENTS,
+        {
+            client: apolloFinanceClient,
+            variables: {
+                params: {
+                    isSettled: false
+                }
+            }
+        }
+    );
+
     useEffect(() => {
-        getBrazilianFundInvestments();
+        refetchBrFunds();
     }, [])
 
     const showInvestmentModal = (e: any) => {
@@ -32,18 +41,7 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
 
     const hideInvestmentModal = () => {
         setModalInvestmentState(false);
-        getBrazilianFundInvestments()
-    }
-
-    const getBrazilianFundInvestments = () => {
-        setIsLoading(true);
-        getFinanceData(URL_FINANCE_BRAZILIAN_FUND_INVESTMENT, { isSettled: false }).then((response: GetBrazilianFundInvestmentResponse) => {
-            setBrFundInvestments(response.investments);
-            setIsLoading(false);
-        }).catch(() => {
-            //toast.error('Houve um erro aos buscar os investimentos em fundos');
-            setIsLoading(false);
-        })
+        refetchBrFunds();
     }
 
     const columns: GridColDef<BrazilianFundInvestment>[] = [
@@ -79,22 +77,22 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showInvestmentModal}
-                    loading={isLoading}
+                    loading={brFundsIsLoading}
                 >
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={getBrazilianFundInvestments}
-                    loading={isLoading}
+                    onClick={refetchBrFunds}
+                    loading={brFundsIsLoading}
                 >
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
             <DataGrid
                 columns={columns}
-                data={brFundInvestments}
-                isLoading={isLoading}
+                data={brFundsData?.getInvestmentsBrazilianFunds?.investments || []}
+                isLoading={brFundsIsLoading}
                 getRowId={(row) => row.investmentId}
                 columnVisibilityModel={{
                     investmentId: false, // Hide the investmentId column
