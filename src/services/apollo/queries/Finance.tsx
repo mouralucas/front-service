@@ -149,5 +149,20 @@ export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
 `
 
 export const QUERY_INVESTMENT_OBJECTIVES = gql`
-    query 
+    query getInvestmentObjectives($params: GetInvestmentObjectivesInput) {
+        getInvestmentObjectives(params: $params) {
+            quantity
+            objectives {
+                id
+                ownerId
+                title
+                description
+                currencyId
+                currencySymbol
+                amount
+                currentAmount
+                estimatedDeadline
+            }
+        }
+    }
 `
