@@ -7,21 +7,28 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useEffect, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { InvestmentObjective } from '../../../../../interfaces/Finance';
-import { getInvestmentObjectives } from '../../../../../services/getCommonData/Finance';
 import { formatDate } from '../../../../../utils/datetime';
 import ObjectiveModal from '../modals/Objectives.tsx';
+import { useQuery } from '@apollo/client';
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
+import { QUERY_INVESTMENT_OBJECTIVES } from '../../../../../services/apollo/queries/Finance.tsx';
 
 
 const InvestmentObjectivesTable = (): ReactElement => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [modalObjectivesState, setModalObjectivesState] = useState<boolean>(false)
 
-    const [objectives, setObjectives] = useState<InvestmentObjective[]>([])
     const [selectedObjective, setSelectedObjective] = useState<InvestmentObjective | undefined>()
+
+    const {data: objectivesData, loading: objectivesLoading, refetch: objectivesRefetch} = useQuery(QUERY_INVESTMENT_OBJECTIVES,
+        {
+            client: apolloFinanceClient,
+            fetchPolicy: "no-cache",
+        }
+    )
 
     const fetchObjectivesData = async () => {
         setIsLoading(true);
-        setObjectives(await getInvestmentObjectives(false))
         setIsLoading(false);
     }
 
@@ -44,7 +51,7 @@ const InvestmentObjectivesTable = (): ReactElement => {
     }, [])
 
     const columns: GridColDef<InvestmentObjective>[] = [
-        { field: 'objectiveId', headerName: 'Id', flex: 1 },
+        { field: 'id', headerName: 'Id', flex: 1 },
         { field: 'title', headerName: 'Título', flex: 1 },
         { field: 'description', headerName: 'Descrição', flex: 3 },
         {
@@ -66,7 +73,7 @@ const InvestmentObjectivesTable = (): ReactElement => {
             }
         },
         {
-            field: 'estimatedDeadline',
+            field: 'estimateDeadline',
             headerName: 'Prazo Estimado',
             flex: 1,
             valueFormatter: (value) => {
@@ -115,7 +122,7 @@ const InvestmentObjectivesTable = (): ReactElement => {
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={fetchObjectivesData}
+                    onClick={objectivesRefetch()}
                     loading={isLoading}
                 >
                     <AutorenewOutlined />
@@ -123,11 +130,11 @@ const InvestmentObjectivesTable = (): ReactElement => {
             </Box>
             <DataGrid
                 columns={columns}
-                data={objectives}
+                data={objectivesData?.getInvestmentObjectives?.objectives}
                 isLoading={isLoading}
-                getRowId={(row) => row.objectiveId}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
-                    objectiveId: false, // Hide the ID column
+                    id: false, // Hide the ID column
                 }}
             />
             <ObjectiveModal modalState={modalObjectivesState} hideModal={hideObjectiveModal} objective={selectedObjective} />

@@ -161,7 +161,7 @@ export const QUERY_INVESTMENT_OBJECTIVES = gql`
                 currencySymbol
                 amount
                 currentAmount
-                estimatedDeadline
+                estimateDeadline
             }
         }
     }
