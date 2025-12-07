@@ -1,30 +1,32 @@
+import { useQuery } from '@apollo/client';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import DataGridComp from '../../../../../components/table/DataGridV2';
 import { Investment } from '../../../../../interfaces/Finance.tsx';
-import { InvestmentResponse } from '../../../../../interfaces/FinanceRequest.tsx';
-import { URL_FINANCE_INVESTMENT } from '../../../../../services/axios/ApiUrls.tsx';
-import { getFinanceData } from '../../../../../services/axios/Get.tsx';
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
+import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate } from '../../../../../utils/datetime.tsx';
 import ModalInvestmentPerformance from '../modals/Performance.tsx';
 
 
 const InvestmentSettledTable = (): ReactElement => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
     const [modalInvestmentPerformanceState, setModalInvestmentPerformanceState] = useState<boolean>(false)
 
     const [investmentId, setInvestmentId] = useState<string>('')
     const [investmentName, setInvestmentName] = useState<string>('')
-    const [investments, setInvestments] = useState<Investment[]>([])
 
-    useEffect(() => {
-        getInvestment();
-    }, [])
+    const { data: investmentData, loading: investmentLoading, refetch: investmentRefetch } = useQuery(
+        QUERY_INVESTMENTS,
+        {
+            client: apolloFinanceClient,
+            variables: { params: { isSettled: false } },
+            fetchPolicy: "no-cache",
+        }
+    )
 
     const showInvestmentPerformanceModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -39,17 +41,6 @@ const InvestmentSettledTable = (): ReactElement => {
         setModalInvestmentPerformanceState(false);
         setInvestmentId('');
         setInvestmentName('');
-    }
-
-    const getInvestment = () => {
-        setIsLoading(true);
-        getFinanceData(URL_FINANCE_INVESTMENT, { isSettled: true }).then((response: InvestmentResponse) => {
-            setInvestments(response.investments);
-            setIsLoading(false);
-        }).catch(() => {
-            // toast.error('Houve um erro ao buscar os investimentos')
-            setIsLoading(false);
-        })
     }
 
     const columns: GridColDef<Investment>[] = [
@@ -113,22 +104,21 @@ const InvestmentSettledTable = (): ReactElement => {
         },
     ]
 
-
     return (
         <Box sx={{ display: 'block ' }} >
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={getInvestment}
-                    loading={isLoading}
+                    onClick={investmentRefetch}
+                    loading={investmentLoading}
                 >
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
             <DataGridComp
                 columns={columns}
-                data={investments}
-                isLoading={isLoading}
+                data={investmentData?.getInvestments?.investments}
+                isLoading={investmentLoading}
                 pageSize={100}
                 getRowId={(row) => row.investmentId}
                 columnVisibilityModel={{
