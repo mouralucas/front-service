@@ -9,18 +9,16 @@ import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { Investment } from "../../../../../interfaces/Finance";
-import { InvestmentResponse } from "../../../../../interfaces/FinanceRequest";
-import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls";
-import { getFinanceData } from "../../../../../services/axios/Get";
 import { formatDate, isLessThanMonths } from "../../../../../utils/datetime";
 import ModalInvestment from '../modals/Investment';
 import ModalInvestmentPerformance from '../modals/Performance';
 import ModalInvestmentStatement from '../modals/Statement';
+import { useQuery } from '@apollo/client';
+import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance';
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
 
 
 const InvestmentV2 = (): ReactElement => {
-    const [investments, setInvestments] = useState<Investment[]>([])
-
     // Modals States
     const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false);
     const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>();
@@ -31,12 +29,18 @@ const InvestmentV2 = (): ReactElement => {
     // Table Filter
     const [investmentFilter, setInvestmentFilter] = useState('');
 
-    // Loading State
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
     // Investment information for the stats modal - soon to be deprecated
     const [investmentId, setInvestmentId] = useState<string>('')
     const [investmentName, setInvestmentName] = useState<string>('')
+
+    const { data: investmentData, loading: investmentLoading, refetch: investmentRefetch } = useQuery(
+        QUERY_INVESTMENTS,
+        {
+            client: apolloFinanceClient,
+            variables: { params: { isSettled: false } },
+            fetchPolicy: "no-cache",
+        }
+    )
 
     // Modals Open/Close functions
     const showInvestmentModal = (e: any) => {
@@ -49,7 +53,7 @@ const InvestmentV2 = (): ReactElement => {
     const hideInvestmentModal = () => {
         setModalInvestmentState(false);
         setSelectedInvestment(undefined);
-        getInvestment();
+        investmentRefetch();
     }
 
     const showInvestmentStatementModal = (e: any) => {
@@ -62,7 +66,7 @@ const InvestmentV2 = (): ReactElement => {
     const hideInvestmentStatementModal = () => {
         setModalInvestmentStatementState(false);
         setSelectedInvestment(undefined);
-        getInvestment();
+        investmentRefetch()
     }
 
     const showInvestmentPerformanceModal = (e: any) => {
@@ -79,10 +83,6 @@ const InvestmentV2 = (): ReactElement => {
         setInvestmentName('');
     }
 
-    useEffect(() => {
-        getInvestment();
-    }, [])
-
     const getRowClassName = (params: any) => {
         // The check order is based in importance, negative performance should be shown first, then near settle investments, and finally the default row style.
         const perc = parseFloat(params.row.percentageChange);
@@ -98,18 +98,6 @@ const InvestmentV2 = (): ReactElement => {
             return 'info-mui-row'
         }
 
-    }
-
-    const getInvestment = () => {
-        setIsLoading(true);
-        getFinanceData(URL_FINANCE_INVESTMENT, { isSettled: false }).then((response: InvestmentResponse) => {
-            setInvestments(response.investments);
-            setIsLoading(false);
-        }).catch(() => {
-            // TODO: change to mui toast
-            // toast.error('Houve um erro ao buscar os investimentos')
-            setIsLoading(false);
-        })
     }
 
     const columns: GridColDef<Investment>[] = [
@@ -142,6 +130,7 @@ const InvestmentV2 = (): ReactElement => {
             flex: 1,
             type: 'number',
             valueFormatter: (value: number, row) => {
+                if (!value) return 'R$ 0.00'
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
             }
         },
@@ -151,6 +140,7 @@ const InvestmentV2 = (): ReactElement => {
             flex: 1,
             type: 'number',
             valueFormatter: (value: number, row) => {
+                if (!value) return 'R$ 0.00'
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
             }
         },
@@ -160,7 +150,7 @@ const InvestmentV2 = (): ReactElement => {
             flex: 1.5,
             type: 'number',
             valueFormatter: (value: string, row) => {
-                if (!value) return '0.00 (0.00%)';
+                if (!value) return 'R$ 0.00 (0.00%)';
                 const percentageChange: number = !row.percentageChange ? 0.00 : row.percentageChange;
 
                 const formattedValue = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
@@ -212,6 +202,12 @@ const InvestmentV2 = (): ReactElement => {
         },
     ]
 
+    const investments = investmentData?.getInvestments?.investments
+
+    useEffect(() => {
+        console.log(investments);
+    }, [investments])
+
     const filterdRows = investmentFilter
         ? investments.filter(row => row.name.toLowerCase().includes(investmentFilter.toLowerCase()))
         : investments
@@ -230,14 +226,14 @@ const InvestmentV2 = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showInvestmentModal}
-                    loading={isLoading}
+                    loading={investmentLoading}
                 >
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={getInvestment}
-                    loading={isLoading}
+                    onClick={investmentRefetch}
+                    loading={investmentLoading}
                 >
                     <AutorenewOutlined />
                 </IconButton>
@@ -246,7 +242,7 @@ const InvestmentV2 = (): ReactElement => {
                 columns={columns}
                 data={filterdRows}
                 getRowId={(row) => row.investmentId.toString()}
-                isLoading={isLoading}
+                isLoading={investmentLoading}
                 getRowClassName={getRowClassName}
                 columnVisibilityModel={{
                     investmentId: false,

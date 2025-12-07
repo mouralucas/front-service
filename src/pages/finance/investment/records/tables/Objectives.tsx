@@ -116,14 +116,14 @@ const InvestmentObjectivesTable = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showObjectiveModal}
-                    loading={isLoading}
+                    loading={objectivesLoading}
                 >
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={objectivesRefetch()}
-                    loading={isLoading}
+                    onClick={objectivesRefetch}
+                    loading={objectivesLoading}
                 >
                     <AutorenewOutlined />
                 </IconButton>
@@ -131,7 +131,7 @@ const InvestmentObjectivesTable = (): ReactElement => {
             <DataGrid
                 columns={columns}
                 data={objectivesData?.getInvestmentObjectives?.objectives}
-                isLoading={isLoading}
+                isLoading={objectivesLoading}
                 getRowId={(row) => row.id}
                 columnVisibilityModel={{
                     id: false, // Hide the ID column

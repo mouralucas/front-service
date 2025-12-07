@@ -137,6 +137,45 @@ export const QUERY_BRAZILIAN_FUND_INVESTMENTS = gql`
     }
 `
 
+export const QUERY_INVESTMENTS = gql`
+    query GetInvestments($params: GetInvestmentsInput) {
+    getInvestments(params: $params) {
+        quantity
+        investments {
+            investmentId
+            custodianId
+            accountId
+            name
+            typeId
+            transactionDate
+            maturityDate
+            quantity
+            price
+            amount
+            contractedRate
+            currencyId
+            currencySymbol
+            indexerTypeId
+            indexerTypeName
+            indexerId
+            indexerName
+            liquidityId
+            liquidityName
+            isSettled
+            settlementDate
+            settlementAmount
+            countryId
+            countryName
+            observation
+            objectiveId
+            grossAmount
+            totalContribution
+            totalWithdrawn
+        }
+    }
+}
+
+`
 
 export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
     query GetStatementMetadata($params: GetStatementMetadataInput) {
