@@ -209,7 +209,7 @@ const InvestmentV2 = (): ReactElement => {
     }, [investments])
 
     const filterdRows = investmentFilter
-        ? investments.filter(row => row.name.toLowerCase().includes(investmentFilter.toLowerCase()))
+        ? investments.filter((row: { name: string; }) => row.name.toLowerCase().includes(investmentFilter.toLowerCase()))
         : investments
 
     return (

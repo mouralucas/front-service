@@ -197,7 +197,7 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
                             render={({ field }) => (
                                 <SelectAutocomplete
                                     label="Objetivo"
-                                    value={field.value}
+                                    value={field.value || null}
                                     options={objectives || []}
                                     getOptionLabel={(option: any) => option.label}
                                     getOptionValue={(option: any) => option.value}
