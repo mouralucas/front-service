@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import { Grid, TextField } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -12,10 +13,12 @@ import SelectAutocomplete from "../../../../../components/form/SelectAutocomplet
 import Loader from "../../../../../components/Loader.tsx";
 import Modal from '../../../../../components/Modal.tsx';
 import { Investment } from "../../../../../interfaces/Finance.tsx";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
+import { QUERY_ACCOUNTS, QUERY_CURRENCY as QUERY_CURRENCIES, QUERY_INVESTMENT_OBJECTIVES } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
-import { getAccounts, getCurrencies, getIndexers, getIndexerTypes, getInvestmentObjectives, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
+import { getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
 
 
 interface InvestmentProps {
@@ -52,29 +55,42 @@ const DefaultInvestment: Investment = {
 const App = (props: InvestmentProps): ReactElement => {
     const { handleSubmit, control, reset, formState: { errors, dirtyFields }, getValues, setValue } = useForm<Investment>({ defaultValues: DefaultInvestment })
 
-    const [accounts, setAccounts] = useState<any[]>([])
     const [investmentTypes, setInvestmentTypes] = useState<any[]>([])
-    const [objectives, setObjectives] = useState<any[]>([])
-    const [currencies, setCurrencies] = useState<any[]>([])
     const [indexerTypes, setIndexerTypes] = useState<any[]>([])
     const [indexers, setIndexers] = useState<any[]>([])
     const [liquidity, setLiquidity] = useState<any[]>([])
     const [countries, setCountries] = useState<any[]>([])
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const { data: accountData, loading: accountLoading } = useQuery(QUERY_ACCOUNTS,
+        {
+            client: apolloFinanceClient,
+            skip: !props.modalState
+        }
+    )
+    
+    const { data: objectiveData, loading: objectiveLoading } = useQuery(QUERY_INVESTMENT_OBJECTIVES,
+        {
+            client: apolloFinanceClient,
+            skip: !props.modalState
+        }
+    )
+
+    const { data: currencyData, loading: currencyLoading } = useQuery(QUERY_CURRENCIES,
+        {
+            client: apolloFinanceClient,
+            skip: !props.modalState
+        }
+    )
 
     const fetchInvestmentData: () => Promise<void> = async () => {
-        setAccounts(await getAccounts());
         setInvestmentTypes(await getInvestmentTypes());
-        setObjectives(await getInvestmentObjectives(true));
-        setCurrencies(await getCurrencies());
         setIndexerTypes(await getIndexerTypes());
         setIndexers(await getIndexers(true));
         setLiquidity(await getLiquidity());
         setCountries(await getCountries(true));
-
-        setIsLoading(false);
     };
+
+    const isLoading = objectiveLoading || currencyLoading || accountLoading
 
     useEffect(() => {
         // Set initial value if provided
@@ -176,9 +192,9 @@ const App = (props: InvestmentProps): ReactElement => {
                                 <SelectAutocomplete
                                     label="Conta"
                                     value={field.value}
-                                    options={accounts || []}
-                                    getOptionLabel={(option: any) => option.label}
-                                    getOptionValue={(option: any) => option.value}
+                                    options={accountData.getAccounts.accounts || []}
+                                    getOptionLabel={(option: any) => option.nickname}
+                                    getOptionValue={(option: any) => option.accountId}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
@@ -215,9 +231,9 @@ const App = (props: InvestmentProps): ReactElement => {
                                 <SelectAutocomplete
                                     label="Objetivo"
                                     value={field.value || null}
-                                    options={objectives || []}
-                                    getOptionLabel={(option: any) => option.label}
-                                    getOptionValue={(option: any) => option.value}
+                                    options={objectiveData?.getInvestmentObjectives?.objectives || []}
+                                    getOptionLabel={(option: any) => option.title}
+                                    getOptionValue={(option: any) => option.id}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
@@ -355,9 +371,9 @@ const App = (props: InvestmentProps): ReactElement => {
                                 <SelectAutocomplete
                                     label="Moeda"
                                     value={field.value}
-                                    options={currencies || []}
-                                    getOptionLabel={(option: any) => option.label}
-                                    getOptionValue={(option: any) => option.value}
+                                    options={currencyData.getCurrencies.currencies || []}
+                                    getOptionLabel={(option: any) => option.symbol}
+                                    getOptionValue={(option: any) => option.currencyId}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
