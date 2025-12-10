@@ -9,6 +9,7 @@ interface LineChartProps {
   title?: string
   subtitle?: string
   customAxisTooltip?: any
+  loading?: boolean
 }
 
 const  Chart = (props: LineChartProps): ReactElement => {
@@ -28,6 +29,7 @@ const  Chart = (props: LineChartProps): ReactElement => {
         margin={margin}
         slots={{ tooltip: props.customAxisTooltip }}
         slotProps={{ tooltip: { trigger: 'axis' } }}
+        loading={props.loading || false}
       />
     </Box>
   );
