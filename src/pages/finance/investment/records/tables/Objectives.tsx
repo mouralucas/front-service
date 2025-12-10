@@ -4,7 +4,7 @@ import EditOutlined from '@mui/icons-material/EditOutlined';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { InvestmentObjective } from '../../../../../interfaces/Finance';
 import { formatDate } from '../../../../../utils/datetime';
@@ -15,7 +15,6 @@ import { QUERY_INVESTMENT_OBJECTIVES } from '../../../../../services/apollo/quer
 
 
 const InvestmentObjectivesTable = (): ReactElement => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [modalObjectivesState, setModalObjectivesState] = useState<boolean>(false)
 
     const [selectedObjective, setSelectedObjective] = useState<InvestmentObjective | undefined>()
@@ -27,11 +26,6 @@ const InvestmentObjectivesTable = (): ReactElement => {
         }
     )
 
-    const fetchObjectivesData = async () => {
-        setIsLoading(true);
-        setIsLoading(false);
-    }
-
     const showObjectiveModal = (e: any) => {
         if (typeof e.row != "undefined") {
             setSelectedObjective(e.row);
@@ -42,13 +36,8 @@ const InvestmentObjectivesTable = (): ReactElement => {
 
     const hideObjectiveModal = () => {
         setSelectedObjective(undefined);
-        setModalObjectivesState(false)
-        fetchObjectivesData().then();
+        setModalObjectivesState(false);
     }
-
-    useEffect(() => {
-        fetchObjectivesData().then()
-    }, [])
 
     const columns: GridColDef<InvestmentObjective>[] = [
         { field: 'id', headerName: 'Id', flex: 1 },

@@ -1,9 +1,8 @@
 import { useQuery } from "@apollo/client";
 import Grid from "@mui/material/Grid";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Select from "react-select";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import Loader from "../../../../../components/Loader.tsx";
@@ -45,14 +44,14 @@ const DefaultBrazilianFundInvestment: BrazilianFundInvestment = {
 
 const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) => {
 
-    const {handleSubmit, control, reset, formState: {errors, dirtyFields}, getValues, setValue} = useForm<BrazilianFundInvestment>({defaultValues: DefaultBrazilianFundInvestment})
+    const { handleSubmit, control, reset, formState: { errors, dirtyFields }, getValues, setValue } = useForm<BrazilianFundInvestment>({ defaultValues: DefaultBrazilianFundInvestment })
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     // Combo boxes data
     const [funds, setFunds] = useState<any[]>([])
     const [objectives, setObjectives] = useState<any[]>([])
 
-    const {data: accountData, loading: accountLoading, refetch: accountRefetch} = useQuery(
+    const { data: accountData } = useQuery(
         QUERY_ACCOUNTS,
         {
             client: apolloFinanceClient,
@@ -118,12 +117,12 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
         // })
     }
 
-    const body: ReactElement = isLoading ? <Loader/> :
+    const body: ReactElement = isLoading ? <Loader /> :
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
                     <Grid size={{ sm: 12, md: 3 }}>
-                         <Controller
+                        <Controller
                             name="transactionDate"
                             control={control}
                             render={({ field }) => (
@@ -149,7 +148,7 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3}}>
+                    <Grid size={{ sm: 12, md: 3 }}>
                         <Controller
                             name="fundId"
                             control={control}
@@ -170,7 +169,7 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3}}>
+                    <Grid size={{ sm: 12, md: 3 }}>
                         <Controller
                             name="accountId"
                             control={control}
@@ -191,7 +190,7 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3}}>
+                    <Grid size={{ sm: 12, md: 3 }}>
                         <Controller
                             name="objectiveId"
                             control={control}

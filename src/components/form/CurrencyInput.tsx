@@ -39,7 +39,7 @@ function CurrencyInput({
         if (/-$/.test(inputValue)) isNegative = !signedValue;
 
         // Remove all non-digit characters
-        let numericValue = parseInt(inputValue.replace(/\D/g, "")) || 0;
+        const numericValue = parseInt(inputValue.replace(/\D/g, "")) || 0;
 
         // Reset sign if real value is zero
         if (numericValue === 0) {

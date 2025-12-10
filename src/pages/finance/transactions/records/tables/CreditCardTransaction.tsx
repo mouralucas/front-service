@@ -6,7 +6,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState, useCallback } from 'react';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { CreditCardTransaction } from '../../../../../interfaces/Finance';
 import { GetCreditCardTransactionResponse } from '../../../../../interfaces/FinanceRequest';
@@ -48,13 +48,7 @@ const CreditCardTransactionTable = (): ReactElement => {
         updateDateRange([startDate, endDate]);
     }
 
-    const updateDateRange = (dates: any) => {
-        if (dates[1] !== null) {
-            getTransactions(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
-        }
-    }
-
-    const getTransactions = (startAt: number, endAt: number) => {
+    const getTransactions = useCallback((startAt: number, endAt: number) => {
         setIsLoading(true);
 
         getFinanceData(URL_CREDIT_CARD_TRANSACTION, {
@@ -67,7 +61,13 @@ const CreditCardTransactionTable = (): ReactElement => {
             //toast.error("Erro ao buscar transações")
             setIsLoading(false);
         })
-    }
+    }, []);
+
+    const updateDateRange = useCallback((dates: any) => {
+        if (dates[1] !== null) {
+            getTransactions(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
+        }
+    }, [getTransactions]);
 
     const columns: GridColDef<CreditCardTransaction>[] = [
         { field: 'transactionId', headerName: 'Id', flex: 1 },
@@ -167,7 +167,7 @@ const CreditCardTransactionTable = (): ReactElement => {
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={updateDateRange.bind(null, [startDate, endDate])}
+                    onClick={() => updateDateRange([startDate, endDate])}
                     loading={isLoading}
                 >
                     <AutorenewOutlined />

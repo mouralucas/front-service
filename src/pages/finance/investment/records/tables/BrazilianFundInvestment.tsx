@@ -7,7 +7,7 @@ import { ReactElement, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { BrazilianFundInvestment } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
-import { QUERY_ACCOUNTS, QUERY_BRAZILIAN_FUND_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
+import { QUERY_BRAZILIAN_FUND_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate } from "../../../../../utils/datetime";
 import BrazilianFundInvestmentModal from "../modals/BrazilianFundInvestment.tsx";
 
@@ -34,7 +34,7 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
 
     const showInvestmentModal = (e: any) => {
         if (e.row) {
-
+            console.log("Example to access the row values");
         }
         setModalInvestmentState(true);
     }

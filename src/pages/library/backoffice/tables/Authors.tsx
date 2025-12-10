@@ -41,7 +41,7 @@ const AuthorTable = (): ReactElement => {
         }
 
         setAuthorModalState((prev) => !prev);
-    }, [authorModalState])
+    }, [])
 
 
 
