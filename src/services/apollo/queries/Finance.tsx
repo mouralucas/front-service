@@ -176,6 +176,31 @@ export const QUERY_INVESTMENTS = gql`
 }
 `
 
+export const QUERY_INVESTMENT_STATEMENT = gql`
+    query GetInvestmentStatements($params: GetInvestmentStatementsInput) {
+        getInvestmentStatements(params: $params) {
+            quantity
+            statements {
+                id
+                investmentId
+                period
+                previousAmount
+                contribution
+                withdrawn
+                grossAmount
+                totalTax
+                totalFee
+                referenceDate
+                atMaturity
+                valueChange
+                percentageChange
+                netAmount
+            }
+        }
+    }
+`
+
+
 export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
     query GetStatementMetadata($params: GetStatementMetadataInput) {
         getStatementMetadata(params: $params) {

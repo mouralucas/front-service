@@ -1,10 +1,10 @@
 import { GridColDef } from "@mui/x-data-grid";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement } from "react";
 import DataGridComp from "../../../../../components/table/DataGridV2";
 import { InvestmentStatement } from "../../../../../interfaces/Finance";
-import { GetInvestmentStatementResponse } from "../../../../../interfaces/FinanceRequest";
-import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls";
-import { getFinanceData } from "../../../../../services/axios/Get";
+import { useQuery } from "@apollo/client";
+import { QUERY_INVESTMENT_STATEMENT } from "../../../../../services/apollo/queries/Finance";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 
 
 interface IncestmentStatementTableProps {
@@ -12,29 +12,16 @@ interface IncestmentStatementTableProps {
 }
 
 const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactElement => {
-    const [statements, setStatements] = useState<InvestmentStatement[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        if (props.investmentId) {
-            getInvestmentStatement()
+    const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENT,
+        {
+            client: apolloFinanceClient,
+            variables: { params: { investmentId: props.investmentId } },
+            skip: !props.investmentId
         }
-    }, [props.investmentId])
-
-    const getInvestmentStatement = () => {
-        setIsLoading(true);
-
-        getFinanceData(URL_FINANCE_INVESTMENT_STATEMENT, { investmentId: props.investmentId }).then((response: GetInvestmentStatementResponse) => {
-            setStatements(response.statements)
-            setIsLoading(false);
-        }).catch(() => {
-            // toast.error('Erro ao buscar os extratos do investimento')
-            setIsLoading(false);
-        })
-    }
+    )
 
     const columns: GridColDef<InvestmentStatement>[] = [
-        { field: "investmentStatementId", headerName: "Id", flex: 1 },
+        { field: "id", headerName: "Id", flex: 1 },
         { field: "period", headerName: 'Período', flex: 0.5 },
         {
             field: "previousAmount",
@@ -78,12 +65,12 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
     return (
         <DataGridComp
             columns={columns}
-            data={statements}
-            isLoading={isLoading}
-            getRowId={(row) => row.investmentStatementId}
+            data={statementData?.getInvestmentStatements?.statements}
+            isLoading={statementLoading}
+            getRowId={(row) => row.id}
             pageSize={100}
             columnVisibilityModel={{
-                investmentStatementId: false
+                id: false
             }}
         />
     )
