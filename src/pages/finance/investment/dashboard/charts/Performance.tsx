@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import Line from "../../../../../components/chart/Line.tsx"
-import { getFinanceData } from "../../../../../services/axios/Get.tsx";
-import { URL_FINANCE_INVESTMENT_PERFORMANCE } from "../../../../../services/axios/ApiUrls.tsx";
-import { toast, ToastOptions } from "react-toastify";
-import { GetInvestmentPerformanceResponse } from "../../../../../interfaces/FinanceRequest.tsx";
 import Select from "react-select";
 import { Indexer } from "../../../../../interfaces/Finance.tsx";
 import { getIndexers } from "../../../../../services/getCommonData/Finance.tsx";
 import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
 import { Divider, Paper, Typography } from "@mui/material";
+import { useQuery } from "@apollo/client";
+import { QUERY_INVESTMENT_PERFORMANCE } from "../../../../../services/apollo/queries/Finance.tsx";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 
 const periodsRange = [
     {
@@ -30,7 +29,6 @@ const periodsRange = [
 ]
 
 const App = () => {
-    const [performance, setPerformance] = useState<any>([])
     const [indexers, setIndexers] = useState<Indexer[]>([])
 
     const [filters, setFilters] = useState({
@@ -39,6 +37,18 @@ const App = () => {
         somethingElse: 35
     });
 
+    const { data: performanceData, loading: performanceLoading } = useQuery(
+    QUERY_INVESTMENT_PERFORMANCE,
+    {
+        client: apolloFinanceClient,
+        variables: {
+            params: {
+                indexerId: filters.selectedIndexer,
+                periodRange: filters.selectedPeriod,
+            }
+        }
+    }
+);
 
     const fetchPerformanceData = async () => {
         setIndexers(await getIndexers(true));
@@ -48,37 +58,6 @@ const App = () => {
         fetchPerformanceData().then();
     }, []);
 
-    useEffect(() => {
-        updatePerformanceByIndexer();
-    }, [filters]);
-
-    const getPerformance = (indexerId: string, periodRange: number) => {
-        getFinanceData(URL_FINANCE_INVESTMENT_PERFORMANCE, {
-            periodRange: periodRange,
-            indexerId: indexerId
-        }).then((response: GetInvestmentPerformanceResponse) => {
-            setPerformance(response);
-        }).catch((err: string | ToastOptions) => {
-            toast.error(`Houve um erro ao buscar a performance dos investimentos ${err}`)
-        })
-    }
-
-    const updatePerformanceByIndexer = () => {
-        getPerformance(filters.selectedIndexer, filters.selectedPeriod);
-    }
-
-    // const customToolTip = (pointInfo: any) => {
-    //     const period: string = pointInfo.point.data.period
-    //     const series: string = pointInfo.points.map(
-    //         (p: { seriesName: any; valueText: any; }) =>
-    //             `<b>${p.seriesName}</b>: ${parseFloat(p.valueText).toFixed(2)}%`
-    //     ).join('<br/>')
-
-    //     const formattedString = `<b>Período</b> ${period}<br/>${series}`
-    //     return {
-    //         text: formattedString,
-    //     };
-    // }
     function CustomAxisTooltip() {
         const tooltipData = useAxesTooltip();
         const firstAxisData: any = tooltipData?.[0];
@@ -116,6 +95,7 @@ const App = () => {
         );
     }
 
+    const performance = performanceData?.getInvestmentPerformance
     return (
         <>
             <div className="row mb-3">
@@ -140,13 +120,13 @@ const App = () => {
             <div className="row">
                 <div className="col-12">
                     <Line
-                        series={performance.data}
-                        xLabels={performance.xLabel}
+                        series={performance?.data}
+                        xLabels={performance?.xLabel}
                         customAxisTooltip={CustomAxisTooltip}
+                        loading={performanceLoading}
                     />
                 </div>
             </div>
-
         </>
     )
 }

@@ -174,7 +174,6 @@ export const QUERY_INVESTMENTS = gql`
         }
     }
 }
-
 `
 
 export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
@@ -204,4 +203,16 @@ export const QUERY_INVESTMENT_OBJECTIVES = gql`
             }
         }
     }
+`
+
+export const QUERY_INVESTMENT_PERFORMANCE = gql`
+query GetInvestmentPerformance($params: GetInvestmentPerformanceInput) {
+    getInvestmentPerformance(params: $params) {
+        xLabel
+        data {
+            data
+            label
+        }
+    }
+}
 `
