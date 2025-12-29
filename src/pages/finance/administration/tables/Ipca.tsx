@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from "@mui/material";
 import { GridColDef } from '@mui/x-data-grid';
@@ -18,10 +18,10 @@ const IpcaTable = (): ReactElement => {
 
     const columns: GridColDef<Ipca>[] = [
         { field: 'id', headerName: 'ID', flex: 1 },
-        { field: 'indexer_name', headerName: 'Indexador', flex: 1},
+        { field: 'indexerName', headerName: 'Indexador', flex: 1},
         { field: 'period', headerName: 'Período', flex: 1 },
         { field: 'value', headerName: 'Valor (%)', flex: 1, type: 'number' },
-        { field: 'periodicity_name', headerName: 'Periodicidade', flex: 1 }
+        { field: 'periodicityName', headerName: 'Periodicidade', flex: 1 }
     ]
 
     /*
