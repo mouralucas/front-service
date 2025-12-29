@@ -43,6 +43,20 @@ export const QUERY_INDEXER_SERIES = gql`
     }
 `
 
+export const QUERY_PERIODICITY = gql`
+    query GetPeriodicity {
+        getPeriodicity {
+            quantity
+            periodicities {
+                id
+                name
+                description
+                order
+            }
+        }
+    }
+`
+
 // Credit card queries
 export const QUERY_CREDIT_CARDS = gql`
     query GetCreditCards($params: GetCreditCardsInput) {
