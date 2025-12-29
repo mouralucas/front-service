@@ -12,7 +12,7 @@ import { QUERY_INDEXER_SERIES } from "../../../../services/apollo/queries/Financ
 const IpcaTable = (): ReactElement => {
     const { data, loading, refetch } = useQuery(QUERY_INDEXER_SERIES, {
         client: apolloFinanceClient,
-        variables: { params: { indexerId: "2a2b100f-17d9-4c61-b3b4-f06662113953" } }
+        variables: { params: { indexerId: "ef07cbb0-9b29-43c6-a060-bef73f1cc000" } }
         // pollInterval: 30000,
     });
 
@@ -38,7 +38,7 @@ const IpcaTable = (): ReactElement => {
 
     return (
         <Box sx={{ display: 'block' }}>
-            <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
                 <IconButton
                     aria-label="Atualizar"
                     onClick={() => refetch()}

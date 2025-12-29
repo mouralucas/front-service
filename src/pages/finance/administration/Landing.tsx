@@ -4,6 +4,7 @@ import BankTable from './tables/Bank';
 import DefaultCategoriesTable from './tables/DefaultCategory.tsx';
 import BrazilianFundsTable from './tables/BrazilianFunds.tsx';
 import IpcaTable from './tables/Ipca.tsx'
+import CdiTable from './tables/Cdi.tsx'
 
 
 const App = (): ReactElement => {
@@ -39,6 +40,16 @@ const App = (): ReactElement => {
                         </Card.Header>
                         <Card.Body>
                             <DefaultCategoriesTable />
+                        </Card.Body>
+                    </Card>
+                </div>
+                <div className="col-12">
+                    <Card>
+                        <Card.Header>
+                            <b>Histórico CDI</b>
+                        </Card.Header>
+                        <Card.Body>
+                            <CdiTable />
                         </Card.Body>
                     </Card>
                 </div>
