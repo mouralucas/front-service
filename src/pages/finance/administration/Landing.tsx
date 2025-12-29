@@ -1,17 +1,19 @@
-import {ReactElement} from "react";
-import Card from "../../../components/Card";
-import BankTable from './tables/Bank';
-import DefaultCategoriesTable from './tables/DefaultCategory.tsx';
-import BrazilianFundsTable from './tables/BrazilianFunds.tsx';
-import IpcaTable from './tables/Ipca.tsx'
-import CdiTable from './tables/Cdi.tsx'
+import { ReactElement } from "react";
+import Grid from "@mui/material/Grid";
 
+import Card from "../../../components/Card";
+import BankTable from "./tables/Bank";
+import DefaultCategoriesTable from "./tables/DefaultCategory";
+import BrazilianFundsTable from "./tables/BrazilianFunds";
+import IpcaTable from "./tables/Ipca";
+import CdiTable from "./tables/Cdi";
 
 const App = (): ReactElement => {
     return (
-        <div className='container'>
-            <div className="row">
-                <div className="col-12">
+        <div className="container">
+            <Grid container spacing={2}>
+                {/* Fundos de Investimento */}
+                <Grid size={{ xs: 12 }}>
                     <Card>
                         <Card.Header>
                             <b>Fundos de investimentos</b>
@@ -20,10 +22,10 @@ const App = (): ReactElement => {
                             <BrazilianFundsTable />
                         </Card.Body>
                     </Card>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-12">
+                </Grid>
+
+                {/* Bancos / Financeiras */}
+                <Grid size={{ xs: 12, md: 6 }}>
                     <Card>
                         <Card.Header>
                             <b>Bancos/Financeiras</b>
@@ -32,8 +34,10 @@ const App = (): ReactElement => {
                             <BankTable />
                         </Card.Body>
                     </Card>
-                </div>
-                <div className="col-12">
+                </Grid>
+
+                {/* Categorias */}
+                <Grid size={{ xs: 12, md: 6 }}>
                     <Card>
                         <Card.Header>
                             <b>Categorias</b>
@@ -42,8 +46,10 @@ const App = (): ReactElement => {
                             <DefaultCategoriesTable />
                         </Card.Body>
                     </Card>
-                </div>
-                <div className="col-12">
+                </Grid>
+
+                {/* Histórico CDI */}
+                <Grid size={{ xs: 12, md: 6 }}>
                     <Card>
                         <Card.Header>
                             <b>Histórico CDI</b>
@@ -52,8 +58,10 @@ const App = (): ReactElement => {
                             <CdiTable />
                         </Card.Body>
                     </Card>
-                </div>
-                <div className="col-12">
+                </Grid>
+
+                {/* Histórico IPCA */}
+                <Grid size={{ xs: 12, md: 6 }}>
                     <Card>
                         <Card.Header>
                             <b>Histórico IPCA</b>
@@ -62,10 +70,10 @@ const App = (): ReactElement => {
                             <IpcaTable />
                         </Card.Body>
                     </Card>
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         </div>
-    )
-}
+    );
+};
 
 export default App;
