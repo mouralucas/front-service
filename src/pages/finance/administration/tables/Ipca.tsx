@@ -6,26 +6,13 @@ import { ReactElement } from "react";
 import DataGridComp from "../../../../components/table/DataGridV2";
 import { Ipca } from "../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../services/apollo/client/ApolloFinanceService";
+import { QUERY_INDEXER_SERIES } from "../../../../services/apollo/queries/Finance";
 
-
-const query = gql`
-        query {
-            getIndexerSeries(params: {indexer_id:"2a2b100f-17d9-4c61-b3b4-f06662113953"}) {
-              quantity
-              series {
-                id
-                indexer_name
-                period
-                value
-                periodicity_name
-              }
-            }
-        }
-        `
 
 const IpcaTable = (): ReactElement => {
-    const { data, loading, refetch } = useQuery(query, {
+    const { data, loading, refetch } = useQuery(QUERY_INDEXER_SERIES, {
         client: apolloFinanceClient,
+        variables: { params: { indexerId: "2a2b100f-17d9-4c61-b3b4-f06662113953" } }
         // pollInterval: 30000,
     });
 

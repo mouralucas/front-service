@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-
+// General queries
 export const QUERY_CURRENCY = gql`
     query {
         getCurrencies {
@@ -28,7 +28,22 @@ export const QUERY_CATEGORIES = gql`
 }
 `
 
+export const QUERY_INDEXER_SERIES = gql`
+    query GetIndexerSeries($params: GetIndexerSeriesInput!) {
+        getIndexerSeries(params: $params) {
+            quantity
+            series {
+                id
+                indexerName
+                period
+                value
+                periodicityName
+            }
+        }
+    }
+`
 
+// Credit card queries
 export const QUERY_CREDIT_CARDS = gql`
     query GetCreditCards($params: GetCreditCardsInput) {
         getCreditCards(params: $params) {
@@ -41,6 +56,7 @@ export const QUERY_CREDIT_CARDS = gql`
     }
 `
 
+// Account queries
 export const QUERY_ACCOUNTS = gql`
 query GetAccounts($params: GetAccountsInput) {
     getAccounts(params: $params) {
