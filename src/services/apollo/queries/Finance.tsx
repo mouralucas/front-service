@@ -176,7 +176,7 @@ export const QUERY_INVESTMENTS = gql`
             custodianId
             accountId
             name
-            typeId
+            investmentTypeId
             transactionDate
             maturityDate
             quantity
