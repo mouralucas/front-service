@@ -125,25 +125,6 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     }
 
     const onSubmit = async (data: InvestmentStatement) => {
-        // let method: string;
-        // let submitData: InvestmentStatement;
-
-        // if (data.investmentStatementId !== null) {
-        //     method = 'patch'
-        //     submitData = data
-        // } else {
-        //     method = 'post'
-        //     submitData = data
-        // }
-
-        // financeSubmit(e, URL_FINANCE_INVESTMENT_STATEMENT, submitData, method).then(() => {
-        //     toast.success('Extrato inserido com sucesso');
-        //     reset(DefaultInvestmentStatement);
-        //     props.hideModal();
-        // }).catch(() => {
-        //     toast.error('Erro ao salvar extrato');
-        // })
-        console.log(data);
         if (data.investmentStatementId) {
             toast.warning('Função não implementada');
         } else {
