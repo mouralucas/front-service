@@ -199,6 +199,7 @@ export const QUERY_INVESTMENTS = gql`
             observation
             objectiveId
             grossAmount
+            percentageChange
             totalContribution
             totalWithdrawn
         }
