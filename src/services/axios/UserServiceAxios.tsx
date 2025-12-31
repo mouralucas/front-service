@@ -1,6 +1,6 @@
 import axios, {AxiosInstance} from "axios";
 import {getToken} from "../auth/Auth.tsx";
-import {URL_USER_BASE} from "./ApiUrls.tsx";
+import { URL_USER_BASE } from "../baseUrl.tsx";
 
 const user_connections_instance: AxiosInstance = axios.create(
     {
