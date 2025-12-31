@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
@@ -6,16 +7,15 @@ import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box, TextField } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { Investment } from "../../../../../interfaces/Finance";
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
+import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance';
 import { formatDate, isLessThanMonths } from "../../../../../utils/datetime";
 import ModalInvestment from '../modals/Investment';
 import ModalInvestmentPerformance from '../modals/Performance';
 import ModalInvestmentStatement from '../modals/Statement';
-import { useQuery } from '@apollo/client';
-import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance';
-import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
 
 
 const InvestmentV2 = (): ReactElement => {
