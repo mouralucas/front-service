@@ -228,7 +228,7 @@ const InvestmentV2 = (): ReactElement => {
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
-                    onClick={investmentRefetch}
+                    onClick={() => investmentRefetch()}
                     loading={investmentLoading}
                 >
                     <AutorenewOutlined />

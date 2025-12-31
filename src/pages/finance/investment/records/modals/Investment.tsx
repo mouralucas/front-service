@@ -142,7 +142,8 @@ const App = (props: InvestmentProps): ReactElement => {
         }
 
         financeSubmit(e, URL_FINANCE_INVESTMENT, submitData, method).then(() => {
-            toast.success('Investimento salvo com sucesso')
+            toast.success('Investimento salvo com sucesso');
+            props.hideModal();
         }).catch((err: string) => {
             toast.error('Erro ao salvar o investimento ' + err)
         })
@@ -192,7 +193,7 @@ const App = (props: InvestmentProps): ReactElement => {
                                 <SelectAutocomplete
                                     label="Conta"
                                     value={field.value}
-                                    options={accountData.getAccounts.accounts || []}
+                                    options={accountData?.getAccounts?.accounts || []}
                                     getOptionLabel={(option: any) => option.nickname}
                                     getOptionValue={(option: any) => option.accountId}
                                     onChange={(value) => {
@@ -371,7 +372,7 @@ const App = (props: InvestmentProps): ReactElement => {
                                 <SelectAutocomplete
                                     label="Moeda"
                                     value={field.value}
-                                    options={currencyData.getCurrencies.currencies || []}
+                                    options={currencyData?.getCurrencies?.currencies || []}
                                     getOptionLabel={(option: any) => option.symbol}
                                     getOptionValue={(option: any) => option.currencyId}
                                     onChange={(value) => {
