@@ -34,8 +34,8 @@ export interface AccountTransaction {
 }
 
 export type CreateAccountTransactionInput = Omit<
-  AccountTransaction,
-  "currencySymbol" | "accountNickname" | "createdAt" | "lastEditedAt" | "period" | "ownerId"
+    AccountTransaction,
+    "currencySymbol" | "accountNickname" | "createdAt" | "lastEditedAt" | "period" | "ownerId"
 >;
 
 // Credit card interfaces

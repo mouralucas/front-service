@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client"
 
 
+// Account mutations
 export const CREATE_ACCOUNT_TRANSACTION = gql`
     mutation CreateAccountTransaction($input: CreateAccountTransactionInput!) {
         createAccountTransaction(transaction: $input) {
@@ -21,3 +22,12 @@ export const UPDATE_ACCOUNT_TRANSACTION = gql`
     }
 `
 
+// Investment mutations
+export const CREATE_INVESTMENT_STATEMENT = gql`
+    mutation CreateInvestmentStatement($statement: CreateInvestmentStatementInput) {
+        createInvestmentStatement(statement: $statement) {
+            created
+            statementId
+        }
+    }
+`

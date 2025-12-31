@@ -1,11 +1,11 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Button, Divider, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale";
-import { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import '../../../../../assets/core/icons.css';
@@ -15,9 +15,8 @@ import Modal from "../../../../../components/Modal.tsx";
 import TaxArray from "../../../../../components/TaxFeeArray.tsx";
 import { Investment, InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
+import { CREATE_INVESTMENT_STATEMENT } from "../../../../../services/apollo/mutations/Finance.tsx";
 import { QUERY_CURRENCY, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
-import { URL_FINANCE_INVESTMENT_STATEMENT } from "../../../../../services/axios/ApiUrls.tsx";
-import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getTaxFee } from "../../../../../services/getCommonData/Finance.tsx";
 import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 
@@ -34,6 +33,8 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
     maturityDate: null,
     referenceDate: null, // TODO: create function to get last business day from last month
     period: '',
+    contribution: 0,
+    withdrawn: 0,
     grossAmount: 0,
     netAmount: 0,
     taxDetails: [],
@@ -73,12 +74,24 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         setFees(await getTaxFee('BR', 'fee'))
     };
 
-
     const isLoading = currenciesLoading || metadataLoading
     const hasData = taxes && fees && currenciesData
 
+    const [createStatement] = useMutation(CREATE_INVESTMENT_STATEMENT, {
+        client: apolloFinanceClient,
+        onCompleted: () => {
+            toast.success(
+                'Extrato criado com sucesso'
+            );
+            props.hideModal();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
+
     useEffect(() => {
-        // TODO: add fetch to get last statement and set the data and period automatically
+        /* Set values from selected investment */
         if (props.modalState && props.investment && props.investment.investmentId) {
             reset({
                 ...getValues(),
@@ -97,6 +110,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     }, [getValues, props.investment, props.modalState, reset]);
 
     useEffect(() => {
+        /* Set values from metadata */
         setValue("referenceDate", metadata?.getStatementMetadata?.referenceDate);
         setValue("period", metadata?.getStatementMetadata?.period)
         setValue("contribution", metadata?.getStatementMetadata?.contribution)
@@ -110,25 +124,39 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         setValue('period', String(period));
     }
 
-    const onSubmit = (data: InvestmentStatement, e: BaseSyntheticEvent<object> | undefined) => {
-        let method: string;
-        let submitData: InvestmentStatement;
+    const onSubmit = async (data: InvestmentStatement) => {
+        // let method: string;
+        // let submitData: InvestmentStatement;
 
-        if (data.investmentStatementId !== null) {
-            method = 'patch'
-            submitData = data
+        // if (data.investmentStatementId !== null) {
+        //     method = 'patch'
+        //     submitData = data
+        // } else {
+        //     method = 'post'
+        //     submitData = data
+        // }
+
+        // financeSubmit(e, URL_FINANCE_INVESTMENT_STATEMENT, submitData, method).then(() => {
+        //     toast.success('Extrato inserido com sucesso');
+        //     reset(DefaultInvestmentStatement);
+        //     props.hideModal();
+        // }).catch(() => {
+        //     toast.error('Erro ao salvar extrato');
+        // })
+        console.log(data);
+        if (data.investmentStatementId) {
+            toast.warning('Função não implementada');
         } else {
-            method = 'post'
-            submitData = data
+            try {
+                await createStatement({
+                    variables: {
+                        statement: data
+                    }
+                })
+            } catch (error) {
+                console.error("Erro ao criar extrato " + error)
+            }
         }
-
-        financeSubmit(e, URL_FINANCE_INVESTMENT_STATEMENT, submitData, method).then(() => {
-            toast.success('Extrato inserido com sucesso');
-            reset(DefaultInvestmentStatement);
-            props.hideModal();
-        }).catch(() => {
-            toast.error('Erro ao salvar extrato');
-        })
     }
 
     const body: ReactElement = isLoading || !hasData ? <Loader /> : (
