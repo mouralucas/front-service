@@ -1,11 +1,11 @@
-// apolloFinanceClient.ts
+import { ApolloClient, HttpLink, InMemoryCache, from } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { getToken } from "../../auth/Auth";
 
 let isRedirecting = false;
 
-export const authLink = setContext((_, { headers }) => {
+const authLink = setContext((_, { headers }) => {
     const token: string | null = getToken();
     return {
         headers: {
@@ -15,7 +15,7 @@ export const authLink = setContext((_, { headers }) => {
     };
 });
 
-export const errorLink = onError(({ networkError }) => {
+const errorLink = onError(({ networkError }) => {
     if (
         networkError &&
         "statusCode" in networkError &&
@@ -32,4 +32,12 @@ export const errorLink = onError(({ networkError }) => {
         }
     }
 });
+
+export const createApolloClient = (uri: string): ApolloClient<any> => {
+    const httpLink = new HttpLink({ uri });
+    return new ApolloClient({
+        link: from([authLink, errorLink, httpLink]),
+        cache: new InMemoryCache(),
+    });
+};
 
