@@ -2,6 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache, from } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { getToken } from "../../auth/Auth";
+import { refreshAccessToken } from "../../auth/RefreshToken";
 
 let isRedirecting = false;
 
@@ -15,20 +16,23 @@ const authLink = setContext((_, { headers }) => {
     };
 });
 
-const errorLink = onError(({ networkError }) => {
+const errorLink = onError(async ({ networkError }) => {
     if (
         networkError &&
         "statusCode" in networkError &&
         networkError.statusCode === 401
     ) {
-        if (!isRedirecting) {
-            isRedirecting = true;
-            localStorage.clear();
+        const refreshed = await refreshAccessToken() !== null;
+        if (!refreshed) {
+            if (!isRedirecting) {
+                isRedirecting = true;
+                localStorage.clear();
 
-            const currentPath = encodeURIComponent(
-                window.location.pathname + window.location.search
-            );
-            window.location.href = `/login?from=${currentPath}`;
+                const currentPath = encodeURIComponent(
+                    window.location.pathname + window.location.search
+                );
+                window.location.href = `/login?from=${currentPath}`;
+            }
         }
     }
 });
