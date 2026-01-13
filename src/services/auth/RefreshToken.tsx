@@ -32,14 +32,13 @@ export async function refreshAccessToken(): Promise<{ accessToken?: string; refr
         const data = await res.json();
 
         // Expected shape: { accessToken: string, refreshToken?: string }
-        if (data.accessToken) {
-            setToken('access', data.accessToken);
-        }
-        if (data.refreshToken) {
-            setToken('refresh', data.refreshToken);
+        if (data.tokenPair) {
+            setToken('access', data.tokenPair.accessToken);
+            console.log(data.tokenPair.accessToken);
+            setToken('refresh', data.tokenPair.refreshToken);
         }
 
-        return {accessToken: data.accessToken, refreshToken: data.refreshToken};
+        return {accessToken: data.tokenPair.accessToken, refreshToken: data.tokenPair.refreshToken};
     } catch (error) {
         console.error('refreshAccessToken error', error);
         return null;
