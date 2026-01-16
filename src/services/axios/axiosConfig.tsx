@@ -1,51 +1,81 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosError } from "axios";
 import { getToken } from "../auth/Auth.tsx";
 import { refreshAccessToken } from "../auth/RefreshToken.tsx";
 
 let isRedirecting = false;
+let refreshPromise: Promise<boolean> | null = null;
+
+const redirectToLogin = () => {
+    if (isRedirecting) return;
+
+    isRedirecting = true;
+    localStorage.clear();
+
+    const currentPath = encodeURIComponent(
+        window.location.pathname + window.location.search
+    );
+
+    window.location.href = `/login?from=${currentPath}`;
+};
 
 export const createAxiosInstance = (baseURL: string): AxiosInstance => {
-    const instance: AxiosInstance = axios.create({
-        baseURL
-    });
+    const instance = axios.create({ baseURL });
 
-    instance.interceptors.request.use(async config => {
-        const token: string | null = getToken();
+    // 🔐 Request interceptor
+    instance.interceptors.request.use(config => {
+        const token = getToken();
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+            config.headers?.set("Authorization", `Bearer ${token}`);
         }
         return config;
     });
 
+    // 🚨 Response interceptor
     instance.interceptors.response.use(
-        async function (response: any) {
-            return response;
-        },
-        async function (error: { response: { status: number; }; config: any }) {
-            if (error.response?.status === 401) {
-                const originalRequest = error.config;
+        response => response,
+        async (error: AxiosError) => {
+            const status = error.response?.status;
+            const originalRequest: any = error.config;
 
-                if (!originalRequest._retry) {
-                    originalRequest._retry = true;
-
-                    const refreshed = await refreshAccessToken() !== null;
-                    if (refreshed) {
-                        const token = getToken();
-                        if (token) {
-                            originalRequest.headers.Authorization = `Bearer ${token}`;
-                            return instance(originalRequest);
-                        }
-                    }
+            if (status === 401 && originalRequest) {
+                // 🔒 Evita loop infinito
+                if (originalRequest._alreadyTriedRefresh) {
+                    redirectToLogin();
+                    return Promise.reject(error);
                 }
 
-                if (!isRedirecting) {
-                    isRedirecting = true;
-                    localStorage.clear();
+                originalRequest._alreadyTriedRefresh = true;
 
-                    const currentPath = encodeURIComponent(window.location.pathname + window.location.search);
-                    window.location.href = `/login?from=${currentPath}`;
+                if (!refreshPromise) {
+                    refreshPromise = refreshAccessToken()
+                        .then(result => {
+                            refreshPromise = null;
+                            return result !== null;
+                        })
+                        .catch(() => {
+                            refreshPromise = null;
+                            return false;
+                        });
                 }
+
+                const refreshed = await refreshPromise;
+
+                if (!refreshed) {
+                    redirectToLogin();
+                    return Promise.reject(error);
+                }
+
+                const newToken = getToken();
+                if (newToken) {
+                    originalRequest.headers.set(
+                        "Authorization",
+                        `Bearer ${newToken}`
+                    );
+                }
+
+                return instance(originalRequest);
             }
+
             return Promise.reject(error);
         }
     );
