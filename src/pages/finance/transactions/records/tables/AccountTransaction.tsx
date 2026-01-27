@@ -2,17 +2,18 @@ import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import EditOutlined from '@mui/icons-material/EditOutlined';
-import { Box, IconButton, TextField } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useEffect, useState } from "react";
+import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete.tsx';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { AccountTransaction } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
-import { QUERY_ACCOUNT_TRANSACTIONS } from '../../../../../services/apollo/queries/Finance.tsx';
+import { QUERY_ACCOUNT_TRANSACTIONS, QUERY_ACCOUNTS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate, getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
 import ModalStatement from '../modals/AccountTransaction.tsx';
 
@@ -22,7 +23,7 @@ const AccountTransactionTable = (): ReactElement => {
     const [modalState, setModalState] = useState<boolean>(false)
 
     // Filter date range
-    const [accountFilter, setAccountFilter] = useState('');
+    const [selectedAccount, setSelectedAccount] = useState(null)
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -31,10 +32,15 @@ const AccountTransactionTable = (): ReactElement => {
         variables: {
             params: {
                 startPeriod: getPeriodFromDate(startDate),
-                endPeriod: getPeriodFromDate(endDate)
+                endPeriod: getPeriodFromDate(endDate),
+                accountId: selectedAccount
             }
         },
         skip: !startDate || !endDate
+    });
+
+    const { data: accountData } = useQuery(QUERY_ACCOUNTS, {
+        client: apolloFinanceClient,
     })
 
     useEffect(() => {
@@ -128,11 +134,9 @@ const AccountTransactionTable = (): ReactElement => {
         },
     ]
 
-    // Filtra as transações pelo accountName usando accountFilter
-    const filteredTransactions = transactionData?.getAccountTransactions?.transactions?.filter(
-        (transaction: AccountTransaction) =>
-            transaction.accountNickname?.toLowerCase().includes(accountFilter.toLowerCase())
-    ) ?? transactionData?.getAccountTransactions?.transactions;
+    const filterAccounts = (val: any) => {
+        setSelectedAccount(val);
+    }
 
     return (
         <Box sx={{ display: 'block', me: 5 }}>
@@ -175,13 +179,14 @@ const AccountTransactionTable = (): ReactElement => {
                         }}
                     />
                 </LocalizationProvider>
-                <TextField
-                    label="Filtrar por conta"
-                    variant="outlined"
-                    size="small"
-                    value={accountFilter}
-                    onChange={e => setAccountFilter(e.target.value)}
-                    sx={{ minWidth: 250 }}
+                <SelectAutocomplete
+                    label="Conta"
+                    value={selectedAccount}
+                    options={accountData?.getAccounts?.accounts || []}
+                    getOptionLabel={(option: any) => option.nickname}
+                    getOptionValue={(option: any) => option.accountId}
+                    onChange={(val) => filterAccounts(val)}
+                    width={250}
                 />
                 <IconButton
                     aria-label="Novo Registro"
@@ -200,7 +205,7 @@ const AccountTransactionTable = (): ReactElement => {
             </Box>
             <DataGrid
                 columns={columns}
-                data={filteredTransactions}
+                data={transactionData?.getAccountTransactions?.transactions}
                 isLoading={loading}
                 getRowId={(row) => row.transactionId}
                 columnVisibilityModel={{
