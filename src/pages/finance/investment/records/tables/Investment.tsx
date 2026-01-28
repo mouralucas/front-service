@@ -126,28 +126,10 @@ const InvestmentV2 = (): ReactElement => {
             headerName: 'Valor Inicial',
             flex: 1,
             type: 'number',
-            valueFormatter: (value: number, row) => {
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
-            }
-        },
-        {
-            field: 'totalContribution',
-            headerName: 'Aportes',
-            flex: 1,
-            type: 'number',
-            valueFormatter: (value: number, row) => {
-                if (!value) return 'R$ 0.00'
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
-            }
-        },
-        {
-            field: 'totalWithdrawn',
-            headerName: 'Retiradas',
-            flex: 1,
-            type: 'number',
-            valueFormatter: (value: number, row) => {
-                if (!value) return 'R$ 0.00'
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            valueFormatter: (value: string, row) => {
+                if (!value) return 'R$ 0.00 (0.00%)';
+                const formattedValue = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+                return `${formattedValue}`
             }
         },
         {
@@ -155,13 +137,26 @@ const InvestmentV2 = (): ReactElement => {
             headerName: 'Valor Bruto',
             flex: 1.5,
             type: 'number',
-            valueFormatter: (value: string, row) => {
-                if (!value) return 'R$ 0.00 (0.00%)';
-                const percentageChange: number = !row.percentageChange ? 0.00 : row.percentageChange;
+            renderCell: (params: GridRenderCellParams) => {
+                const { grossAmount, totalContribution, totalWithdrawn, currencyId } = params.row;
+                const formattedAmount = grossAmount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
 
-                const formattedValue = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
-                const formattedPercChange: string = percentageChange.toFixed(2);
-                return `${formattedValue} (${formattedPercChange}%)`;
+                return (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                        <Box>{formattedAmount}</Box>
+
+                        {totalContribution !== 0 && totalContribution && (
+                            <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                                +{totalContribution.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
+                            </Box>
+                        )}
+                        {totalWithdrawn !== 0 && totalWithdrawn && (
+                            <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                                -{totalWithdrawn.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
+                            </Box>
+                        )}
+                    </Box>
+                );
             }
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
