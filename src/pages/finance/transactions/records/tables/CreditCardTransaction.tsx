@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from '@mui/material';
@@ -6,21 +7,20 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
-import { ReactElement, useEffect, useState, useCallback } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
+import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete.tsx';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { CreditCardTransaction } from '../../../../../interfaces/Finance';
-import { GetCreditCardTransactionResponse } from '../../../../../interfaces/FinanceRequest';
-import { URL_CREDIT_CARD_TRANSACTION } from '../../../../../services/axios/ApiUrls';
-import { getFinanceData } from '../../../../../services/axios/Get';
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
+import { QUERY_CREDIT_CARD_TRANSACTIONS, QUERY_CREDIT_CARDS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../utils/datetime';
 import CreditCardTransactionModal from '../modals/CreditCardTransaction.tsx';
 
 const CreditCardTransactionTable = (): ReactElement => {
 
-    const [creditCardTransaction, setCreditCardTransaction] = useState<CreditCardTransaction[]>([]);
     const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
-    // const [updateTransactionModalState, setUpdateTransactionModalState] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+
+    const [selectedCreditCard, setSelectedCreditCard] = useState(null)
 
     // Filter date range
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -35,7 +35,7 @@ const CreditCardTransactionTable = (): ReactElement => {
 
     useEffect(() => {
         if (startDate && endDate) {
-            getTransactions(getPeriodFromDate(startDate), getPeriodFromDate(endDate));
+            transactionRefetch()
         }
     }, [startDate, endDate])
 
@@ -48,29 +48,30 @@ const CreditCardTransactionTable = (): ReactElement => {
         updateDateRange([startDate, endDate]);
     }
 
-    const getTransactions = useCallback((startAt: number, endAt: number) => {
-        setIsLoading(true);
+    const { data: creditCardData} = useQuery(QUERY_CREDIT_CARDS, {
+        client: apolloFinanceClient
+    })
 
-        getFinanceData(URL_CREDIT_CARD_TRANSACTION, {
-            startPeriod: startAt,
-            endPeriod: endAt
-        }).then((response: GetCreditCardTransactionResponse) => {
-            setCreditCardTransaction(response.transactions);
-            setIsLoading(false);
-        }).catch(() => {
-            //toast.error("Erro ao buscar transações")
-            setIsLoading(false);
-        })
-    }, []);
+    const { data: transactionData, loading: transactionLoading, refetch: transactionRefetch } = useQuery(QUERY_CREDIT_CARD_TRANSACTIONS, {
+            client: apolloFinanceClient,
+            variables: {
+                params: {
+                    startPeriod: getPeriodFromDate(startDate),
+                    endPeriod: getPeriodFromDate(endDate),
+                    creditCardId: selectedCreditCard
+                }
+            },
+            skip: !startDate || !endDate
+        });
 
     const updateDateRange = useCallback((dates: any) => {
         if (dates[1] !== null) {
-            getTransactions(getPeriodFromDate(dates[0]), getPeriodFromDate(dates[1]));
+            transactionRefetch();
         }
-    }, [getTransactions]);
+    }, [transactionRefetch]);
 
     const columns: GridColDef<CreditCardTransaction>[] = [
-        { field: 'transactionId', headerName: 'Id', flex: 1 },
+        { field: 'id', headerName: 'Id', flex: 1 },
         { field: 'creditCardNickname', headerAlign: "center", headerName: 'Cartão', flex: 1 },
         {
             field: 'transactionDate',
@@ -117,6 +118,10 @@ const CreditCardTransactionTable = (): ReactElement => {
         { field: 'categoryName', headerAlign: "center", headerName: 'Categoria', flex: 1.5 }
     ];
 
+    const filterCreditCards = (val: any) => {
+        setSelectedCreditCard(val);
+    }
+
     return (
         <Box sx={{ display: 'block ' }} >
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
@@ -158,28 +163,37 @@ const CreditCardTransactionTable = (): ReactElement => {
                         }}
                     />
                 </LocalizationProvider>
+                <SelectAutocomplete
+                    label="Cartão de crédito"
+                    value={selectedCreditCard}
+                    options={creditCardData?.getCreditCards?.creditCards || []}
+                    getOptionLabel={(option: any) => option.nickname}
+                    getOptionValue={(option: any) => option.creditCardId}
+                    onChange={(val) => filterCreditCards(val)}
+                    width={250}
+                />
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showCreditCardTransactionModal}
-                    loading={isLoading}
+                    loading={transactionLoading}
                 >
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton
                     aria-label="Atualizar"
                     onClick={() => updateDateRange([startDate, endDate])}
-                    loading={isLoading}
+                    loading={transactionLoading}
                 >
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
             <DataGrid
                 columns={columns}
-                data={creditCardTransaction}
-                isLoading={isLoading}
-                getRowId={(row) => row.transactionId}
+                data={transactionData?.getCreditCardTransactions?.transactions}
+                isLoading={transactionLoading}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
-                    transactionId: false
+                    id: false
                 }}
             />
             <CreditCardTransactionModal modalState={transactionModalState} hideModal={hideCreditCardTransactionModal} />

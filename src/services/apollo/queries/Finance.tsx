@@ -70,6 +70,37 @@ export const QUERY_CREDIT_CARDS = gql`
     }
 `
 
+export const QUERY_CREDIT_CARD_TRANSACTIONS = gql`
+    query GetCreditCardTransactions($params: GetCreditCardTransactionsInput) {
+        getCreditCardTransactions(params: $params) {
+            quantity
+            transactions {
+                id
+                creditCardNickname
+                creditCardId
+                period
+                dueDate
+                transactionDate
+                amount
+                categoryId
+                categoryName
+                currencyId
+                currencySymbol
+                transactionCurrencyId
+                transactionCurrencySymbol
+                transactionAmount
+                isInstallment
+                currentInstallment
+                installments
+                totalAmount
+                description
+                createdAt
+                editedAt
+            }
+        }
+    }
+`
+
 // Account queries
 export const QUERY_ACCOUNTS = gql`
 query GetAccounts($params: GetAccountsInput) {
