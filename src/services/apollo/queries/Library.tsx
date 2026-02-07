@@ -5,7 +5,7 @@ export const QUERY_ITEMS = gql`
     getItems(params: $params) {
       quantity
       items {
-        itemId
+        id
         mainAuthorId
         mainAuthorName
         lastStatusId
@@ -50,8 +50,8 @@ query {
   getSeries {
       quantity
       series {
-          serieId
-          serieName
+          id
+          name
           originalName
           description
           countryName
@@ -65,8 +65,9 @@ query {
   getCollections {
     quantity
     collections {
-      collectionId
-      collectionName
+      id
+      name
+      description
     }
   }
 }
@@ -77,8 +78,8 @@ export const QUERY_PUBLISHERS = gql`
     getPublishers {
       quantity
       publishers {
-          publisherId
-          publisherName
+          id
+          name
           description
           countryId
           countryName
@@ -93,9 +94,9 @@ export const QUERY_LANGUAGES = gql`
     getLanguages {
         quantity
         languages {
-            languageId
-            languageName
-            languageCode
+            id
+            name
+            code
         }
     }
   }`
@@ -118,8 +119,8 @@ query GetAuthors($params: GetAuthorsRequest) {
       getAuthors(params: $params) {
         quantity
         authors {
-            authorId
-            authorName
+            id
+            name
             birthDate
             description
             countryId
@@ -135,7 +136,7 @@ export const QUERY_STATUS = gql`
 query GetStatus ($params: GetStatusInput) {
     getStatus(params: $params) {
         statuses {
-            statusId
+            id
             name
             description
             order

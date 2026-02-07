@@ -93,7 +93,7 @@ const MangaTable = (): ReactElement => {
     }
 
     const columns: GridColDef<Item>[] = [
-        { field: 'itemId', headerName: 'Id', flex: 1 },
+        { field: 'id', headerName: 'Id', flex: 1 },
         { field: 'mainAuthorName', headerName: 'Autor', flex: 1.5 },
         { field: 'title', headerName: 'Título', flex: 2.5 },
         { field: 'serieName', headerName: 'Série', flex: 2 },
@@ -238,9 +238,9 @@ const MangaTable = (): ReactElement => {
                 data={filteredRows}
                 columns={columns}
                 isLoading={loading}
-                getRowId={(row: any) => row.itemId}
+                getRowId={(row: any) => row.id}
                 columnVisibilityModel={{
-                    itemId: false,
+                    id: false,
                 }}
             />
             <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedManga} />

@@ -61,7 +61,7 @@ const Books = (): ReactElement => {
 
 
     const columns: GridColDef<Item>[] = [
-        { field: 'itemId', headerName: 'Id', flex: 1, type: 'number' },
+        { field: 'id', headerName: 'Id', flex: 1, type: 'number' },
         { field: 'title', headerName: 'título', flex: 2 },
         { field: 'mainAuthorName', headerName: 'Autor', flex: 1 },
         { field: 'serieName', headerName: 'Série', flex: 1 },
@@ -134,10 +134,10 @@ const Books = (): ReactElement => {
             <DataGridComp
                 columns={columns}
                 data={filterdRows}
-                getRowId={(row: any) => row.itemId}
+                getRowId={(row: any) => row.id}
                 isLoading={loading}
                 columnVisibilityModel={{
-                    itemId: false
+                    id: false
                 }}
             />
             <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedBook} />

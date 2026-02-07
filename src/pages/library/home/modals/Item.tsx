@@ -25,7 +25,7 @@ export interface ItemModalProps {
 
 
 const DefaultItem: CreateItemInput = {
-    itemId: null,
+    id: null,
     lastStatusId: null,
     lastStatusDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
     mainAuthorId: null,
@@ -91,7 +91,6 @@ const App = (props: ItemModalProps) => {
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        variables: { params: {} },
         skip: !props.modalState
     })
 
@@ -109,14 +108,12 @@ const App = (props: ItemModalProps) => {
     const { data: seriesData, loading: seriesLoading } = useQuery(QUERY_SERIES, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        variables: { params: {} },
         skip: !props.modalState
     })
 
     const { data: collectionsData, loading: collectionsLoading } = useQuery(QUERY_COLLECTION, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        variables: { params: {} },
         skip: !props.modalState
     })
 
@@ -178,11 +175,11 @@ const App = (props: ItemModalProps) => {
     }, [props.modalState, props.item, reset]);
 
     const onSubmit = async (itemFormData: CreateItemInput) => {
-        if (itemFormData.itemId) {
+        if (itemFormData.id) {
             try {
                 const currentValues: CreateItemInput = getValues();
                 const modifiedFields: Partial<Record<keyof CreateItemInput, CreateItemInput[keyof CreateItemInput]>> = {
-                    itemId: itemFormData.itemId
+                    id: itemFormData.id
                 };
 
                 (Object.keys(dirtyFields) as Array<keyof CreateItemInput>).forEach((key: keyof CreateItemInput) => {
@@ -227,8 +224,8 @@ const App = (props: ItemModalProps) => {
                                     label="Autor"
                                     value={field.value}
                                     options={authorsData?.getAuthors?.authors || []}
-                                    getOptionLabel={(option: any) => option.authorName}
-                                    getOptionValue={(option: any) => option.authorId}
+                                    getOptionLabel={(author: any) => author.name}
+                                    getOptionValue={(author: any) => author.id}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
@@ -338,7 +335,7 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 6 }} >
+                    {/* <Grid size={{ sm: 12, md: 6 }} >
                         <Controller
                             name="titleOriginal"
                             control={control}
@@ -365,7 +362,7 @@ const App = (props: ItemModalProps) => {
                                 />
                             )}
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name="isbn"
@@ -380,7 +377,7 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 3 }} >
+                    {/* <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name="isbn10"
                             control={control}
@@ -393,7 +390,7 @@ const App = (props: ItemModalProps) => {
                                 />
                             )}
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'itemTypeId'}
@@ -533,8 +530,8 @@ const App = (props: ItemModalProps) => {
                                     label="Série"
                                     value={field.value}
                                     options={seriesData?.getSeries?.series || []}
-                                    getOptionLabel={(option: any) => option.serieName}
-                                    getOptionValue={(option: any) => option.serieId}
+                                    getOptionLabel={(serie: any) => serie.name}
+                                    getOptionValue={(serie: any) => serie.id}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
@@ -553,8 +550,8 @@ const App = (props: ItemModalProps) => {
                                     label="Coleção"
                                     value={field.value}
                                     options={collectionsData?.getCollections?.collections || []}
-                                    getOptionLabel={(option: any) => option.collectionName}
-                                    getOptionValue={(option: any) => option.collectionId}
+                                    getOptionLabel={(collection: any) => collection.name}
+                                    getOptionValue={(collection: any) => collection.id}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
@@ -573,8 +570,8 @@ const App = (props: ItemModalProps) => {
                                     label="Editora"
                                     value={field.value}
                                     options={publishersData?.getPublishers?.publishers || []}
-                                    getOptionLabel={(option: any) => option.publisherName}
-                                    getOptionValue={(option: any) => option.publisherId}
+                                    getOptionLabel={(publisher: any) => publisher.name}
+                                    getOptionValue={(publisher: any) => publisher.id}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
@@ -613,8 +610,8 @@ const App = (props: ItemModalProps) => {
                                     label="Idioma"
                                     value={field.value}
                                     options={languageData?.getLanguages?.languages || []}
-                                    getOptionLabel={(option: any) => option.languageName}
-                                    getOptionValue={(option: any) => option.languageId}
+                                    getOptionLabel={(language: any) => language.name}
+                                    getOptionValue={(language: any) => language.id}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
@@ -652,62 +649,6 @@ const App = (props: ItemModalProps) => {
                         />
                     </Grid>
                     <Grid size={{ sm: 12, md: 6 }} ></Grid>
-                    <Grid size={{ sm: 6, md: 3 }} >
-                        <Controller
-                            name="dimensions"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Dimensões"
-                                    fullWidth
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ sm: 6, md: 3 }} >
-                        <Controller
-                            name="height"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Altura"
-                                    fullWidth
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ sm: 6, md: 3 }} >
-                        <Controller
-                            name="width"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Largura"
-                                    fullWidth
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ sm: 6, md: 3 }} >
-                        <Controller
-                            name="thickness"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Profundidade"
-                                    fullWidth
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid>
                     <Grid size={{ sm: 12, md: 12 }} >
                         <Controller
                             name="summary"

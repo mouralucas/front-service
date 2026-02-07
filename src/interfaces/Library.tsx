@@ -1,5 +1,5 @@
 export interface Item {
-    itemId?: number | null
+    id?: number | null
     lastStatusId: string | null
     lastStatusDate: string
     lastStatusName?: string | null
