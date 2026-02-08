@@ -201,8 +201,8 @@ const MangaTable = (): ReactElement => {
                         label="Série"
                         value={selectedSerie}
                         options={seriesData?.getSeries.series || []}
-                        getOptionLabel={(option: any) => option.serieName}
-                        getOptionValue={(option: any) => option.serieId}
+                        getOptionLabel={(serie: any) => serie.name}
+                        getOptionValue={(serie: any) => serie.id}
                         onChange={(e: any) => handleSerieChange(e)}
                         width={200}
                     />
@@ -210,8 +210,8 @@ const MangaTable = (): ReactElement => {
                         label="Coleção"
                         value={selectedCollection}
                         options={collectionsData?.getCollections.collections || []}
-                        getOptionLabel={(option: any) => option.collectionName}
-                        getOptionValue={(option: any) => option.collectionId}
+                        getOptionLabel={(collection: any) => collection.name}
+                        getOptionValue={(collection: any) => collection.id}
                         onChange={(e: any) => handleCollectionChange(e)}
                         width={200}
                     />

@@ -5,10 +5,9 @@ import { gql } from "@apollo/client";
 export const CREATE_ITEM_MUTATION = gql`
   mutation CreateItem($input: CreateItemInput) {
     createItem(item: $input) {
-      item {
-        itemId
-        title
-      }
+      created
+      id
+      title
     }
   }
 `
@@ -16,10 +15,8 @@ export const CREATE_ITEM_MUTATION = gql`
 export const UPDATE_ITEM_MUTATION = gql`
   mutation UpdateItem($input: UpdateItemInput) {
     updateItem(item: $input) {
-      item {
-        itemId
-        title
-      }
+      created
+      id
     }
   }
 `
@@ -62,15 +59,8 @@ export const CREATE_READING_MUTATION = gql`
 export const CREATE_READING_PROGRESS_MUTATION = gql`
   mutation CreateReadingProgress($input: CreateReadingProgressInput!) {
     createReadingProgress(progress: $input)  {
+        created
         itemTitle
-        pagesRead
-        readingProgress {
-            readingProgressId
-            date
-            page
-            percentage
-            rate
-            comment
-        }
+        readingProgressId
     }
 }`

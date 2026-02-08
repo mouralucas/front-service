@@ -19,13 +19,12 @@ interface BookDrawerProps {
 
 const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
-    // const [stats, setStats] = useState<ItemReadingStats>();
     const [crateReadingProgressModalState, setCrateReadingProgressModalState] = useState<boolean>(false)
     const [createReadingModalState, setCrateReadingModalState] = useState<boolean>(false)
 
     const { data: statsData, refetch: refetchStats } = useQuery(QUERY_READING_STATS, {
         client: apolloLibraryClient,
-        variables: { itemId: props.item?.itemId },
+        variables: { itemId: props.item?.id },
         skip: !props.openDrawerState,
     });
 
@@ -235,11 +234,11 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                 hideCreateReadingProgressModal={hideCreateReadingProgressModal}
                 readingId={stats?.currentReadingId || ''}
             />
-            {props?.item?.itemId &&
+            {props?.item?.id &&
                 <CreateReadingModal
                     modalState={createReadingModalState}
                     hideCreateReadingModal={hideCreateReadingModal}
-                    itemId={props.item.itemId}
+                    itemId={props.item.id}
                 />
             }
         </>

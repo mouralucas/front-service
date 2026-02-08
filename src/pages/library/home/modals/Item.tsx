@@ -26,7 +26,7 @@ export interface ItemModalProps {
 
 const DefaultItem: CreateItemInput = {
     id: null,
-    lastStatusId: null,
+    lastStatusId: 'owned',
     lastStatusDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
     mainAuthorId: null,
     authorsId: [],
@@ -37,7 +37,7 @@ const DefaultItem: CreateItemInput = {
     subtitleOriginal: '',
     isbn: '',
     isbn10: '',
-    itemTypeId: '',
+    itemTypeId: 'manga',
     pages: 0,
     volume: 1,
     edition: 1,
@@ -45,8 +45,8 @@ const DefaultItem: CreateItemInput = {
     originalPublicationDate: null,
     serieId: 0,
     collectionId: 0,
-    publisherId: 0,
-    formatId: '',
+    publisherId: 2,
+    formatId: 'paperback',
     languageId: 'PT',
     coverPrice: 0,
     paidPrice: 0,
@@ -138,7 +138,7 @@ const App = (props: ItemModalProps) => {
         client: apolloLibraryClient,
         onCompleted: (data) => {
             toast.success(
-                `Item "${data.createItem.item.title}" criado com sucesso`
+                `Item "${data.createItem.item}" criado com sucesso`
             );
             props.hideItemModal();
         },
@@ -264,8 +264,8 @@ const App = (props: ItemModalProps) => {
                                     label="Status"
                                     value={field.value}
                                     options={statusesData?.getStatus?.statuses || []}
-                                    getOptionLabel={(option: any) => option.name}
-                                    getOptionValue={(option: any) => option.statusId}
+                                    getOptionLabel={(status: any) => status.name}
+                                    getOptionValue={(status: any) => status.id}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
