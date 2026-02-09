@@ -24,7 +24,7 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
 
     const { data: statsData, refetch: refetchStats } = useQuery(QUERY_READING_STATS, {
         client: apolloLibraryClient,
-        variables: { itemId: props.item?.itemId },
+        variables: { itemId: props.item?.id },
         skip: !props.openDrawerState,
     });
 
@@ -234,11 +234,11 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
                 hideCreateReadingProgressModal={hideCreateReadingProgressModal}
                 readingId={stats?.currentReadingId || ''}
             />
-            {props?.item?.itemId &&
+            {props?.item?.id &&
                 <CreateReadingModal
                     modalState={createReadingModalState}
                     hideCreateReadingModal={hideCreateReadingModal}
-                    itemId={props.item.itemId}
+                    itemId={props.item.id}
                 />
             }
         </>
