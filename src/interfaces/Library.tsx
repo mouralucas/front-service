@@ -15,8 +15,7 @@ export interface Item {
     isbn10?: string
     itemTypeId: string
     pages?: number
-    volume?: number
-    edition?: number
+    volume?: number 
     publicationDate: string | null
     originalPublicationDate: string | null
     serieId: number
@@ -28,10 +27,6 @@ export interface Item {
     languageId: 'PT'
     coverPrice: number
     paidPrice: number
-    dimensions: string
-    height: 0
-    width: 0
-    thickness: 0
     summary?: string
     observation?: string
     createdBy?: string | null

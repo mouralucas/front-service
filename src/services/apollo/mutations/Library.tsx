@@ -17,6 +17,7 @@ export const UPDATE_ITEM_MUTATION = gql`
     updateItem(item: $input) {
       created
       id
+      title
     }
   }
 `

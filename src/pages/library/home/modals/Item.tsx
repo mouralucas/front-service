@@ -120,7 +120,6 @@ const App = (props: ItemModalProps) => {
     const { data: publishersData, loading: publishersLoading } = useQuery(QUERY_PUBLISHERS, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        variables: { params: {} },
         skip: !props.modalState
     })
 
@@ -138,7 +137,7 @@ const App = (props: ItemModalProps) => {
         client: apolloLibraryClient,
         onCompleted: (data) => {
             toast.success(
-                `Item "${data.createItem.item}" criado com sucesso`
+                `Item "${data.createItem.title}" criado com sucesso`
             );
             props.hideItemModal();
         },
@@ -150,8 +149,9 @@ const App = (props: ItemModalProps) => {
     const [updateItem] = useMutation(UPDATE_ITEM_MUTATION, {
         client: apolloLibraryClient,
         onCompleted: (data) => {
+            console.log("Item atualizado")
             toast.success(
-                `Item "${data.updateItem.item.title}" atualizado com sucesso`
+                `Item "${data.updateItem.title}" atualizado com sucesso`
             );
             props.hideItemModal();
         },
@@ -185,9 +185,6 @@ const App = (props: ItemModalProps) => {
                 (Object.keys(dirtyFields) as Array<keyof CreateItemInput>).forEach((key: keyof CreateItemInput) => {
                     modifiedFields[key] = currentValues[key];
                 });
-
-                console.log(modifiedFields);
-                console.log(itemFormData)
 
                 await updateItem({
                     variables: {
@@ -244,8 +241,8 @@ const App = (props: ItemModalProps) => {
                                     value={Array.isArray(field.value) ? field.value : []}
                                     multiple
                                     options={authorsData?.getAuthors?.authors || []}
-                                    getOptionLabel={(option: any) => option.authorName}
-                                    getOptionValue={(option: any) => option.authorId}
+                                    getOptionLabel={(author: any) => author.name}
+                                    getOptionValue={(author: any) => author.idd}
                                     onChange={(value) => {
                                         field.onChange(Array.isArray(value) ? value : []);
                                     }}
@@ -438,24 +435,6 @@ const App = (props: ItemModalProps) => {
                                 <TextField
                                     {...field}
                                     label="Volume"
-                                    fullWidth
-                                    size="small"
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        field.onChange(value === '' ? null : Number(value));
-                                    }}
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ sm: 4, md: 1 }} >
-                        <Controller
-                            name="edition"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Edição"
                                     fullWidth
                                     size="small"
                                     onChange={(e) => {
