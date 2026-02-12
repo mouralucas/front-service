@@ -13,8 +13,8 @@ const PublisherTable = (): ReactElement => {
     })
 
     const columns: GridColDef[] = [
-        { field: "publisherId", headerName: "Id"},
-        { field: "publisherName", headerName: "Nome", flex: 2 }, 
+        { field: "id", headerName: "Id"},
+        { field: "name", headerName: "Nome", flex: 2 }, 
         { field: "description", headerName: "Descrição", flex: 2 },
         { field: "countryName", headerName: "País", flex: 1 }
     ]
@@ -35,9 +35,9 @@ const PublisherTable = (): ReactElement => {
                 columns={columns}
                 data={publishersData?.getPublishers?.publishers}
                 isLoading={publishersLoading}
-                getRowId={(row) => row.publisherId}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
-                    publisherId: false
+                    id  : false
                 }}
             />
         </Box>

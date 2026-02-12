@@ -69,8 +69,8 @@ export interface ItemReadingProgress {
 }
 
 export interface Author {
-    authorId?: string | null
-    authorName: string
+    id?: string | null
+    name: string
     birthDate?: string | null
     languageId?: string
     languageName?: string

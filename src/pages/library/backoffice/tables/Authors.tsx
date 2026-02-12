@@ -46,8 +46,8 @@ const AuthorTable = (): ReactElement => {
 
 
     const columns: GridColDef<Author>[] = [
-        { field: 'authorId', headerName: 'Id', type: 'number', flex: 2 },
-        { field: "authorName", headerName: 'Nome', flex: 1 },
+        { field: 'id', headerName: 'Id', type: 'number', flex: 2 },
+        { field: "name", headerName: 'Nome', flex: 1 },
         {
             field: "birthDate",
             headerName: 'Data de Nascimento',
@@ -105,9 +105,9 @@ const AuthorTable = (): ReactElement => {
                 data={authorData?.getAuthors?.authors}
                 columns={columns}
                 isLoading={loadingAuthors}
-                getRowId={(row) => row.authorId}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
-                    authorId: false
+                    id: false
                 }}
             />
             <AuthorModal modalState={authorModalState} hideAuthorModal={toggleAuthorModal} author={selectedAuthor} />

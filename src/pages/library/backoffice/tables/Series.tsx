@@ -13,8 +13,8 @@ const SeriesTable = (): ReactElement => {
     })
 
     const columns: GridColDef[] = [
-        { field: "serieId", headerName: "Id", flex: .5 },
-        { field: "serieName", headerName: "Nome", flex: 2 },
+        { field: "id", headerName: "Id", flex: .5 },
+        { field: "name", headerName: "Nome", flex: 2 },
         { field: "originalName", headerName: "Nome Original", flex: 2 },
         { field: "description", headerName: "Descrição", flex: 1},
         { field: "countryName", headerName: "País", flex: 1 },
@@ -35,7 +35,7 @@ const SeriesTable = (): ReactElement => {
                 columns={columns}
                 data={seriesData?.getSeries?.series}
                 isLoading={seriesLoading}
-                getRowId={(row) => row.serieId}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
                     seriesId: false
                 }}

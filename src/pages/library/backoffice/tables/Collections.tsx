@@ -14,8 +14,8 @@ const CollectionsTable = (): ReactElement => {
     })
 
     const columns: GridColDef[] = [
-        { field: "collectionId", headerName: "Id", flex: .5 },
-        { field: "collectionName", headerName: "Nome", flex: 2 },
+        { field: "id", headerName: "Id", flex: .5 },
+        { field: "name", headerName: "Nome", flex: 2 },
         { field: "description", headerName: "Descrição"}
     ]
 
@@ -34,7 +34,7 @@ const CollectionsTable = (): ReactElement => {
                 columns={columns}
                 data={collectionsData?.getCollections?.collections}
                 isLoading={collectionsLoading}
-                getRowId={(row) => row.collectionId}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
                     collectionId: false
                 }}
