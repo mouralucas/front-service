@@ -334,12 +334,11 @@ const App = (props: CreditCardBillProps): ReactElement => {
                                             getOptionLabel={(option: any) => option.symbol}
                                             getOptionValue={(option: any) => option.currencyId}
                                             onChange={field.onChange}
-                                            error={errors.currencyId?.message}
+                                            error={errors.transactionCurrencyId?.message}
                                         />
                                     )}
                                 />
                             </Grid>
-                            <Grid size={{ sm: 12, md: 12 }}> </Grid>
                             <Grid size={{ sm: 6, md: 3 }} >
                                 <Controller
                                     name="transactionAmount"
