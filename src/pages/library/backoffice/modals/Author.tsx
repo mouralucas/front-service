@@ -22,8 +22,8 @@ interface AuthorModalProps {
 }
 
 const DefaultAuthor: Author = {
-    authorId: null,
-    authorName: '',
+    id: null,
+    name: '',
     birthDate: null,
     languageId: '',
     countryId: '',
@@ -95,7 +95,7 @@ const App = (props: AuthorModalProps): ReactElement => {
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
                     <Grid size={{ xs: 12, md: 9 }}>
                         <Controller
-                            name="authorName"
+                            name="name"
                             control={control}
                             rules={{ required: "Esse campo é obrigatório" }}
                             render={({ field }) => (
@@ -104,8 +104,8 @@ const App = (props: AuthorModalProps): ReactElement => {
                                     label="Nome"
                                     fullWidth
                                     size="small"
-                                    error={!!errors.authorName}
-                                    helperText={errors.authorName?.message}
+                                    error={!!errors.name}
+                                    helperText={errors.name?.message}
                                 />
                             )}
                         />

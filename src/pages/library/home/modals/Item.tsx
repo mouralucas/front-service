@@ -40,7 +40,6 @@ const DefaultItem: CreateItemInput = {
     itemTypeId: 'manga',
     pages: 0,
     volume: 1,
-    edition: 1,
     publicationDate: null,
     originalPublicationDate: null,
     serieId: 0,
@@ -50,10 +49,6 @@ const DefaultItem: CreateItemInput = {
     languageId: 'PT',
     coverPrice: 0,
     paidPrice: 0,
-    dimensions: '',
-    height: 0,
-    width: 0,
-    thickness: 0,
     summary: '',
     observation: '',
 }

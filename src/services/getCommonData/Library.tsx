@@ -21,7 +21,7 @@ export const getAuthors = async (selectFormat: boolean) => {
         const response: GetAuthorsResponse = await getLibraryData(URL_LIBRARY_AUTHOR);
         if (selectFormat) {
             return response.authors.map((i: Author) => (
-                {value: i.authorId, label: i.authorName}
+                {value: i.id, label: i.name}
             ));
         }
 
