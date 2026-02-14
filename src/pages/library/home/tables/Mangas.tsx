@@ -243,7 +243,7 @@ const MangaTable = (): ReactElement => {
                     id: false,
                 }}
             />
-            <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedManga} />
+            <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedManga} itemTypeId='manga' />
             {selectedManga && (
                 <MangaDrawer
                     openDrawerState={isDrawerOpened}

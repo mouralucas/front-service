@@ -50,7 +50,7 @@ const Books = (): ReactElement => {
     const onOpenDrawerClick = useCallback((e: any) => {
         if (e.row !== undefined) {
             // Nomalize itemId to number
-            setSelectedBook({ ...e.row, itemId: Number(e.row.itemId)});
+            setSelectedBook({ ...e.row, itemId: Number(e.row.itemId) });
         } else {
             setSelectedBook(undefined);
         }
@@ -140,7 +140,11 @@ const Books = (): ReactElement => {
                     id: false
                 }}
             />
-            <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedBook} />
+            <ItemModal 
+                modalState={itemModalState} 
+                hideItemModal={hideItemModal} 
+                item={selectedBook} 
+                itemTypeId='book' />
             {selectedBook && (
                 <BookDrawer
                     openDrawerState={isDrawerOpened}

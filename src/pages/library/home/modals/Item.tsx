@@ -21,12 +21,13 @@ export interface ItemModalProps {
     item: CreateItemInput | undefined | null
     modalState: boolean
     hideItemModal: any
+    itemTypeId: string
 }
 
 
 const DefaultItem: CreateItemInput = {
     id: null,
-    lastStatusId: 'owned',
+    lastStatusId: '',
     lastStatusDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
     mainAuthorId: null,
     authorsId: [],
@@ -37,14 +38,14 @@ const DefaultItem: CreateItemInput = {
     subtitleOriginal: '',
     isbn: '',
     isbn10: '',
-    itemTypeId: 'manga',
+    itemTypeId: '',
     pages: 0,
     volume: 1,
     publicationDate: null,
     originalPublicationDate: null,
     serieId: 0,
     collectionId: 0,
-    publisherId: 2,
+    publisherId: 0,
     formatId: 'paperback',
     languageId: 'PT',
     coverPrice: 0,
@@ -81,7 +82,7 @@ const itemFormats = [
 
 
 const App = (props: ItemModalProps) => {
-    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
+    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues, setValue } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
 
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
@@ -162,6 +163,8 @@ const App = (props: ItemModalProps) => {
         } else if (props.modalState && !props.item) {
             reset(DefaultItem);
         }
+
+        setValue("itemTypeId", props.itemTypeId)
 
         // Clean form when modal closes
         if (!props.modalState) {
