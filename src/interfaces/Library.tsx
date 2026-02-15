@@ -31,6 +31,7 @@ export interface Item {
     observation?: string
     createdBy?: string | null
     createdAt?: Date | null
+    locationId: number
     lastEditedBy?: string | null
     lastEditedAt?: Date | null
 }

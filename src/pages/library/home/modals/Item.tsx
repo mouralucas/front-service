@@ -15,7 +15,7 @@ import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.t
 import { CreateItemInput } from '../../../../interfaces/Library.tsx';
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_ITEM_MUTATION, UPDATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
-import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_LANGUAGES, QUERY_PUBLISHERS, QUERY_SERIES, QUERY_STATUS } from "../../../../services/apollo/queries/Library.tsx";
+import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_ITEM_LOCATIONS, QUERY_LANGUAGES, QUERY_PUBLISHERS, QUERY_SERIES, QUERY_STATUS } from "../../../../services/apollo/queries/Library.tsx";
 
 export interface ItemModalProps {
     item: CreateItemInput | undefined | null
@@ -52,6 +52,7 @@ const DefaultItem: CreateItemInput = {
     paidPrice: 0,
     summary: '',
     observation: '',
+    locationId: 0,
 }
 
 const itemTypes = [
@@ -125,8 +126,14 @@ const App = (props: ItemModalProps) => {
         skip: !props.modalState
     })
 
-    const isLoading = authorsLoading || statusesLoading || seriesLoading || collectionsLoading || publishersLoading || languageLoading
-    const hasData = authorsData && statusesData && seriesData && collectionsData && publishersData && languageData
+    const { data: locationsData, loading: locationsLoading } = useQuery(QUERY_ITEM_LOCATIONS, {
+        client: apolloLibraryClient,
+        onError: (error) => { toast.error(`Erro: ${error.message}`); },
+        skip: !props.modalState
+    })
+
+    const isLoading = authorsLoading || statusesLoading || seriesLoading || collectionsLoading || publishersLoading || languageLoading || locationsLoading
+    const hasData = authorsData && statusesData && seriesData && collectionsData && publishersData && languageData && locationsData
 
 
     const [createItem] = useMutation(CREATE_ITEM_MUTATION, {
@@ -497,7 +504,7 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} >
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'serieId'}
                             control={control}
@@ -517,7 +524,7 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} >
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'collectionId'}
                             control={control}
@@ -537,7 +544,7 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} >
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'publisherId'}
                             control={control}
@@ -557,7 +564,7 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} >
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'formatId'}
                             control={control}
@@ -577,7 +584,7 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} >
+                    <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'languageId'}
                             control={control}
@@ -621,6 +628,26 @@ const App = (props: ItemModalProps) => {
                                     prefix={"R$ "}
                                     value={field.value}
                                     onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid size={{ sm: 12, md: 3 }} >
+                        <Controller
+                            name={'locationId'}
+                            control={control}
+                            rules={{ required: "Campo obrigatório" }}
+                            render={({ field }) => (
+                                <SelectAutocomplete
+                                    label="Localização"
+                                    value={field.value}
+                                    options={locationsData?.getItemLocations?.locations || []}
+                                    getOptionLabel={(locations: any) => locations.name}
+                                    getOptionValue={(location: any) => location.id}
+                                    onChange={(value) => {
+                                        field.onChange(value);
+                                    }}
+                                    error={errors.locationId?.message}
                                 />
                             )}
                         />

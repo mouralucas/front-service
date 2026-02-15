@@ -147,8 +147,8 @@ const App = (props: AuthorModalProps): ReactElement => {
                                     label="País"
                                     value={field.value || ''}
                                     options={countryData?.getCountries?.countries || []}
-                                    getOptionLabel={(option: any) => option.countryName}
-                                    getOptionValue={(option: any) => option.countryId}
+                                    getOptionLabel={(country: any) => country.name}
+                                    getOptionValue={(country: any) => country.id}
                                     onChange={field.onChange}
                                     error={errors.countryId?.message}
                                 />
@@ -165,27 +165,11 @@ const App = (props: AuthorModalProps): ReactElement => {
                                     label="Idioma"
                                     value={field.value || ''}
                                     options={languageData?.getLanguages?.languages || []}
-                                    getOptionLabel={(option: any) => option.languageName}
-                                    getOptionValue={(option: any) => option.languageId}
+                                    getOptionLabel={(language: any) => language.name}
+                                    getOptionValue={(language: any) => language.id}
                                     onChange={field.onChange}
                                     error={errors.languageId?.message}
                                 />
-                                // <FormControl fullWidth size="small">
-                                //     <InputLabel id="language-label">Idioma</InputLabel>
-                                //     <Select
-                                //         {...field}
-                                //         labelId="language-label"
-                                //         value={field.value || ''}
-                                //         onChange={(e) => field.onChange(e.target.value)}
-                                //         sx={{ width: "100%" }}
-                                //     >
-                                //         {languageData?.getLanguages?.languages?.map((language: any) => (
-                                //             <MenuItem key={language.languageId} value={language.languageId}>
-                                //                 {language.languageName}
-                                //             </MenuItem>
-                                //         ))}
-                                //     </Select>
-                                // </FormControl>
                             )}
                         />
                     </Grid>

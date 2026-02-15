@@ -106,8 +106,8 @@ export const GET_COUNTRIES = gql`
     getCountries {
       quantity
       countries {
-          countryId
-          countryName
+          id
+          name
           continent
           description
       }
@@ -133,7 +133,7 @@ query GetAuthors($params: GetAuthorsRequest) {
 
 
 export const QUERY_STATUS = gql`
-query GetStatus ($params: GetStatusInput) {
+  query GetStatus ($params: GetStatusInput) {
     getStatus(params: $params) {
         statuses {
             id
@@ -148,17 +148,31 @@ query GetStatus ($params: GetStatusInput) {
 `
 
 export const QUERY_READING_STATS = gql`
-query GetReadingStats($itemId: Int!) {
-  getReadingStats(params: { itemId: $itemId }) {
-    stats {
-      readingsCount
-      lastReadingDate
-      isCurrentlyReading
-      currentReadingId
-      currentPage
-      currentPercentage
+  query GetReadingStats($itemId: Int!) {
+    getReadingStats(params: { itemId: $itemId }) {
+      stats {
+        readingsCount
+        lastReadingDate
+        isCurrentlyReading
+        currentReadingId
+        currentPage
+        currentPercentage
+      }
     }
   }
-}
 `;
+
+export const QUERY_ITEM_LOCATIONS = gql`
+  query GetItemLocations {
+      getItemLocations {
+          quantity
+          locations {
+              id
+              name
+              physicalphysical_location
+              description
+          }
+      }
+  }
+`
 
