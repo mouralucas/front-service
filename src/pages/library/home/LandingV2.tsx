@@ -7,6 +7,7 @@ import { ReactElement, SyntheticEvent, useEffect, useState } from "react";
 import Card from '../../../components/Card';
 import BookTable from './tables/Books.tsx'
 import MangaTable from "./tables/Mangas.tsx";
+import UserPage from "./UserPage.tsx"
 
 
 const LibraryLanding = (): ReactElement => {
@@ -17,6 +18,7 @@ const LibraryLanding = (): ReactElement => {
     const [selectedTab, setSelectedTab] = useState(0);
 
     const handleTabChange = (event: SyntheticEvent, newValue: number) => {
+        console.log(event);
         setSelectedTab(newValue);
     };
 
@@ -38,7 +40,7 @@ const LibraryLanding = (): ReactElement => {
                     <TabPanel value="0">
                         <Card>
                             <Card.Body>
-                                <p>{'Resumo de <Username>'}</p>
+                                <UserPage />
                             </Card.Body>
                         </Card>
                     </TabPanel>

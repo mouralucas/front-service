@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_ITEMS = gql`
-  query GetItems($params: GetItemInput!) {
+  query GetItems($params: GetItemInput) {
     getItems(params: $params) {
       quantity
       items {

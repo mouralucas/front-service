@@ -27,6 +27,7 @@ export interface Item {
     languageId: 'PT'
     coverPrice: number
     paidPrice: number
+    cover: string
     summary?: string
     observation?: string
     createdBy?: string | null

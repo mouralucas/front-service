@@ -53,6 +53,7 @@ const DefaultItem: CreateItemInput = {
     summary: '',
     observation: '',
     locationId: 0,
+    cover: "",
 }
 
 const itemTypes = [

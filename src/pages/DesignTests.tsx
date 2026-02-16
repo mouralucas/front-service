@@ -57,6 +57,7 @@ const App = (): ReactElement => {
     const [value, setValue] = useState(0);
 
     const handleChange = (event: SyntheticEvent, newValue: number) => {
+        console.log(event);
         setValue(newValue);
     };
 
