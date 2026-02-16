@@ -238,6 +238,7 @@ const MangaTable = (): ReactElement => {
                 data={filteredRows}
                 columns={columns}
                 isLoading={loading}
+                pageSize={100}
                 getRowId={(row: any) => row.id}
                 columnVisibilityModel={{
                     id: false,

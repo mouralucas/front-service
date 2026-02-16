@@ -136,6 +136,7 @@ const Books = (): ReactElement => {
                 data={filterdRows}
                 getRowId={(row: any) => row.id}
                 isLoading={loading}
+                pageSize={100}
                 columnVisibilityModel={{
                     id: false
                 }}

@@ -18,7 +18,7 @@ const FinanceTransactionsDashboard: FC = lazy(() => import('../pages/finance/tra
 const FinanceAdmin: FC = lazy(() => import('../pages/finance/administration/Landing'))
 
 // Library imports
-const LibraryLanding: FC = lazy(() => import('../pages/library/home/Landing.tsx'))
+const LibraryLanding: FC = lazy(() => import('../pages/library/home/LandingV2.tsx'))
 const LibraryBackoffice: FC = lazy(() => import('../pages/library/backoffice/Landing'));
 const LibraryItem: FC = lazy(() => import('../pages/library/home/Item'));
 

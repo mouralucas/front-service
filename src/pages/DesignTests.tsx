@@ -1,9 +1,13 @@
-import { ReactElement } from "react";
+import { ReactElement, useState, SyntheticEvent } from "react";
 import Card from "../components/Card.tsx";
 import DataGrid from "../components/table/DataGridV2.tsx";
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, Box } from '@mui/material';
 import { toast } from "react-toastify";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import TabPanel from '@mui/lab/TabPanel';
+import TabContext from '@mui/lab/TabContext';
 
 const App = (): ReactElement => {
 
@@ -50,13 +54,84 @@ const App = (): ReactElement => {
         { 'id': 13, 'service': 'Service 13', 'host': 'Host 2' },
     ];
 
-    
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event: SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
 
     return (
         <div className="container">
             <div className="row">
                 <div className="col-12">
-                    <></>
+                    <Box sx={{ bgcolor: 'background.paper' }}>
+                        <TabContext value={String(value)}>
+                            <Tabs
+                                value={value}
+                                onChange={handleChange}
+                                variant="scrollable"
+                                scrollButtons="auto"
+                                aria-label="scrollable auto tabs example"
+                            >
+                                <Tab label="Item One" value={0} />
+                                <Tab label="Item Two" value={1} />
+                                <Tab label="Item Three" value={2} />
+                                <Tab label="Item Four" value={3} />
+                                <Tab label="Item Five" value={4} />
+                                <Tab label="Item Six" value={5} />
+                                <Tab label="Item Seven" value={6} />
+                            </Tabs>
+                            <TabPanel value="0">
+                                <Card>
+                                    <Card.Body>
+                                        <p>Conteúdo do Item One</p>
+                                    </Card.Body>
+                                </Card>
+                            </TabPanel>
+                            <TabPanel value="1">
+                                <Card>
+                                    <Card.Body>
+                                        <p>Conteúdo do Item Two</p>
+                                    </Card.Body>
+                                </Card>
+                            </TabPanel>
+                            <TabPanel value="2">
+                                <Card>
+                                    <Card.Body>
+                                        <p>Conteúdo do Item Three</p>
+                                    </Card.Body>
+                                </Card>
+                            </TabPanel>
+                            <TabPanel value="3">
+                                <Card>
+                                    <Card.Body>
+                                        <p>Conteúdo do Item Four</p>
+                                    </Card.Body>
+                                </Card>
+                            </TabPanel>
+                            <TabPanel value="4">
+                                <Card>
+                                    <Card.Body>
+                                        <p>Conteúdo do Item Five</p>
+                                    </Card.Body>
+                                </Card>
+                            </TabPanel>
+                            <TabPanel value="5">
+                                <Card>
+                                    <Card.Body>
+                                        <p>Conteúdo do Item Six</p>
+                                    </Card.Body>
+                                </Card>
+                            </TabPanel>
+                            <TabPanel value="6">
+                                <Card>
+                                    <Card.Body>
+                                        <p>Conteúdo do Item Seven</p>
+                                    </Card.Body>
+                                </Card>
+                            </TabPanel>
+                        </TabContext>
+                    </Box>
                 </div>
             </div>
             <div className="row">
