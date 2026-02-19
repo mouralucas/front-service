@@ -9,6 +9,7 @@ import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLi
 import { QUERY_READING_STATS } from "../../../../services/apollo/queries/Library.tsx";
 import CreateReadingModal from "../modals/CreateReading.tsx";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
+import ItemCard from "../../../../components/ItemCard.tsx";
 
 
 interface BookDrawerProps {
@@ -105,19 +106,9 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
             {/* Cover + Main info */}
             <Stack direction="row" spacing={2} p={2}>
-                <Box
-                    className="item-cover"
-                    sx={{
-                        backgroundImage: 'url(/images/no-cover.png)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                        borderRadius: 1,
-                        border: '1px solid #ddd',
-                        width: 150,
-                        height: 200,
-                        flexShrink: 0,
-                    }}
+                <ItemCard
+                    key={props.item.id}
+                    coverUrl={props.item.cover}
                 />
                 <Stack spacing={2}>
                     <Box>

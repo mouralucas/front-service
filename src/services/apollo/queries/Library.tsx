@@ -33,12 +33,9 @@ export const QUERY_ITEMS = gql`
         languageId
         coverPrice
         paidPrice
-        dimensions
-        height
-        width
-        thickness
+        locationId
+        cover
         summary
-        
       }
     }
   }

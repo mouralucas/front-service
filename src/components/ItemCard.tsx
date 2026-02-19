@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 
 interface ItemCardProps {
-  title: string;
+  title?: string;
   coverUrl?: string;
   author?: string;
   onClick?: () => void;
@@ -43,20 +43,23 @@ export default function ItemCard({
       />
 
       {/* Título */}
-      <Typography
-        variant="body2"
-        mt={1}
-        textAlign="center"
-        sx={{
-          display: "-webkit-box",
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {title}
-      </Typography>
+      {title && (
+        <Typography
+          variant="body2"
+          mt={1}
+          textAlign="center"
+          sx={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {title}
+        </Typography>
+      )}
+
 
       {/* Autor (opcional) */}
       {author && (
