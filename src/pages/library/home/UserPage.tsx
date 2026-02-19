@@ -15,7 +15,7 @@ const UserPage = (): ReactElement => {
         client: apolloLibraryClient,
         variables: {
             params: {
-                statusId: "owned",
+                // statusId: "owned",
                 orderBy: [
                     {
                         field: 'created_at',
