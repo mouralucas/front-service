@@ -6,12 +6,13 @@ import { Item } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
 import { QUERY_ITEMS } from "../../../services/apollo/queries/Library";
 import BookDrawer from "./drawer/Book";
+import Loader from "../../../components/Loader";
 
 const UserPage = (): ReactElement => {
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
     const [selectedBook, setSelectedBook] = useState<Item>()
 
-    const { data: itemsData } = useQuery(QUERY_ITEMS, {
+    const { data: itemsData, loading: itemsLoading } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
             params: {
@@ -40,7 +41,7 @@ const UserPage = (): ReactElement => {
 
     }, [isDrawerOpened]);
 
-    return (
+    return (itemsLoading ? <Loader /> :
         <Box display="flex" flexDirection="column" height="100%">
             <Stack
                 direction="row"
