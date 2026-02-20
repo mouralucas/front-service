@@ -19,7 +19,11 @@ export default function ItemCard({
       flexDirection="column"
       alignItems="center"
       sx={{
-        width: 150,
+        width: {
+          xs: 120,
+          sm: 140,
+          md: 150,
+        },
         cursor: onClick ? "pointer" : "default",
         transition: "transform 0.2s ease",
         "&:hover": {
@@ -30,15 +34,19 @@ export default function ItemCard({
     >
       {/* Capa */}
       <Box
+        component="img"
+        src={coverUrl || "/images/no-cover.png"}
+        alt={title}
+        onError={(e: any) => {
+          e.currentTarget.src = "/images/no-cover.png";
+        }}
         sx={{
-          backgroundImage: `url(${coverUrl || "/images/no-cover.png"})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          width: "100%",
+          aspectRatio: "2 / 3",
+          objectFit: "contain", // <- importante
           borderRadius: 1,
           border: "1px solid #ddd",
-          width: 150,
-          height: 200,
+          backgroundColor: "#f5f5f5",
         }}
       />
 
@@ -60,8 +68,7 @@ export default function ItemCard({
         </Typography>
       )}
 
-
-      {/* Autor (opcional) */}
+      {/* Autor */}
       {author && (
         <Typography
           variant="caption"
