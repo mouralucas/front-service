@@ -140,6 +140,14 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                 </Box>
             </Stack>
 
+            {/* ISBN */}
+            <Stack direction="row" spacing={2} px={2}>
+                <Box flex={1}>
+                    <div className="contact-name">ISBN</div>
+                    <div>{props.item?.isbn}</div>
+                </Box>
+            </Stack>
+
             <hr />
 
             {/* Reading stats */}
@@ -230,6 +238,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
                     modalState={createReadingModalState}
                     hideCreateReadingModal={hideCreateReadingModal}
                     itemId={props.item.id}
+                    itemTitle={props.item.title}
                 />
             }
         </>

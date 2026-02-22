@@ -12,7 +12,6 @@ export interface Item {
     titleOriginal?: string
     subtitleOriginal?: string
     isbn?: string
-    isbn10?: string
     itemTypeId: string
     pages?: number
     volume?: number 

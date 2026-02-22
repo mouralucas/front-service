@@ -239,6 +239,7 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
                     modalState={createReadingModalState}
                     hideCreateReadingModal={hideCreateReadingModal}
                     itemId={props.item.id}
+                    itemTitle={props.item.title}
                 />
             }
         </>

@@ -19,6 +19,7 @@ interface CreateReadingModalProps {
     modalState: boolean;
     hideCreateReadingModal: () => void;
     itemId: number;
+    itemTitle?: string;
 }
 
 const DefaultReading: ItemReading ={
@@ -154,9 +155,11 @@ const CreateReadingModal = (props: CreateReadingModalProps): ReactElement => {
         </form>
     );
 
+    const modalTtitle = props.itemTitle ? `Iniciar Leitura para ${props.itemTitle}` : "Criar leitura";
+
     return (
         <Modal
-            title="Iniciar Leitura"
+            title={modalTtitle}
             body={body}
             showModal={props.modalState}
             hideModal={props.hideCreateReadingModal}
