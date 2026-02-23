@@ -1,10 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface ItemCardProps {
   title?: string;
   coverUrl?: string;
   author?: string;
   onClick?: () => void;
+  onEdit?: any;
 }
 
 export default function ItemCard({
@@ -12,6 +14,7 @@ export default function ItemCard({
   coverUrl,
   author,
   onClick,
+  onEdit,
 }: ItemCardProps) {
   return (
     <Box
@@ -19,36 +22,84 @@ export default function ItemCard({
       flexDirection="column"
       alignItems="center"
       sx={{
-        width: {
-          xs: 120,
-          sm: 140,
-          md: 150,
-        },
-        cursor: onClick ? "pointer" : "default",
-        transition: "transform 0.2s ease",
-        "&:hover": {
-          transform: onClick ? "scale(1.03)" : "none",
-        },
+        width: 150,
       }}
-      onClick={onClick}
     >
-      {/* Capa */}
+      {/* Wrapper da imagem */}
       <Box
-        component="img"
-        src={coverUrl || "/images/no-cover.png"}
-        alt={title}
-        onError={(e: any) => {
-          e.currentTarget.src = "/images/no-cover.png";
-        }}
+        position="relative"
+        width="100%"
         sx={{
-          width: "100%",
-          aspectRatio: "2 / 3",
-          objectFit: "contain", // <- importante
-          borderRadius: 1,
-          border: "1px solid #ddd",
-          backgroundColor: "#f5f5f5",
+          transition: "transform 0.2s ease",
+          cursor: onClick ? "pointer" : "default",
+
+          "&:hover": {
+            transform: "scale(1.03)", // 👈 destaque voltou
+          },
+
+          "&:hover .overlay": {
+            opacity: onEdit ? 1 : 0,
+          },
         }}
-      />
+        onClick={onClick}
+      >
+        {/* Imagem */}
+        <Box
+          component="img"
+          src={coverUrl || "/images/no-cover.png"}
+          alt={title}
+          onError={(e: any) => {
+            e.currentTarget.src = "/images/no-cover.png";
+          }}
+          sx={{
+            width: "100%",
+            aspectRatio: "2 / 3",
+            objectFit: "contain",
+            borderRadius: 1,
+            border: "1px solid #ddd",
+            backgroundColor: "#f5f5f5",
+            display: "block",
+          }}
+        />
+
+        {/* Overlay */}
+        {onEdit && (
+          <Box
+            className="overlay"
+            position="absolute"
+            top={0}
+            left={0}
+            width="100%"
+            height="100%"
+            display="flex"
+            justifyContent="flex-end"
+            alignItems="flex-start"
+            p={1}
+            sx={{
+              backgroundColor: "rgba(0,0,0,0.35)",
+              borderRadius: 1,
+              opacity: 0,
+              transition: "opacity 0.2s ease",
+            }}
+          >
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit();
+              }}
+              sx={{
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: "#eee",
+                },
+              }}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        )}
+      </Box>
 
       {/* Título */}
       {title && (
@@ -61,7 +112,6 @@ export default function ItemCard({
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
-            textOverflow: "ellipsis",
           }}
         >
           {title}

@@ -7,16 +7,17 @@ import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibra
 import { QUERY_ITEMS } from "../../../services/apollo/queries/Library";
 import BookDrawer from "./drawer/Book";
 import Loader from "../../../components/Loader";
+import ItemModal from './modals/Item.tsx'
 
 const UserPage = (): ReactElement => {
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
+    const [itemModalState, setItemModalState] = useState<boolean>(false)
     const [selectedBook, setSelectedBook] = useState<Item>()
 
-    const { data: itemsData, loading: itemsLoading } = useQuery(QUERY_ITEMS, {
+    const { data: itemsData, loading: itemsLoading, refetch: itemsRefetch} = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
             params: {
-                // statusId: "owned",
                 orderBy: [
                     {
                         field: 'created_at',
@@ -30,6 +31,23 @@ const UserPage = (): ReactElement => {
             }
         }
     });
+
+    const showItemModal = (book: Item) => {
+        console.log(book);
+        if (typeof book !== 'undefined') {
+            setSelectedBook(book);
+        } else {
+            setSelectedBook(undefined);
+        }
+
+        setItemModalState(true);
+    }
+
+    const hideItemModal = () => {
+        setItemModalState(false);
+        setSelectedBook(undefined);
+        itemsRefetch();
+    }
 
     const onOpenDrawerClick = useCallback((book: Item) => {
         if (book !== undefined) {
@@ -58,15 +76,23 @@ const UserPage = (): ReactElement => {
                         author={book.mainAuthorName}
                         coverUrl={book.cover}
                         onClick={() => onOpenDrawerClick(book)}
+                        onEdit={() => showItemModal(book)}
                     />
                 ))}
             </Stack>
-            {selectedBook && (
+            {(selectedBook && isDrawerOpened) && (
                 <BookDrawer
                     openDrawerState={isDrawerOpened}
                     onCloseDrawerClick={onOpenDrawerClick}
                     item={selectedBook}
                 />
+            )}
+            {(selectedBook && itemModalState) && (
+                <ItemModal
+                    modalState={itemModalState}
+                    hideItemModal={hideItemModal}
+                    item={selectedBook}
+                    itemTypeId='book' />
             )}
         </Box>
     )
