@@ -2,16 +2,16 @@ import { useQuery } from "@apollo/client";
 import { Box, Stack } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
+import Loader from "../../../components/Loader";
 import { Item } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
 import { QUERY_ITEMS } from "../../../services/apollo/queries/Library";
 import BookDrawer from "./drawer/Book";
-import Loader from "../../../components/Loader";
-import ItemModal from './modals/Item.tsx'
+import ItemModal from './modals/Item.tsx';
 
 const UserPage = (): ReactElement => {
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
-    const [itemModalState, setItemModalState] = useState<boolean>(false)
+    const [isItemModalOpen, setIsItemModalOpen] = useState<boolean>(false)
     const [selectedBook, setSelectedBook] = useState<Item>()
 
     const { data: itemsData, loading: itemsLoading, refetch: itemsRefetch} = useQuery(QUERY_ITEMS, {
@@ -32,22 +32,19 @@ const UserPage = (): ReactElement => {
         }
     });
 
-    const showItemModal = (book: Item) => {
-        console.log(book);
-        if (typeof book !== 'undefined') {
+    const onItemModalToggle = useCallback((book?: Item) => {
+        if (book !== undefined) {
             setSelectedBook(book);
         } else {
             setSelectedBook(undefined);
         }
+        setIsItemModalOpen(!isItemModalOpen);
 
-        setItemModalState(true);
-    }
+        if (!isItemModalOpen) {
+            itemsRefetch()
+        }
 
-    const hideItemModal = () => {
-        setItemModalState(false);
-        setSelectedBook(undefined);
-        itemsRefetch();
-    }
+    }, [isItemModalOpen, itemsRefetch]);
 
     const onOpenDrawerClick = useCallback((book: Item) => {
         if (book !== undefined) {
@@ -76,7 +73,7 @@ const UserPage = (): ReactElement => {
                         author={book.mainAuthorName}
                         coverUrl={book.cover}
                         onClick={() => onOpenDrawerClick(book)}
-                        onEdit={() => showItemModal(book)}
+                        onEdit={() => onItemModalToggle(book)}
                     />
                 ))}
             </Stack>
@@ -87,12 +84,13 @@ const UserPage = (): ReactElement => {
                     item={selectedBook}
                 />
             )}
-            {(selectedBook && itemModalState) && (
+            {(selectedBook && isItemModalOpen) && (
                 <ItemModal
-                    modalState={itemModalState}
-                    hideItemModal={hideItemModal}
                     item={selectedBook}
-                    itemTypeId='book' />
+                    itemTypeId='book' 
+                    onToggle={onItemModalToggle}
+                    isOpen={isItemModalOpen}
+                />
             )}
         </Box>
     )

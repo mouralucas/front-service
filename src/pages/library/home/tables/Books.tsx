@@ -26,26 +26,20 @@ const Books = (): ReactElement => {
 
 
     const [selectedBook, setSelectedBook] = useState<Item>()
-    const [itemModalState, setItemModalState] = useState<boolean>(false)
+    const [isItemModalOpen, setIsItemModalOpen] = useState<boolean>(false)
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
     const [bookFilter, setBookFilter] = useState('');
 
-    const showItemModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedBook(e.row);
+    const onItemModalToggle = useCallback((e: any) => {
+        if (e.row !== undefined) {
+            // Nomalize itemId to number
+            setSelectedBook({ ...e.row, itemId: Number(e.row.itemId) });
         } else {
             setSelectedBook(undefined);
         }
-
-        setItemModalState(true);
-    }
-
-    const hideItemModal = () => {
-        setItemModalState(false);
-        setSelectedBook(undefined);
-        refetch();
-    }
+        setIsItemModalOpen(!isItemModalOpen);
+    }, [isItemModalOpen]);
 
     const onOpenDrawerClick = useCallback((e: any) => {
         if (e.row !== undefined) {
@@ -85,7 +79,7 @@ const Books = (): ReactElement => {
                     <IconButton
                         aria-label="editar"
                         color="success"
-                        onClick={showItemModal.bind(null, params)}
+                        onClick={onItemModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
@@ -118,7 +112,7 @@ const Books = (): ReactElement => {
                 />
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showItemModal}
+                    onClick={onItemModalToggle}
                     disabled={loading}
                 >
                     <AddCircleOutline />
@@ -141,10 +135,10 @@ const Books = (): ReactElement => {
                     id: false
                 }}
             />
-            <ItemModal 
-                modalState={itemModalState} 
-                hideItemModal={hideItemModal} 
-                item={selectedBook} 
+            <ItemModal
+                isOpen={isItemModalOpen}
+                onToggle={onItemModalToggle}
+                item={selectedBook}
                 itemTypeId='book' />
             {selectedBook && (
                 <BookDrawer

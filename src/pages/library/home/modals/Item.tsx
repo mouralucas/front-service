@@ -9,7 +9,7 @@ import { ReactElement, useEffect } from "react";
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
 import Loader from "../../../../components/Loader.tsx";
-import Modal from "../../../../components/Modal.tsx";
+import Modal from "../../../../components/ModalV2.tsx";
 import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 import { CreateItemInput } from '../../../../interfaces/Library.tsx';
@@ -19,9 +19,9 @@ import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_ITEM_LOCATIONS, QUERY_LANGUAGES,
 
 export interface ItemModalProps {
     item: CreateItemInput | undefined | null
-    modalState: boolean
-    hideItemModal: any
     itemTypeId: string
+    onToggle: any;
+    isOpen: boolean;
 }
 
 
@@ -37,7 +37,6 @@ const DefaultItem: CreateItemInput = {
     titleOriginal: '',
     subtitleOriginal: '',
     isbn: '',
-    isbn10: '',
     itemTypeId: '',
     pages: 0,
     volume: 1,
@@ -89,7 +88,7 @@ const App = (props: ItemModalProps) => {
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        skip: !props.modalState
+        skip: !props.isOpen
     })
 
     const { data: statusesData, loading: statusesLoading } = useQuery(QUERY_STATUS, {
@@ -100,37 +99,37 @@ const App = (props: ItemModalProps) => {
                 statusType: "ITEM.STATUS"
             }
         },
-        skip: !props.modalState
+        skip: !props.isOpen
     })
 
     const { data: seriesData, loading: seriesLoading } = useQuery(QUERY_SERIES, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        skip: !props.modalState
+        skip: !props.isOpen
     })
 
     const { data: collectionsData, loading: collectionsLoading } = useQuery(QUERY_COLLECTION, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        skip: !props.modalState
+        skip: !props.isOpen
     })
 
     const { data: publishersData, loading: publishersLoading } = useQuery(QUERY_PUBLISHERS, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        skip: !props.modalState
+        skip: !props.isOpen
     })
 
     const { data: languageData, loading: languageLoading } = useQuery(QUERY_LANGUAGES, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        skip: !props.modalState
+        skip: !props.isOpen
     })
 
     const { data: locationsData, loading: locationsLoading } = useQuery(QUERY_ITEM_LOCATIONS, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
-        skip: !props.modalState
+        skip: !props.isOpen
     })
 
     const isLoading = authorsLoading || statusesLoading || seriesLoading || collectionsLoading || publishersLoading || languageLoading || locationsLoading
@@ -143,7 +142,7 @@ const App = (props: ItemModalProps) => {
             toast.success(
                 `Item "${data.createItem.title}" criado com sucesso`
             );
-            props.hideItemModal();
+            props.onToggle()
         },
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
@@ -157,7 +156,7 @@ const App = (props: ItemModalProps) => {
             toast.success(
                 `Item "${data.updateItem.title}" atualizado com sucesso`
             );
-            props.hideItemModal();
+            props.onToggle();
         },
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
@@ -166,19 +165,19 @@ const App = (props: ItemModalProps) => {
 
     useEffect(() => {
         // Set initial values
-        if (props.modalState && props.item) {
+        if (props.isOpen && props.item) {
             reset(props.item);
-        } else if (props.modalState && !props.item) {
+        } else if (props.isOpen && !props.item) {
             reset(DefaultItem);
         }
 
         setValue("itemTypeId", props.itemTypeId)
 
         // Clean form when modal closes
-        if (!props.modalState) {
+        if (!props.isOpen) {
             reset(DefaultItem);
         }
-    }, [props.modalState, props.item, reset]);
+    }, [props.isOpen, props.item, reset]);
 
     const onSubmit = async (itemFormData: CreateItemInput) => {
         if (itemFormData.id) {
@@ -694,13 +693,13 @@ const App = (props: ItemModalProps) => {
     return (
         <div>
             <Modal
-                showModal={props.modalState}
-                hideModal={props.hideItemModal}
-                title={'Item'}
+                title={"Item"}
                 body={body}
                 actionModal={handleSubmit(onSubmit)}
                 disableAction={!isDirty}
-                size={'modal-lg'}
+                size={"modal-lg"}
+                onToggle={props.onToggle}
+                isOpen={props.isOpen}
             />
         </div>
     )

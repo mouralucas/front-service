@@ -24,13 +24,24 @@ type ItemFilters = {
 
 const MangaTable = (): ReactElement => {
     const [selectedManga, setSelectedManga] = useState<Item>()
-    const [itemModalState, setItemModalState] = useState<boolean>(false)
+    const [isItemModalOpen, setIsItemModalOpen] = useState<boolean>(false)
 
     const [mangaFilter, setMangaFilter] = useState('');
     const [selectedSerie, setSelectedSerie] = useState<number>(-1)
     const [selectedCollection, setSelectedCollection] = useState<number>(-1)
 
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
+
+
+    const onItemModalToggle = useCallback((e: any) => {
+        if (e.row !== undefined) {
+            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
+        } else {
+            setSelectedManga(undefined);
+        }
+        setIsItemModalOpen(!isItemModalOpen);
+
+    }, [isItemModalOpen]);
 
     const onOpenDrawerClick = useCallback((e: any) => {
         if (e.row !== undefined) {
@@ -74,24 +85,6 @@ const MangaTable = (): ReactElement => {
         client: apolloLibraryClient
     })
 
-
-
-    const showItemModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedManga(e.row)
-        } else {
-            setSelectedManga(undefined);
-        }
-
-        setItemModalState(true);
-    }
-
-    const hideItemModal = () => {
-        setItemModalState(false);
-        setSelectedManga(undefined);
-        refetch();
-    }
-
     const columns: GridColDef<Item>[] = [
         { field: 'id', headerName: 'Id', flex: 1 },
         { field: 'mainAuthorName', headerName: 'Autor', flex: 1.5 },
@@ -121,7 +114,7 @@ const MangaTable = (): ReactElement => {
                     <IconButton
                         aria-label="editar"
                         color="success"
-                        onClick={showItemModal.bind(null, params)}
+                        onClick={onItemModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
@@ -226,7 +219,7 @@ const MangaTable = (): ReactElement => {
                     />
                 </Stack>
 
-                <IconButton aria-label="Novo Registro" onClick={showItemModal} disabled={loading}>
+                <IconButton aria-label="Novo Registro" onClick={onItemModalToggle} disabled={loading}>
                     <AddCircleOutline />
                 </IconButton>
                 <IconButton aria-label="Atualizar" onClick={() => refetch()} disabled={loading}>
@@ -244,7 +237,11 @@ const MangaTable = (): ReactElement => {
                     id: false,
                 }}
             />
-            <ItemModal modalState={itemModalState} hideItemModal={hideItemModal} item={selectedManga} itemTypeId='manga' />
+            <ItemModal
+                isOpen={isItemModalOpen} 
+                onToggle={onItemModalToggle} 
+                item={selectedManga} 
+                itemTypeId='manga' />
             {selectedManga && (
                 <MangaDrawer
                     openDrawerState={isDrawerOpened}
