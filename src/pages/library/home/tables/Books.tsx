@@ -32,7 +32,7 @@ const Books = (): ReactElement => {
     const [bookFilter, setBookFilter] = useState('');
 
     const onItemModalToggle = useCallback((e: any) => {
-        if (e.row !== undefined) {
+        if (e !== undefined && e.row !== undefined) {
             // Nomalize itemId to number
             setSelectedBook({ ...e.row, itemId: Number(e.row.itemId) });
         } else {
@@ -42,7 +42,7 @@ const Books = (): ReactElement => {
     }, [isItemModalOpen]);
 
     const onOpenDrawerClick = useCallback((e: any) => {
-        if (e.row !== undefined) {
+        if (e !== undefined && e.row !== undefined) {
             // Nomalize itemId to number
             setSelectedBook({ ...e.row, itemId: Number(e.row.itemId) });
         } else {

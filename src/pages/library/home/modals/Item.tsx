@@ -152,7 +152,6 @@ const App = (props: ItemModalProps) => {
     const [updateItem] = useMutation(UPDATE_ITEM_MUTATION, {
         client: apolloLibraryClient,
         onCompleted: (data) => {
-            console.log("Item atualizado")
             toast.success(
                 `Item "${data.updateItem.title}" atualizado com sucesso`
             );

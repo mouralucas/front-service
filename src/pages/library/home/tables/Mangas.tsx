@@ -34,7 +34,7 @@ const MangaTable = (): ReactElement => {
 
 
     const onItemModalToggle = useCallback((e: any) => {
-        if (e.row !== undefined) {
+        if (e !== undefined && e.row !== undefined) {
             setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
         } else {
             setSelectedManga(undefined);
@@ -44,7 +44,7 @@ const MangaTable = (): ReactElement => {
     }, [isItemModalOpen]);
 
     const onOpenDrawerClick = useCallback((e: any) => {
-        if (e.row !== undefined) {
+        if (e !== undefined && e.row !== undefined) {
             // Nomalize itemId to number
             setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
         } else {
