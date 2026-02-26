@@ -1,4 +1,9 @@
-import { Autocomplete, FormControl, FormHelperText, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  FormControl,
+  FormHelperText,
+  TextField,
+} from "@mui/material";
 
 interface SelectAutocompleteProps<
   T,
@@ -18,7 +23,7 @@ interface SelectAutocompleteProps<
   ) => void;
   error?: string;
   multiple?: boolean;
-  width?: number | string; // 👈 nova prop
+  width?: number | string;
 }
 
 function SelectAutocomplete<
@@ -33,36 +38,45 @@ function SelectAutocomplete<
   onChange,
   error,
   multiple = false,
-  width, // 👈 recebendo aqui
+  width,
 }: SelectAutocompleteProps<T, ReturnValue>) {
-  // Determine selected options for single/multiple
+  const isReturningObject = false as ReturnValue extends "object"
+    ? true
+    : false;
+
+  // Resolve selected option(s)
   const selectedOption = multiple
     ? Array.isArray(value)
       ? options.filter((opt) =>
-          (typeof value[0] === "string" || typeof value[0] === "number")
-            ? value.includes(getOptionValue(opt))
-            : value.includes(opt)
+          typeof value[0] === "string" || typeof value[0] === "number"
+            ? (value as Array<string | number>).includes(
+                getOptionValue(opt)
+              )
+            : (value as T[]).includes(opt)
         )
       : []
-    : (options.find((opt) =>
-        (typeof value === "string" || typeof value === "number")
+    : options.find((opt) =>
+        typeof value === "string" || typeof value === "number"
           ? getOptionValue(opt) === value
           : opt === value
-      ) as T | null) || null;
+      ) ?? null;
 
   return (
     <FormControl
-      fullWidth={!width} // se passar width, não ocupa 100%
+      fullWidth
       size="small"
-      sx={width ? { width } : undefined} // 👈 aplica largura custom
+      sx={width ? { width } : undefined}
     >
-      <Autocomplete<T, typeof multiple, false, false>
+      <Autocomplete<T, boolean, false, false>
         multiple={multiple}
         options={options}
         getOptionLabel={getOptionLabel}
-        value={selectedOption}
+        value={selectedOption as any}
         autoHighlight
-        fullWidth={!width} // idem: só fullWidth se não tiver width
+        fullWidth
+        isOptionEqualToValue={(option, val) =>
+          getOptionValue(option) === getOptionValue(val)
+        }
         onChange={(_, newValue) => {
           if (!newValue || (Array.isArray(newValue) && newValue.length === 0)) {
             onChange(null as any);
@@ -70,26 +84,33 @@ function SelectAutocomplete<
           }
 
           if (multiple) {
-            if ((null as any as ReturnValue) === "object") {
-              onChange(newValue as any); // retorna array de objetos
+            if (isReturningObject) {
+              onChange(newValue as any);
             } else {
               onChange(
                 (newValue as T[]).map(getOptionValue) as any
-              ); // retorna array de ids
+              );
             }
           } else {
-            if ((null as any as ReturnValue) === "object") {
-              onChange(newValue as any); // retorna objeto
+            if (isReturningObject) {
+              onChange(newValue as any);
             } else {
-              onChange(getOptionValue(newValue as T) as any); // retorna id
+              onChange(
+                getOptionValue(newValue as T) as any
+              );
             }
           }
         }}
         renderInput={(params) => (
-          <TextField {...params} label={label} size="small" error={!!error} />
+          <TextField
+            {...params}
+            label={label}
+            size="small"
+            error={!!error}
+          />
         )}
       />
-      {error && <FormHelperText>{error}</FormHelperText>}
+      {error && <FormHelperText error>{error}</FormHelperText>}
     </FormControl>
   );
 }

@@ -66,7 +66,7 @@ const UserPage = (): ReactElement => {
                 useFlexGap
                 justifyContent="center"
             >
-                {itemsData?.getItems?.items.map((book: Item) => (
+                {itemsData?.getItems?.items?.map((book: Item) => (
                     <ItemCard
                         key={book.id}
                         title={book.title}

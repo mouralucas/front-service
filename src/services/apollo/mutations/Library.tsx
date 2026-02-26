@@ -27,8 +27,8 @@ export const CREATE_AUTHOR_MUTATION = gql`
   mutation CreateAuthor($input: CreateAuthorInput!) {
     createAuthor(author: $input) {
         author {
-            authorId
-            authorName
+            id
+            name
             birthDate
             description
             countryId
@@ -44,7 +44,7 @@ export const CREATE_READING_MUTATION = gql`
   mutation CreateReading($input: CreateReadingInput!) {
     createReading(reading: $input) {
       reading {
-        readingId
+        id
         itemId
         itemTitle
         startDate
