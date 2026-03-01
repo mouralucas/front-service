@@ -215,155 +215,160 @@ const App = (props: ItemModalProps) => {
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>
-                    <Grid size={{ sm: 12, md: 4 }} >
-                        <Controller
-                            name={'mainAuthorId'}
-                            control={control}
-                            rules={{ required: "Campo obrigatório" }}
-                            render={({ field }) => (
-                                <SelectAutocomplete
-                                    label="Autor"
-                                    value={field.value}
-                                    options={authorsData?.getAuthors?.authors || []}
-                                    getOptionLabel={(author: any) => author.name}
-                                    getOptionValue={(author: any) => author.id}
-                                    onChange={(value) => {
-                                        field.onChange(value);
-                                    }}
-                                    error={errors.mainAuthorId?.message}
-                                />
-                            )}
-                        />
+                    <Grid size={{ sm: 12, md: 3 }} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+                        <div style={{
+                            width: '100%',
+                            aspectRatio: '2 / 3',
+                            backgroundColor: '#f0f0f0',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: '2px dashed #ccc'
+                        }}>
+                            {/* Imagem da capa */}
+                            <img src={getValues('cover') || '/images/no-cover.png'} alt="Capa" style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '4px', objectFit: 'contain' }} onError={(e: any) => {
+                                e.currentTarget.src = '/images/no-cover.png';
+                            }} />
+                        </div>
                     </Grid>
-                    <Grid size={{ sm: 12, md: 4 }} >
-                        <Controller
-                            name={'authorsId'}
-                            control={control}
-                            render={({ field }) => (
-                                <SelectAutocomplete
-                                    label="Outros autores"
-                                    value={Array.isArray(field.value) ? field.value : []}
-                                    multiple
-                                    options={authorsData?.getAuthors?.authors || []}
-                                    getOptionLabel={(author: any) => author.name}
-                                    getOptionValue={(author: any) => author.idd}
-                                    onChange={(value) => {
-                                        field.onChange(Array.isArray(value) ? value : []);
-                                    }}
-                                    error={errors.authorsId?.message}
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ sm: 6, md: 2 }} >
-                        <Controller
-                            name={'lastStatusId'}
-                            control={control}
-                            rules={{ required: "Campo obrigatório" }}
-                            render={({ field }) => (
-                                <SelectAutocomplete
-                                    label="Status"
-                                    value={field.value}
-                                    options={statusesData?.getStatus?.statuses || []}
-                                    getOptionLabel={(status: any) => status.name}
-                                    getOptionValue={(status: any) => status.id}
-                                    onChange={(value) => {
-                                        field.onChange(value);
-                                    }}
-                                    error={errors.lastStatusId?.message}
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ sm: 6, md: 2 }} >
-                        <Controller
-                            name="lastStatusDate"
-                            control={control}
-                            rules={{ required: "Campo obrigatório" }}
-                            render={({ field }) => (
-                                <LocalizationProvider
-                                    dateAdapter={AdapterDateFns}
-                                    adapterLocale={ptBR}
-                                >
-                                    <DatePicker
-                                        label="Data"
-                                        value={field.value ? new Date(field.value + "T00:00") : null}
-                                        onChange={(date) =>
-                                            field.onChange(date ? date.toISOString().split("T")[0] : null)
-                                        }
-                                        slotProps={{
-                                            textField: {
-                                                fullWidth: true,
-                                                size: "small",
-                                                error: !!errors.lastStatusDate,
-                                                helperText: errors.lastStatusDate?.message,
-                                            },
+                    <Grid size={{ sm: 12, md: 9 }} container rowSpacing={4} columnSpacing={2}>
+                        <Grid size={{ sm: 12, md: 6 }} >
+                            <Controller
+                                name={'mainAuthorId'}
+                                control={control}
+                                rules={{ required: "Campo obrigatório" }}
+                                render={({ field }) => (
+                                    <SelectAutocomplete
+                                        label="Autor"
+                                        value={field.value}
+                                        options={authorsData?.getAuthors?.authors || []}
+                                        getOptionLabel={(author: any) => author.name}
+                                        getOptionValue={(author: any) => author.id}
+                                        onChange={(value) => {
+                                            field.onChange(value);
                                         }}
-                                        sx={{ width: "100%" }}
+                                        error={errors.mainAuthorId?.message}
                                     />
-                                </LocalizationProvider>
-                            )}
-                        />
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={{ sm: 12, md: 6 }} >
+                            <Controller
+                                name={'authorsId'}
+                                control={control}
+                                render={({ field }) => (
+                                    <SelectAutocomplete
+                                        label="Outros autores"
+                                        value={Array.isArray(field.value) ? field.value : []}
+                                        multiple
+                                        options={authorsData?.getAuthors?.authors || []}
+                                        getOptionLabel={(author: any) => author.name}
+                                        getOptionValue={(author: any) => author.idd}
+                                        onChange={(value) => {
+                                            field.onChange(Array.isArray(value) ? value : []);
+                                        }}
+                                        error={errors.authorsId?.message}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={{ sm: 6, md: 4 }} >
+                            <Controller
+                                name={'lastStatusId'}
+                                control={control}
+                                rules={{ required: "Campo obrigatório" }}
+                                render={({ field }) => (
+                                    <SelectAutocomplete
+                                        label="Status"
+                                        value={field.value}
+                                        options={statusesData?.getStatus?.statuses || []}
+                                        getOptionLabel={(status: any) => status.name}
+                                        getOptionValue={(status: any) => status.id}
+                                        onChange={(value) => {
+                                            field.onChange(value);
+                                        }}
+                                        error={errors.lastStatusId?.message}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={{ sm: 6, md: 4 }} >
+                            <Controller
+                                name="lastStatusDate"
+                                control={control}
+                                rules={{ required: "Campo obrigatório" }}
+                                render={({ field }) => (
+                                    <LocalizationProvider
+                                        dateAdapter={AdapterDateFns}
+                                        adapterLocale={ptBR}
+                                    >
+                                        <DatePicker
+                                            label="Data"
+                                            value={field.value ? new Date(field.value + "T00:00") : null}
+                                            onChange={(date) =>
+                                                field.onChange(date ? date.toISOString().split("T")[0] : null)
+                                            }
+                                            slotProps={{
+                                                textField: {
+                                                    fullWidth: true,
+                                                    size: "small",
+                                                    error: !!errors.lastStatusDate,
+                                                    helperText: errors.lastStatusDate?.message,
+                                                },
+                                            }}
+                                            sx={{ width: "100%" }}
+                                        />
+                                    </LocalizationProvider>
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={{ sm: 12, md: 12 }} >
+                            <Controller
+                                name="title"
+                                control={control}
+                                rules={{ required: "Esse campo é obrigatório" }}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        label="Título"
+                                        fullWidth
+                                        size="small"
+                                        error={!!errors.title}
+                                        helperText={errors.title?.message}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={{ sm: 12, md: 12 }} >
+                            <Controller
+                                name="subtitle"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        label="Subtítulo"
+                                        fullWidth
+                                        size="small"
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={{ sm: 12, md: 12 }} >
+                            <Controller
+                                name="cover"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        label="Capa"
+                                        fullWidth
+                                        size="small"
+                                    />
+                                )}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid size={{ sm: 12, md: 6 }} >
-                        <Controller
-                            name="title"
-                            control={control}
-                            rules={{ required: "Esse campo é obrigatório" }}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Título"
-                                    fullWidth
-                                    size="small"
-                                    error={!!errors.title}
-                                    helperText={errors.title?.message}
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ sm: 12, md: 6 }} >
-                        <Controller
-                            name="subtitle"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Subtítulo"
-                                    fullWidth
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid>
-                    {/* <Grid size={{ sm: 12, md: 6 }} >
-                        <Controller
-                            name="titleOriginal"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Título original"
-                                    fullWidth
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ sm: 12, md: 6 }} >
-                        <Controller
-                            name="subtitleOriginal"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Subtítulo original"
-                                    fullWidth
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid> */}
                     <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name="isbn"
@@ -378,20 +383,6 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    {/* <Grid size={{ sm: 12, md: 3 }} >
-                        <Controller
-                            name="isbn10"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="ISBN 10"
-                                    fullWidth
-                                    size="small"
-                                />
-                            )}
-                        />
-                    </Grid> */}
                     <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
                             name={'itemTypeId'}
@@ -651,7 +642,6 @@ const App = (props: ItemModalProps) => {
                             )}
                         />
                     </Grid>
-                    <Grid size={{ sm: 12, md: 6 }} ></Grid>
                     <Grid size={{ sm: 12, md: 12 }} >
                         <Controller
                             name="summary"

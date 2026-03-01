@@ -3,6 +3,7 @@ import AuthorTable from './tables/Authors'
 import PublisherTable from './tables/Publishers'
 import SerieTable from './tables/Series'
 import CollectionTable from './tables/Collections'
+import ItemLocationTable from './tables/Locations'
 import Card from "../../../components/Card";
 
 const App = (): ReactElement => {
@@ -56,6 +57,18 @@ const App = (): ReactElement => {
                         </Card.Header>
                         <Card.Body>
                             <CollectionTable/>
+                        </Card.Body>
+                    </Card>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <Card>
+                        <Card.Header>
+                            <b>Localizacão de items</b>
+                        </Card.Header>
+                        <Card.Body>
+                            <ItemLocationTable/>
                         </Card.Body>
                     </Card>
                 </div>

@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, TextField } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
 import Loader from "../../../components/Loader";
@@ -13,6 +13,7 @@ const UserPage = (): ReactElement => {
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
     const [isItemModalOpen, setIsItemModalOpen] = useState<boolean>(false)
     const [selectedBook, setSelectedBook] = useState<Item>()
+    const [bookFilter, setBookFilter] = useState('');
 
     const { data: itemsData, loading: itemsLoading, refetch: itemsRefetch} = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
@@ -56,8 +57,22 @@ const UserPage = (): ReactElement => {
 
     }, [isDrawerOpened]);
 
+    const filterdRows = bookFilter
+        ? itemsData?.getItems.items.filter((row: Item) => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
+        : itemsData?.getItems.items
+
     return (itemsLoading ? <Loader /> :
         <Box display="flex" flexDirection="column" height="100%">
+            <Box display="flex" justifyContent="flex-end" sx={{mb: 4}}>
+                <TextField
+                    label='Filtrar por título'
+                    variant='outlined'
+                    size='small'
+                    value={bookFilter}
+                    onChange={e => setBookFilter(e.target.value)}
+                    sx={{ minWidth: 250 }}
+                />
+            </Box>
             <Stack
                 direction="row"
                 spacing={3}
@@ -66,7 +81,7 @@ const UserPage = (): ReactElement => {
                 useFlexGap
                 justifyContent="center"
             >
-                {itemsData?.getItems?.items?.map((book: Item) => (
+                {filterdRows.map((book: Item) => (
                     <ItemCard
                         key={book.id}
                         title={book.title}
