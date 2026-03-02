@@ -39,6 +39,11 @@ const MangaTable = (): ReactElement => {
         } else {
             setSelectedManga(undefined);
         }
+        
+        if (isItemModalOpen) {
+            refetch()
+        }
+
         setIsItemModalOpen(!isItemModalOpen);
 
     }, [isItemModalOpen]);

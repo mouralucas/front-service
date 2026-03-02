@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Box, Stack, TextField } from "@mui/material";
+import ClearIcon from '@mui/icons-material/Clear';
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
 import Loader from "../../../components/Loader";
@@ -39,11 +40,12 @@ const UserPage = (): ReactElement => {
         } else {
             setSelectedBook(undefined);
         }
-        setIsItemModalOpen(!isItemModalOpen);
 
-        if (!isItemModalOpen) {
+        if (isItemModalOpen) {
             itemsRefetch()
         }
+
+        setIsItemModalOpen(!isItemModalOpen);
 
     }, [isItemModalOpen, itemsRefetch]);
 
@@ -71,6 +73,16 @@ const UserPage = (): ReactElement => {
                     value={bookFilter}
                     onChange={e => setBookFilter(e.target.value)}
                     sx={{ minWidth: 250 }}
+                    slotProps={{
+                        input: {
+                            endAdornment: bookFilter && (
+                                <ClearIcon
+                                    onClick={() => setBookFilter('')}
+                                    sx={{ cursor: 'pointer' }}
+                                />
+                            ),
+                        },
+                    }}
                 />
             </Box>
             <Stack

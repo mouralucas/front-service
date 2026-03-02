@@ -336,6 +336,7 @@ const App = (props: ItemModalProps) => {
                                         size="small"
                                         error={!!errors.title}
                                         helperText={errors.title?.message}
+                                        onFocus={(e) => e.currentTarget.select()}
                                     />
                                 )}
                             />
@@ -350,6 +351,7 @@ const App = (props: ItemModalProps) => {
                                         label="Subtítulo"
                                         fullWidth
                                         size="small"
+                                        onFocus={(e) => e.currentTarget.select()}
                                     />
                                 )}
                             />
@@ -364,6 +366,7 @@ const App = (props: ItemModalProps) => {
                                         label="Capa"
                                         fullWidth
                                         size="small"
+                                        onFocus={(e) => e.currentTarget.select()}
                                     />
                                 )}
                             />
@@ -379,6 +382,7 @@ const App = (props: ItemModalProps) => {
                                     label="ISBN"
                                     fullWidth
                                     size="small"
+                                    onFocus={(e) => e.currentTarget.select()}
                                 />
                             )}
                         />
@@ -418,6 +422,7 @@ const App = (props: ItemModalProps) => {
                                         const value = e.target.value;
                                         field.onChange(value === '' ? null : Number(value));
                                     }}
+                                    onFocus={(e) => e.currentTarget.select()}
                                 />
                             )}
                         />
@@ -436,6 +441,7 @@ const App = (props: ItemModalProps) => {
                                         const value = e.target.value;
                                         field.onChange(value === '' ? null : Number(value));
                                     }}
+                                    onFocus={(e) => e.currentTarget.select()}
                                 />
                             )}
                         />
@@ -654,6 +660,7 @@ const App = (props: ItemModalProps) => {
                                     minRows={6}
                                     fullWidth
                                     size="small"
+                                    onFocus={(e) => e.currentTarget.select()}
                                 />
                             )}
                         />
@@ -670,6 +677,7 @@ const App = (props: ItemModalProps) => {
                                     minRows={6}
                                     fullWidth
                                     size="small"
+                                    onFocus={(e) => e.currentTarget.select()}
                                 />
                             )}
                         />

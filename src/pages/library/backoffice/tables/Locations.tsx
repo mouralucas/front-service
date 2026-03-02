@@ -15,7 +15,7 @@ const ItemLocationTable = (): ReactElement => {
 
     const toggleItemLocationModal = useCallback(() => {
         console.log("Modal de localização de item");
-    })
+    }, [])
 
     const columns: GridColDef[] = [
         { field: "id", headerName: "Id", flex: .5 },
