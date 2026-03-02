@@ -254,6 +254,7 @@ const App = (props: InvestmentProps): ReactElement => {
                                     label="Título"
                                     fullWidth
                                     size="small"
+                                    onFocus={(e) => e.currentTarget.select()}
                                     error={!!errors.name}
                                     helperText={errors.name?.message}
                                 />
@@ -271,6 +272,7 @@ const App = (props: InvestmentProps): ReactElement => {
                                     label="Taxa contratada"
                                     fullWidth
                                     size="small"
+                                    onFocus={(e) => e.currentTarget.select()}
                                     error={!!errors.contractedRate}
                                     helperText={errors.contractedRate?.message}
                                 />
@@ -315,7 +317,9 @@ const App = (props: InvestmentProps): ReactElement => {
                                 <CurrencyInput
                                     label="Quantidade"
                                     value={field.value}
+                                    decimalPlaces={5}
                                     onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    onFocus={(e) => e.currentTarget.select()}
                                     error={!!errors.quantity}
                                     helperText={errors.quantity?.message}
                                 />
@@ -334,7 +338,9 @@ const App = (props: InvestmentProps): ReactElement => {
                                     label="Preço"
                                     value={field.value}
                                     prefix={'R$ '}
+                                    decimalPlaces={5}
                                     onValueChange={(values: any) => field.onChange(values.rawValue)}
+                                    onFocus={(e) => e.currentTarget.select()}
                                     error={!!errors.price}
                                     helperText={errors.price?.message}
                                     onBlur={calculateTotalAmount}
@@ -354,6 +360,7 @@ const App = (props: InvestmentProps): ReactElement => {
                                     label="Total"
                                     value={field.value}
                                     prefix={'R$ '}
+                                    decimalPlaces={5}
                                     onValueChange={(values: any) => field.onChange(values.rawValue)}
                                     error={!!errors.amount}
                                     helperText={errors.amount?.message}
