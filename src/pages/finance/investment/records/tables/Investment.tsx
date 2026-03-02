@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
+import ClearIcon from '@mui/icons-material/Clear';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box, TextField } from "@mui/material";
@@ -219,6 +220,17 @@ const InvestmentV2 = (): ReactElement => {
                     value={investmentFilter}
                     onChange={e => setInvestmentFilter(e.target.value)}
                     sx={{ minWidth: 250 }}
+                    onFocus={(e) => e.currentTarget.select()}
+                    slotProps={{
+                        input: {
+                            endAdornment: investmentFilter && (
+                                <ClearIcon
+                                    onClick={() => setInvestmentFilter('')}
+                                    sx={{ cursor: 'pointer' }}
+                                />
+                            ),
+                        },
+                    }}
                 />
                 <IconButton
                     aria-label="Novo Registro"

@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { Box, Stack, TextField } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
+import { Box, Stack, TextField } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
 import Loader from "../../../components/Loader";
@@ -73,6 +73,7 @@ const UserPage = (): ReactElement => {
                     value={bookFilter}
                     onChange={e => setBookFilter(e.target.value)}
                     sx={{ minWidth: 250 }}
+                    onFocus={(e) => e.currentTarget.select()}
                     slotProps={{
                         input: {
                             endAdornment: bookFilter && (
