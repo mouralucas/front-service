@@ -16,7 +16,8 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
         {
             client: apolloFinanceClient,
             variables: { params: { investmentId: props.investmentId } },
-            skip: !props.investmentId
+            skip: !props.investmentId,
+            fetchPolicy: 'no-cache'
         }
     )
 

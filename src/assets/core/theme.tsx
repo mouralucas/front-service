@@ -11,13 +11,22 @@ interface MyZIndex extends ZIndex {
     verification: number;
 }
 
+const spacingScale = [0, 2, 4, 8, 12, 16, 20, 24, 32, 36, 40, 48, 64, 128, 256, 512];
+
 const theme = createTheme({
     breakpoints: {
         keys: ['xs', 'sm', 'md', 'lg', 'xl'],
         values: { xs: 0, sm: 640, md: 832, lg: 1224, xl: 1500 },
     },
-    space: [0, 2, 4, 8, 12, 16, 20, 24, 32, 36, 40, 48, 64, 128, 256, 512],
-    spacing: [0, 2, 4, 8, 12, 16, 20, 24, 32, 36, 40, 48, 64, 128, 256, 512],
+    space: spacingScale,
+    spacing: (factor: number) => {
+        // Handle integer indices by returning from the scale array
+        if (Number.isInteger(factor) && factor >= 0 && factor < spacingScale.length) {
+            return `${spacingScale[factor]}px`;
+        }
+        // Handle fractional values by interpolating
+        return `${factor * 8}px`;
+    },
     palette: ColorPalette as any,
     zIndex: {
         backdrop: 100,
