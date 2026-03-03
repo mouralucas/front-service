@@ -264,7 +264,7 @@ const App = (props: ItemModalProps) => {
                                         multiple
                                         options={authorsData?.getAuthors?.authors || []}
                                         getOptionLabel={(author: any) => author.name}
-                                        getOptionValue={(author: any) => author.idd}
+                                        getOptionValue={(author: any) => author.id}
                                         onChange={(value) => {
                                             field.onChange(Array.isArray(value) ? value : []);
                                         }}
