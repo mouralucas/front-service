@@ -166,7 +166,7 @@ export const QUERY_ITEM_LOCATIONS = gql`
           locations {
               id
               name
-              physicalphysical_location
+              physicalLocation
               description
           }
       }
