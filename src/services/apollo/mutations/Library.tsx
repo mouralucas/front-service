@@ -40,6 +40,16 @@ export const CREATE_AUTHOR_MUTATION = gql`
 }
 `
 
+export const CREATE_SERIE_MUTATION = gql`
+  mutation CreateSerie($input: CreateSerieRequest) {
+    createSerie(serie: $input) {
+      created
+      id
+      name
+    }
+  }
+`
+
 export const CREATE_READING_MUTATION = gql`
   mutation CreateReading($input: CreateReadingInput!) {
     createReading(reading: $input) {

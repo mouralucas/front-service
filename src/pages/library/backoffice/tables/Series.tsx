@@ -1,13 +1,35 @@
-import { ReactElement } from "react";
-import DataGridComp from "../../../../components/table/DataGridV2"
-import { Box, IconButton } from "@mui/material"
-import { GridColDef } from "@mui/x-data-grid";
-import { useQuery } from "@apollo/client"
-import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
+import { useQuery } from "@apollo/client";
 import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
+import { Box, IconButton } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { ReactElement, useCallback, useState } from "react";
+import DataGridComp from "../../../../components/table/DataGridV2";
+import { Serie } from "../../../../interfaces/Library.tsx";
+import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import { QUERY_SERIES } from "../../../../services/apollo/queries/Library";
+import SerieModal from "../modals/Serie.tsx";
+import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 
 const SeriesTable = (): ReactElement => {
+    const [selectedSerie, setSelectedSerie] = useState<Serie>();
+    const [isSerieModalOpen, setIsSerieModalOpen] = useState<boolean>(false);
+
+    const onSerieModalToggle = useCallback((e: any) => {
+        if (e !== undefined && e.row !== undefined) {
+            // Nomalize itemId to number
+            setSelectedSerie({ ...e.row, itemId: Number(e.row.itemId) });
+        } else {
+            setSelectedSerie(undefined);
+        }
+
+        if (isSerieModalOpen) {
+            seriesRefetch();
+        }
+
+        setIsSerieModalOpen(!isSerieModalOpen);
+
+    }, [isSerieModalOpen])
+
     const { data: seriesData, loading: seriesLoading, refetch: seriesRefetch } = useQuery(QUERY_SERIES, {
         client: apolloLibraryClient,
     })
@@ -16,7 +38,7 @@ const SeriesTable = (): ReactElement => {
         { field: "id", headerName: "Id", flex: .5 },
         { field: "name", headerName: "Nome", flex: 2 },
         { field: "originalName", headerName: "Nome Original", flex: 2 },
-        { field: "description", headerName: "Descrição", flex: 1},
+        { field: "description", headerName: "Descrição", flex: 1 },
         { field: "countryName", headerName: "País", flex: 1 },
     ]
 
@@ -30,6 +52,13 @@ const SeriesTable = (): ReactElement => {
                 >
                     <AutorenewOutlined />
                 </IconButton>
+                <IconButton
+                    aria-label="Novo Registro"
+                    onClick={onSerieModalToggle}
+                    loading={seriesLoading}
+                >
+                    <AddCircleOutline />
+                </IconButton>
             </Box>
             <DataGridComp
                 columns={columns}
@@ -39,6 +68,11 @@ const SeriesTable = (): ReactElement => {
                 columnVisibilityModel={{
                     seriesId: false
                 }}
+            />
+            <SerieModal 
+                isOpen={isSerieModalOpen}
+                onToggle={onSerieModalToggle}
+                serie={selectedSerie}
             />
         </Box>
     )

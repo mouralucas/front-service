@@ -54,7 +54,7 @@ export const getSeries = async (selectFormat: boolean) => {
         const response: SeriesResponse = await getLibraryData(URL_LIBRARY_SERIE);
         if (selectFormat) {
             return response.series.map((i: Serie) => (
-                {value: i.serieId, label: i.serieName}
+                {value: i.id, label: i.name}
             ));
         }
 

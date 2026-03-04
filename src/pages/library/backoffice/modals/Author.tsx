@@ -13,7 +13,7 @@ import Modal from "../../../../components/Modal.tsx";
 import { Author } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_AUTHOR_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
-import { GET_COUNTRIES, QUERY_LANGUAGES } from "../../../../services/apollo/queries/Library.tsx";
+import { QUERY_COUNTRIES, QUERY_LANGUAGES } from "../../../../services/apollo/queries/Library.tsx";
 
 interface AuthorModalProps {
     modalState: boolean;
@@ -41,7 +41,7 @@ const App = (props: AuthorModalProps): ReactElement => {
         skip: !props.modalState
     })
 
-    const { data: countryData } = useQuery(GET_COUNTRIES, {
+    const { data: countryData } = useQuery(QUERY_COUNTRIES, {
         client: apolloLibraryClient,
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);

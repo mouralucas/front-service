@@ -82,7 +82,7 @@ const itemFormats = [
 ]
 
 
-const App = (props: ItemModalProps) => {
+const ItemModal = (props: ItemModalProps) => {
     const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues, setValue } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
 
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
@@ -702,4 +702,4 @@ const App = (props: ItemModalProps) => {
     )
 }
 
-export default App;
+export default ItemModal;

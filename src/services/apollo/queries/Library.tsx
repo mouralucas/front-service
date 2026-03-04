@@ -98,7 +98,7 @@ export const QUERY_LANGUAGES = gql`
     }
   }`
 
-export const GET_COUNTRIES = gql`
+export const QUERY_COUNTRIES = gql`
  query {
     getCountries {
       quantity

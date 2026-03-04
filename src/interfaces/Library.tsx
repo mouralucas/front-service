@@ -81,11 +81,11 @@ export interface Author {
 }
 
 export interface Serie {
-    serieId: string;
-    serieName: string;
+    id?: number | null;
+    name: string;
     originalName: string;
     description: string;
-    countryId: string;
+    countryId: string | null;
 }
 
 export interface Collection {
