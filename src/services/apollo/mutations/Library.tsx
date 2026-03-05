@@ -50,6 +50,16 @@ export const CREATE_SERIE_MUTATION = gql`
   }
 `
 
+export const CREATE_COLLECTION_MUTATION = gql`
+  mutation CreateCollection($input: CreateCollectionRequest) {
+    createCollection(collection: $input) {
+      created
+      id
+      name
+    }
+  }
+`
+
 export const CREATE_READING_MUTATION = gql`
   mutation CreateReading($input: CreateReadingInput!) {
     createReading(reading: $input) {

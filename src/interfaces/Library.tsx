@@ -89,8 +89,9 @@ export interface Serie {
 }
 
 export interface Collection {
-    collectionId: string
-    collectionName: string
+    id: string | null
+    name: string
+    description: String
 }
 
 export interface Publisher {
