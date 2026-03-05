@@ -25,9 +25,9 @@ const DefaultSerie: Serie = {
 }
 
 const App = (props: SerieModalProps): ReactElement => {
-    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues, setValue } = useForm<Serie>({ defaultValues: DefaultSerie });
+    const { handleSubmit, control, formState: { isDirty, errors }} = useForm<Serie>({ defaultValues: DefaultSerie });
 
-    const { data: countriesData, loading: countriesLoading } = useQuery(QUERY_COUNTRIES, {
+    const { data: countriesData } = useQuery(QUERY_COUNTRIES, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
         skip: !props.isOpen

@@ -94,7 +94,7 @@ const UserPage = (): ReactElement => {
                 useFlexGap
                 justifyContent="center"
             >
-                {filterdRows.map((book: Item) => (
+                {filterdRows?.map((book: Item) => (
                     <ItemCard
                         key={book.id}
                         title={book.title}

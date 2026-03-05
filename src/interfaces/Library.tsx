@@ -91,7 +91,7 @@ export interface Serie {
 export interface Collection {
     id: string | null
     name: string
-    description: String
+    description: string
 }
 
 export interface Publisher {

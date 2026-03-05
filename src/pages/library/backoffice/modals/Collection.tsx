@@ -1,14 +1,12 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Grid, TextField } from "@mui/material";
 import { ReactElement } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 import Modal from "../../../../components/ModalV2.tsx";
-import { Collection, Serie } from "../../../../interfaces/Library.tsx";
+import { Collection } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { QUERY_COUNTRIES } from "../../../../services/apollo/queries/Library.tsx";
-import { CREATE_COLLECTION_MUTATION, CREATE_SERIE_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { CREATE_COLLECTION_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 
 export interface CollectionModalProps {
     collection: Collection | undefined
@@ -19,10 +17,11 @@ export interface CollectionModalProps {
 const DefaultCollections: Collection = {
     id: null,
     name: '',
+    description: ''
 }
 
 const App = (props: CollectionModalProps): ReactElement => {
-    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues, setValue } = useForm<Collection>({ defaultValues: DefaultCollections });
+    const { handleSubmit, control, formState: { isDirty, errors } } = useForm<Collection>({ defaultValues: DefaultCollections });
 
     const [createCollection] = useMutation(CREATE_COLLECTION_MUTATION, {
         client: apolloLibraryClient,

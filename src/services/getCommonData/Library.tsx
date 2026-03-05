@@ -70,7 +70,7 @@ export const getCollections = async (selectFormat: boolean) => {
         const response: CollectionResponse = await getLibraryData(URL_LIBRARY_COLLECTION);
         if (selectFormat) {
             return response.collections.map((i: Collection) => (
-                {value: i.collectionId, label: i.collectionName}
+                {value: i.id, label: i.name}
             ));
         }
 
