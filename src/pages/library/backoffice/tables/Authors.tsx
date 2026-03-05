@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import EditOutlined from '@mui/icons-material/EditOutlined';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, TextField } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -15,6 +15,7 @@ import AuthorModal from '../modals/Author.tsx';
 const AuthorTable = (): ReactElement => {
     const [authorModalState, setAuthorModalState] = useState<boolean>(false)
     const [selectedAuthor, setSelectedAuthor] = useState<Author | undefined>(undefined)
+    const [authorFilter, setAuthorFilter] = useState('');
 
     const { data: authorData, loading: loadingAuthors } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
@@ -90,9 +91,21 @@ const AuthorTable = (): ReactElement => {
         },
     ]
 
+    const filterdRows = authorFilter
+            ? authorData?.getAuthors.authors.filter((row: Author) => row.name.toLowerCase().includes(authorFilter.toLowerCase()))
+            : authorData?.getAuthors.authors
+
     return (
         <Box sx={{ display: "block" }}>
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
+                <TextField
+                    label="Filtrar por título"
+                    variant="outlined"
+                    size="small"
+                    value={authorFilter}
+                    onChange={e => setAuthorFilter(e.target.value)}
+                    sx={{ minWidth: 250 }}
+                />
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={toggleAuthorModal}
@@ -102,7 +115,7 @@ const AuthorTable = (): ReactElement => {
                 </IconButton>
             </Box>
             <DataGridComp
-                data={authorData?.getAuthors?.authors}
+                data={filterdRows}
                 columns={columns}
                 isLoading={loadingAuthors}
                 getRowId={(row) => row.id}
