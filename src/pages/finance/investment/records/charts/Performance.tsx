@@ -16,7 +16,7 @@ const App = (props: InvestmentPerformanceProps) => {
         QUERY_INVESTMENT_PERFORMANCE,
         {
             client: apolloFinanceClient,
-            variables: { params: { investmentId: props.investmentId } },
+            variables: { params: { investmentId: props.investmentId, isSettled: true} },
             skip: !props.investmentId,
             fetchPolicy: 'no-cache'
         }

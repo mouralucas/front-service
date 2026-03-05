@@ -23,7 +23,7 @@ const InvestmentSettledTable = (): ReactElement => {
         QUERY_INVESTMENTS,
         {
             client: apolloFinanceClient,
-            variables: { params: { isSettled: false } },
+            variables: { params: { isSettled: true } },
             fetchPolicy: "no-cache",
         }
     )
