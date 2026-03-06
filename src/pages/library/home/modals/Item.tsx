@@ -30,7 +30,7 @@ const DefaultItem: CreateItemInput = {
     lastStatusId: '',
     lastStatusDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
     mainAuthorId: null,
-    authorsId: [],
+    authorsIds: [],
     translatorId: 0,
     title: '',
     subtitle: '',
@@ -255,7 +255,7 @@ const ItemModal = (props: ItemModalProps) => {
                         </Grid>
                         <Grid size={{ sm: 12, md: 6 }} >
                             <Controller
-                                name={'authorsId'}
+                                name={'authorsIds'}
                                 control={control}
                                 render={({ field }) => (
                                     <SelectAutocomplete

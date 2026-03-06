@@ -8,7 +8,8 @@ export const QUERY_ITEMS = gql`
         id
         mainAuthorId
         mainAuthorName
-        authorsId
+        authorsIds
+        authorsNames
         lastStatusId
         lastStatusName
         lastStatusDate

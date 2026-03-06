@@ -5,7 +5,8 @@ export interface Item {
     lastStatusName?: string | null
     mainAuthorId: number | null;
     mainAuthorName: string;
-    authorsId?: number[]
+    authorsIds?: number[]
+    authorsNames?: string[]
     translatorId?: number
     title: string
     subtitle?: string

@@ -9,6 +9,7 @@ import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLi
 import { QUERY_READING_STATS } from "../../../../services/apollo/queries/Library.tsx";
 import CreateReadingModal from "../modals/CreateReading.tsx";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
+import ItemCard from "../../../../components/ItemCard.tsx";
 
 interface BookDrawerProps {
     openDrawerState: boolean;
@@ -18,7 +19,6 @@ interface BookDrawerProps {
 
 const MangaDrawer = (props: BookDrawerProps): ReactElement => {
 
-    // const [stats, setStats] = useState<ItemReadingStats>();
     const [crateReadingProgressModalState, setCrateReadingProgressModalState] = useState<boolean>(false)
     const [createReadingModalState, setCrateReadingModalState] = useState<boolean>(false)
 
@@ -105,20 +105,10 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
 
             {/* Cover + Main info */}
             <Stack direction="row" spacing={2} p={2}>
-                <Box
-                    className="item-cover"
-                    sx={{
-                        backgroundImage: 'url(/images/no-cover.png)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                        borderRadius: 1,
-                        border: '1px solid #ddd',
-                        width: 150,
-                        height: 200,
-                        flexShrink: 0,
-                    }}
-                />
+                <ItemCard
+                                    key={props.item.id}
+                                    coverUrl={props.item.cover}
+                                />
                 <Stack spacing={2}>
                     <Box>
                         <div className="contact-name">Título</div>
@@ -128,7 +118,9 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
                     <Box>
                         <div className="contact-name">Autor</div>
                         <div>{props.item?.mainAuthorName}</div>
-                        <div className="fw-light text-muted small">Owen King; Outro Autor; Mais um ainda</div>
+                        <div className="fw-light text-muted small">
+                            {props.item.authorsNames?.join("; ")}
+                        </div>
                     </Box>
                     <Box>
                         <div className="contact-name">Páginas</div>
