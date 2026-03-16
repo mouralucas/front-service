@@ -1,12 +1,11 @@
 import { useQuery } from "@apollo/client";
-import ClearIcon from '@mui/icons-material/Clear';
-import { Box, Stack, TextField } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
 import Loader from "../../../components/Loader";
 import { Item } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
-import { QUERY_ITEMS } from "../../../services/apollo/queries/Library";
+import { QUERY_ITEMS, QUERY_READING_GOALS } from "../../../services/apollo/queries/Library";
 import BookDrawer from "./drawer/Book";
 import ItemModal from './modals/Item.tsx';
 
@@ -16,7 +15,7 @@ const UserPage = (): ReactElement => {
     const [selectedBook, setSelectedBook] = useState<Item>()
     const [bookFilter, setBookFilter] = useState('');
 
-    const { data: itemsData, loading: itemsLoading, refetch: itemsRefetch} = useQuery(QUERY_ITEMS, {
+    const { data: itemsData, loading: itemsLoading, refetch: itemsRefetch } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
             params: {
@@ -33,6 +32,15 @@ const UserPage = (): ReactElement => {
             }
         }
     });
+
+    const { data: readingGoalData } = useQuery(QUERY_READING_GOALS, {
+        client: apolloLibraryClient,
+        variables: {
+            params: {
+                year: 2026
+            }
+        }
+    })
 
     const onItemModalToggle = useCallback((book?: Item) => {
         if (book !== undefined) {
@@ -65,7 +73,7 @@ const UserPage = (): ReactElement => {
 
     return (itemsLoading ? <Loader /> :
         <Box display="flex" flexDirection="column" height="100%">
-            <Box display="flex" justifyContent="flex-end" sx={{mb: 4}}>
+            {/* <Box display="flex" justifyContent="flex-end" sx={{mb: 4}}>
                 <TextField
                     label='Filtrar por título'
                     variant='outlined'
@@ -85,7 +93,32 @@ const UserPage = (): ReactElement => {
                         },
                     }}
                 />
+            </Box> */}
+            <Box display="flex" flexDirection="column" height="100%">
+                <Typography variant="h6" sx={{ px: 2, pt: 2 }}>
+                    Meta de leitura
+                </Typography>
+                <Stack
+                    direction="row"
+                    spacing={3}
+                    p={2}
+                    flexWrap="wrap"
+                    useFlexGap
+                    justifyContent="center"
+                >
+                    {readingGoalData?.getReadingGoals?.goals?.map((book: Item) => (
+                        <ItemCard
+                            key={book.id}
+                            title={book.title}
+                            author={book.mainAuthorName}
+                            coverUrl={book.cover}
+                            onClick={() => onOpenDrawerClick(book)}
+                            onEdit={() => onItemModalToggle(book)}
+                        />
+                    ))}
+                </Stack>
             </Box>
+            Lucas
             <Stack
                 direction="row"
                 spacing={3}
@@ -115,7 +148,7 @@ const UserPage = (): ReactElement => {
             {(selectedBook && isItemModalOpen) && (
                 <ItemModal
                     item={selectedBook}
-                    itemTypeId='book' 
+                    itemTypeId='book'
                     onToggle={onItemModalToggle}
                     isOpen={isItemModalOpen}
                 />

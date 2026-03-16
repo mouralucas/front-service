@@ -70,6 +70,13 @@ export interface ItemReadingProgress {
     comment: string | undefined;
 }
 
+export interface ItemReadingGoal {
+    id: string
+    itemId: number
+    itemTitle: string
+    year: number
+}
+
 export interface Author {
     id?: string | null
     name: string

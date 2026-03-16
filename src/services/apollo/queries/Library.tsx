@@ -98,7 +98,8 @@ export const QUERY_LANGUAGES = gql`
             code
         }
     }
-  }`
+  }
+`
 
 export const QUERY_COUNTRIES = gql`
  query {
@@ -110,8 +111,9 @@ export const QUERY_COUNTRIES = gql`
           continent
           description
       }
+    }
   }
- }`
+`
 
 export const QUERY_AUTHORS = gql`
 query GetAuthors($params: GetAuthorsRequest) {
@@ -128,8 +130,8 @@ query GetAuthors($params: GetAuthorsRequest) {
             languageName
         }
     }
-}`
-
+  }
+`
 
 export const QUERY_STATUS = gql`
   query GetStatus ($params: GetStatusInput) {
@@ -143,7 +145,7 @@ export const QUERY_STATUS = gql`
         }
         quantity
     }
-}
+  }
 `
 
 export const QUERY_READING_STATS = gql`
@@ -159,7 +161,20 @@ export const QUERY_READING_STATS = gql`
       }
     }
   }
-`;
+`
+
+export const QUERY_READING_GOALS = gql`
+  query GetReadingGoals($params: GetReadingGoalsInput) {
+      getReadingGoals(params: $params) {
+          goals {
+              id
+              itemId
+              itemTitle
+              year
+          }
+      }
+  }
+`
 
 export const QUERY_ITEM_LOCATIONS = gql`
   query GetItemLocations {
