@@ -268,7 +268,7 @@ const ItemModal = (props: ItemModalProps) => {
                                         onChange={(value) => {
                                             field.onChange(Array.isArray(value) ? value : []);
                                         }}
-                                        error={errors.authorsId?.message}
+                                        error={errors.authorsIds?.message}
                                     />
                                 )}
                             />

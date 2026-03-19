@@ -71,10 +71,11 @@ export interface ItemReadingProgress {
 }
 
 export interface ItemReadingGoal {
-    id: string
-    itemId: number
-    itemTitle: string
-    year: number
+    id: string;
+    item: Item;
+    year: number;
+    acheived: boolean;
+    dateAcheived?: string;
 }
 
 export interface Author {

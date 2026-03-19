@@ -168,9 +168,46 @@ export const QUERY_READING_GOALS = gql`
       getReadingGoals(params: $params) {
           goals {
               id
-              itemId
-              itemTitle
+              item {
+                id
+                mainAuthorId
+                mainAuthorName
+                authorsIds
+                authorsNames
+                title
+                subtitle
+                titleOriginal
+                subtitleOriginal
+                isbn
+                isbn10
+                itemTypeId
+                pages
+                volume
+                edition
+                publicationDate
+                originalPublicationDate
+                serieId
+                serieName
+                collectionId
+                collectionName
+                publisherId
+                publisherName
+                formatId
+                languageId
+                languageName
+                coverPrice
+                cover
+                paidPrice
+                summary
+                observation
+                lastStatusId
+                locationId
+                lastStatusName
+                lastStatusDate
+              }
               year
+              acheived
+              dateAcheived
           }
       }
   }

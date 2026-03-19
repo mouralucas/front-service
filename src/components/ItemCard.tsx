@@ -1,5 +1,6 @@
 import { Box, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import StarIcon from "@mui/icons-material/Star";
 
 interface ItemCardProps {
   title?: string;
@@ -7,6 +8,8 @@ interface ItemCardProps {
   author?: string;
   onClick?: () => void;
   onEdit?: any;
+  readingGoalAchieved?: boolean;
+  readingGoalAchievedDate?: string;
 }
 
 export default function ItemCard({
@@ -15,6 +18,8 @@ export default function ItemCard({
   author,
   onClick,
   onEdit,
+  readingGoalAchieved,
+  readingGoalAchievedDate,
 }: ItemCardProps) {
   return (
     <Box
@@ -34,7 +39,7 @@ export default function ItemCard({
           cursor: onClick ? "pointer" : "default",
 
           "&:hover": {
-            transform: "scale(1.03)", // 👈 destaque voltou
+            transform: "scale(1.03)",
           },
 
           "&:hover .overlay": {
@@ -43,6 +48,27 @@ export default function ItemCard({
         }}
         onClick={onClick}
       >
+        {/* ⭐ Badge de conquista */}
+        {readingGoalAchieved && (
+          <Box
+            position="absolute"
+            top={-25}
+            left="50%"
+            sx={{
+              transform: "translateX(-50%)",
+              zIndex: 2,
+            }}
+          >
+            <StarIcon
+              sx={{
+                fill: "#FFD700",
+                fontSize: 50,
+                filter: "drop-shadow(0 5px 10px rgba(0,0,0,0.4))",
+              }}
+            />
+          </Box>
+        )}
+
         {/* Imagem */}
         <Box
           component="img"
@@ -126,6 +152,19 @@ export default function ItemCard({
           textAlign="center"
         >
           {author}
+        </Typography>
+      )}
+
+      {/* 📅 Data de conclusão */}
+      {readingGoalAchieved && readingGoalAchievedDate && (
+        <Typography
+          variant="caption"
+          color="primary"
+          textAlign="center"
+          sx={{ mt: 0.5 }}
+        >
+          {/* TODO: add datetime to format */}
+          {readingGoalAchievedDate} 
         </Typography>
       )}
     </Box>

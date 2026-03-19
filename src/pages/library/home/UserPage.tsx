@@ -1,9 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { Box, Stack, Typography } from "@mui/material";
+import ClearIcon from '@mui/icons-material/Clear';
+import { Box, Stack, TextField, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
 import Loader from "../../../components/Loader";
-import { Item } from "../../../interfaces/Library";
+import { Item, ItemReadingGoal } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
 import { QUERY_ITEMS, QUERY_READING_GOALS } from "../../../services/apollo/queries/Library";
 import BookDrawer from "./drawer/Book";
@@ -73,7 +74,7 @@ const UserPage = (): ReactElement => {
 
     return (itemsLoading ? <Loader /> :
         <Box display="flex" flexDirection="column" height="100%">
-            {/* <Box display="flex" justifyContent="flex-end" sx={{mb: 4}}>
+            <Box display="flex" justifyContent="flex-end" sx={{mb: 4}}>
                 <TextField
                     label='Filtrar por título'
                     variant='outlined'
@@ -93,7 +94,7 @@ const UserPage = (): ReactElement => {
                         },
                     }}
                 />
-            </Box> */}
+            </Box>
             <Box display="flex" flexDirection="column" height="100%">
                 <Typography variant="h6" sx={{ px: 2, pt: 2 }}>
                     Meta de leitura
@@ -106,14 +107,16 @@ const UserPage = (): ReactElement => {
                     useFlexGap
                     justifyContent="center"
                 >
-                    {readingGoalData?.getReadingGoals?.goals?.map((book: Item) => (
+                    {readingGoalData?.getReadingGoals?.goals?.map((goal: ItemReadingGoal) => (
                         <ItemCard
-                            key={book.id}
-                            title={book.title}
-                            author={book.mainAuthorName}
-                            coverUrl={book.cover}
-                            onClick={() => onOpenDrawerClick(book)}
-                            onEdit={() => onItemModalToggle(book)}
+                            key={goal.id}
+                            title={goal.item?.title}
+                            author={goal.item?.mainAuthorName}
+                            coverUrl={goal.item?.cover}
+                            readingGoalAchieved={goal.acheived}
+                            readingGoalAchievedDate={goal.dateAcheived}
+                            onClick={() => onOpenDrawerClick(goal.item)}
+                            onEdit={() => onItemModalToggle(goal.item)}
                         />
                     ))}
                 </Stack>
