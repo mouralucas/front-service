@@ -1,22 +1,23 @@
 import { useQuery } from "@apollo/client";
 import ClearIcon from '@mui/icons-material/Clear';
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import { Box, Divider, Stack, TextField, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
 import Loader from "../../../components/Loader";
-import { Item, ItemReadingGoal } from "../../../interfaces/Library";
+import { Item, ItemReadingGoal, ItemSummary } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
-import { QUERY_ITEMS, QUERY_READING_GOALS } from "../../../services/apollo/queries/Library";
-import BookDrawer from "./drawer/Book";
+import { QUERY_ITEMS_SUMMARY, QUERY_READING_GOALS } from "../../../services/apollo/queries/Library";
+import BookDrawer from "./drawer/Item.tsx";
 import ItemModal from './modals/Item.tsx';
 
 const UserPage = (): ReactElement => {
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
     const [isItemModalOpen, setIsItemModalOpen] = useState<boolean>(false)
     const [selectedBook, setSelectedBook] = useState<Item>()
+    const [selectedItemId, setSelectedItemId] = useState<number>()
     const [bookFilter, setBookFilter] = useState('');
 
-    const { data: itemsData, loading: itemsLoading, refetch: itemsRefetch } = useQuery(QUERY_ITEMS, {
+    const { data: itemSummaryData, loading: itemSummaryLoading, refetch: itemsRefetch } = useQuery(QUERY_ITEMS_SUMMARY, {
         client: apolloLibraryClient,
         variables: {
             params: {
@@ -34,20 +35,20 @@ const UserPage = (): ReactElement => {
         }
     });
 
-    const { data: readingGoalData } = useQuery(QUERY_READING_GOALS, {
+    const { data: readingGoalData } = useQuery(QUERY_ITEMS_SUMMARY, {
         client: apolloLibraryClient,
         variables: {
             params: {
-                year: 2026
+                activeGoal: true
             }
         }
     })
 
-    const onItemModalToggle = useCallback((book?: Item) => {
-        if (book !== undefined) {
-            setSelectedBook(book);
+    const onItemModalToggle = useCallback((itemId?: number) => {
+        if (itemId !== undefined) {
+            setSelectedItemId(itemId);
         } else {
-            setSelectedBook(undefined);
+            setSelectedItemId(undefined);
         }
 
         if (isItemModalOpen) {
@@ -58,23 +59,23 @@ const UserPage = (): ReactElement => {
 
     }, [isItemModalOpen, itemsRefetch]);
 
-    const onOpenDrawerClick = useCallback((book: Item) => {
-        if (book !== undefined) {
-            setSelectedBook(book);
+    const onOpenDrawerClick = useCallback((itemId: number) => {
+        if (itemId !== undefined) {
+            setSelectedItemId(itemId);
         } else {
-            setSelectedBook(undefined);
+            setSelectedItemId(undefined);
         }
         setIsDrawerOpened(!isDrawerOpened);
 
     }, [isDrawerOpened]);
 
     const filterdRows = bookFilter
-        ? itemsData?.getItems.items.filter((row: Item) => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
-        : itemsData?.getItems.items
+        ? itemSummaryData?.getItemSummary.summary.filter((row: Item) => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
+        : itemSummaryData?.getItemSummary.summary
 
-    return (itemsLoading ? <Loader /> :
+    return (itemSummaryLoading ? <Loader /> :
         <Box display="flex" flexDirection="column" height="100%">
-            <Box display="flex" justifyContent="flex-end" sx={{mb: 4}}>
+            <Box display="flex" justifyContent="flex-end" sx={{ mb: 4 }}>
                 <TextField
                     label='Filtrar por título'
                     variant='outlined'
@@ -96,7 +97,12 @@ const UserPage = (): ReactElement => {
                 />
             </Box>
             <Box display="flex" flexDirection="column" height="100%">
-                <Typography variant="h6" sx={{ px: 2, pt: 2 }}>
+                <Typography
+                    variant="h5"
+                    textAlign="center"
+                    fontWeight={600}
+                    sx={{ mt: 2, mb: 1 }}
+                >
                     Meta de leitura
                 </Typography>
                 <Stack
@@ -107,21 +113,37 @@ const UserPage = (): ReactElement => {
                     useFlexGap
                     justifyContent="center"
                 >
-                    {readingGoalData?.getReadingGoals?.goals?.map((goal: ItemReadingGoal) => (
+                    {readingGoalData?.getItemSummary?.summary?.map((summary: ItemSummary) => (
                         <ItemCard
-                            key={goal.id}
-                            title={goal.item?.title}
-                            author={goal.item?.mainAuthorName}
-                            coverUrl={goal.item?.cover}
-                            readingGoalAchieved={goal.acheived}
-                            readingGoalAchievedDate={goal.dateAcheived}
-                            onClick={() => onOpenDrawerClick(goal.item)}
-                            onEdit={() => onItemModalToggle(goal.item)}
+                            key={summary.id}
+                            title={summary.title}
+                            author={summary.mainAuthorName}
+                            coverUrl={summary.cover}
+                            readingGoalAchieved={summary.readingGoalAchieved}
+                            readingGoalAchievedDate={summary.readingGoalDateAchieved}
+                            onClick={() => onOpenDrawerClick(summary.id)}
+                            onEdit={() => onItemModalToggle(summary.id)}
                         />
                     ))}
                 </Stack>
             </Box>
-            Lucas
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                sx={{ my: 4 }}
+            >
+                <Divider sx={{ flex: 1 }} />
+
+                <Typography
+                    variant="h6"
+                    sx={{ mx: 2, fontWeight: 600 }}
+                >
+                    Meus itens
+                </Typography>
+
+                <Divider sx={{ flex: 1 }} />
+            </Box>
             <Stack
                 direction="row"
                 spacing={3}
@@ -130,22 +152,24 @@ const UserPage = (): ReactElement => {
                 useFlexGap
                 justifyContent="center"
             >
-                {filterdRows?.map((book: Item) => (
+                {filterdRows?.map((item: ItemSummary) => (
                     <ItemCard
-                        key={book.id}
-                        title={book.title}
-                        author={book.mainAuthorName}
-                        coverUrl={book.cover}
-                        onClick={() => onOpenDrawerClick(book)}
-                        onEdit={() => onItemModalToggle(book)}
+                        key={item.id}
+                        title={item.title}
+                        author={item.mainAuthorName}
+                        coverUrl={item.cover}
+                        readingGoalAchieved={item.readingGoalAchieved}
+                        readingGoalAchievedDate={item.readingGoalDateAchieved}
+                        onClick={() => onOpenDrawerClick(item.id)}
+                        onEdit={() => onItemModalToggle(item.id)}
                     />
                 ))}
             </Stack>
-            {(selectedBook && isDrawerOpened) && (
+            {(selectedItemId && isDrawerOpened) && (
                 <BookDrawer
                     openDrawerState={isDrawerOpened}
                     onCloseDrawerClick={onOpenDrawerClick}
-                    item={selectedBook}
+                    itemId={selectedItemId}
                 />
             )}
             {(selectedBook && isItemModalOpen) && (

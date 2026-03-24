@@ -17,7 +17,7 @@ import { CREATE_READING_MUTATION } from "../../../../services/apollo/mutations/L
 
 interface CreateReadingModalProps {
     modalState: boolean;
-    hideCreateReadingModal: () => void;
+    hideCreateReadingModal: any;
     itemId: number;
     itemTitle?: string;
 }

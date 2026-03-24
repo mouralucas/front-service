@@ -43,6 +43,28 @@ export const QUERY_ITEMS = gql`
   }
 `;
 
+export const QUERY_ITEMS_SUMMARY = gql`
+  query GetItemSummary($params: GetItemSummaryInput) {
+    getItemSummary(params: $params) {
+        summary {
+            id
+            title
+            cover
+            mainAuthorId
+            mainAuthorName
+            readingGoalId
+            readingGoalYear
+            readingGoalAchieved
+            readingGoalDateAchieved
+            readingId
+            readingStartDate
+            lastPage
+            lastPercentage
+        }
+    }
+  }
+`
+
 
 export const QUERY_SERIES = gql`
 query {
@@ -207,7 +229,7 @@ export const QUERY_READING_GOALS = gql`
               }
               year
               acheived
-              dateAcheived
+              dateAchieved
           }
       }
   }

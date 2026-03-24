@@ -42,6 +42,21 @@ export type CreateItemInput = Omit<
   "lastStatusName" | "mainAuthorName" | "serieName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId"
 >;
 
+export interface ItemSummary {
+    id: number;
+    title: string;
+    cover: string;
+    mainAuthorId: number;
+    mainAuthorName: string;
+    readingGoalId: string;
+    readingGoalYear?: number;
+    readingGoalAchieved: boolean;
+    readingGoalDateAchieved: string;
+    readingId: string;
+    readingStartDate: string;
+    lastPage: number;
+    lastPercentage: number;
+}
 
 export interface ItemReadingStats {
     readingsCount: number;
