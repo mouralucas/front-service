@@ -1,10 +1,52 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_ITEMS = gql`
-  query GetItems($params: GetItemInput) {
+  query GetItems($params: GetItemsInput) {
     getItems(params: $params) {
       quantity
       items {
+        id
+        mainAuthorId
+        mainAuthorName
+        authorsIds
+        authorsNames
+        lastStatusId
+        lastStatusName
+        lastStatusDate
+        title
+        subtitle
+        titleOriginal
+        subtitleOriginal
+        isbn
+        isbn10
+        itemTypeId
+        pages
+        volume
+        edition
+        publicationDate
+        originalPublicationDate
+        serieId
+        serieName
+        collectionId
+        collectionName
+        publisherId
+        publisherName
+        formatId
+        languageId
+        coverPrice
+        paidPrice
+        locationId
+        cover
+        summary
+      }
+    }
+  }
+`
+
+export const QUERY_ITEMS_BY_ID = gql`
+  query GetItemById($id: Int!) {
+    getItemById(id: $id) {
+      item {
         id
         mainAuthorId
         mainAuthorName

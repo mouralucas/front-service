@@ -4,16 +4,15 @@ import { Box, Divider, Stack, TextField, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
 import Loader from "../../../components/Loader";
-import { Item, ItemReadingGoal, ItemSummary } from "../../../interfaces/Library";
+import { Item, ItemSummary } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
-import { QUERY_ITEMS_SUMMARY, QUERY_READING_GOALS } from "../../../services/apollo/queries/Library";
+import { QUERY_ITEMS_SUMMARY } from "../../../services/apollo/queries/Library";
 import BookDrawer from "./drawer/Item.tsx";
-import ItemModal from './modals/Item.tsx';
+import ItemModal from './modals/ItemV2.tsx';
 
 const UserPage = (): ReactElement => {
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
     const [isItemModalOpen, setIsItemModalOpen] = useState<boolean>(false)
-    const [selectedBook, setSelectedBook] = useState<Item>()
     const [selectedItemId, setSelectedItemId] = useState<number>()
     const [bookFilter, setBookFilter] = useState('');
 
@@ -172,9 +171,9 @@ const UserPage = (): ReactElement => {
                     itemId={selectedItemId}
                 />
             )}
-            {(selectedBook && isItemModalOpen) && (
+            {(selectedItemId && isItemModalOpen) && (
                 <ItemModal
-                    item={selectedBook}
+                    itemId={selectedItemId}
                     itemTypeId='book'
                     onToggle={onItemModalToggle}
                     isOpen={isItemModalOpen}
