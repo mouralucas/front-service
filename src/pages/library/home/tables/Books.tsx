@@ -98,8 +98,8 @@ const Books = (): ReactElement => {
     ]
 
     const filterdRows = bookFilter
-        ? data?.getItems.items.filter((row: Item) => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
-        : data?.getItems.items
+        ? data?.getDetailedItems?.items.filter((row: Item) => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
+        : data?.getDetailedItems?.items
 
     return (
         <Box sx={{ me: 5 }}>

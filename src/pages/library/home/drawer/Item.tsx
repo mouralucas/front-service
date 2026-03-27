@@ -32,7 +32,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         fetchPolicy: "no-cache",
     });
 
-    const item: Item = itemData?.getItems?.items[0];
+    const item: Item = itemData?.getDetailedItems?.items[0];
 
     const { data: statsData, loading: loadingStats, refetch: refetchStats } = useQuery(QUERY_READING_STATS, {
         client: apolloLibraryClient,

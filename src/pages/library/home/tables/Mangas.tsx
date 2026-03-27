@@ -144,7 +144,7 @@ const MangaTable = (): ReactElement => {
 
     };
 
-    const items = mangaData?.getItems.items
+    const items = mangaData?.getDetailedItems?.items
 
     const filteredRows = filterItems(items, {
         text: mangaFilter,

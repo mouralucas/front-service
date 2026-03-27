@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_ITEMS = gql`
-  query GetItems($params: GetItemsInput) {
-    getItems(params: $params) {
+  query GetDetailedItems($params: GetItemsInput) {
+    getDetailedItems(params: $params) {
       quantity
       items {
         id
@@ -44,16 +44,13 @@ export const QUERY_ITEMS = gql`
 `
 
 export const QUERY_ITEMS_BY_ID = gql`
-  query GetItemById($id: Int!) {
-    getItemById(id: $id) {
+  query GetItem($id: Int!) {
+    getItem(id: $id) {
       item {
         id
         mainAuthorId
-        mainAuthorName
         authorsIds
-        authorsNames
         lastStatusId
-        lastStatusName
         lastStatusDate
         title
         subtitle
@@ -68,11 +65,8 @@ export const QUERY_ITEMS_BY_ID = gql`
         publicationDate
         originalPublicationDate
         serieId
-        serieName
         collectionId
-        collectionName
         publisherId
-        publisherName
         formatId
         languageId
         coverPrice

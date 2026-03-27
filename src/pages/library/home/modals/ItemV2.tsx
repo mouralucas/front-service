@@ -91,10 +91,12 @@ const ItemModal = (props: ItemModalProps) => {
         variables: {
             id: props.itemId
         },
-        skip: !props.itemId
+        skip: !props.itemId,
+        fetchPolicy: "no-cache"
+
     })
 
-    const item = itemData?.getItemById?.item
+    const item = itemData?.getItem?.item
 
     useEffect(() => {
         reset(item);
@@ -176,10 +178,6 @@ const ItemModal = (props: ItemModalProps) => {
             toast.error(`Erro: ${error.message}`);
         },
     })
-
-    useCallback(() => {
-        console.log("Atualizou item")
-    }, [item])
 
     const onSubmit = async (itemFormData: CreateItemInput) => {
         if (itemFormData.id) {
