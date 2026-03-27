@@ -5,7 +5,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ReactElement, useCallback, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
 import Loader from "../../../../components/Loader.tsx";
@@ -83,7 +83,7 @@ const itemFormats = [
 
 
 const ItemModal = (props: ItemModalProps) => {
-    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues, setValue } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
+    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
 
 
     const { data: itemData, loading: itemLoading } = useQuery(QUERY_ITEMS_BY_ID, {
