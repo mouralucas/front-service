@@ -1,77 +1,77 @@
-@use "../variables.scss" as *;
-@use "sass:math";
+// @use "../variables.scss" as *;
+// @use "sass:math";
 
-.status-item {
-  span {
-    font-size: 13px;
+// .status-item {
+//   span {
+//     font-size: 13px;
 
-    &::before {
-      --diameter: 10px;
+//     &::before {
+//       --diameter: 10px;
 
-      content: " ";
-      width: var(--diameter);
-      height: var(--diameter);
-      border-radius: calc(var(--diameter) / 2);
-      margin-right: calc(var(--diameter) / 2);
-      display: inline-block;
-    }
+//       content: " ";
+//       width: var(--diameter);
+//       height: var(--diameter);
+//       border-radius: calc(var(--diameter) / 2);
+//       margin-right: calc(var(--diameter) / 2);
+//       display: inline-block;
+//     }
 
-    &.input {
-      display: block;
-      padding: 15px 16px 14px;
-    }
-  }
-}
+//     &.input {
+//       display: block;
+//       padding: 15px 16px 14px;
+//     }
+//   }
+// }
 
-.status-owned {
-  @include status-contact(#2eb52c);
-}
+// .status-owned {
+//   @include status-contact(#2eb52c);
+// }
 
-.custom-toolbar {
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ddd;
+// .custom-toolbar {
+//   display: flex;
+//   align-items: center;
+//   padding: 8px;
+//   background-color: #f5f5f5;
+//   border-bottom: 1px solid #ddd;
 
-  .toolbar-item {
-    &.before {
-      margin-right: 2px;
-    }
+//   .toolbar-item {
+//     &.before {
+//       margin-right: 2px;
+//     }
 
-    &.after {
-      margin-left: auto;
-    }
-  }
+//     &.after {
+//       margin-left: auto;
+//     }
+//   }
 
-  .contact-name {
-    font-weight: bold;
-    font-size: 14px;
-  }
+//   .contact-name {
+//     font-weight: bold;
+//     font-size: 14px;
+//   }
 
-  .item-cover-view {
-    position: relative;
-    display: flex;
+//   .item-cover-view {
+//     position: relative;
+//     display: flex;
 
-    .item-cover {
-      border-radius: 8px;
-      background-repeat: no-repeat;
-      background-size: cover;
-      border: 1px solid var(--border-color);
-    }
-  }
-  .toolbar-button {
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
+//     .item-cover {
+//       border-radius: 8px;
+//       background-repeat: no-repeat;
+//       background-size: cover;
+//       border: 1px solid var(--border-color);
+//     }
+//   }
+//   .toolbar-button {
+//     background: none;
+//     border: none;
+//     font-size: 16px;
+//     cursor: pointer;
 
-    &.close-button {
-      color: #555;
-    }
+//     &.close-button {
+//       color: #555;
+//     }
 
-    &:hover {
-      color: #000;
-    }
-  }
-}
+//     &:hover {
+//       color: #000;
+//     }
+//   }
+// }

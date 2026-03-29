@@ -119,17 +119,17 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                     />
                     <Stack spacing={2}>
                         <Box>
-                            <div className="contact-name">Título</div>
+                            <div className="title">Título</div>
                             <div>{item?.title}</div>
                             <div className="fw-light text-muted small">{item?.subtitle}</div>
                         </Box>
                         <Box>
-                            <div className="contact-name">Autor</div>
+                            <div className="title">Autor</div>
                             <div>{item?.mainAuthorName}</div>
                             <div className="fw-light text-muted small">Owen King; Outro Autor; Mais um ainda</div>
                         </Box>
                         <Box>
-                            <div className="contact-name">Páginas</div>
+                            <div className="title">Páginas</div>
                             <div>{item?.pages}</div>
                         </Box>
                     </Stack>
@@ -138,11 +138,11 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                 {/* Publisher + Serie */}
                 <Stack direction="row" spacing={2} px={2}>
                     <Box flex={1}>
-                        <div className="contact-name">Editora</div>
+                        <div className="title">Editora</div>
                         <div>{item?.publisherName}</div>
                     </Box>
                     <Box flex={2}>
-                        <div className="contact-name">Série</div>
+                        <div className="title">Série</div>
                         <div>{item?.serieName}</div>
                     </Box>
                 </Stack>
@@ -150,7 +150,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                 {/* ISBN */}
                 <Stack direction="row" spacing={2} px={2}>
                     <Box flex={1}>
-                        <div className="contact-name">ISBN</div>
+                        <div className="title">ISBN</div>
                         <div>{item?.isbn}</div>
                     </Box>
                 </Stack>
@@ -163,12 +163,12 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                             <>
                                 <Stack direction="row" spacing={2}>
                                     <Box flex={1}>
-                                        <div className="contact-name">Leituras</div>
+                                        <div className="title">Leituras</div>
                                         <div>{stats?.readingsCount}</div>
                                     </Box>
                                     <Box flex={1}>
-                                        <div className="contact-name">Última leitura</div>
-                                        <div>{stats?.lastReadingDate}</div>
+                                        <div className="title">Última leitura</div>
+                                        <div>{new Date(stats?.lastReadingDate).toLocaleDateString('pt-BR')}</div>
                                     </Box>
                                 </Stack>
 
@@ -177,12 +177,12 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                                     <>
                                         <Stack direction="row" spacing={2} mt={2}>
                                             <Box flex={1}>
-                                                <div className="contact-name">Página atual</div>
+                                                <div className="title">Página atual</div>
                                                 <div>{stats?.currentPage}</div>
                                             </Box>
                                             <Box flex={1}>
-                                                <div className="contact-name">Perc. atual</div>
-                                                <div>{stats?.currentPercentage}</div>
+                                                <div className="title">Perc. atual</div>
+                                                <div>{Math.min(parseFloat((stats?.currentPercentage || 0).toFixed(2)), 100)}%</div>
                                             </Box>
                                         </Stack>
                                         <Box >
