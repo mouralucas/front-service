@@ -85,7 +85,7 @@ const InvestmentV2 = (): ReactElement => {
     }
 
     const getRowClassName = (params: any) => {
-        // The check order is based in importance, 
+        // The check order is based on importance, 
         //  negative performance should be shown first, 
         // then near settle investments, and finally the default row style.
         const perc = parseFloat(params.row.percentageChange);

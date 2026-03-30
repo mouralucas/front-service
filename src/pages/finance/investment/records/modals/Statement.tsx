@@ -1,29 +1,28 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Divider, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale";
-import { ReactElement, useEffect, useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { ReactElement, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import '../../../../../assets/core/icons.css';
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import Loader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
-import TaxArray from "../../../../../components/TaxFeeArray.tsx";
 import { Investment, InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { CREATE_INVESTMENT_STATEMENT } from "../../../../../services/apollo/mutations/Finance.tsx";
-import { QUERY_CURRENCY, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
-import { getTaxFee } from "../../../../../services/getCommonData/Finance.tsx";
+import { QUERY_CURRENCY, QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
 import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 
 interface InvestmentStatementProps {
     modalState: boolean,
     hideModal: any,
     investment: Investment | undefined,
+    statementId?: string
 }
 
 const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
@@ -44,16 +43,6 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
 const App = (props: InvestmentStatementProps): ReactElement => {
     const { handleSubmit, control, getValues, reset, formState: { errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
 
-    const { fields: taxFields, append: appendTax, remove: removeTax } = useFieldArray({
-        control,
-        name: 'taxDetails',
-    });
-
-    const { fields: feeFields, append: appendFee, remove: removeFee } = useFieldArray({
-        control,
-        name: 'feeDetails',
-    });
-
     const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
         client: apolloFinanceClient,
         skip: !props.modalState,
@@ -66,16 +55,25 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         variables: { params: { investmentId: props.investment?.investmentId } },
     })
 
-    const [taxes, setTaxes] = useState<any[]>([])
-    const [fees, setFees] = useState<any[]>([])
+    const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENT , {
+        client: apolloFinanceClient,
+        variables: {
+            params: {
+                "id": props.statementId
+            }
+        },
+        skip: !props.statementId
+    })
 
-    const fetchTransactionData: () => Promise<void> = async () => {
-        setTaxes(await getTaxFee('BR', 'tax'))
-        setFees(await getTaxFee('BR', 'fee'))
-    };
+    const statement = statementData?.getInvestmentStatement?.statement
 
-    const isLoading = currenciesLoading || metadataLoading
-    const hasData = taxes && fees && currenciesData
+    useEffect(() => {
+        // TODO: check if this will not replace the metadata info
+        reset(statement);
+    }, [statement])
+
+    const isLoading = currenciesLoading || metadataLoading || statementData
+    const hasData = currenciesData 
 
     const [createStatement] = useMutation(CREATE_INVESTMENT_STATEMENT, {
         client: apolloFinanceClient,
@@ -100,8 +98,6 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                 transactionDate: props.investment.transactionDate,
                 maturityDate: props.investment.maturityDate,
             });
-
-            fetchTransactionData().then()
         }
 
         if (!props.modalState) {
@@ -122,6 +118,13 @@ const App = (props: InvestmentStatementProps): ReactElement => {
 
         const period = getPeriodFromDate(selectedDate);
         setValue('period', String(period));
+    }
+
+    const updateNetAmount = () => {
+        const grossAmount = getValues("grossAmount");
+        if (!grossAmount) return;
+
+        setValue("netAmount", grossAmount);
     }
 
     const onSubmit = async (data: InvestmentStatement) => {
@@ -312,6 +315,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                                         onValueChange={(values: any) => field.onChange(values.rawValue)}
                                         error={!!errors?.grossAmount}
                                         helperText={errors?.grossAmount?.message}
+                                        onChange={updateNetAmount}
                                     />
                                 )}
                             />
@@ -338,77 +342,6 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             />
                         </div>
                     </Grid>
-                    {/* --- TAX --- */}
-                    <Divider sx={{ my: 2 }} />
-                    <Grid size={12}>
-                        {taxFields.length === 0 ? (
-                            <>
-                                <Grid size={{ xs: 12, md: 2 }} />
-                                <Grid size={{ xs: 12, md: 10 }} >
-                                    <Button
-                                        fullWidth
-                                        variant="outlined"
-                                        onClick={() =>
-                                            appendTax([{ currencyId: "BRL", taxFeeId: "", amount: 0 }])
-                                        }
-                                    >
-                                        Adicionar imposto
-                                    </Button>
-                                </Grid>
-                            </>
-                        ) : (
-                            <Grid size={{ xs: 12, md: 12 }}>
-                                <TaxArray
-                                    taxFeeTitile="Imposto"
-                                    type="taxDetails"
-                                    control={control}
-                                    taxFeeList={taxes}
-                                    errors={errors}
-                                    taxFeeFields={taxFields}
-                                    appendTaxFee={appendTax}
-                                    removeTaxFee={removeTax}
-                                    currencies={currenciesData?.getCurrencies?.currencies}
-                                />
-                            </Grid>
-                        )}
-                    </Grid>
-
-                    {/* --- FEE --- */}
-                    <Divider sx={{ my: 2 }} />
-
-                    <Grid size={{ md: 12 }}>
-                        {feeFields.length === 0 ? (
-                            <>
-                                <Grid size={{ xs: 12, md: 2 }} />
-                                <Grid size={{ xs: 12, md: 10 }}>
-                                    <Button
-                                        fullWidth
-                                        variant="outlined"
-                                        onClick={() =>
-                                            appendFee([{ currencyId: "BRL", taxFeeId: "", amount: 0 }])
-                                        }
-                                    >
-                                        Adicionar taxa
-                                    </Button>
-                                </Grid>
-                            </>
-                        ) : (
-                            <Grid size={{ xs: 12, md: 12 }}>
-                                <TaxArray
-                                    taxFeeTitile="Taxa"
-                                    type="feeDetails"
-                                    control={control}
-                                    taxFeeList={fees}
-                                    errors={errors}
-                                    taxFeeFields={feeFields}
-                                    appendTaxFee={appendFee}
-                                    removeTaxFee={removeFee}
-                                    currencies={currenciesData?.getCurrencies?.currencies}
-                                />
-                            </Grid>
-                        )}
-                    </Grid>
-
                 </Grid>
             </form>
         </>

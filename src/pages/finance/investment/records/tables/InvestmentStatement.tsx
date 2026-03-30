@@ -1,10 +1,12 @@
-import { GridColDef } from "@mui/x-data-grid";
+import { useQuery } from "@apollo/client";
+import EditOutlined from "@mui/icons-material/EditOutlined";
+import { Box, IconButton } from "@mui/material";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement } from "react";
 import DataGridComp from "../../../../../components/table/DataGridV2";
 import { InvestmentStatement } from "../../../../../interfaces/Finance";
-import { useQuery } from "@apollo/client";
-import { QUERY_INVESTMENT_STATEMENT } from "../../../../../services/apollo/queries/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
+import { QUERY_INVESTMENT_STATEMENTS } from "../../../../../services/apollo/queries/Finance";
 
 
 interface IncestmentStatementTableProps {
@@ -12,7 +14,7 @@ interface IncestmentStatementTableProps {
 }
 
 const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactElement => {
-    const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENT,
+    const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENTS,
         {
             client: apolloFinanceClient,
             variables: { params: { investmentId: props.investmentId } },
@@ -44,14 +46,6 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
             }
         },
         {
-            field: "netAmount",
-            headerName: 'Valor Líquido',
-            flex: 1,
-            valueFormatter: (value: number) => {
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            }
-        },
-        {
             field: "valueChange",
             headerName: "Variação",
             flex: 1,
@@ -60,7 +54,34 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
                 const perc = row.percentageChange.toFixed(2)
                 return `R$ ${value} (${perc}%)`
             }
-        }
+        },
+        {
+            field: 'actions',
+            headerName: 'Ações',
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',      // vertical
+                        justifyContent: 'center',  // horizontal
+                        gap: 1,
+                        flex: 1,                   // ocupa toda a largura da célula
+                        height: '100%',            // ocupa toda a altura
+                    }}
+                >
+                    <IconButton
+                        aria-label="editar"
+                        color="success"
+                        // onClick={showInvestmentModal.bind(null, params)}
+                    >
+                        <EditOutlined />
+                    </IconButton>
+                </Box>
+            ),
+        },
     ]
 
     return (
