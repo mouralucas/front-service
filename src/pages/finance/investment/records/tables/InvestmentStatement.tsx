@@ -2,11 +2,12 @@ import { useQuery } from "@apollo/client";
 import EditOutlined from "@mui/icons-material/EditOutlined";
 import { Box, IconButton } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { ReactElement } from "react";
+import { ReactElement, useCallback, useState } from "react";
 import DataGridComp from "../../../../../components/table/DataGridV2";
 import { InvestmentStatement } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 import { QUERY_INVESTMENT_STATEMENTS } from "../../../../../services/apollo/queries/Finance";
+import StatementModal from "../modals/Statement"
 
 
 interface IncestmentStatementTableProps {
@@ -14,6 +15,9 @@ interface IncestmentStatementTableProps {
 }
 
 const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactElement => {
+    const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false);
+    const [selectedStatementId, setSelectedStatementId] = useState<string>()
+
     const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENTS,
         {
             client: apolloFinanceClient,
@@ -22,6 +26,15 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
             fetchPolicy: 'no-cache'
         }
     )
+
+    const onStatementModalToggle = useCallback((e: any) => {
+        if (e !== undefined && e.row !== undefined) {
+            setSelectedStatementId(e.row.id);
+            setIsStatementModalOpen(true);
+        }
+
+        setIsStatementModalOpen(!isStatementModalOpen);
+    }, [isStatementModalOpen])
 
     const columns: GridColDef<InvestmentStatement>[] = [
         { field: "id", headerName: "Id", flex: 1 },
@@ -55,46 +68,55 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
                 return `R$ ${value} (${perc}%)`
             }
         },
-        {
-            field: 'actions',
-            headerName: 'Ações',
-            flex: 1,
-            sortable: false,
-            filterable: false,
-            renderCell: (params: GridRenderCellParams) => (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',      // vertical
-                        justifyContent: 'center',  // horizontal
-                        gap: 1,
-                        flex: 1,                   // ocupa toda a largura da célula
-                        height: '100%',            // ocupa toda a altura
-                    }}
-                >
-                    <IconButton
-                        aria-label="editar"
-                        color="success"
-                        // onClick={showInvestmentModal.bind(null, params)}
-                    >
-                        <EditOutlined />
-                    </IconButton>
-                </Box>
-            ),
-        },
+        // {
+        //     field: 'actions',
+        //     headerName: 'Ações',
+        //     flex: 1,
+        //     sortable: false,
+        //     filterable: false,
+        //     renderCell: (params: GridRenderCellParams) => (
+        //         <Box
+        //             sx={{
+        //                 display: 'flex',
+        //                 alignItems: 'center',      // vertical
+        //                 justifyContent: 'center',  // horizontal
+        //                 gap: 1,
+        //                 flex: 1,                   // ocupa toda a largura da célula
+        //                 height: '100%',            // ocupa toda a altura
+        //             }}
+        //         >
+        //             <IconButton
+        //                 aria-label="editar"
+        //                 color="success"
+        //                 onClick={onStatementModalToggle.bind(null, params)}
+        //             >
+        //                 <EditOutlined />
+        //             </IconButton>
+        //         </Box>
+        //     ),
+        // },
     ]
 
     return (
-        <DataGridComp
-            columns={columns}
-            data={statementData?.getInvestmentStatements?.statements}
-            isLoading={statementLoading}
-            getRowId={(row) => row.id}
-            pageSize={100}
-            columnVisibilityModel={{
-                id: false
-            }}
-        />
+
+        <>
+            <DataGridComp
+                columns={columns}
+                data={statementData?.getInvestmentStatements?.statements}
+                isLoading={statementLoading}
+                getRowId={(row) => row.id}
+                pageSize={100}
+                columnVisibilityModel={{
+                    id: false
+                }}
+            />
+            <StatementModal
+                isOpen={isStatementModalOpen}
+                onToggle={onStatementModalToggle}
+                investmentId={props.investmentId}
+                statementId={selectedStatementId}
+            />
+        </>
     )
 }
 

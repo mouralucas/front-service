@@ -11,17 +11,17 @@ import { toast } from "react-toastify";
 import '../../../../../assets/core/icons.css';
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import Loader from "../../../../../components/Loader.tsx";
-import Modal from "../../../../../components/Modal.tsx";
-import { Investment, InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
+import Modal from "../../../../../components/ModalV2.tsx";
+import { InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { CREATE_INVESTMENT_STATEMENT } from "../../../../../services/apollo/mutations/Finance.tsx";
 import { QUERY_CURRENCY, QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
 import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 
 interface InvestmentStatementProps {
-    modalState: boolean,
-    hideModal: any,
-    investment: Investment | undefined,
+    isOpen: boolean
+    onToggle: any
+    investmentId: string
     statementId?: string
 }
 
@@ -30,7 +30,7 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
     investmentId: '',
     name: '',
     maturityDate: null,
-    referenceDate: null, // TODO: create function to get last business day from last month
+    referenceDate: null,
     period: '',
     contribution: 0,
     withdrawn: 0,
@@ -45,35 +45,46 @@ const App = (props: InvestmentStatementProps): ReactElement => {
 
     const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
         client: apolloFinanceClient,
-        skip: !props.modalState,
+        skip: !props.isOpen,
     })
 
     const { data: metadata, loading: metadataLoading } = useQuery(QUERY_INVESTMENT_STATEMENT_METADATA, {
         client: apolloFinanceClient,
-        skip: !props.modalState,
+        skip: !props.isOpen,
         fetchPolicy: "no-cache",
-        variables: { params: { investmentId: props.investment?.investmentId } },
+        variables: { params: { investmentId: props.investmentId } },
     })
 
-    const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENT , {
+    const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENT, {
         client: apolloFinanceClient,
         variables: {
             params: {
                 "id": props.statementId
             }
         },
-        skip: !props.statementId
+        skip: !props.statementId,
+        fetchPolicy: "no-cache"
     })
 
     const statement = statementData?.getInvestmentStatement?.statement
 
+    // Effect for editing: combine statement with metadata
     useEffect(() => {
-        // TODO: check if this will not replace the metadata info
-        reset(statement);
-    }, [statement])
+        if (metadata) {
+            reset({
+                ...statement,
+                referenceDate: metadata?.getStatementMetadata?.referenceDate,
+                period: metadata?.getStatementMetadata?.period,
+                contribution: metadata?.getStatementMetadata?.contribution,
+                name: metadata?.getStatementMetadata?.investmentName,
+                transactionDate: metadata?.getStatementMetadata?.investmentTransactionDate,
+                maturityDate: metadata?.getStatementMetadata?.investmentMaturityDate,
+            });
+        }
+    }, [statement, metadata, props.statementId, reset])
 
-    const isLoading = currenciesLoading || metadataLoading || statementData
-    const hasData = currenciesData 
+    const isLoading = currenciesLoading || metadataLoading || statementLoading
+    const hasData = currenciesData
 
     const [createStatement] = useMutation(CREATE_INVESTMENT_STATEMENT, {
         client: apolloFinanceClient,
@@ -81,36 +92,12 @@ const App = (props: InvestmentStatementProps): ReactElement => {
             toast.success(
                 'Extrato criado com sucesso'
             );
-            props.hideModal();
+            props.onToggle();
         },
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
         },
     })
-
-    useEffect(() => {
-        /* Set values from selected investment */
-        if (props.modalState && props.investment && props.investment.investmentId) {
-            reset({
-                ...getValues(),
-                investmentId: props.investment.investmentId,
-                name: props.investment.name,
-                transactionDate: props.investment.transactionDate,
-                maturityDate: props.investment.maturityDate,
-            });
-        }
-
-        if (!props.modalState) {
-            reset(DefaultInvestmentStatement);
-        }
-    }, [getValues, props.investment, props.modalState, reset]);
-
-    useEffect(() => {
-        /* Set values from metadata */
-        setValue("referenceDate", metadata?.getStatementMetadata?.referenceDate);
-        setValue("period", metadata?.getStatementMetadata?.period)
-        setValue("contribution", metadata?.getStatementMetadata?.contribution)
-    }, [metadata])
 
     const updatePeriod = () => {
         const selectedDate = getValues('referenceDate');
@@ -281,7 +268,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             />
                         </div>
                     </Grid>
-                     <Grid size={{ sm: 12, md: 4 }} > {/* Withdrawn */}
+                    <Grid size={{ sm: 12, md: 4 }} > {/* Withdrawn */}
                         <div key={"R$"}>
                             <Controller
                                 name="withdrawn"
@@ -349,8 +336,8 @@ const App = (props: InvestmentStatementProps): ReactElement => {
 
     return (
         <Modal
-            showModal={props.modalState}
-            hideModal={props.hideModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             title={'Investimento'}
             actionModal={handleSubmit(onSubmit)}
             body={body}

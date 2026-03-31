@@ -263,7 +263,7 @@ export const QUERY_INVESTMENT_STATEMENTS = gql`
 `
 
 export const QUERY_INVESTMENT_STATEMENT = gql`
-    query GetInvestmentStatement($params: GetInvestmentStatementInput) {
+    query GetInvestmentStatement($params: GetInvestmentStatementInput!) {
         getInvestmentStatement(params: $params) {
             statement {
                 id
@@ -291,6 +291,9 @@ export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
             period
             referenceDate
             contribution
+            investmentName
+            investmentTransactionDate
+            investmentMaturityDate
         }
     }
 `

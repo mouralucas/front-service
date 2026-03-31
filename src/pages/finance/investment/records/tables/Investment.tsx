@@ -8,7 +8,7 @@ import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box, TextField } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { ReactElement, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { Investment } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
@@ -22,9 +22,9 @@ import ModalInvestmentStatement from '../modals/Statement';
 const InvestmentV2 = (): ReactElement => {
     // Modals States
     const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false);
-    const [selectedInvestment, setSelectedInvestment] = useState<Investment | undefined>();
+    const [selectedInvestmentId, setSelectedInvestmentId] = useState<string>("");
 
-    const [modalInvestmentStatementState, setModalInvestmentStatementState] = useState<boolean>(false)
+    const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false)
     const [modalInvestmentPerformanceState, setModalInvestmentPerformanceState] = useState<boolean>(false)
 
     // Table Filter
@@ -46,29 +46,24 @@ const InvestmentV2 = (): ReactElement => {
     // Modals Open/Close functions
     const showInvestmentModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
-            setSelectedInvestment(e.row);
+            setSelectedInvestmentId(e.row);
         }
         setModalInvestmentState(true);
     }
 
     const hideInvestmentModal = () => {
         setModalInvestmentState(false);
-        setSelectedInvestment(undefined);
+        setSelectedInvestmentId(undefined);
         investmentRefetch();
     }
 
-    const showInvestmentStatementModal = (e: any) => {
+    const onStatementModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
-            setSelectedInvestment(e.row)
+            setSelectedInvestmentId(e.row.investmentId)
         }
-        setModalInvestmentStatementState(true);
-    }
 
-    const hideInvestmentStatementModal = () => {
-        setModalInvestmentStatementState(false);
-        setSelectedInvestment(undefined);
-        investmentRefetch()
-    }
+        setIsStatementModalOpen(!isStatementModalOpen)
+    }, [isStatementModalOpen])
 
     const showInvestmentPerformanceModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
@@ -188,7 +183,7 @@ const InvestmentV2 = (): ReactElement => {
                     <IconButton
                         aria-label="extrato"
                         color="secondary"
-                        onClick={showInvestmentStatementModal.bind(null, params)}
+                        onClick={onStatementModalToggle.bind(null, params)}
                     >
                         <AccountBalanceWalletOutlined />
                     </IconButton>
@@ -258,8 +253,11 @@ const InvestmentV2 = (): ReactElement => {
                 }}
                 pageSize={50}
             />
-            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestment} />
-            <ModalInvestmentStatement modalState={modalInvestmentStatementState} hideModal={hideInvestmentStatementModal} investment={selectedInvestment} />
+            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestmentId} />
+            <ModalInvestmentStatement 
+                onToggle={onStatementModalToggle}
+                isOpen={isStatementModalOpen}
+                investmentId={selectedInvestmentId} />
             <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName} />
         </Box>
     )
