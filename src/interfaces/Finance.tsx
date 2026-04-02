@@ -186,7 +186,7 @@ export interface InvestmentType {
 }
 
 export interface InvestmentStatement {
-    investmentStatementId?: string | null
+    id?: string | null
     investmentId: string;
     name: string;
     transactionDate: string;

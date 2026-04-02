@@ -14,7 +14,7 @@ import Loader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/ModalV2.tsx";
 import { InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { CREATE_INVESTMENT_STATEMENT } from "../../../../../services/apollo/mutations/Finance.tsx";
+import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../../../../services/apollo/mutations/Finance.tsx";
 import { QUERY_CURRENCY, QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
 import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 
@@ -26,7 +26,7 @@ interface InvestmentStatementProps {
 }
 
 const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
-    investmentStatementId: null,
+    id: null,
     investmentId: '',
     name: '',
     maturityDate: null,
@@ -41,7 +41,7 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
-    const { handleSubmit, control, getValues, reset, formState: { errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
+    const { handleSubmit, control, getValues, reset, formState: { isDirty, dirtyFields, errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
 
     const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
         client: apolloFinanceClient,
@@ -70,12 +70,18 @@ const App = (props: InvestmentStatementProps): ReactElement => {
 
     // Effect for editing: combine statement with metadata
     useEffect(() => {
+        // If statement exist, populate with its values, else just default metadata values
         if (metadata) {
             reset({
-                ...statement,
-                referenceDate: metadata?.getStatementMetadata?.referenceDate,
-                period: metadata?.getStatementMetadata?.period,
-                contribution: metadata?.getStatementMetadata?.contribution,
+                ...DefaultInvestmentStatement,
+                id: statement?.id ?? null,
+                investmentId: props.investmentId,
+                referenceDate: statement?.referenceDate ?? metadata?.getStatementMetadata?.referenceDate,
+                period: statement?.period ?? metadata?.getStatementMetadata?.period,
+                grossAmount: statement?.grossAmount ?? 0,
+                netAmount: statement?.netAmount ?? 0,
+                contribution: statement?.contribution ?? metadata?.getStatementMetadata?.contribution,
+                withdrawn: statement?.withdrawn ?? 0,
                 name: metadata?.getStatementMetadata?.investmentName,
                 transactionDate: metadata?.getStatementMetadata?.investmentTransactionDate,
                 maturityDate: metadata?.getStatementMetadata?.investmentMaturityDate,
@@ -99,6 +105,19 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         },
     })
 
+    const [updateStatement] = useMutation(UPDATE_INVESTMENT_STATEMENT, {
+        client: apolloFinanceClient,
+        onCompleted: () => {
+            toast.success(
+                'Extrato atualizado com sucesso'
+            );
+            props.onToggle();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
+
     const updatePeriod = () => {
         const selectedDate = getValues('referenceDate');
         if (!selectedDate) return;
@@ -108,15 +127,33 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     }
 
     const updateNetAmount = () => {
+        // Function only to update deplrecated field until its gone
         const grossAmount = getValues("grossAmount");
         if (!grossAmount) return;
 
-        setValue("netAmount", grossAmount);
+        setValue("netAmount", grossAmount, {
+            shouldDirty: true
+        });
     }
 
     const onSubmit = async (data: InvestmentStatement) => {
-        if (data.investmentStatementId) {
-            toast.warning('Função não implementada');
+        if (data.id) {
+            const currentValues: InvestmentStatement = getValues();
+
+            const modifiedFields: Partial<Record<keyof InvestmentStatement, InvestmentStatement[keyof InvestmentStatement]>> = {
+                id: data.id
+            };
+
+            (Object.keys(dirtyFields) as Array<keyof InvestmentStatement>).forEach((key: keyof InvestmentStatement) => {
+                modifiedFields[key] = currentValues[key];
+            });
+            
+            console.log(modifiedFields);
+            await updateStatement({
+                variables: {
+                    statement: modifiedFields
+                }
+            })
         } else {
             try {
                 await createStatement({

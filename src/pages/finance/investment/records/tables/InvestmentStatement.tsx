@@ -7,18 +7,19 @@ import DataGridComp from "../../../../../components/table/DataGridV2";
 import { InvestmentStatement } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 import { QUERY_INVESTMENT_STATEMENTS } from "../../../../../services/apollo/queries/Finance";
-import StatementModal from "../modals/Statement"
+import StatementModal from "../modals/Statement";
 
 
 interface IncestmentStatementTableProps {
     investmentId: string
+    updatePerformanceChart: any;
 }
 
 const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactElement => {
     const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false);
     const [selectedStatementId, setSelectedStatementId] = useState<string>()
 
-    const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENTS,
+    const { data: statementData, loading: statementLoading, refetch: statementRefetch } = useQuery(QUERY_INVESTMENT_STATEMENTS,
         {
             client: apolloFinanceClient,
             variables: { params: { investmentId: props.investmentId } },
@@ -31,6 +32,11 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
         if (e !== undefined && e.row !== undefined) {
             setSelectedStatementId(e.row.id);
             setIsStatementModalOpen(true);
+        }
+
+        if (isStatementModalOpen) {
+            props.updatePerformanceChart();
+            statementRefetch();
         }
 
         setIsStatementModalOpen(!isStatementModalOpen);
@@ -68,33 +74,33 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
                 return `R$ ${value} (${perc}%)`
             }
         },
-        // {
-        //     field: 'actions',
-        //     headerName: 'Ações',
-        //     flex: 1,
-        //     sortable: false,
-        //     filterable: false,
-        //     renderCell: (params: GridRenderCellParams) => (
-        //         <Box
-        //             sx={{
-        //                 display: 'flex',
-        //                 alignItems: 'center',      // vertical
-        //                 justifyContent: 'center',  // horizontal
-        //                 gap: 1,
-        //                 flex: 1,                   // ocupa toda a largura da célula
-        //                 height: '100%',            // ocupa toda a altura
-        //             }}
-        //         >
-        //             <IconButton
-        //                 aria-label="editar"
-        //                 color="success"
-        //                 onClick={onStatementModalToggle.bind(null, params)}
-        //             >
-        //                 <EditOutlined />
-        //             </IconButton>
-        //         </Box>
-        //     ),
-        // },
+        {
+            field: 'actions',
+            headerName: 'Ações',
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',      // vertical
+                        justifyContent: 'center',  // horizontal
+                        gap: 1,
+                        flex: 1,                   // ocupa toda a largura da célula
+                        height: '100%',            // ocupa toda a altura
+                    }}
+                >
+                    <IconButton
+                        aria-label="editar"
+                        color="success"
+                        onClick={onStatementModalToggle.bind(null, params)}
+                    >
+                        <EditOutlined />
+                    </IconButton>
+                </Box>
+            ),
+        },
     ]
 
     return (

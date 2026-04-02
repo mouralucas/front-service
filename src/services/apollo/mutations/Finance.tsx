@@ -29,3 +29,12 @@ export const CREATE_INVESTMENT_STATEMENT = gql`
         }
     }
 `
+
+export const UPDATE_INVESTMENT_STATEMENT = gql`
+    mutation UpdateInvestmentStatement($statement: UpdateInvestmentStatementInput) {
+        updateInvestmentStatement(statement: $statement) {
+            updated
+            statementId
+        }
+    }
+`
