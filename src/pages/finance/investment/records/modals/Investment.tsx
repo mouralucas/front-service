@@ -11,10 +11,10 @@ import { toast } from "react-toastify";
 import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx';
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import Loader from "../../../../../components/Loader.tsx";
-import Modal from '../../../../../components/Modal.tsx';
+import Modal from '../../../../../components/ModalV2.tsx';
 import { Investment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_ACCOUNTS, QUERY_CURRENCY as QUERY_CURRENCIES, QUERY_INVESTMENT_OBJECTIVES } from "../../../../../services/apollo/queries/Finance.tsx";
+import { QUERY_ACCOUNTS, QUERY_CURRENCY as QUERY_CURRENCIES, QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
@@ -22,17 +22,17 @@ import { getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity } from "
 
 
 interface InvestmentProps {
-    investment: Investment | undefined | null,
-    modalState: boolean,
-    hideModal: any
+    isOpen: boolean,
+    onToggle: any,
+    investmentId: string,
 }
 
 const DefaultInvestment: Investment = {
-    investmentId: null,
+    id: null,
     transactionDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
     name: '',
     accountId: '',
-    investmentTypeId: '',
+    typeId: '',
     maturityDate: null,
     quantity: 0,
     price: 0,
@@ -61,26 +61,37 @@ const App = (props: InvestmentProps): ReactElement => {
     const [liquidity, setLiquidity] = useState<any[]>([])
     const [countries, setCountries] = useState<any[]>([])
 
+    const { data: investmentData, loading: investmentLoading } = useQuery(QUERY_INVESTMENT_BY_ID, {
+        client: apolloFinanceClient,
+        variables: {
+            params: {id: props.investmentId}
+        },
+        skip: !props.isOpen || !props.investmentId,
+        fetchPolicy: "no-cache"
+    })
+
     const { data: accountData, loading: accountLoading } = useQuery(QUERY_ACCOUNTS,
         {
             client: apolloFinanceClient,
-            skip: !props.modalState
+            skip: !props.isOpen
         }
     )
     
     const { data: objectiveData, loading: objectiveLoading } = useQuery(QUERY_INVESTMENT_OBJECTIVES,
         {
             client: apolloFinanceClient,
-            skip: !props.modalState
+            skip: !props.isOpen
         }
     )
 
     const { data: currencyData, loading: currencyLoading } = useQuery(QUERY_CURRENCIES,
         {
             client: apolloFinanceClient,
-            skip: !props.modalState
+            skip: !props.isOpen
         }
     )
+
+    const investment = investmentData?.getInvestmentById?.investment
 
     const fetchInvestmentData: () => Promise<void> = async () => {
         setInvestmentTypes(await getInvestmentTypes());
@@ -90,26 +101,27 @@ const App = (props: InvestmentProps): ReactElement => {
         setCountries(await getCountries(true));
     };
 
-    const isLoading = objectiveLoading || currencyLoading || accountLoading
+
+    const isLoading = objectiveLoading || currencyLoading || accountLoading || investmentLoading
 
     useEffect(() => {
         // Set initial value if provided
-        if (props.modalState && props.investment) {
-            reset(props.investment);
-        } else if (props.modalState && !props.investment) {
+        if (props.isOpen && investment) {
+            reset(investment);
+        } else if (props.isOpen && !investment) {
             reset(DefaultInvestment);
         }
 
         // Load necessary information
-        if (props.modalState) {
+        if (props.isOpen) {
             fetchInvestmentData().then();
         }
 
         // Clean form when modal closes
-        if (!props.modalState) {
+        if (!props.isOpen) {
             reset(DefaultInvestment);
         }
-    }, [props.modalState, props.investment, reset]);
+    }, [props.isOpen, investment, reset]);
 
     const calculateTotalAmount = () => {
         const quantity = getValues("quantity");
@@ -123,12 +135,12 @@ const App = (props: InvestmentProps): ReactElement => {
         let method: string;
         let submitData;
 
-        if (data.investmentId !== null) {
+        if (data.id !== null) {
             method = 'patch';
 
             const currentValues: Investment = getValues();
             const modifiedFields: Partial<Record<keyof Investment, Investment[keyof Investment]>> = {
-                investmentId: data.investmentId
+                id: data.id
             };
 
             (Object.keys(dirtyFields) as Array<keyof Investment>).forEach((key: keyof Investment) => {
@@ -143,7 +155,7 @@ const App = (props: InvestmentProps): ReactElement => {
 
         financeSubmit(e, URL_FINANCE_INVESTMENT, submitData, method).then(() => {
             toast.success('Investimento salvo com sucesso');
-            props.hideModal();
+            props.onToggle();
         }).catch((err: string) => {
             toast.error('Erro ao salvar o investimento ' + err)
         })
@@ -206,7 +218,7 @@ const App = (props: InvestmentProps): ReactElement => {
                     </Grid>
                     <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
-                            name={'investmentTypeId'}
+                            name={'typeId'}
                             control={control}
                             rules={{ required: "Campo obrigatório" }}
                             render={({ field }) => (
@@ -219,7 +231,7 @@ const App = (props: InvestmentProps): ReactElement => {
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}
-                                    error={errors.investmentTypeId?.message}
+                                    error={errors.id?.message}
                                 />
                             )}
                         />
@@ -535,8 +547,8 @@ const App = (props: InvestmentProps): ReactElement => {
 
     return (
         <Modal
-            showModal={props.modalState}
-            hideModal={props.hideModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             title={'Investimento'}
             actionModal={handleSubmit(onSubmit)}
             body={body}

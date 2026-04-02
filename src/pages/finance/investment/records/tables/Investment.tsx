@@ -21,7 +21,7 @@ import ModalInvestmentStatement from '../modals/Statement';
 
 const InvestmentV2 = (): ReactElement => {
     // Modals States
-    const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false);
+    const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState<boolean>(false);
     const [selectedInvestmentId, setSelectedInvestmentId] = useState<string>("");
 
     const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false)
@@ -43,31 +43,30 @@ const InvestmentV2 = (): ReactElement => {
         }
     )
 
-    // Modals Open/Close functions
-    const showInvestmentModal = (e: any) => {
-        if (typeof e.row !== 'undefined') {
-            setSelectedInvestmentId(e.row);
+    const onInvestmentModalToggle = useCallback((e: any) => {
+        if (typeof e?.row !== 'undefined') {
+            setSelectedInvestmentId(e.row.id);
         }
-        setModalInvestmentState(true);
-    }
 
-    const hideInvestmentModal = () => {
-        setModalInvestmentState(false);
-        setSelectedInvestmentId(undefined);
-        investmentRefetch();
-    }
+        if (isInvestmentModalOpen) {
+            investmentRefetch();
+        }
+
+        setIsInvestmentModalOpen(!isInvestmentModalOpen);
+    }, [isInvestmentModalOpen])
+
 
     const onStatementModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
-            setSelectedInvestmentId(e.row.investmentId)
+            setSelectedInvestmentId(e.row.id);
         }
 
-        setIsStatementModalOpen(!isStatementModalOpen)
+        setIsStatementModalOpen(!isStatementModalOpen);
     }, [isStatementModalOpen])
 
     const showInvestmentPerformanceModal = (e: any) => {
         if (typeof e.row !== 'undefined') {
-            setInvestmentId(e.row.investmentId);
+            setInvestmentId(e.row.id);
             setInvestmentName(e.row.name);
             setModalInvestmentPerformanceState(true);
         }
@@ -103,7 +102,7 @@ const InvestmentV2 = (): ReactElement => {
     }
 
     const columns: GridColDef<Investment>[] = [
-        { field: 'investmentId', headerName: 'ID', flex: 1 },
+        { field: 'id', headerName: 'ID', flex: 1 },
         { field: 'name', headerName: 'Nome', flex: 2.5 },
         {
             field: 'transactionDate',
@@ -176,7 +175,7 @@ const InvestmentV2 = (): ReactElement => {
                     <IconButton
                         aria-label="editar"
                         color="success"
-                        onClick={showInvestmentModal.bind(null, params)}
+                        onClick={onInvestmentModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
@@ -229,7 +228,7 @@ const InvestmentV2 = (): ReactElement => {
                 />
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showInvestmentModal}
+                    onClick={onInvestmentModalToggle}
                     loading={investmentLoading}
                 >
                     <AddCircleOutline />
@@ -245,19 +244,24 @@ const InvestmentV2 = (): ReactElement => {
             <DataGrid
                 columns={columns}
                 data={filterdRows}
-                getRowId={(row) => row.investmentId.toString()}
+                getRowId={(row) => row.id.toString()}
                 isLoading={investmentLoading}
                 getRowClassName={getRowClassName}
                 columnVisibilityModel={{
-                    investmentId: false,
+                    id: false,
                 }}
                 pageSize={50}
             />
-            <ModalInvestment modalState={modalInvestmentState} hideModal={hideInvestmentModal} investment={selectedInvestmentId} />
-            <ModalInvestmentStatement 
-                onToggle={onStatementModalToggle}
+            <ModalInvestment
+                isOpen={isInvestmentModalOpen}
+                onToggle={onInvestmentModalToggle}
+                investmentId={selectedInvestmentId}
+            />
+            <ModalInvestmentStatement
                 isOpen={isStatementModalOpen}
-                investmentId={selectedInvestmentId} />
+                onToggle={onStatementModalToggle}
+                investmentId={selectedInvestmentId}
+            />
             <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName} />
         </Box>
     )

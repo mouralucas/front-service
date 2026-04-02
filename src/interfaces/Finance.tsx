@@ -134,11 +134,11 @@ export interface CreditCardBillHistory {
 
 // Investment Interfaces
 export interface Investment {
-    investmentId?: string | null,
+    id?: string | null,
     transactionDate: string
     name: string;
     accountId: string;
-    investmentTypeId: string;
+    typeId: string;
     maturityDate: string | null;
     quantity: number;
     price: number;

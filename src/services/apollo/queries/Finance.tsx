@@ -200,42 +200,77 @@ export const QUERY_BRAZILIAN_FUND_INVESTMENTS = gql`
 
 export const QUERY_INVESTMENTS = gql`
     query GetInvestments($params: GetInvestmentsInput) {
-    getInvestments(params: $params) {
-        quantity
-        investments {
-            investmentId
-            custodianId
-            accountId
-            name
-            investmentTypeId
-            transactionDate
-            maturityDate
+        getInvestments(params: $params) {
             quantity
-            price
-            amount
-            contractedRate
-            currencyId
-            currencySymbol
-            indexerTypeId
-            indexerTypeName
-            indexerId
-            indexerName
-            liquidityId
-            liquidityName
-            isSettled
-            settlementDate
-            settlementAmount
-            countryId
-            countryName
-            observation
-            objectiveId
-            grossAmount
-            percentageChange
-            totalContribution
-            totalWithdrawn
+            investments {
+                id
+                custodianId
+                accountId
+                name
+                typeId
+                transactionDate
+                maturityDate
+                quantity
+                price
+                amount
+                contractedRate
+                currencyId
+                currencySymbol
+                indexerTypeId
+                indexerTypeName
+                indexerId
+                indexerName
+                liquidityId
+                liquidityName
+                isSettled
+                settlementDate
+                settlementAmount
+                countryId
+                countryName
+                observation
+                objectiveId
+                grossAmount
+                percentageChange
+                totalContribution
+                totalWithdrawn
+            }
         }
     }
-}
+`
+
+export const QUERY_INVESTMENT_BY_ID = gql`
+    query GetInvestmentById($params: GetInvestmentByIdInput!) {
+        getInvestmentById(params: $params) {
+            investment {
+                id
+                custodianId
+                accountId
+                name
+                typeId
+                transactionDate
+                maturityDate
+                quantity
+                price
+                amount
+                contractedRate
+                currencyId
+                currencySymbol
+                indexerTypeId
+                indexerTypeName
+                indexerId
+                indexerName
+                liquidityId
+                liquidityName
+                isSettled
+                settlementDate
+                settlementAmount
+                countryId
+                countryName
+                observation
+                objectiveId
+            }
+        }
+    }
 `
 
 export const QUERY_INVESTMENT_STATEMENTS = gql`

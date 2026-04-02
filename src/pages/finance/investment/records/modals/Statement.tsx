@@ -41,7 +41,7 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
-    const { handleSubmit, control, getValues, reset, formState: { isDirty, dirtyFields, errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
+    const { handleSubmit, control, getValues, reset, formState: {dirtyFields, errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
 
     const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
         client: apolloFinanceClient,
