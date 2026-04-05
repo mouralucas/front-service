@@ -126,7 +126,9 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                         <Box>
                             <div className="title">Autor</div>
                             <div>{item?.mainAuthorName}</div>
-                            <div className="fw-light text-muted small">Owen King; Outro Autor; Mais um ainda</div>
+                            <div className="fw-light text-muted small">
+                                {item?.authorsNames?.join("; ")}
+                            </div>
                         </Box>
                         <Box>
                             <div className="title">Páginas</div>
@@ -135,9 +137,9 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                     </Stack>
                 </Stack>
 
-                {/* Publisher + Serie */}
+                {/* Publisher + Serie  + Collection */}
                 <Stack direction="row" spacing={2} px={2}>
-                    <Box flex={1}>
+                    <Box flex={2}>
                         <div className="title">Editora</div>
                         <div>{item?.publisherName}</div>
                     </Box>
@@ -145,6 +147,12 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                         <div className="title">Série</div>
                         <div>{item?.serieName}</div>
                     </Box>
+                    {item?.collectionId !== 0 &&
+                        <Box flex={2}>
+                            <div className="title">Coleção</div>
+                            <div>{item?.collectionName}</div>
+                        </Box>
+                    }
                 </Stack>
 
                 {/* ISBN */}

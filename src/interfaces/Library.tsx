@@ -21,6 +21,7 @@ export interface Item {
     serieId: number
     serieName: string
     collectionId: number
+    collectionName: string
     publisherId: number | null
     publisherName: string
     formatId: string;
