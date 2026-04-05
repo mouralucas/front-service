@@ -32,34 +32,6 @@ const MangaTable = (): ReactElement => {
 
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
-
-    const onItemModalToggle = useCallback((e: any) => {
-        if (e !== undefined && e.row !== undefined) {
-            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
-        } else {
-            setSelectedManga(undefined);
-        }
-        
-        if (isItemModalOpen) {
-            refetch()
-        }
-
-        setIsItemModalOpen(!isItemModalOpen);
-
-    }, [isItemModalOpen]);
-
-    const onOpenDrawerClick = useCallback((e: any) => {
-        if (e !== undefined && e.row !== undefined) {
-            // Nomalize itemId to number
-            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
-        } else {
-            setSelectedManga(undefined);
-        }
-
-        setIsDrawerOpened(!isDrawerOpened);
-
-    }, [isDrawerOpened]);
-
     const { data: mangaData, loading, refetch } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
@@ -81,6 +53,35 @@ const MangaTable = (): ReactElement => {
         }
         // pollInterval: 30000,
     });
+
+
+    const onItemModalToggle = useCallback((e: any) => {
+        if (e !== undefined && e.row !== undefined) {
+            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
+        } else {
+            setSelectedManga(undefined);
+        }
+
+        if (isItemModalOpen) {
+            refetch()
+        }
+
+        setIsItemModalOpen(!isItemModalOpen);
+
+    }, [isItemModalOpen, refetch]);
+
+    const onMangaDrawerToggle = useCallback((e: any) => {
+        if (e !== undefined && e.row !== undefined) {
+            // Nomalize itemId to number
+            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
+        } else {
+            setSelectedManga(undefined);
+        }
+
+        setIsDrawerOpened(!isDrawerOpened);
+
+    }, [isDrawerOpened]);
+
 
     const { data: seriesData } = useQuery(QUERY_SERIES, {
         client: apolloLibraryClient
@@ -126,7 +127,7 @@ const MangaTable = (): ReactElement => {
                     <IconButton
                         aria-label="detalhes"
                         color="success"
-                        onClick={onOpenDrawerClick.bind(null, params)}
+                        onClick={onMangaDrawerToggle.bind(null, params)}
                     >
                         <LibraryBooksOutlinedIcon />
                     </IconButton>
@@ -243,14 +244,14 @@ const MangaTable = (): ReactElement => {
                 }}
             />
             <ItemModal
-                isOpen={isItemModalOpen} 
-                onToggle={onItemModalToggle} 
-                item={selectedManga} 
+                isOpen={isItemModalOpen}
+                onToggle={onItemModalToggle}
+                item={selectedManga}
                 itemTypeId='manga' />
             {selectedManga && (
                 <MangaDrawer
                     openDrawerState={isDrawerOpened}
-                    onCloseDrawerClick={onOpenDrawerClick}
+                    onCloseDrawerClick={onMangaDrawerToggle}
                     item={selectedManga}
                 />
             )}

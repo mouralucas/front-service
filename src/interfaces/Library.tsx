@@ -40,7 +40,7 @@ export interface Item {
 
 export type CreateItemInput = Omit<
   Item,
-  "lastStatusName" | "mainAuthorName" | "serieName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId"
+  "lastStatusName" | "mainAuthorName" | "serieName" | "collectionName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId"
 >;
 
 export interface ItemSummary {

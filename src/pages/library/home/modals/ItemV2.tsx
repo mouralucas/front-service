@@ -100,7 +100,7 @@ const ItemModal = (props: ItemModalProps) => {
 
     useEffect(() => {
         reset(item);
-    }, [item])
+    }, [item, reset])
 
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
