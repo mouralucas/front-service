@@ -121,6 +121,7 @@ const InvestmentV2 = (): ReactElement => {
             headerName: 'Total Investido',
             flex: 1,
             type: 'number',
+
             renderCell: (params: GridRenderCellParams) => {
                 const { totalContribution, totalWithdrawn, currencyId, amount } = params.row;
                 const formattedAmount = amount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
@@ -129,7 +130,7 @@ const InvestmentV2 = (): ReactElement => {
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                         <Box>{formattedAmount}</Box>
 
-                        {totalContribution !== 0 && totalContribution && (
+                        {totalContribution !== 0 && totalContribution !== amount && totalContribution && (
                             <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
                                 +{totalContribution.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
                             </Box>
