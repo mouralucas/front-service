@@ -118,23 +118,12 @@ const InvestmentV2 = (): ReactElement => {
         },
         {
             field: 'amount',
-            headerName: 'Valor Inicial',
+            headerName: 'Total Investido',
             flex: 1,
             type: 'number',
-            valueFormatter: (value: string, row) => {
-                if (!value) return 'R$ 0.00 (0.00%)';
-                const formattedValue = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
-                return `${formattedValue}`
-            }
-        },
-        {
-            field: 'grossAmount',
-            headerName: 'Valor Bruto',
-            flex: 1.5,
-            type: 'number',
             renderCell: (params: GridRenderCellParams) => {
-                const { grossAmount, totalContribution, totalWithdrawn, currencyId } = params.row;
-                const formattedAmount = grossAmount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
+                const { totalContribution, totalWithdrawn, currencyId, amount } = params.row;
+                const formattedAmount = amount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
 
                 return (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
@@ -153,6 +142,38 @@ const InvestmentV2 = (): ReactElement => {
                     </Box>
                 );
             }
+        },
+        {
+            field: 'grossAmount',
+            headerName: 'Valor Bruto',
+            flex: 1.5,
+            type: 'number',
+            valueFormatter: (value: string, row) => {
+                if (!value) return 'R$ 0.00 (0.00%)';
+                const formattedAmount = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+                return `${formattedAmount}`
+            }
+            // renderCell: (params: GridRenderCellParams) => {
+            //     const { grossAmount, totalContribution, totalWithdrawn, currencyId } = params.row;
+            //     const formattedAmount = grossAmount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
+
+            //     return (
+            //         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            //             <Box>{formattedAmount}</Box>
+
+            //             {totalContribution !== 0 && totalContribution && (
+            //                 <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+            //                     +{totalContribution.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
+            //                 </Box>
+            //             )}
+            //             {totalWithdrawn !== 0 && totalWithdrawn && (
+            //                 <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+            //                     -{totalWithdrawn.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
+            //                 </Box>
+            //             )}
+            //         </Box>
+            //     );
+            // }
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
         {
