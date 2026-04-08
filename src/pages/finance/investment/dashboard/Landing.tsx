@@ -5,7 +5,7 @@ import PerformanceChart from './charts/Performance.tsx'
 
 const InvestmentLanding: FC = (): ReactElement => {
     return (
-        <>
+        <div className="container">
             <div className="row">
                 <div className="col-12">
                     <Card>
@@ -25,7 +25,7 @@ const InvestmentLanding: FC = (): ReactElement => {
                     </Card>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
