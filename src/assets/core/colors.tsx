@@ -88,7 +88,6 @@ export const ColorPalette = {
     contrastText: COLORS.BLACK,
   },
 
-  // 🔥 CORRIGIDO (MUI precisa disso assim)
   grey: {
     50: '#FAFAFA',
     100: '#F5F5F5',
@@ -102,7 +101,6 @@ export const ColorPalette = {
     900: '#212121',
   },
 
-  // 🔥 CORRIGIDO
   background: {
     default: COLORS.PASTEL_WHITE,
     paper: COLORS.WHITE,
@@ -116,7 +114,7 @@ export const ColorPalette = {
 
   divider: '#E0E0E0',
 
-  // === CUSTOM (mantidos) ===
+  // === CUSTOM ===
   pastel: {
     red: COLORS.PASTEL_RED,
     orange: COLORS.PASTEL_ORANGE,

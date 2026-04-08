@@ -50,8 +50,8 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
             headerName: 'Anterior',
             flex: 1,
             renderCell: (params: GridRenderCellParams) => {
-                const { previousAmount, contribution, withdrawn } = params.row;
-                const formattedAmount = previousAmount.toLocaleString('pt-BR', { style: 'currency', currency: "BRL" });
+                const { previousAmount, contribution, withdrawn, currencyId } = params.row;
+                const formattedAmount = previousAmount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
 
                 return (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
@@ -59,12 +59,12 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
 
                         {contribution !== 0 && contribution && (
                             <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
-                                +{contribution.toLocaleString('pt-BR', { style: 'currency', currency: "BRL" })}
+                                +{contribution.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
                             </Box>
                         )}
                         {withdrawn !== 0 && withdrawn && (
                             <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
-                                -{withdrawn.toLocaleString('pt-BR', { style: 'currency', currency: "BRL" })}
+                                -{withdrawn.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
                             </Box>
                         )}
                     </Box>

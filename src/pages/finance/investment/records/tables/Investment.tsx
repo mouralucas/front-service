@@ -154,27 +154,6 @@ const InvestmentV2 = (): ReactElement => {
                 const formattedAmount = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
                 return `${formattedAmount}`
             }
-            // renderCell: (params: GridRenderCellParams) => {
-            //     const { grossAmount, totalContribution, totalWithdrawn, currencyId } = params.row;
-            //     const formattedAmount = grossAmount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
-
-            //     return (
-            //         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-            //             <Box>{formattedAmount}</Box>
-
-            //             {totalContribution !== 0 && totalContribution && (
-            //                 <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
-            //                     +{totalContribution.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
-            //                 </Box>
-            //             )}
-            //             {totalWithdrawn !== 0 && totalWithdrawn && (
-            //                 <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
-            //                     -{totalWithdrawn.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
-            //                 </Box>
-            //             )}
-            //         </Box>
-            //     );
-            // }
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
         {
@@ -187,11 +166,11 @@ const InvestmentV2 = (): ReactElement => {
                 <Box
                     sx={{
                         display: 'flex',
-                        alignItems: 'center',      // vertical
-                        justifyContent: 'center',  // horizontal
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         gap: 1,
-                        flex: 1,                   // ocupa toda a largura da célula
-                        height: '100%',            // ocupa toda a altura
+                        flex: 1,
+                        height: '100%',
                     }}
                 >
                     <IconButton
