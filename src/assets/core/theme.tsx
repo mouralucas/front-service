@@ -1,6 +1,6 @@
 import { ZIndex, createTheme } from '@mui/material/styles';
 
-import { ColorPalette } from './colors';
+import { ColorPalette, COLORS } from './colors';
 import TypographyTheme from './typography';
 
 
@@ -50,6 +50,7 @@ const theme = createTheme({
     fontSizes: [12, 14, 16, 18, 20, 24, 30, 32, 48, 64, 96],
     typography: TypographyTheme as any,
     components: {
+        
         MuiOutlinedInput: {
             styleOverrides: {
                 notchedOutline: {
@@ -88,7 +89,7 @@ const theme = createTheme({
             styleOverrides: {
                 label: {
                     ...TypographyTheme.body1_lato,
-                    color: 'black',
+                    color: COLORS.BLACK,
                 },
             },
         },
@@ -100,10 +101,10 @@ const theme = createTheme({
                 {
                     props: { variant: "danger" as any },
                     style: {
-                        backgroundColor: "var(--red-pastel)", // fundo
-                        //border: "1px solid var(--black)", // borda
+                        backgroundColor: COLORS.PASTEL_RED, // fundo
+                        //border: `1px solid ${COLORS.BLACK}`, // borda
                         "& .MuiChip-label": {
-                            color: "var(--white)",
+                            color: COLORS.WHITE,
                         },
                         //"&:hover": {
                         //    backgroundColor: "var(--black)",

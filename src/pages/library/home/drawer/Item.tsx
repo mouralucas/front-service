@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { Box, Button, Chip, Divider, LinearProgress, LinearProgressProps, Stack, Typography } from "@mui/material";
+import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
+import { Box, Button, Chip, Divider, IconButton, LinearProgress, LinearProgressProps, Stack, SvgIcon, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import DrawerV2 from "../../../../components/Drawer";
 import ItemCard from "../../../../components/ItemCard";
@@ -21,6 +22,8 @@ interface ItemDrawerProps {
 const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
     const [isReadingModalOpen, setIsReadingModalOpen] = useState<boolean>(false);
     const [isProgressModalOpen, setIsProgressModalOpen] = useState<boolean>(false);
+
+    const [itemInQueue, setItemInQueue] = useState<boolean>(false)
 
     const { data: itemData, loading: itemLoading } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
@@ -59,6 +62,10 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         }
         setIsProgressModalOpen(!isProgressModalOpen);
     }, [isProgressModalOpen])
+
+    const setItemQueue = useCallback(() => {
+        setItemInQueue(prev => !prev);
+    }, [])
 
     const getStatusChipVariant = (): any => {
         if (props.openDrawerState) {
@@ -107,6 +114,17 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                                 variant={getStatusChipVariant()}
                             />
                             <span className="contact-name"> | {item?.title}</span>
+
+                            <IconButton
+                                aria-label="performance"
+                                onClick={setItemQueue}
+                            >
+                                <BookOutlinedIcon
+                                    sx={{
+                                        color: itemInQueue ? 'blue' : 'red'
+                                    }}
+                                />
+                            </IconButton>
                         </Box>
                     </Stack>
                 </Box>
