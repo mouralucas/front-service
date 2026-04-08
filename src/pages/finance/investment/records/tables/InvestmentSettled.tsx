@@ -44,7 +44,7 @@ const InvestmentSettledTable = (): ReactElement => {
     }
 
     const columns: GridColDef<Investment>[] = [
-        { field: 'investmentId', headerName: 'Id', flex: 1 },
+        { field: 'id', headerName: 'Id', flex: 1 },
         { field: 'name', headerName: 'Nome', flex: 3 },
         {
             field: 'maturityDate',
@@ -120,9 +120,9 @@ const InvestmentSettledTable = (): ReactElement => {
                 data={investmentData?.getInvestments?.investments}
                 isLoading={investmentLoading}
                 pageSize={100}
-                getRowId={(row) => row.investmentId}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
-                    investmentId: false,
+                    id: false,
                 }}
             />
             <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName} />
