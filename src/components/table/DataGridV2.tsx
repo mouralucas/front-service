@@ -1,6 +1,6 @@
 import { DataGrid, GridDensity, GridRowIdGetter } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
-import '../../assets/core/components/tablev2.css'
+// import '../../assets/core/components/tablev2.css'
 
 
 interface DataGridProps {
