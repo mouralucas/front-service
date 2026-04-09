@@ -66,7 +66,7 @@ const Login: FC = () => {
             height="100vh"
             bgcolor="background.default"
         >
-            <Card sx={{ width: 800, p: 2, height: 400}}>
+            <Card sx={{ width: 800, p: 2, height: 400 }}>
                 <CardContent>
                     <Box display="flex" flexDirection="column" alignItems="center">
                         <Box
@@ -83,14 +83,17 @@ const Login: FC = () => {
                         <Box
                             component="form"
                             onSubmit={handleSubmit(onSubmit)}
-                            width="100%"
+                            width="50%"
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="center"
                         >
                             <TextField
                                 label="Usuário"
                                 fullWidth
                                 margin="normal"
                                 {...register("username", {
-                                    required: "Digite o nome de usuário"
+                                    required: "Entre com o nome de usuário"
                                 })}
                                 error={!!errors.username}
                                 helperText={errors.username?.message}
@@ -102,7 +105,7 @@ const Login: FC = () => {
                                 fullWidth
                                 margin="normal"
                                 {...register("password", {
-                                    required: "Digite a senha"
+                                    required: "Entre com a senha"
                                 })}
                                 error={!!errors.password}
                                 helperText={errors.password?.message}
