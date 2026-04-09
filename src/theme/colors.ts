@@ -128,6 +128,19 @@ export const ColorPalette = {
     white: COLORS.PASTEL_WHITE,
   },
 
+  pastel_hover: {
+    red: COLORS.RED_HOVER,
+    orange: COLORS.ORANGE_HOVER,
+    yellow: COLORS.YELLOW_HOVER,
+    green: COLORS.GREEN_HOVER,
+    blue: COLORS.BLUE_HOVER,
+    purple: COLORS.PURPLE_HOVER,
+    pink: COLORS.PINK_HOVER,
+    brown: COLORS.BROWN_HOVER,
+    gray: COLORS.GRAY_HOVER,
+    white: COLORS.WHITE_HOVER,
+  },
+
   gradients: {
     red: COLORS.GRADIENT_RED,
     orange: COLORS.GRADIENT_ORANGE,

@@ -1,6 +1,5 @@
 import { DataGrid, GridDensity, GridRowIdGetter } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
-// import '../../assets/core/components/tablev2.css'
 
 
 interface DataGridProps {
@@ -25,10 +24,10 @@ const DataGridComp = (props: DataGridProps) => {
     return (
         <Box sx={{ width: '100%' }}>
             <DataGrid
-                autoHeight // TODO: update this attr
-                density={props.density ?? 'compact'}
                 rows={props.data}
                 columns={props.columns}
+                autoHeight // TODO: update this attr
+                density={props.density ?? 'compact'}
                 loading={props.isLoading ?? false}
                 initialState={{
                     pagination: {
@@ -42,10 +41,10 @@ const DataGridComp = (props: DataGridProps) => {
                 disableRowSelectionOnClick={props.disableRowSelectionOnClick ?? true}
                 onRowClick={props.onRowClick}
                 getRowId={props.getRowId ?? ((row: any) => row.id)}
-                getRowClassName={props.getRowClassName ?? ''}
+                getRowClassName={props.getRowClassName}
                 getRowHeight={props.getRowHeight ?? (() => 'auto')}
                 columnVisibilityModel={props.columnVisibilityModel ?? {}}
-                sx={props.sx || null}
+                sx={props.sx ?? {}}
 
             />
         </Box>
@@ -53,24 +52,3 @@ const DataGridComp = (props: DataGridProps) => {
 };
 
 export default DataGridComp;
-
-/*
-columns,
-data,
-isLoading = false,
-initialState = {},
-pageSize = 15,
-rowHeight = 35,
-variant = 'light',
-multipleLinesCells = false,
-padding = 0,
-search = undefined,
-emptyStateComponent = undefined,
-footer = undefined,
-hideFooter = false,
-onRowClick = undefined,
-getRowId = undefined,
-autoPageSize = false,
-size = 'normal',
-sx = undefined,
-*/
