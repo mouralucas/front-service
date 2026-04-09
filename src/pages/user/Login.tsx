@@ -1,19 +1,18 @@
-import { FC } from "react";
+import logo from '@/assets/core/images/logo/logo_lucas.svg';
 import {
     Box,
+    Button,
     Card,
     CardContent,
-    TextField,
-    Button,
-    Typography
+    TextField
 } from "@mui/material";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import logo from '@/assets/core/images/logo/logo_lucas.svg'
-import { Login as LoginInterface } from "./Interfaces";
-import { userSubmit } from "../../services/axios/Submit";
-import { URL_LOGIN } from "../../services/axios/ApiUrls";
 import { setToken } from "../../services/auth/Auth";
+import { URL_LOGIN } from "../../services/axios/ApiUrls";
+import { userSubmit } from "../../services/axios/Submit";
+import { Login as LoginInterface } from "./Interfaces";
 
 interface LoginResponse {
     tokenPair: {

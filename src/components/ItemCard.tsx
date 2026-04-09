@@ -1,6 +1,8 @@
 import { Box, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import StarIcon from "@mui/icons-material/Star";
+import nocover from '@/assets/core/images/no-cover.png'
+
 
 interface ItemCardProps {
   title?: string;
@@ -72,10 +74,10 @@ export default function ItemCard({
         {/* Imagem */}
         <Box
           component="img"
-          src={coverUrl || "/images/no-cover.png"}
+          src={coverUrl || nocover }
           alt={title}
           onError={(e: any) => {
-            e.currentTarget.src = "/images/no-cover.png";
+            e.currentTarget.src = nocover ;
           }}
           sx={{
             width: "100%",
