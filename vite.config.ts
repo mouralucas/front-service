@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path'
 
 export default defineConfig({
   base: '/',
@@ -7,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@styles': '/src/styles',
+      '@': path.resolve(__dirname, 'src'),
     },
   },
   css: {
@@ -25,6 +27,5 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
     host: true,
-    origin: 'http://0.0.0.0:3000',
   },
 });

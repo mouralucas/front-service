@@ -9,8 +9,7 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-
-import logo from "../../assets/core/images/logo/logo_lucas.svg";
+import logo from '@/assets/core/images/logo/logo_lucas.svg'
 import { Login as LoginInterface } from "./Interfaces";
 import { userSubmit } from "../../services/axios/Submit";
 import { URL_LOGIN } from "../../services/axios/ApiUrls";
@@ -73,13 +72,11 @@ const Login: FC = () => {
                             component="img"
                             src={logo}
                             alt="Logo"
-                            sx={{ width: 120, mb: 3 }}
+                            sx={{
+                                width: 240,
+                                height: 120,
+                            }}
                         />
-
-                        <Typography variant="h5" mb={2}>
-                            Login
-                        </Typography>
-
                         <Box
                             component="form"
                             onSubmit={handleSubmit(onSubmit)}

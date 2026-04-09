@@ -2,6 +2,7 @@ import { Theme } from '@mui/material/styles';
 import { getCssVariables } from './tokens';
 import TypographyTheme from './typography';
 import { COLORS } from './colors';
+import { BorderTop } from '@mui/icons-material';
 
 export const getComponents = (theme: Theme) => ({
     MuiCssBaseline: {
@@ -71,82 +72,93 @@ export const getComponents = (theme: Theme) => ({
     },
 
     MuiDataGrid: {
-    styleOverrides: {
-        root: {
-            fontFamily: "'Quicksand', sans-serif",
+        styleOverrides: {
+            root: {
+                fontFamily: "'Quicksand', sans-serif",
 
-            // Headers
-            '& .MuiDataGrid-columnHeader': {
-                fontWeight: 600,
-            },
+                // Headers
+                '& .MuiDataGrid-columnHeaders': {
+                    backgroundColor: theme.palette.background.paper,
+                    borderBottom: `2px solid ${theme.palette.divider}`,
+                },
 
-            // Cells
-            '& .MuiDataGrid-cell': {
-                display: 'flex',
-                alignItems: 'center',
-            },
+                '& .MuiDataGrid-columnHeader': {
+                    fontWeight: 600,
+                    color: theme.palette.text.primary,
+                },
 
-            // Row borders
-            '& .MuiDataGrid-row': {
-                borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
-            },
+                '& .MuiDataGrid-columnSeparator': {
+                    visibility: 'hidden',
+                },
 
-            // Pagination
-            '& .MuiTablePagination-root': {
-                borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-            },
+                // Cells
+                '& .MuiDataGrid-cell': {
+                    display: 'flex',
+                    alignItems: 'center',
+                },
 
-            // Zebra rows
-            '& .MuiDataGrid-row:nth-of-type(even)': {
-                backgroundColor: 'rgba(0, 0, 0, 0.02)',
-            },
+                // Row borders
+                '& .MuiDataGrid-row': {
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
+                },
 
-            '& .MuiDataGrid-row:nth-of-type(odd)': {
-                backgroundColor: 'transparent',
-            },
 
-            // Hover (mantém zebra visual consistente)
-            '& .MuiDataGrid-row:hover': {
-                backgroundColor: 'rgba(0, 0, 0, 0.04)',
-            },
+                // Pagination
+                '& .MuiTablePagination-root': {
+                    borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+                },
 
-            // Status rows (sobrescrevem zebra)
-            '& .MuiDataGrid-row.danger-mui-row': {
-                backgroundColor: theme.palette.pastel?.red || '#ffcccc',
+                // Zebra rows
+                '& .MuiDataGrid-row:nth-of-type(even)': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                },
 
-                '&:hover': {
+                '& .MuiDataGrid-row:nth-of-type(odd)': {
+                    backgroundColor: 'transparent',
+                },
+
+                // Hover
+                '& .MuiDataGrid-row:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                },
+
+                // Status rows
+                '& .MuiDataGrid-row.danger-mui-row': {
                     backgroundColor: theme.palette.pastel?.red || '#ffcccc',
-                    opacity: 0.85,
+
+                    '&:hover': {
+                        backgroundColor: theme.palette.pastel?.red || '#ffcccc',
+                        opacity: 0.85,
+                    },
                 },
-            },
 
-            '& .MuiDataGrid-row.success-mui-row': {
-                backgroundColor: theme.palette.pastel?.green || '#ccffcc',
+                '& .MuiDataGrid-row.success-mui-row': {
+                    backgroundColor: theme.palette.pastel?.green || '#ccffcc',
 
-                '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover?.green || '#ccffcc',
-                    opacity: 0.85,
+                    '&:hover': {
+                        backgroundColor: theme.palette.pastel_hover?.green || '#ccffcc',
+                        opacity: 0.85,
+                    },
                 },
-            },
 
-            '& .MuiDataGrid-row.alert-mui-row': {
-                backgroundColor: theme.palette.pastel?.orange || '#ffddcc',
+                '& .MuiDataGrid-row.alert-mui-row': {
+                    backgroundColor: theme.palette.pastel?.orange || '#ffddcc',
 
-                '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover?.orange || '#ffddcc',
-                    opacity: 0.85,
+                    '&:hover': {
+                        backgroundColor: theme.palette.pastel_hover?.orange || '#ffddcc',
+                        opacity: 0.85,
+                    },
                 },
-            },
 
-            '& .MuiDataGrid-row.info-mui-row': {
-                backgroundColor: theme.palette.pastel?.blue || '#ccddff',
+                '& .MuiDataGrid-row.info-mui-row': {
+                    backgroundColor: theme.palette.pastel?.blue || '#ccddff',
 
-                '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover?.blue || '#ccddff',
-                    opacity: 0.85,
+                    '&:hover': {
+                        backgroundColor: theme.palette.pastel_hover?.blue || '#ccddff',
+                        opacity: 0.85,
+                    },
                 },
             },
         },
     },
-},
 });
