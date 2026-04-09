@@ -4,7 +4,7 @@ import {createRoot} from 'react-dom/client'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import './index.css';
-import './assets/core/errors.css';
+import './styles/errors.css';
 import App from './App.tsx';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './theme/theme.ts'
