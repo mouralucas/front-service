@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import "../assets/core/components/modal.css";
+import "@/styles/components/modal.css";
 
 interface ModalProps {
   showModal: boolean;

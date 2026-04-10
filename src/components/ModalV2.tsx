@@ -9,7 +9,7 @@ import {
     IconButton,
 } from "@mui/material";
 import React, { ReactElement } from "react";
-import "../assets/core/components/modal.css";
+import "@/styles/components/modal.css";
 
 interface ModalV2Props {
     isOpen: boolean;

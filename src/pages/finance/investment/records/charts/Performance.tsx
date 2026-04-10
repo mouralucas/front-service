@@ -1,8 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { useEffect } from "react";
 import Line from "../../../../../components/chart/Line.tsx";
-// Import this css to test tooltip style
-import '../../../../../assets/core/components/tooltip.css';
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_INVESTMENT_PERFORMANCE } from "../../../../../services/apollo/queries/Finance.tsx";
 

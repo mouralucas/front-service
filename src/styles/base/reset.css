@@ -1,0 +1,90 @@
+/* =========================
+   1. Box sizing
+========================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* =========================
+   2. Remove margins padrão
+========================= */
+body,
+h1, h2, h3, h4, h5, h6,
+p,
+ul, ol,
+figure,
+blockquote {
+  margin: 0;
+}
+
+/* =========================
+   3. Listas sem estilo
+========================= */
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+/* =========================
+   4. Imagens previsíveis
+========================= */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* =========================
+   5. Inputs e botões
+========================= */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove estilo padrão de botão (MUI já controla isso) */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* =========================
+   6. Links neutros
+========================= */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* =========================
+   7. Scroll suave
+========================= */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* =========================
+   8. Melhor renderização de texto
+========================= */
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================
+   9. Evita overflow inesperado
+========================= */
+html,
+body,
+#root {
+  height: 100%;
+}
