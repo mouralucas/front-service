@@ -61,20 +61,26 @@ const NavItem = ({ item }: { item: MenuItemType }) => {
         {item.title}
       </Button>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-      >
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         {item.submenu.map((subItem, index) => (
-          <SubMenuItem key={index} item={subItem} />
+          <SubMenuItem
+            key={index}
+            item={subItem}
+            onCloseAll={handleClose} // 🔥 passa o fechamento global
+          />
         ))}
       </Menu>
     </>
   );
 };
 
-const SubMenuItem = ({ item }: { item: MenuItemType }) => {
+const SubMenuItem = ({
+  item,
+  onCloseAll,
+}: {
+  item: MenuItemType;
+  onCloseAll: () => void;
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
@@ -89,18 +95,20 @@ const SubMenuItem = ({ item }: { item: MenuItemType }) => {
     setAnchorEl(null);
   };
 
+  // 🔹 Item final (link)
   if (!item.submenu) {
     return (
       <MenuItem
         component={Link}
         to={item.url || "/"}
-        onClick={handleClose}
+        onClick={onCloseAll} // 🔥 fecha tudo
       >
         {item.title}
       </MenuItem>
     );
   }
 
+  // 🔹 Item com submenu
   return (
     <>
       <MenuItem
@@ -109,11 +117,14 @@ const SubMenuItem = ({ item }: { item: MenuItemType }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          gap: 1
+          gap: 1,
         }}
       >
         {item.title}
-        <ChevronRightIcon fontSize="small" sx={{ opacity: 0.6, color: "text.secondary" }} />
+        <ChevronRightIcon
+          fontSize="small"
+          sx={{ opacity: 0.6, color: "text.secondary" }}
+        />
       </MenuItem>
 
       <Popover
@@ -122,16 +133,20 @@ const SubMenuItem = ({ item }: { item: MenuItemType }) => {
         onClose={handleClose}
         anchorOrigin={{
           vertical: "top",
-          horizontal: "right"
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "left"
+          horizontal: "left",
         }}
       >
         <Box sx={{ minWidth: 200 }}>
           {item.submenu.map((subItem, index) => (
-            <SubMenuItem key={index} item={subItem} />
+            <SubMenuItem
+              key={index}
+              item={subItem}
+              onCloseAll={onCloseAll} // 🔥 continua propagando
+            />
           ))}
         </Box>
       </Popover>
