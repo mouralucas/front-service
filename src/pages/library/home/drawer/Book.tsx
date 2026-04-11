@@ -55,7 +55,7 @@ const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
     const getStatusChipVariant = (): any => {
         if (props.openDrawerState) {
-            if (props.item?.lastStatusId == 'lost') {
+            if (props.item?.lastStatusId === 'lost') {
                 return "danger";
             }
 
