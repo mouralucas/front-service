@@ -80,14 +80,14 @@ const Books = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={onItemModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
                     <IconButton
                         aria-label="detalhes"
-                        color="success"
+                        color="primary"
                         onClick={onOpenDrawerClick.bind(null, params)}
                     >
                         <LibraryBooksOutlinedIcon />
@@ -115,6 +115,7 @@ const Books = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={onItemModalToggle}
+                    color={"primary"}
                     disabled={loading}
                 >
                     <AddCircleOutline />
@@ -122,6 +123,7 @@ const Books = (): ReactElement => {
                 <IconButton
                     aria-label="Atualizar"
                     onClick={() => refetch()}
+                    color={"primary"}
                     disabled={loading}
                 >
                     <Autorenew />

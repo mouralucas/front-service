@@ -175,6 +175,7 @@ const CreditCardTransactionTable = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showCreditCardTransactionModal}
+                    color='primary'
                     loading={transactionLoading}
                 >
                     <AddCircleOutline />
@@ -182,6 +183,7 @@ const CreditCardTransactionTable = (): ReactElement => {
                 <IconButton
                     aria-label="Atualizar"
                     onClick={() => updateDateRange([startDate, endDate])}
+                    color='primary'
                     loading={transactionLoading}
                 >
                     <AutorenewOutlined />

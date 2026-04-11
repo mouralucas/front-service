@@ -77,6 +77,7 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showInvestmentModal}
+                    color='primary'
                     loading={brFundsIsLoading}
                 >
                     <AddCircleOutline />
@@ -84,6 +85,7 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
                 <IconButton
                     aria-label="Atualizar"
                     onClick={refetchBrFunds}
+                    color='primary'
                     loading={brFundsIsLoading}
                 >
                     <AutorenewOutlined />

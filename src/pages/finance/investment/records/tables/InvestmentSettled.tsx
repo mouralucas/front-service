@@ -94,7 +94,7 @@ const InvestmentSettledTable = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="performance"
-                        color="secondary"
+                        color="primary"
                         onClick={showInvestmentPerformanceModal.bind(null, params)}
                     >
                         <QueryStatsutlined />

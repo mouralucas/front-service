@@ -89,7 +89,7 @@ const InvestmentObjectivesTable = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={showObjectiveModal.bind(null, params)}
                     >
                         <EditOutlined />

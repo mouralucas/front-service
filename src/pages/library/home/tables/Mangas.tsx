@@ -119,14 +119,14 @@ const MangaTable = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={onItemModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
                     <IconButton
                         aria-label="detalhes"
-                        color="success"
+                        color="primary"
                         onClick={onMangaDrawerToggle.bind(null, params)}
                     >
                         <LibraryBooksOutlinedIcon />
@@ -225,10 +225,18 @@ const MangaTable = (): ReactElement => {
                     />
                 </Stack>
 
-                <IconButton aria-label="Novo Registro" onClick={onItemModalToggle} disabled={loading}>
+                <IconButton 
+                    aria-label="Novo Registro" 
+                    onClick={onItemModalToggle} 
+                    color={"primary"}
+                    disabled={loading}>
                     <AddCircleOutline />
                 </IconButton>
-                <IconButton aria-label="Atualizar" onClick={() => refetch()} disabled={loading}>
+                <IconButton 
+                aria-label="Atualizar" 
+                onClick={() => refetch()} 
+                color={"primary"}
+                disabled={loading}>
                     <Autorenew />
                 </IconButton>
             </Box>

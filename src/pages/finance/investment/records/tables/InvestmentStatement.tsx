@@ -108,7 +108,7 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={onStatementModalToggle.bind(null, params)}
                     >
                         <EditOutlined />

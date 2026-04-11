@@ -124,7 +124,7 @@ const AccountTransactionTable = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={showAccountTransactionModal.bind(null, params)}
                     >
                         <EditOutlined />
@@ -191,6 +191,7 @@ const AccountTransactionTable = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={showAccountTransactionModal}
+                    color='primary'
                     loading={loading}
                 >
                     <AddCircleOutline />
@@ -198,6 +199,7 @@ const AccountTransactionTable = (): ReactElement => {
                 <IconButton
                     aria-label="Atualizar"
                     onClick={updateDateRange.bind(null, [startDate, endDate])}
+                    color='primary'
                     loading={loading}
                 >
                     <AutorenewOutlined />

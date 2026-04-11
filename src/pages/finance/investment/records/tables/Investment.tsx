@@ -175,21 +175,21 @@ const InvestmentV2 = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={onInvestmentModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
                     <IconButton
                         aria-label="extrato"
-                        color="secondary"
+                        color="primary"
                         onClick={onStatementModalToggle.bind(null, params)}
                     >
                         <AccountBalanceWalletOutlined />
                     </IconButton>
                     <IconButton
                         aria-label="performance"
-                        color="secondary"
+                        color="primary"
                         onClick={showInvestmentPerformanceModal.bind(null, params)}
                     >
                         <QueryStatsutlined />
