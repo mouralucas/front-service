@@ -49,13 +49,11 @@ export const COLORS = {
   GRADIENT_GRAY: 'linear-gradient(135deg, #F8F8F8, #E0E0E0)',
   GRADIENT_WHITE: 'linear-gradient(135deg, #FFFFFF, #FAFAFA)',
 
-  // === NEUTROS EXTRA ===
   BLACK: '#000000',
   WHITE: '#FFFFFF',
 };
 
 
-// ✅ COMPATÍVEL COM MUI
 export const ColorPalette = {
   primary: {
     light: COLORS.BLUE_FOCUS,
@@ -100,6 +98,8 @@ export const ColorPalette = {
     800: '#424242',
     900: '#212121',
   },
+
+  white: COLORS.WHITE,
 
   background: {
     default: COLORS.PASTEL_WHITE,
