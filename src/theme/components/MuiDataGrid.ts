@@ -28,63 +28,58 @@ export const getMuiDataGrid = (theme: Theme) => ({
 
             // Row borders
             '& .MuiDataGrid-row': {
-                borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
+                borderBottom: `1px solid ${theme.palette.divider}`,
             },
-
 
             // Pagination
             '& .MuiTablePagination-root': {
-                borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+                borderTop: `1px solid ${theme.palette.divider}`,
             },
 
             // Zebra rows
             '& .MuiDataGrid-row:nth-of-type(even)': {
-                backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                backgroundColor: theme.palette.action.hover,
             },
 
             '& .MuiDataGrid-row:nth-of-type(odd)': {
                 backgroundColor: 'transparent',
             },
 
-            // Hover
             '& .MuiDataGrid-row:hover': {
-                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                backgroundColor: theme.palette.action.hover,
             },
 
             // Status rows
             '& .MuiDataGrid-row.danger-mui-row': {
-                backgroundColor: theme.palette.pastel?.red || '#ffcccc',
+                backgroundColor: theme.palette.pastel.red,
 
                 '&:hover': {
-                    backgroundColor: theme.palette.pastel?.red || '#ffcccc',
-                    opacity: 0.85,
+                    backgroundColor: theme.palette.pastel.red,
+                    filter: 'brightness(0.95)',
                 },
             },
 
             '& .MuiDataGrid-row.success-mui-row': {
-                backgroundColor: theme.palette.pastel?.green || '#ccffcc',
+                backgroundColor: theme.palette.pastel.green,
 
                 '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover?.green || '#ccffcc',
-                    opacity: 0.85,
+                    backgroundColor: theme.palette.pastel_hover.green,
                 },
             },
 
             '& .MuiDataGrid-row.alert-mui-row': {
-                backgroundColor: theme.palette.pastel?.orange || '#ffddcc',
+                backgroundColor: theme.palette.pastel.orange,
 
                 '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover?.orange || '#ffddcc',
-                    opacity: 0.85,
+                    backgroundColor: theme.palette.pastel_hover.orange,
                 },
             },
 
             '& .MuiDataGrid-row.info-mui-row': {
-                backgroundColor: theme.palette.pastel?.blue || '#ccddff',
+                backgroundColor: theme.palette.pastel.blue,
 
                 '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover?.blue || '#ccddff',
-                    opacity: 0.85,
+                    backgroundColor: theme.palette.pastel_hover.blue,
                 },
             },
         },

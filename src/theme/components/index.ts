@@ -1,21 +1,11 @@
 import { Theme } from '@mui/material/styles';
-import { getMuiCssBaseline } from './MuiCssBaseline';
-import { getMuiOutlinedInput } from './MuiOutlinedInput';
-import { getMuiListItemIcon } from './MuiListItemIcon';
-import { getMuiPaginationItem } from './MuiPaginationItem';
-import { getMuiFormControlLabel } from './MuiFormControlLabel';
 import { getMuiChip } from './MuiChip';
+import { getMuiCssBaseline } from './MuiCssBaseline';
 import { getMuiDataGrid } from './MuiDataGrid';
-
-// export {
-//     MuiCssBaseline,
-//     MuiOutlinedInput,
-//     MuiListItemIcon,
-//     MuiPaginationItem,
-//     MuiFormControlLabel,
-//     MuiChip,
-//     MuiDataGrid,
-// };
+import { getMuiFormControlLabel } from './MuiFormControlLabel';
+import { getMuiListItemIcon } from './MuiListItemIcon';
+import { getMuiOutlinedInput } from './MuiOutlinedInput';
+import { getMuiPaginationItem } from './MuiPaginationItem';
 
 export const getComponentsConfig = (theme: Theme) => ({
     MuiCssBaseline: getMuiCssBaseline(theme),

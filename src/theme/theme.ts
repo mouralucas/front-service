@@ -1,7 +1,7 @@
 import { createTheme, ZIndex } from '@mui/material/styles';
+import { getComponents } from './components';
 import palette from './palette';
 import TypographyTheme from './typography';
-import { getComponents } from './components';
 
 interface MyZIndex extends ZIndex {
   backdrop: number;

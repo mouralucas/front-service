@@ -1,13 +1,12 @@
-import TypographyTheme from '../typography';
-import { COLORS } from '../colors';
 import { Theme } from '@mui/material/styles';
+import TypographyTheme from '../typography';
 
 
 export const getMuiFormControlLabel = (theme: Theme) => ({
     styleOverrides: {
         label: {
-            ...TypographyTheme.body1_lato,
-            color: COLORS.BLACK,
+            ...TypographyTheme.body1,
+            color: theme.palette.text.primary,
         },
     },
 });
