@@ -3,7 +3,7 @@ import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { BrazilianFundInvestment } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
@@ -14,9 +14,9 @@ import BrazilianFundInvestmentModal from "../modals/BrazilianFundInvestment.tsx"
 
 const BrazilianFundInvestmentTable = (): ReactElement => {
     // Modal states
-    const [modalInvestmentState, setModalInvestmentState] = useState<boolean>(false)
+    const [isBrazilianFundsInvestmentModalOpen, setIsBrazilianFundsInvestmentModalOpen] = useState<boolean>(false)
 
-    const {data: brFundsData, loading: brFundsIsLoading, refetch: refetchBrFunds} = useQuery(
+    const { data: brFundsData, loading: brFundsIsLoading, refetch: refetchBrFunds } = useQuery(
         QUERY_BRAZILIAN_FUND_INVESTMENTS,
         {
             client: apolloFinanceClient,
@@ -32,17 +32,14 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
         refetchBrFunds();
     }, [])
 
-    const showInvestmentModal = (e: any) => {
+    const onBrazilianFundsInvestmentModaToggle = useCallback((e: any) => {
         if (e.row) {
             console.log("Example to access the row values");
         }
-        setModalInvestmentState(true);
-    }
+        
+        setIsBrazilianFundsInvestmentModalOpen(!isBrazilianFundsInvestmentModalOpen);
 
-    const hideInvestmentModal = () => {
-        setModalInvestmentState(false);
-        refetchBrFunds();
-    }
+    }, [isBrazilianFundsInvestmentModalOpen])
 
     const columns: GridColDef<BrazilianFundInvestment>[] = [
         { field: 'investmentId', headerName: 'Id', flex: 1 },
@@ -76,7 +73,7 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showInvestmentModal}
+                    onClick={onBrazilianFundsInvestmentModaToggle}
                     color='primary'
                     loading={brFundsIsLoading}
                 >
@@ -100,7 +97,10 @@ const BrazilianFundInvestmentTable = (): ReactElement => {
                     investmentId: false, // Hide the investmentId column
                 }}
             />
-            <BrazilianFundInvestmentModal modalState={modalInvestmentState} hideModal={hideInvestmentModal} brazilianFundInvestment={null} />
+            <BrazilianFundInvestmentModal
+                isOpen={isBrazilianFundsInvestmentModalOpen}
+                onToggle={onBrazilianFundsInvestmentModaToggle}
+                brazilianFundInvestment={null} />
         </Box>
     )
 }

@@ -166,8 +166,8 @@ const UserPage = (): ReactElement => {
             </Stack>
             {(selectedItemId && isDrawerOpened) && (
                 <BookDrawer
-                    openDrawerState={isDrawerOpened}
-                    onCloseDrawerClick={onOpenDrawerClick}
+                    isOpen={isDrawerOpened}
+                    onToggle={onOpenDrawerClick}
                     itemId={selectedItemId}
                 />
             )}

@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import Loader from "../../../../../components/Loader.tsx";
-import Modal from "../../../../../components/Modal.tsx";
+import Modal from "../../../../../components/ModalV2.tsx";
 import { BrazilianFundInvestment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_ACCOUNTS } from "../../../../../services/apollo/queries/Finance.tsx";
@@ -19,8 +19,8 @@ import { TextField } from "@mui/material";
 
 
 interface BrazilianFundInvestmentModalProps {
-    modalState: boolean;
-    hideModal: any;
+    isOpen: boolean;
+    onToggle: any;
     brazilianFundInvestment: BrazilianFundInvestment | undefined | null
 }
 
@@ -290,8 +290,8 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
 
     return (
         <Modal
-            showModal={props.modalState}
-            hideModal={props.hideModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             title={'Investimento em Fundos'}
             body={body}
             size={'modal-md'}

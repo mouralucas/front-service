@@ -24,8 +24,8 @@ const InvestmentV2 = (): ReactElement => {
     const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState<boolean>(false);
     const [selectedInvestmentId, setSelectedInvestmentId] = useState<string>("");
 
-    const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false)
-    const [modalInvestmentPerformanceState, setModalInvestmentPerformanceState] = useState<boolean>(false)
+    const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false);
+    const [isPerformanceModalOpen, setIsPerformanceModalOpen] = useState<boolean>(false);
 
     // Table Filter
     const [investmentFilter, setInvestmentFilter] = useState('');
@@ -64,19 +64,20 @@ const InvestmentV2 = (): ReactElement => {
         setIsStatementModalOpen(!isStatementModalOpen);
     }, [isStatementModalOpen])
 
-    const showInvestmentPerformanceModal = (e: any) => {
+
+    const onPerformanceModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
             setInvestmentId(e.row.id);
             setInvestmentName(e.row.name);
-            setModalInvestmentPerformanceState(true);
         }
-    }
 
-    const hideInvestmentPerformanceModal = () => {
-        setModalInvestmentPerformanceState(false);
-        setInvestmentId('');
-        setInvestmentName('');
-    }
+        if (isPerformanceModalOpen) {
+            setInvestmentId('');
+            setInvestmentName('');
+        }
+
+        setIsPerformanceModalOpen(!isPerformanceModalOpen);
+    }, [isPerformanceModalOpen])
 
     const getRowClassName = (params: any) => {
         // The check order is based on importance, 
@@ -190,7 +191,7 @@ const InvestmentV2 = (): ReactElement => {
                     <IconButton
                         aria-label="performance"
                         color="primary"
-                        onClick={showInvestmentPerformanceModal.bind(null, params)}
+                        onClick={onPerformanceModalToggle.bind(null, params)}
                     >
                         <QueryStatsutlined />
                     </IconButton>
@@ -263,7 +264,11 @@ const InvestmentV2 = (): ReactElement => {
                 onToggle={onStatementModalToggle}
                 investmentId={selectedInvestmentId}
             />
-            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName} />
+            <ModalInvestmentPerformance
+                isOpen={isPerformanceModalOpen}
+                onToggle={onPerformanceModalToggle}
+                investmentId={investmentId}
+                investmentName={investmentName} />
         </Box>
     )
 }

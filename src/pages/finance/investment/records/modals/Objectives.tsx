@@ -8,7 +8,7 @@ import { BaseSyntheticEvent, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
-import Modal from "../../../../../components/Modal.tsx";
+import Modal from "../../../../../components/ModalV2.tsx";
 import { InvestmentObjective } from "../../../../../interfaces/Finance.tsx";
 import { URL_FINANCE_INVESTMENT_OBJECTIVE } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
@@ -18,8 +18,8 @@ import { QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.t
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 
 interface ObjectivesProps {
-    modalState: boolean;
-    hideModal: () => void;
+    isOpen: boolean;
+    onToggle: any;
     objective: InvestmentObjective | undefined | null;
 }
 
@@ -189,8 +189,8 @@ const App = (props: ObjectivesProps) => {
         <Modal
             title="Objetivo"
             body={body}
-            showModal={props.modalState}
-            hideModal={props.hideModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             actionModal={handleSubmit(onSubmit)}
             size={'modal-sm'}
         />

@@ -8,7 +8,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete.tsx';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { AccountTransaction } from "../../../../../interfaces/Finance";
@@ -19,8 +19,8 @@ import ModalStatement from '../modals/AccountTransaction.tsx';
 
 
 const AccountTransactionTable = (): ReactElement => {
-    const [selectedTransaction, setSelectedTransaction] = useState<AccountTransaction | null>()
-    const [modalState, setModalState] = useState<boolean>(false)
+    const [selectedTransaction, setSelectedTransaction] = useState<AccountTransaction | null>();
+    const [isTransactionModalOpen, setIsModalTransactionOpen] = useState<boolean>(false);
 
     // Filter date range
     const [selectedAccount, setSelectedAccount] = useState(null)
@@ -56,21 +56,19 @@ const AccountTransactionTable = (): ReactElement => {
         }
     }, [startDate, endDate])
 
-    const showAccountTransactionModal = (e: any) => {
+    const onTransactionModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
             console.log(e.row)
             setSelectedTransaction(e.row);
-        } else {
-            setSelectedTransaction(null);
         }
-        setModalState(true);
-    }
 
-    const hideModal = () => {
-        setModalState(false);
-        setSelectedTransaction(undefined);
-        updateDateRange([startDate, endDate]);
-    }
+        if (isTransactionModalOpen) {
+            setSelectedTransaction(null);
+            updateDateRange([startDate, endDate]);
+        }
+
+        setIsModalTransactionOpen(!isTransactionModalOpen);
+    }, [isTransactionModalOpen])
 
     const updateDateRange = (dates: any) => {
         if (dates[1] !== null) {
@@ -125,7 +123,7 @@ const AccountTransactionTable = (): ReactElement => {
                     <IconButton
                         aria-label="editar"
                         color="primary"
-                        onClick={showAccountTransactionModal.bind(null, params)}
+                        onClick={onTransactionModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
@@ -190,7 +188,7 @@ const AccountTransactionTable = (): ReactElement => {
                 />
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showAccountTransactionModal}
+                    onClick={onTransactionModalToggle}
                     color='primary'
                     loading={loading}
                 >
@@ -214,7 +212,10 @@ const AccountTransactionTable = (): ReactElement => {
                     transactionId: false
                 }}
             />
-            <ModalStatement modalState={modalState} hideAccountTransactionModal={hideModal} transaction={selectedTransaction} />
+            <ModalStatement
+                isOpen={isTransactionModalOpen}
+                onToggle={onTransactionModalToggle}
+                transaction={selectedTransaction} />
         </Box>
     )
 }

@@ -4,7 +4,7 @@ import EditOutlined from '@mui/icons-material/EditOutlined';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { ReactElement, useState } from 'react';
+import { ReactElement, useCallback, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGridV2';
 import { InvestmentObjective } from '../../../../../interfaces/Finance';
 import { formatDate } from '../../../../../utils/datetime';
@@ -12,32 +12,33 @@ import ObjectiveModal from '../modals/Objectives.tsx';
 import { useQuery } from '@apollo/client';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_INVESTMENT_OBJECTIVES } from '../../../../../services/apollo/queries/Finance.tsx';
+import { is } from 'date-fns/locale';
 
 
 const InvestmentObjectivesTable = (): ReactElement => {
-    const [modalObjectivesState, setModalObjectivesState] = useState<boolean>(false)
+    const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState<boolean>(false)
 
     const [selectedObjective, setSelectedObjective] = useState<InvestmentObjective | undefined>()
 
-    const {data: objectivesData, loading: objectivesLoading, refetch: objectivesRefetch} = useQuery(QUERY_INVESTMENT_OBJECTIVES,
+    const { data: objectivesData, loading: objectivesLoading, refetch: objectivesRefetch } = useQuery(QUERY_INVESTMENT_OBJECTIVES,
         {
             client: apolloFinanceClient,
             fetchPolicy: "no-cache",
         }
     )
 
-    const showObjectiveModal = (e: any) => {
+    const onObjectiveModalToggle = useCallback((e: any) => {
         if (typeof e.row != "undefined") {
             setSelectedObjective(e.row);
         }
 
-        setModalObjectivesState(true)
-    }
+        if (isObjectiveModalOpen) {
+            setSelectedObjective(undefined);
+        }
 
-    const hideObjectiveModal = () => {
-        setSelectedObjective(undefined);
-        setModalObjectivesState(false);
-    }
+        setIsObjectiveModalOpen(!isObjectiveModalOpen);
+
+    }, [isObjectiveModalOpen])
 
     const columns: GridColDef<InvestmentObjective>[] = [
         { field: 'id', headerName: 'Id', flex: 1 },
@@ -90,7 +91,7 @@ const InvestmentObjectivesTable = (): ReactElement => {
                     <IconButton
                         aria-label="editar"
                         color="primary"
-                        onClick={showObjectiveModal.bind(null, params)}
+                        onClick={onObjectiveModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
@@ -104,7 +105,7 @@ const InvestmentObjectivesTable = (): ReactElement => {
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showObjectiveModal}
+                    onClick={onObjectiveModalToggle}
                     loading={objectivesLoading}
                 >
                     <AddCircleOutline />
@@ -126,7 +127,10 @@ const InvestmentObjectivesTable = (): ReactElement => {
                     id: false, // Hide the ID column
                 }}
             />
-            <ObjectiveModal modalState={modalObjectivesState} hideModal={hideObjectiveModal} objective={selectedObjective} />
+            <ObjectiveModal
+                isOpen={isObjectiveModalOpen}
+                onToggle={onObjectiveModalToggle}
+                objective={selectedObjective} />
         </Box>
     )
 }

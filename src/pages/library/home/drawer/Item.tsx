@@ -13,9 +13,9 @@ import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 
 
 interface ItemDrawerProps {
-    openDrawerState: boolean;
+    isOpen: boolean;
+    onToggle: (e: any) => void;
     itemId: number | undefined;
-    onCloseDrawerClick: (e: any) => void;
 };
 
 
@@ -41,7 +41,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         client: apolloLibraryClient,
         variables: { itemId: props.itemId },
         fetchPolicy: "no-cache",
-        skip: !props.openDrawerState || !item,
+        skip: !props.isOpen || !item,
     });
 
     const stats = statsData?.getReadingStats?.stats;
@@ -68,7 +68,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
     }, [])
 
     const getStatusChipVariant = (): any => {
-        if (props.openDrawerState) {
+        if (props.isOpen) {
             if (item?.lastStatusId == 'lost') {
                 return "danger";
             }
@@ -260,20 +260,20 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
     return (
         <>
             <DrawerV2
-                isOpened={props.openDrawerState}
-                changePanelOpened={props.onCloseDrawerClick}
+                isOpened={props.isOpen}
+                changePanelOpened={props.onToggle}
                 anchor="right"
                 content={content}
             />
             <CreateReadingProgressModal
-                modalState={isProgressModalOpen}
-                hideCreateReadingProgressModal={onProgresModalToggle}
+                isOpen={isProgressModalOpen}
+                onToggle={onProgresModalToggle}
                 readingId={stats?.currentReadingId || ''}
             />
             {props?.itemId && item &&
                 <CreateReadingModal
-                    modalState={isReadingModalOpen}
-                    hideCreateReadingModal={onReadingModalToggle}
+                    isOpen={isReadingModalOpen}
+                    onToggle={onReadingModalToggle}
                     itemId={props.itemId}
                     itemTitle={item.title}
                 />

@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { Box, Button, Divider, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { ReactElement, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 import DrawerV2 from "../../../../components/Drawer.tsx";
 import { Item } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
@@ -19,12 +19,13 @@ interface BookDrawerProps {
 
 const MangaDrawer = (props: BookDrawerProps): ReactElement => {
 
-    const [crateReadingProgressModalState, setCrateReadingProgressModalState] = useState<boolean>(false)
-    const [createReadingModalState, setCrateReadingModalState] = useState<boolean>(false)
+    const [isCreateReadingProgressModalOpen, setIsCreateReadingProgressModalOpen] = useState<boolean>(false)
+    const [isCreateReadingModalOpen, setIsCreateReadingModalOpen] = useState<boolean>(false)
 
-    const { data: statsData, refetch: refetchStats } = useQuery(QUERY_READING_STATS, {
+    const { data: statsData } = useQuery(QUERY_READING_STATS, {
         client: apolloLibraryClient,
         variables: { itemId: props.item?.id },
+        fetchPolicy: "no-cache",
         skip: !props.openDrawerState,
     });
 
@@ -32,25 +33,14 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
     // Flatten stats data
     const stats = statsData?.getReadingStats?.stats;
 
-    // Create reading progress modal
-    const showCreateReadingProgressModal = () => {
-        setCrateReadingProgressModalState(true);
-    }
+    const onCreateReadingProgressModalToggle = useCallback(() => {
+        setIsCreateReadingProgressModalOpen(!isCreateReadingProgressModalOpen)
+    }, [isCreateReadingProgressModalOpen])
 
-    const hideCreateReadingProgressModal = () => {
-        setCrateReadingProgressModalState(false);
-        refetchStats();
-    }
 
-    // Create reading modal
-    const showCreateReadingModal = () => {
-        setCrateReadingModalState(true);
-    }
-
-    const hideCreateReadingModal = () => {
-        setCrateReadingModalState(false);
-        refetchStats();
-    }
+    const onCreateReadingModalToggle = useCallback(() => {
+        setIsCreateReadingModalOpen(!isCreateReadingModalOpen)
+    }, [isCreateReadingModalOpen])
 
     const getStatusChipVariant = (): any => {
         if (props.openDrawerState) {
@@ -106,9 +96,9 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
             {/* Cover + Main info */}
             <Stack direction="row" spacing={2} p={2}>
                 <ItemCard
-                                    key={props.item.id}
-                                    coverUrl={props.item.cover}
-                                />
+                    key={props.item.id}
+                    coverUrl={props.item.cover}
+                />
                 <Stack spacing={2}>
                     <Box>
                         <div className="contact-name">Título</div>
@@ -190,7 +180,7 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
                             <Button
                                 fullWidth
                                 variant="outlined"
-                                onClick={showCreateReadingModal}
+                                onClick={onCreateReadingModalToggle}
                             >
                                 Iniciar Nova Leitura
                             </Button>
@@ -203,7 +193,7 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
                             <Button
                                 fullWidth
                                 variant='outlined'
-                                onClick={showCreateReadingModal}
+                                onClick={onCreateReadingModalToggle}
                             >
                                 Iniciar Leitura
                             </Button>
@@ -222,14 +212,14 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
                 content={content}
             />
             <CreateReadingProgressModal
-                modalState={crateReadingProgressModalState}
-                hideCreateReadingProgressModal={hideCreateReadingProgressModal}
+                isOpen={isCreateReadingProgressModalOpen}
+                onToggle={onCreateReadingProgressModalToggle}
                 readingId={stats?.currentReadingId || ''}
             />
             {props?.item?.id &&
                 <CreateReadingModal
-                    modalState={createReadingModalState}
-                    hideCreateReadingModal={hideCreateReadingModal}
+                    isOpen={isCreateReadingModalOpen}
+                    onToggle={onCreateReadingModalToggle}
                     itemId={props.item.id}
                     itemTitle={props.item.title}
                 />

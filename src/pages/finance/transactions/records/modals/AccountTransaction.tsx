@@ -10,7 +10,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Loader from "../../../../../components/Loader.tsx";
-import Modal from "../../../../../components/Modal.tsx";
+import Modal from "../../../../../components/ModalV2.tsx";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import { Account, AccountTransaction, CreateAccountTransactionInput } from "../../../../../interfaces/Finance.tsx";
@@ -25,9 +25,9 @@ import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../..
  * Account Transaction Modal With React Hook Form
  */
 interface AccountStatementProps {
-    transaction: AccountTransaction | undefined | null,
-    modalState: boolean,
-    hideAccountTransactionModal: any
+    transaction: AccountTransaction | undefined | null;
+    isOpen: boolean;
+    onToggle: any;
 }
 
 const DefaultTransaction: CreateAccountTransactionInput = {
@@ -57,7 +57,7 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
             toast.success(
                 `Transação criada com sucesso!`
             );
-            props.hideAccountTransactionModal();
+            props.onToggle(null);
         },
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
@@ -70,7 +70,7 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
             toast.success(
                 `Transação atualizada com sucesso!`
             );
-            props.hideAccountTransactionModal();
+            props.onToggle(null);
         },
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
@@ -80,17 +80,17 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
     const { data: accountData, loading: accountsLoading } = useQuery(QUERY_ACCOUNTS, {
         client: apolloFinanceClient,
         variables: { params: {} },
-        skip: !props.modalState,
+        skip: !props.isOpen,
     })
 
     const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_CATEGORIES, {
         client: apolloFinanceClient,
-        skip: !props.modalState,
+        skip: !props.isOpen,
     })
 
     const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
         client: apolloFinanceClient,
-        skip: !props.modalState,
+        skip: !props.isOpen,
     })
 
     const isLoading = accountsLoading || categoriesLoading || currenciesLoading
@@ -107,17 +107,17 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
 
     useEffect(() => {
         // Set initial value if provided
-        if (props.modalState && props.transaction && accountData && categoriesData && currenciesData) {
+        if (props.isOpen && props.transaction && accountData && categoriesData && currenciesData) {
             reset(props.transaction);
-        } else if (props.modalState && !props.transaction && accountData && categoriesData && currenciesData) {
+        } else if (props.isOpen && !props.transaction && accountData && categoriesData && currenciesData) {
             reset(DefaultTransaction);
         }
 
         // Clean form when modal closes
-        if (!props.modalState && accountData && categoriesData && currenciesData) {
+        if (!props.isOpen && accountData && categoriesData && currenciesData) {
             reset(DefaultTransaction);
         }
-    }, [props.modalState, props.transaction, reset, accountData, currenciesData, categoriesData]);
+    }, [props.isOpen, props.transaction, reset, accountData, currenciesData, categoriesData]);
 
     const onSubmit = async (transactionFormData: CreateAccountTransactionInput) => {
         if (transactionFormData.transactionId !== null) {
@@ -286,8 +286,8 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
     return (
         <>
             <Modal
-                showModal={props.modalState}
-                hideModal={props.hideAccountTransactionModal}
+                isOpen={props.isOpen}
+                onToggle={props.onToggle}
                 title={'Transação'}
                 body={body}
                 actionModal={handleSubmit(onSubmit)}

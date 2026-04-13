@@ -9,15 +9,15 @@ import { ptBR } from "date-fns/locale";
 import { ReactElement, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Modal from "../../../../components/Modal.tsx";
+import Modal from "../../../../components/ModalV2.tsx";
 import { ItemReading } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_READING_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 
 
 interface CreateReadingModalProps {
-    modalState: boolean;
-    hideCreateReadingModal: any;
+    isOpen: boolean;
+    onToggle: any;
     itemId: number;
     itemTitle?: string;
 }
@@ -37,9 +37,9 @@ const CreateReadingModal = (props: CreateReadingModalProps): ReactElement => {
         client: apolloLibraryClient,
         onCompleted: (data) => {
             toast.success(
-                `Leitura criada com sucesso para "${data.createReading.reading.itemTitle}"`
+                "Leitura criada com sucesso"
             );
-            props.hideCreateReadingModal();
+            props.onToggle();
         },
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
@@ -47,13 +47,13 @@ const CreateReadingModal = (props: CreateReadingModalProps): ReactElement => {
     }); 
 
     useEffect(() => {
-        if (props.modalState) {
+        if (props.isOpen) {
             // check, eventually, the reading object to load
             setValue('itemId', props.itemId);
         }  else {
             reset(DefaultReading);
         }
-    }, [props.modalState, reset, setValue, props.itemId])
+    }, [props.isOpen, reset, setValue, props.itemId])
 
    
     const onSubmit = async (readingFormData: ItemReading) => {
@@ -161,8 +161,8 @@ const CreateReadingModal = (props: CreateReadingModalProps): ReactElement => {
         <Modal
             title={modalTtitle}
             body={body}
-            showModal={props.modalState}
-            hideModal={props.hideCreateReadingModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             actionModal={handleSubmit(onSubmit)}
             size={"modal-sm"}
         />
