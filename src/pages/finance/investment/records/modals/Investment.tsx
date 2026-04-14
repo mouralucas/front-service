@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx';
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import Loader from "../../../../../components/Loader.tsx";
-import Modal from '../../../../../components/ModalV2.tsx';
+import Modal from '../../../../../components/Modal.tsx';
 import { Investment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_ACCOUNTS, QUERY_CURRENCY as QUERY_CURRENCIES, QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../../../../services/apollo/queries/Finance.tsx";

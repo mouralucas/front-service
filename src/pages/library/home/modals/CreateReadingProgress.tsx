@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
-import Modal2 from "../../../../components/ModalV2.tsx";
+import Modal2 from "../../../../components/Modal.tsx";
 import { ItemReadingProgress } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_READING_PROGRESS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";

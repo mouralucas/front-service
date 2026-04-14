@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import { Grid, TextField } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -8,14 +9,13 @@ import { BaseSyntheticEvent, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
-import Modal from "../../../../../components/ModalV2.tsx";
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
+import Modal from "../../../../../components/Modal.tsx";
 import { InvestmentObjective } from "../../../../../interfaces/Finance.tsx";
-import { URL_FINANCE_INVESTMENT_OBJECTIVE } from "../../../../../services/axios/ApiUrls.tsx";
-import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
-import { useQuery } from "@apollo/client";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
-import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
+import { URL_FINANCE_INVESTMENT_OBJECTIVE } from "../../../../../services/axios/ApiUrls.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 
 interface ObjectivesProps {
     isOpen: boolean;

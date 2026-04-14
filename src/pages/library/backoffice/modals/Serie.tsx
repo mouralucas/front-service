@@ -4,11 +4,11 @@ import { ReactElement } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
-import Modal from "../../../../components/ModalV2.tsx";
+import Modal from "../../../../components/Modal.tsx";
 import { Serie } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { QUERY_COUNTRIES } from "../../../../services/apollo/queries/Library.tsx";
 import { CREATE_SERIE_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { QUERY_COUNTRIES } from "../../../../services/apollo/queries/Library.tsx";
 
 export interface SerieModalProps {
     serie: Serie | undefined

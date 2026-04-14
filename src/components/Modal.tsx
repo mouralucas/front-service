@@ -1,3 +1,4 @@
+import "@/styles/components/modal.css";
 import CloseIcon from "@mui/icons-material/Close";
 import {
     Box,
@@ -9,9 +10,8 @@ import {
     IconButton,
 } from "@mui/material";
 import React, { ReactElement } from "react";
-import "@/styles/components/modal.css";
 
-interface ModalV2Props {
+interface ModalProps {
     isOpen: boolean;
     onToggle: () => void;
     body: React.ReactElement;
@@ -23,7 +23,7 @@ interface ModalV2Props {
     size?: "modal-xs" | "modal-sm" | "modal-md" | "modal-lg" | "modal-xl" | "modal-fullscreen";
 }
 
-const ModalV2 = (props: ModalV2Props): React.ReactElement => {
+const Modal = (props: ModalProps): React.ReactElement => {
     const sizeMapping: Record<string, "xs" | "sm" | "md" | "lg" | "xl"> = {
         "modal-xs": "xs",
         "modal-sm": "sm",
@@ -95,4 +95,4 @@ const ModalV2 = (props: ModalV2Props): React.ReactElement => {
     );
 };
 
-export default ModalV2;
+export default Modal;

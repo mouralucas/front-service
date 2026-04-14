@@ -10,7 +10,7 @@ import React, { BaseSyntheticEvent, ReactElement, useEffect, useState } from "re
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast, ToastOptions } from "react-toastify";
 import Loader from "../../../../../components/Loader.tsx";
-import Modal from '../../../../../components/ModalV2.tsx';
+import Modal from '../../../../../components/Modal.tsx';
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import { CreditCardTransaction } from "../../../../../interfaces/Finance.tsx";

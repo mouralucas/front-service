@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Modal from "../../../../../components/ModalV2";
+import Modal from "../../../../../components/Modal";
 import PerformanceChart from '../charts/Performance';
 import StatementTable from '../tables/InvestmentStatement';
 
