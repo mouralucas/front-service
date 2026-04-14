@@ -2,7 +2,7 @@ import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import DataGridComp from '../../../../components/table/DataGridV2.tsx';
 import { Category } from "../../../../interfaces/Finance.tsx";
 import { getCategories } from "../../../../services/getCommonData/Finance.tsx";
@@ -12,7 +12,7 @@ import CategoryModal from '../modals/Category.tsx';
 const DefaultCategoryTable = (): ReactElement => {
     const [defaultCategories, setDefaultCategories] = useState<Category[]>([])
 
-    const [defaultCategoriesModalState, setDefaultCategoriesModalState] = useState<boolean>(false)
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false)
     const [selectedCategories, setSelectedCategories] = useState<Category | undefined>()
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -24,18 +24,17 @@ const DefaultCategoryTable = (): ReactElement => {
         setIsLoading(false);
     }
 
-    const showCategoryModal = (e: any) => {
-        if (typeof e.row != 'undefined') {
+    const onCategoryModalToggle = useCallback((e: any) => {
+         if (typeof e.row != 'undefined') {
             setSelectedCategories(e.row.data);
         }
 
-        setDefaultCategoriesModalState(true);
-    }
+        if (isCategoryModalOpen) {
+            setSelectedCategories(undefined);
+        }
 
-    const hideCategoryModal = () => {
-        setSelectedCategories(undefined);
-        setDefaultCategoriesModalState(false);
-    }
+        setIsCategoryModalOpen(!isCategoryModalOpen);
+    })
 
     useEffect(() => {
         fetchCategoriesData().then();
@@ -72,7 +71,7 @@ const DefaultCategoryTable = (): ReactElement => {
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showCategoryModal}
+                    onClick={onCategoryModalToggle}
                     loading={isLoading}
                 >
                     <AddCircleOutline />
@@ -90,9 +89,12 @@ const DefaultCategoryTable = (): ReactElement => {
                 data={defaultCategories}
                 isLoading={isLoading}
                 getRowId={(row) => row.categoryId}
-                columnVisibilityModel={{categoryId: false}}
+                columnVisibilityModel={{ categoryId: false }}
             />
-             <CategoryModal modalState={defaultCategoriesModalState} hideModal={hideCategoryModal} category={selectedCategories}/>
+            <CategoryModal
+                isOpen={isCategoryModalOpen}
+                onToggle={onCategoryModalToggle}
+                category={selectedCategories} />
         </Box>
     )
 }

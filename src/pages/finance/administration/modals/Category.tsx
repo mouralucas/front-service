@@ -1,5 +1,5 @@
 import {BaseSyntheticEvent, ReactElement} from "react";
-import Modal from "../../../../components/Modal.tsx";
+import Modal from "../../../../components/ModalV2.tsx";
 import {Category} from "../../../../interfaces/Finance.tsx";
 import {Controller, useForm} from "react-hook-form";
 import {financeSubmit} from "../../../../services/axios/Submit.tsx";
@@ -7,8 +7,8 @@ import {URL_FINANCE_CATEGORIES} from "../../../../services/axios/ApiUrls.tsx";
 import {toast} from "react-toastify";
 
 interface BankModalProps {
-    modalState: boolean;
-    hideModal: () => void;
+    isOpen: boolean;
+    onToggle: any;
     category?: Category;
 }
 
@@ -18,7 +18,8 @@ const DefaultCategory: Category = {
 }
 
 
-const App = (props: BankModalProps): ReactElement => {
+const CategoryModal = (props: BankModalProps): ReactElement => {
+    // TODO: change to accept categoriId
     const {handleSubmit, control, formState: {errors, dirtyFields, isDirty}, getValues} = useForm<Category>({defaultValues: DefaultCategory})
 
     const onSubmit = (data: Category, e: BaseSyntheticEvent<object> | undefined) => {
@@ -76,8 +77,8 @@ const App = (props: BankModalProps): ReactElement => {
     return (
         <Modal
             title={'Categorias padrão'}
-            showModal={props.modalState}
-            hideModal={props.hideModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             body={body}
             actionModal={handleSubmit(onSubmit)}
             disableAction={!isDirty}
@@ -86,4 +87,4 @@ const App = (props: BankModalProps): ReactElement => {
     )
 }
 
-export default App;
+export default CategoryModal;

@@ -2,16 +2,17 @@ import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import DataGridComp from '../../../../components/table/DataGridV2';
 import { BrazilianFunds } from "../../../../interfaces/Finance.tsx";
 import { getBrazilianFunds } from "../../../../services/getCommonData/Finance.tsx";
 import BrazilianFundsModal from '../modals/BrazilianFunds.tsx';
+import { on } from 'devextreme/events';
 
 
 const BrazilianFundsTable = (): ReactElement => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [brazilianFundsModalState, setBrazilianFundsModalState] = useState<boolean>(false)
+    const [isBrazilianFundsModalOpen, setIsBrazilianFundsModalOpen] = useState<boolean>(false)
 
     const [brazilianFunds, setBrazilianFunds] = useState<any[]>([])
     const [selectedBrazilianFund, setSelectedBrazilianFund] = useState<BrazilianFunds | undefined>()
@@ -21,18 +22,19 @@ const BrazilianFundsTable = (): ReactElement => {
         setIsLoading(false);
     }
 
-    const showBrazilianFundsModal = (e: any) => {
+    const onBrazilianFundsModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
             setSelectedBrazilianFund(e.row.data);
         }
 
-        setBrazilianFundsModalState(true);
-    }
+        if (isBrazilianFundsModalOpen) {
+            setSelectedBrazilianFund(undefined);
+        }
 
-    const hideBrazilianFundsModal = () => {
-        setSelectedBrazilianFund(undefined);
-        setBrazilianFundsModalState(false);
-    }
+        setIsBrazilianFundsModalOpen(!isBrazilianFundsModalOpen)
+
+
+    }, [isBrazilianFundsModalOpen])
 
     useEffect(() => {
         fetchBrazilianFunds().then();
@@ -82,7 +84,7 @@ const BrazilianFundsTable = (): ReactElement => {
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showBrazilianFundsModal}
+                    onClick={onBrazilianFundsModalToggle}
                     loading={isLoading}
                 >
                     <AddCircleOutline />
@@ -102,7 +104,10 @@ const BrazilianFundsTable = (): ReactElement => {
                 getRowId={(row) => row.fundId}
                 columnVisibilityModel={{ fundId: false, benchmark: false }}
             />
-            <BrazilianFundsModal modalState={brazilianFundsModalState} hideModal={hideBrazilianFundsModal} brazilianFund={selectedBrazilianFund} />
+            <BrazilianFundsModal
+                isOpen={isBrazilianFundsModalOpen}
+                onToggle={onBrazilianFundsModalToggle}
+                brazilianFund={selectedBrazilianFund} />
         </Box>
     )
 }
