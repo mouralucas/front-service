@@ -4,7 +4,7 @@ import { QUERY_ITEM_LOCATIONS } from "../../../../services/apollo/queries/Librar
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService";
 import { GridColDef } from "@mui/x-data-grid";
 import { Box, IconButton } from "@mui/material";
-import DataGridComp from "../../../../components/table/DataGridV2";
+import DataGridComp from "../../../../components/table/DataGrid";
 import { AddCircleOutline, AutorenewOutlined } from "@mui/icons-material";
 
 

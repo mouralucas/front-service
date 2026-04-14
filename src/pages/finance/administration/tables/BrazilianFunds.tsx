@@ -3,7 +3,7 @@ import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
-import DataGridComp from '../../../../components/table/DataGridV2';
+import DataGridComp from '../../../../components/table/DataGrid.tsx';
 import { BrazilianFunds } from "../../../../interfaces/Finance.tsx";
 import { getBrazilianFunds } from "../../../../services/getCommonData/Finance.tsx";
 import BrazilianFundsModal from '../modals/BrazilianFunds.tsx';

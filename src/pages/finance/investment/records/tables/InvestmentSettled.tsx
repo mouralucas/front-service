@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
-import DataGridComp from '../../../../../components/table/DataGridV2';
+import DataGridComp from '../../../../../components/table/DataGrid.tsx';
 import { Investment } from '../../../../../interfaces/Finance.tsx';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';

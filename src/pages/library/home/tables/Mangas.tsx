@@ -7,7 +7,7 @@ import { Box, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
 import SelectAutocomplete from '../../../../components/form/SelectAutocomplete.tsx';
-import DataGridComp from "../../../../components/table/DataGridV2";
+import DataGridComp from "../../../../components/table/DataGrid.tsx";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
 import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../../services/apollo/queries/Library.tsx';

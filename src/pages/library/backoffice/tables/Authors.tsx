@@ -5,7 +5,7 @@ import { Box, IconButton, TextField } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
-import DataGridComp from '../../../../components/table/DataGridV2';
+import DataGridComp from '../../../../components/table/DataGrid.tsx';
 import { Author } from '../../../../interfaces/Library';
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import { QUERY_AUTHORS } from '../../../../services/apollo/queries/Library';

@@ -7,7 +7,7 @@ import { Box, TextField } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
 import { ReactElement, useCallback, useState } from "react"
-import DataGridComp from "../../../../components/table/DataGridV2.tsx"
+import DataGridComp from "../../../../components/table/DataGrid.tsx"
 import { Item } from "../../../../interfaces/Library.tsx"
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx'
 import { QUERY_ITEMS } from '../../../../services/apollo/queries/Library.tsx'

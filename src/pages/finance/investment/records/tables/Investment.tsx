@@ -9,7 +9,7 @@ import { Box, TextField } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
-import DataGrid from '../../../../../components/table/DataGridV2';
+import DataGrid from '../../../../../components/table/DataGrid';
 import { Investment } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
 import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance';

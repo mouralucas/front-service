@@ -9,7 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete.tsx';
-import DataGrid from '../../../../../components/table/DataGridV2';
+import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { CreditCardTransaction } from '../../../../../interfaces/Finance';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_CREDIT_CARD_TRANSACTIONS, QUERY_CREDIT_CARDS } from '../../../../../services/apollo/queries/Finance.tsx';

@@ -1,6 +1,6 @@
 import { ReactElement, useState, SyntheticEvent } from "react";
 import Card from "../components/Card.tsx";
-import DataGrid from "../components/table/DataGridV2.tsx";
+import DataGrid from "../components/table/DataGrid.tsx";
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, Box } from '@mui/material';
 import { toast } from "react-toastify";

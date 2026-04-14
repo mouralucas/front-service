@@ -4,7 +4,7 @@ import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useEffect, useState } from "react";
-import DataGrid from '../../../../../components/table/DataGridV2';
+import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { BrazilianFundInvestment } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_BRAZILIAN_FUND_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';

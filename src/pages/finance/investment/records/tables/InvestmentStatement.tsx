@@ -3,7 +3,7 @@ import EditOutlined from "@mui/icons-material/EditOutlined";
 import { Box, IconButton } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
-import DataGridComp from "../../../../../components/table/DataGridV2";
+import DataGridComp from "../../../../../components/table/DataGrid";
 import { InvestmentStatement } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 import { QUERY_INVESTMENT_STATEMENTS } from "../../../../../services/apollo/queries/Finance";

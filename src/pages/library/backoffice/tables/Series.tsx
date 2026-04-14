@@ -3,7 +3,7 @@ import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
 import { Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
-import DataGridComp from "../../../../components/table/DataGridV2";
+import DataGridComp from "../../../../components/table/DataGrid.tsx";
 import { Serie } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import { QUERY_SERIES } from "../../../../services/apollo/queries/Library";

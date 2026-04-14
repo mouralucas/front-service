@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
-import DataGrid from '../../../../../components/table/DataGridV2';
+import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { InvestmentObjective } from '../../../../../interfaces/Finance';
 import { formatDate } from '../../../../../utils/datetime';
 import ObjectiveModal from '../modals/Objectives.tsx';
