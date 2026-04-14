@@ -65,6 +65,7 @@ export const CREATE_READING_MUTATION = gql`
     createReading(reading: $input) {
       created
       readingId
+      itemTitle
     }
   }
 `;

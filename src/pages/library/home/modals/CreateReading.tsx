@@ -37,7 +37,7 @@ const CreateReadingModal = (props: CreateReadingModalProps): ReactElement => {
         client: apolloLibraryClient,
         onCompleted: (data) => {
             toast.success(
-                "Leitura criada com sucesso"
+                `Leitura criada com sucesso para "${data.createReading.itemTitle}"`
             );
             props.onToggle();
         },
