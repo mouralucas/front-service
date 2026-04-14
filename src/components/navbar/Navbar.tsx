@@ -145,7 +145,7 @@ const SubMenuItem = ({
             <SubMenuItem
               key={index}
               item={subItem}
-              onCloseAll={onCloseAll} // 🔥 continua propagando
+              onCloseAll={onCloseAll} 
             />
           ))}
         </Box>

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import EditOutlined from '@mui/icons-material/EditOutlined';
@@ -7,12 +8,10 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { InvestmentObjective } from '../../../../../interfaces/Finance';
-import { formatDate } from '../../../../../utils/datetime';
-import ObjectiveModal from '../modals/Objectives.tsx';
-import { useQuery } from '@apollo/client';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_INVESTMENT_OBJECTIVES } from '../../../../../services/apollo/queries/Finance.tsx';
-import { is } from 'date-fns/locale';
+import { formatDate } from '../../../../../utils/datetime';
+import ObjectiveModal from '../modals/Objectives.tsx';
 
 
 const InvestmentObjectivesTable = (): ReactElement => {

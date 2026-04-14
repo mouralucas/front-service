@@ -55,7 +55,7 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
         QUERY_ACCOUNTS,
         {
             client: apolloFinanceClient,
-            skip: !props.modalState
+            skip: !props.isOpen
         }
     )
 
@@ -67,17 +67,17 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
     }
 
     useEffect(() => {
-        if (props.modalState && props.brazilianFundInvestment) {
+        if (props.isOpen && props.brazilianFundInvestment) {
             reset(props.brazilianFundInvestment);
-        } else if (props.modalState && !props.brazilianFundInvestment) {
+        } else if (props.isOpen && !props.brazilianFundInvestment) {
             reset(DefaultBrazilianFundInvestment);
         }
 
         // Load necessary information
-        if (props.modalState) {
+        if (props.isOpen) {
             fetchInvestmentData().then();
         }
-    }, [props.brazilianFundInvestment, props.modalState, reset]);
+    }, [props.brazilianFundInvestment, props.isOpen, reset]);
 
     const calculateTotalAmount = () => {
         const quantity = getValues("quantity");

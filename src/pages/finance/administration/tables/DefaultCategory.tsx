@@ -34,7 +34,7 @@ const DefaultCategoryTable = (): ReactElement => {
         }
 
         setIsCategoryModalOpen(!isCategoryModalOpen);
-    })
+    }, [isCategoryModalOpen])
 
     useEffect(() => {
         fetchCategoriesData().then();

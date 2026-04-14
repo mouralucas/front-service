@@ -201,8 +201,8 @@ const App = (props: AuthorModalProps): ReactElement => {
         <>
             {props.modalState && (
                 <Modal
-                    showModal={props.modalState}
-                    hideModal={props.hideAuthorModal}
+                    isOpen={props.modalState}
+                    onToggle={props.hideAuthorModal}
                     title={'Autor'}
                     body={body}
                     actionModal={handleSubmit(onSubmit)}

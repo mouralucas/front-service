@@ -37,20 +37,20 @@ const App = (props: ObjectivesProps) => {
 
     const { data: currenciesData } = useQuery(QUERY_CURRENCY, {
         client: apolloFinanceClient,
-        skip: !props.modalState,
+        skip: !props.isOpen,
     })
 
     useEffect(() => {
-        if (props.modalState && props.objective) {
+        if (props.isOpen && props.objective) {
             reset(props.objective);
-        } else if (props.modalState && !props.objective) {
+        } else if (props.isOpen && !props.objective) {
             reset(DefaultObjective);
         }
 
-        if (!props.modalState) {
+        if (!props.isOpen) {
             reset(DefaultObjective);
         }
-    }, [props.modalState, props.objective, reset]);
+    }, [props.isOpen, props.objective, reset]);
 
     const onSubmit = (data: InvestmentObjective, e: BaseSyntheticEvent<object> | undefined) => {
         let method;

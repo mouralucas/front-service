@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
-import { Box, Button, Chip, Divider, IconButton, LinearProgress, LinearProgressProps, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, Chip, Divider, IconButton, LinearProgress, LinearProgressProps, Stack, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import DrawerV2 from "../../../../components/Drawer";
 import ItemCard from "../../../../components/ItemCard";

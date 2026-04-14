@@ -169,7 +169,7 @@ const MangaDrawer = (props: BookDrawerProps): ReactElement => {
                                     <Button
                                         fullWidth
                                         variant="outlined"
-                                        onClick={showCreateReadingProgressModal}
+                                        onClick={onCreateReadingProgressModalToggle}
                                     >
                                         Adicionar Progresso
                                     </Button>

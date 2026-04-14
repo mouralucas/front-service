@@ -1,5 +1,5 @@
 import React, {BaseSyntheticEvent, useEffect, useState} from "react";
-import Modal from "../../../../../components/ModalOld.tsx";
+import Modal from "../../../../../components/Modal.tsx";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
@@ -187,13 +187,10 @@ const App = (props: UpdateCreditCardTransactionProps) => {
     }
 
     return (
-        <Modal showModal={props.modalState}
-               hideModal={props.hideModal}
+        <Modal isOpen={props.modalState}
+               onToggle={props.hideModal}
                title={'Transação'}
                body={body()}
-               fullscreen={false}
-            // actionModal={handleSubmit(onSubmit)}
-            // disableAction={!isDirty}
                size={'modal-xl'}
         />
     )
