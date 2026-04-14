@@ -2,8 +2,7 @@ import { AppBar, Toolbar, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import Navbar from "./navbar/Navbar";
 
-// ajuste o caminho conforme sua estrutura
-import logo from "../assets/core/images/logo/logo_lucas.svg";
+import logo from "@/assets/core/images/logo/logo_lucas.svg";
 
 const Header = () => {
     return (
