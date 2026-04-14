@@ -63,16 +63,9 @@ export const CREATE_COLLECTION_MUTATION = gql`
 export const CREATE_READING_MUTATION = gql`
   mutation CreateReading($input: CreateReadingInput!) {
     createReading(reading: $input) {
-      reading {
-        id
-        itemId
-        itemTitle
-        startDate
-        finishDate
-        active
-        statusId
-        statusName
-      }
+      created
+      readingId
+      itemTitle
     }
   }
 `;

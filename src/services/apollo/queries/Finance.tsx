@@ -289,6 +289,7 @@ export const QUERY_INVESTMENT_STATEMENTS = gql`
                 totalFee
                 referenceDate
                 atMaturity
+                currencyId
                 valueChange
                 percentageChange
                 netAmount

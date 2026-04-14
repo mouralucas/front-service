@@ -3,7 +3,7 @@ import EditOutlined from "@mui/icons-material/EditOutlined";
 import { Box, IconButton } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
-import DataGridComp from "../../../../../components/table/DataGridV2";
+import DataGrid from "../../../../../components/table/DataGrid";
 import { InvestmentStatement } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 import { QUERY_INVESTMENT_STATEMENTS } from "../../../../../services/apollo/queries/Finance";
@@ -47,13 +47,28 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
         { field: "period", headerName: 'Período', flex: 0.5 },
         {
             field: "previousAmount",
-            headerName: 'Anterior (aportes)',
+            headerName: 'Anterior',
             flex: 1,
-            valueFormatter: (value: number, row) => {
-                const previousAmount = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                const incoming = row.contribution.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                const formattedValue = `${previousAmount} (${incoming})`;
-                return formattedValue;
+            renderCell: (params: GridRenderCellParams) => {
+                const { previousAmount, contribution, withdrawn, currencyId } = params.row;
+                const formattedAmount = previousAmount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
+
+                return (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                        <Box>{formattedAmount}</Box>
+
+                        {contribution !== 0 && contribution && (
+                            <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                                +{contribution.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
+                            </Box>
+                        )}
+                        {withdrawn !== 0 && withdrawn && (
+                            <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                                -{withdrawn.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
+                            </Box>
+                        )}
+                    </Box>
+                );
             }
         },
         {
@@ -93,7 +108,7 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={onStatementModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
@@ -106,7 +121,7 @@ const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactEl
     return (
 
         <>
-            <DataGridComp
+            <DataGrid
                 columns={columns}
                 data={statementData?.getInvestmentStatements?.statements}
                 isLoading={statementLoading}

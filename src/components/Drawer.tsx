@@ -1,7 +1,7 @@
 import { ReactElement } from "react"
 import SwipeableDrawer from "@mui/material/Drawer"
 import Box from "@mui/material/Box"
-import '../assets/core/components/drawer.css';
+import '@/styles/components/drawer.css';
 
 interface DrawerV2Props {
     isOpened: boolean;

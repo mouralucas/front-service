@@ -1,20 +1,37 @@
-import React from "react";
-import '../assets/header/header.css'
-import {Link} from "react-router-dom";
-import Navbar from "./navbar/Base.tsx";
+import { AppBar, Toolbar, Box } from "@mui/material";
+import { Link } from "react-router-dom";
+import Navbar from "./navbar/Navbar";
 
-const Header: React.FC = () => {
+import logo from "@/assets/core/images/logo/logo_lucas.svg";
+
+const Header = () => {
     return (
-        <header>
-            <div className="nav-area">
-                <Link to={'/'} className="logo">
-                    Logo
-                </Link>
-                <Navbar/>
-            </div>
+        <AppBar position="sticky">
+            <Toolbar>
+                <Box
+                    component={Link}
+                    to="/"
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexGrow: 1,
+                    }}
+                >
+                    <Box
+                        component="img"
+                        src={logo}
+                        alt="Logo"
+                        sx={{
+                            height: 40, // ajuste conforme necessário
+                            width: "auto",
+                        }}
+                    />
+                </Box>
 
-        </header>
-    )
-}
+                <Navbar />
+            </Toolbar>
+        </AppBar>
+    );
+};
 
 export default Header;

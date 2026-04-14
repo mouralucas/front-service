@@ -21,6 +21,7 @@ export interface Item {
     serieId: number
     serieName: string
     collectionId: number
+    collectionName: string
     publisherId: number | null
     publisherName: string
     formatId: string;
@@ -39,7 +40,7 @@ export interface Item {
 
 export type CreateItemInput = Omit<
   Item,
-  "lastStatusName" | "mainAuthorName" | "serieName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId"
+  "lastStatusName" | "mainAuthorName" | "serieName" | "collectionName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId"
 >;
 
 export interface ItemSummary {

@@ -9,7 +9,7 @@ import { Box, TextField } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
-import DataGrid from '../../../../../components/table/DataGridV2';
+import DataGrid from '../../../../../components/table/DataGrid';
 import { Investment } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
 import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance';
@@ -24,8 +24,8 @@ const InvestmentV2 = (): ReactElement => {
     const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState<boolean>(false);
     const [selectedInvestmentId, setSelectedInvestmentId] = useState<string>("");
 
-    const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false)
-    const [modalInvestmentPerformanceState, setModalInvestmentPerformanceState] = useState<boolean>(false)
+    const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false);
+    const [isPerformanceModalOpen, setIsPerformanceModalOpen] = useState<boolean>(false);
 
     // Table Filter
     const [investmentFilter, setInvestmentFilter] = useState('');
@@ -64,19 +64,20 @@ const InvestmentV2 = (): ReactElement => {
         setIsStatementModalOpen(!isStatementModalOpen);
     }, [isStatementModalOpen])
 
-    const showInvestmentPerformanceModal = (e: any) => {
+
+    const onPerformanceModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
             setInvestmentId(e.row.id);
             setInvestmentName(e.row.name);
-            setModalInvestmentPerformanceState(true);
         }
-    }
 
-    const hideInvestmentPerformanceModal = () => {
-        setModalInvestmentPerformanceState(false);
-        setInvestmentId('');
-        setInvestmentName('');
-    }
+        if (isPerformanceModalOpen) {
+            setInvestmentId('');
+            setInvestmentName('');
+        }
+
+        setIsPerformanceModalOpen(!isPerformanceModalOpen);
+    }, [isPerformanceModalOpen])
 
     const getRowClassName = (params: any) => {
         // The check order is based on importance, 
@@ -118,29 +119,19 @@ const InvestmentV2 = (): ReactElement => {
         },
         {
             field: 'amount',
-            headerName: 'Valor Inicial',
+            headerName: 'Total Investido',
             flex: 1,
             type: 'number',
-            valueFormatter: (value: string, row) => {
-                if (!value) return 'R$ 0.00 (0.00%)';
-                const formattedValue = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
-                return `${formattedValue}`
-            }
-        },
-        {
-            field: 'grossAmount',
-            headerName: 'Valor Bruto',
-            flex: 1.5,
-            type: 'number',
+
             renderCell: (params: GridRenderCellParams) => {
-                const { grossAmount, totalContribution, totalWithdrawn, currencyId } = params.row;
-                const formattedAmount = grossAmount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
+                const { totalContribution, totalWithdrawn, currencyId, amount } = params.row;
+                const formattedAmount = amount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
 
                 return (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                         <Box>{formattedAmount}</Box>
 
-                        {totalContribution !== 0 && totalContribution && (
+                        {totalContribution !== 0 && totalContribution !== amount && totalContribution && (
                             <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
                                 +{totalContribution.toLocaleString('pt-BR', { style: 'currency', currency: currencyId })}
                             </Box>
@@ -154,6 +145,17 @@ const InvestmentV2 = (): ReactElement => {
                 );
             }
         },
+        {
+            field: 'grossAmount',
+            headerName: 'Valor Bruto',
+            flex: 1.5,
+            type: 'number',
+            valueFormatter: (value: string, row) => {
+                if (!value) return 'R$ 0.00 (0.00%)';
+                const formattedAmount = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+                return `${formattedAmount}`
+            }
+        },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
         {
             field: 'actions',
@@ -165,31 +167,31 @@ const InvestmentV2 = (): ReactElement => {
                 <Box
                     sx={{
                         display: 'flex',
-                        alignItems: 'center',      // vertical
-                        justifyContent: 'center',  // horizontal
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         gap: 1,
-                        flex: 1,                   // ocupa toda a largura da célula
-                        height: '100%',            // ocupa toda a altura
+                        flex: 1,
+                        height: '100%',
                     }}
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={onInvestmentModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
                     <IconButton
                         aria-label="extrato"
-                        color="secondary"
+                        color="primary"
                         onClick={onStatementModalToggle.bind(null, params)}
                     >
                         <AccountBalanceWalletOutlined />
                     </IconButton>
                     <IconButton
                         aria-label="performance"
-                        color="secondary"
-                        onClick={showInvestmentPerformanceModal.bind(null, params)}
+                        color="primary"
+                        onClick={onPerformanceModalToggle.bind(null, params)}
                     >
                         <QueryStatsutlined />
                     </IconButton>
@@ -262,7 +264,11 @@ const InvestmentV2 = (): ReactElement => {
                 onToggle={onStatementModalToggle}
                 investmentId={selectedInvestmentId}
             />
-            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName} />
+            <ModalInvestmentPerformance
+                isOpen={isPerformanceModalOpen}
+                onToggle={onPerformanceModalToggle}
+                investmentId={investmentId}
+                investmentName={investmentName} />
         </Box>
     )
 }

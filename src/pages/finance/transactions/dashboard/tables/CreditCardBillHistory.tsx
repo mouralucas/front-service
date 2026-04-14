@@ -1,5 +1,5 @@
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import DataGrid from '../../../../../components/table/DataGridV2';
+import DataGrid from '../../../../../components/table/DataGrid';
 import { ReactElement, useEffect, useState } from "react";
 import { getFinanceData } from "../../../../../services/axios/Get";
 import { toast } from "react-toastify";

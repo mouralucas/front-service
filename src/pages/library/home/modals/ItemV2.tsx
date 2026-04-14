@@ -9,7 +9,7 @@ import { ReactElement, useEffect } from "react";
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
 import Loader from "../../../../components/Loader.tsx";
-import Modal from "../../../../components/ModalV2.tsx";
+import Modal from "../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 import { CreateItemInput } from '../../../../interfaces/Library.tsx';
@@ -100,7 +100,7 @@ const ItemModal = (props: ItemModalProps) => {
 
     useEffect(() => {
         reset(item);
-    }, [item])
+    }, [item, reset])
 
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,

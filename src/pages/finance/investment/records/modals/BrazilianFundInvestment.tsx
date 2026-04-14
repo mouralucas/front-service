@@ -1,6 +1,11 @@
 import { useQuery } from "@apollo/client";
+import { TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
@@ -11,16 +16,11 @@ import { BrazilianFundInvestment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_ACCOUNTS } from "../../../../../services/apollo/queries/Finance.tsx";
 import { getBrazilianFunds, getInvestmentObjectives } from "../../../../../services/getCommonData/Finance.tsx";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { ptBR } from "date-fns/locale";
-import { TextField } from "@mui/material";
 
 
 interface BrazilianFundInvestmentModalProps {
-    modalState: boolean;
-    hideModal: any;
+    isOpen: boolean;
+    onToggle: any;
     brazilianFundInvestment: BrazilianFundInvestment | undefined | null
 }
 
@@ -290,8 +290,8 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
 
     return (
         <Modal
-            showModal={props.modalState}
-            hideModal={props.hideModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             title={'Investimento em Fundos'}
             body={body}
             size={'modal-md'}

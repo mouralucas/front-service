@@ -3,7 +3,7 @@ import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton, Stack } from "@mui/material";
 import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement, useEffect, useState } from "react";
-import DataGridComp from "../../../../components/table/DataGridV2";
+import DataGrid from "../../../../components/table/DataGrid";
 import { Ipca } from "../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../services/apollo/client/ApolloFinanceService";
 import { QUERY_INDEXER_SERIES, QUERY_PERIODICITY } from "../../../../services/apollo/queries/Finance";
@@ -73,7 +73,7 @@ const IpcaTable = (): ReactElement => {
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
-            <DataGridComp
+            <DataGrid
                 columns={columns}
                 data={data?.getIndexerSeries.series}
                 isLoading={loading}

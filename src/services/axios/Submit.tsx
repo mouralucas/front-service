@@ -23,6 +23,10 @@ const userSubmit = async (
     return response?.data
 }
 
+
+/**
+ * @deprecated Deprecated to use Graphql endpoints
+ */
 const financeSubmit = async (
     e: any, url: string,
     values: any,
@@ -42,6 +46,9 @@ const financeSubmit = async (
     return response?.data
 }
 
+/**
+ * @deprecated Deprecated to use Graphql endpoints
+ */
 const librarySubmit = async (
     e: any, url: string,
     values: any,

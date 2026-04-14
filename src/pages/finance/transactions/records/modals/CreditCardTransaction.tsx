@@ -20,8 +20,8 @@ import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUr
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 
 interface CreditCardBillProps {
-    modalState: boolean;
-    hideModal: any;
+    isOpen: boolean;
+    onToggle: any;
 }
 
 const DefaultCreditCardTransaction: CreditCardTransaction = {
@@ -63,18 +63,18 @@ const App = (props: CreditCardBillProps): ReactElement => {
 
     const { data: creditCardsData, loading: creditCardsLoading } = useQuery(QUERY_CREDIT_CARDS, {
         client: apolloFinanceClient,
-        skip: !props.modalState,
+        skip: !props.isOpen,
         variables: { params: { active: true } },
     })
 
     const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_CATEGORIES, {
         client: apolloFinanceClient,
-        skip: !props.modalState,
+        skip: !props.isOpen,
     })
 
     const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
         client: apolloFinanceClient,
-        skip: !props.modalState,
+        skip: !props.isOpen,
     })
 
     const [fetchInstallmentDueDates, { loading: loadingIntallmentDueDate }] = useLazyQuery(QUERY_INSTALLMENT_DUE_DATE, {
@@ -87,7 +87,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
 
     useEffect(() => {
         reset(DefaultCreditCardTransaction);
-    }, [props.modalState, reset]);
+    }, [props.isOpen, reset]);
 
     const updateInstallmentList = async () => {
         const totInstallments: number = getValues("totInstallments");
@@ -502,8 +502,9 @@ const App = (props: CreditCardBillProps): ReactElement => {
         </>
 
     return (
-        <Modal showModal={props.modalState}
-            hideModal={props.hideModal}
+        <Modal 
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             title={'Transação'}
             body={body}
             actionModal={handleSubmit(onSubmit)}

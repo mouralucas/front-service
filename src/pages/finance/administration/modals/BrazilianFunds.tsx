@@ -1,16 +1,17 @@
+import { BaseSyntheticEvent } from "react";
+import { Controller, useForm } from "react-hook-form";
 import Modal from "../../../../components/Modal.tsx";
-import {BrazilianFunds} from "../../../../interfaces/Finance.tsx";
-import {Controller, useForm} from "react-hook-form";
-import {BaseSyntheticEvent} from "react";
+import { BrazilianFunds } from "../../../../interfaces/Finance.tsx";
 
 interface BrazilianFundsModalProps {
-    modalState: boolean;
-    hideModal: () => void;
+    isOpen: boolean;
+    onToggle: any;
     brazilianFund?: BrazilianFunds;
 }
 
 
 const BrazilianFundsModal = (props: BrazilianFundsModalProps) => {
+    // TODO: chante to accept brazilianFundId
     const {handleSubmit, control, formState: {errors}} = useForm<BrazilianFunds>();
 
     const onSubmit = (data: BrazilianFunds, e: BaseSyntheticEvent<object> | undefined) => {
@@ -57,8 +58,8 @@ const BrazilianFundsModal = (props: BrazilianFundsModalProps) => {
     return (
         <Modal
             title={'Fundos de Investimentos do Brasil'}
-            showModal={props.modalState}
-            hideModal={props.hideModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             body={body}
             size={'modal-sm'}
         />

@@ -9,7 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete.tsx';
-import DataGrid from '../../../../../components/table/DataGridV2';
+import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { CreditCardTransaction } from '../../../../../interfaces/Finance';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_CREDIT_CARD_TRANSACTIONS, QUERY_CREDIT_CARDS } from '../../../../../services/apollo/queries/Finance.tsx';
@@ -18,7 +18,7 @@ import CreditCardTransactionModal from '../modals/CreditCardTransaction.tsx';
 
 const CreditCardTransactionTable = (): ReactElement => {
 
-    const [transactionModalState, setTransactionModalState] = useState<boolean>(false)
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState<boolean>(false)
 
     const [selectedCreditCard, setSelectedCreditCard] = useState(null)
 
@@ -39,30 +39,37 @@ const CreditCardTransactionTable = (): ReactElement => {
         }
     }, [startDate, endDate])
 
-    const showCreditCardTransactionModal = () => {
-        setTransactionModalState(true);
-    }
+    // const showCreditCardTransactionModal = () => {
+    //     setIsTransactionModalOpen(true);
+    // }
 
-    const hideCreditCardTransactionModal = () => {
-        setTransactionModalState(false);
-        updateDateRange([startDate, endDate]);
-    }
+    // const hideCreditCardTransactionModal = () => {
+    //     setIsTransactionModalOpen(false);
+    //     updateDateRange([startDate, endDate]);
+    // }
 
-    const { data: creditCardData} = useQuery(QUERY_CREDIT_CARDS, {
+    const onTransactionModalToggle = useCallback(() => {
+        if (isTransactionModalOpen) {
+            updateDateRange([startDate, endDate]);
+        }
+        setIsTransactionModalOpen(!isTransactionModalOpen);
+    }, [isTransactionModalOpen])
+
+    const { data: creditCardData } = useQuery(QUERY_CREDIT_CARDS, {
         client: apolloFinanceClient
     })
 
     const { data: transactionData, loading: transactionLoading, refetch: transactionRefetch } = useQuery(QUERY_CREDIT_CARD_TRANSACTIONS, {
-            client: apolloFinanceClient,
-            variables: {
-                params: {
-                    startPeriod: getPeriodFromDate(startDate),
-                    endPeriod: getPeriodFromDate(endDate),
-                    creditCardId: selectedCreditCard
-                }
-            },
-            skip: !startDate || !endDate
-        });
+        client: apolloFinanceClient,
+        variables: {
+            params: {
+                startPeriod: getPeriodFromDate(startDate),
+                endPeriod: getPeriodFromDate(endDate),
+                creditCardId: selectedCreditCard
+            }
+        },
+        skip: !startDate || !endDate
+    });
 
     const updateDateRange = useCallback((dates: any) => {
         if (dates[1] !== null) {
@@ -174,7 +181,8 @@ const CreditCardTransactionTable = (): ReactElement => {
                 />
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showCreditCardTransactionModal}
+                    onClick={onTransactionModalToggle}
+                    color='primary'
                     loading={transactionLoading}
                 >
                     <AddCircleOutline />
@@ -182,6 +190,7 @@ const CreditCardTransactionTable = (): ReactElement => {
                 <IconButton
                     aria-label="Atualizar"
                     onClick={() => updateDateRange([startDate, endDate])}
+                    color='primary'
                     loading={transactionLoading}
                 >
                     <AutorenewOutlined />
@@ -196,7 +205,9 @@ const CreditCardTransactionTable = (): ReactElement => {
                     id: false
                 }}
             />
-            <CreditCardTransactionModal modalState={transactionModalState} hideModal={hideCreditCardTransactionModal} />
+            <CreditCardTransactionModal
+                isOpen={isTransactionModalOpen}
+                onToggle={onTransactionModalToggle} />
         </Box>
     )
 }

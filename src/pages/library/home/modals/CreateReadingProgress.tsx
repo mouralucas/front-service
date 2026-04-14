@@ -16,8 +16,8 @@ import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLi
 import { CREATE_READING_PROGRESS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 
 interface CreateReadingProgressProps {
-    modalState: boolean;
-    hideCreateReadingProgressModal: () => void;
+    isOpen: boolean;
+    onToggle: any;
     readingId: string;
 }
 
@@ -35,7 +35,7 @@ const progressType = [
     { value: 'percentage', label: 'Porcentagem' }
 ]
 
-const CreateReadingProgress = (props: CreateReadingProgressProps) => {
+const CreateReadingProgressModal = (props: CreateReadingProgressProps) => {
     const { handleSubmit, control, reset, formState: { errors }, setValue } = useForm<ItemReadingProgress>({ defaultValues: DefaultReadingProgress });
 
     const [createReadingProgress] = useMutation(CREATE_READING_PROGRESS_MUTATION, {
@@ -44,7 +44,7 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
             toast.success(
                 `Progresso criado com sucesso para "${data.createReadingProgress.itemTitle}"`
             );
-            props.hideCreateReadingProgressModal();
+            props.onToggle();
         },
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
@@ -53,13 +53,13 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
 
 
     useEffect(() => {
-        if (props.modalState && props.readingId) {
+        if (props.isOpen && props.readingId) {
             setValue('readingId', props.readingId);
         } else {
             reset(DefaultReadingProgress);
         }
 
-    }, [setValue, reset, props.modalState, props.readingId]);
+    }, [setValue, reset, props.isOpen, props.readingId]);
 
     const submitReadingProgress = async (progressFormData: ItemReadingProgress) => {
         const normalizedData = { ...progressFormData, value: Number(progressFormData.value) }
@@ -183,16 +183,15 @@ const CreateReadingProgress = (props: CreateReadingProgressProps) => {
     return (
         <div>
             <Modal2
-                showModal={props.modalState}
-                hideModal={props.hideCreateReadingProgressModal}
+                isOpen={props.isOpen}
+                onToggle={props.onToggle}
                 title={'Progresso de Leitura'}
-                fullscreen={true}
                 body={body}
                 actionModal={handleSubmit(submitReadingProgress)}
-                size={'modal-md'}
+                size={'modal-fullscreen'}
             />
         </div>
     )
 }
 
-export default CreateReadingProgress;
+export default CreateReadingProgressModal;

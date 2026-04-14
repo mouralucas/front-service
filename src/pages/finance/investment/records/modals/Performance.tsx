@@ -4,10 +4,10 @@ import PerformanceChart from '../charts/Performance';
 import StatementTable from '../tables/InvestmentStatement';
 
 interface InvestmentPerformanceProps {
-    modalState: boolean;
-    hideModal: any;
+    isOpen: boolean;
+    onToggle: any;
     investmentId: string;
-    investmentName: string;
+    investmentName: string; 
 }
 
 
@@ -44,7 +44,7 @@ const PerformanceModal = (props: InvestmentPerformanceProps) => {
             <div className="col-3">
                 <div className="d-flex flex-nowrap">
                     <button className='btn btn-outline-secondary text-center w-100'
-                        onClick={props.hideModal}>Fechar
+                        onClick={props.onToggle}>Fechar
                     </button>
                 </div>
             </div>
@@ -52,8 +52,8 @@ const PerformanceModal = (props: InvestmentPerformanceProps) => {
 
     return (
         <Modal
-            showModal={props.modalState}
-            hideModal={props.hideModal}
+            isOpen={props.isOpen}
+            onToggle={props.onToggle}
             title={props.investmentName || 'Investimento'}
             body={body}
             footer={footer}

@@ -7,7 +7,7 @@ import { Box, TextField } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
 import { ReactElement, useCallback, useState } from "react"
-import DataGridComp from "../../../../components/table/DataGridV2.tsx"
+import DataGrid from "../../../../components/table/DataGrid.tsx"
 import { Item } from "../../../../interfaces/Library.tsx"
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx'
 import { QUERY_ITEMS } from '../../../../services/apollo/queries/Library.tsx'
@@ -80,14 +80,14 @@ const Books = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={onItemModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
                     <IconButton
                         aria-label="detalhes"
-                        color="success"
+                        color="primary"
                         onClick={onOpenDrawerClick.bind(null, params)}
                     >
                         <LibraryBooksOutlinedIcon />
@@ -115,6 +115,7 @@ const Books = (): ReactElement => {
                 <IconButton
                     aria-label="Novo Registro"
                     onClick={onItemModalToggle}
+                    color={"primary"}
                     disabled={loading}
                 >
                     <AddCircleOutline />
@@ -122,12 +123,13 @@ const Books = (): ReactElement => {
                 <IconButton
                     aria-label="Atualizar"
                     onClick={() => refetch()}
+                    color={"primary"}
                     disabled={loading}
                 >
                     <Autorenew />
                 </IconButton>
             </Box>
-            <DataGridComp
+            <DataGrid
                 columns={columns}
                 data={filterdRows}
                 getRowId={(row: any) => row.id}

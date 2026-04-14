@@ -2,8 +2,8 @@ import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from "@mui/material";
 import { GridColDef } from '@mui/x-data-grid';
-import { ReactElement, useEffect, useState } from "react";
-import DataGrid from "../../../../components/table/DataGridV2.tsx";
+import { ReactElement, useCallback, useEffect, useState } from "react";
+import DataGrid from "../../../../components/table/DataGrid.tsx";
 import { Bank } from "../../../../interfaces/Finance";
 import { getBanks } from "../../../../services/getCommonData/Finance";
 import BankModal from '../modals/Bank';
@@ -13,7 +13,7 @@ const BankTable = (): ReactElement => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [banks, setBanks] = useState<Bank[]>([])
 
-    const [bankModalState, setBankModalState] = useState<boolean>(false)
+    const [isBankModalOpen, setIsBankModalOpen] = useState<boolean>(false)
     const [selectedBank, setSelectedBank] = useState<Bank | undefined>()
 
     const fetchBankData = async () => {
@@ -22,18 +22,17 @@ const BankTable = (): ReactElement => {
         setIsLoading(false);
     }
 
-    const showBankModal = (e: any) => {
+    const onBankModalToggle = useCallback((e: any) => {
         if (typeof e.row != 'undefined') {
             setSelectedBank(e.row.data);
         }
 
-        setBankModalState(true);
-    }
+        if (isBankModalOpen) {
+            setSelectedBank(undefined);
+        }
 
-    const hideBankModal = () => {
-        setSelectedBank(undefined);
-        setBankModalState(false);
-    }
+        setIsBankModalOpen(!isBankModalOpen);
+    }, [isBankModalOpen])
 
     useEffect(() => {
         fetchBankData().then();
@@ -50,7 +49,7 @@ const BankTable = (): ReactElement => {
             <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
                 <IconButton
                     aria-label="Novo Registro"
-                    onClick={showBankModal}
+                    onClick={onBankModalToggle}
                     loading={isLoading}
                 >
                     <AddCircleOutline />
@@ -70,7 +69,10 @@ const BankTable = (): ReactElement => {
                 getRowId={(row) => row.bankId}
                 columnVisibilityModel={{ bankId: false }}
             />
-            <BankModal modalState={bankModalState} hideModal={hideBankModal} bank={selectedBank} />
+            <BankModal
+                isOpen={isBankModalOpen}
+                onToggle={onBankModalToggle}
+                bank={selectedBank} />
         </Box>
     )
 }

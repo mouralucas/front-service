@@ -4,8 +4,8 @@ import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { ReactElement, useState } from 'react';
-import DataGridComp from '../../../../../components/table/DataGridV2';
+import { ReactElement, useCallback, useState } from 'react';
+import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { Investment } from '../../../../../interfaces/Finance.tsx';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
@@ -14,7 +14,7 @@ import ModalInvestmentPerformance from '../modals/Performance.tsx';
 
 
 const InvestmentSettledTable = (): ReactElement => {
-    const [modalInvestmentPerformanceState, setModalInvestmentPerformanceState] = useState<boolean>(false)
+    const [isPerformanceModalOpen, setIsPerformanceModalOpen] = useState<boolean>(false)
 
     const [investmentId, setInvestmentId] = useState<string>('')
     const [investmentName, setInvestmentName] = useState<string>('')
@@ -27,24 +27,23 @@ const InvestmentSettledTable = (): ReactElement => {
             fetchPolicy: "no-cache",
         }
     )
-
-    const showInvestmentPerformanceModal = (e: any) => {
+    
+    const onPerformanceModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
             setInvestmentId(e.row.investmentId);
             setInvestmentName(e.row.name);
-            setModalInvestmentPerformanceState(true);
         }
 
-    }
+        if (isPerformanceModalOpen) {
+            setInvestmentId('');
+            setInvestmentName('');
+        }
 
-    const hideInvestmentPerformanceModal = () => {
-        setModalInvestmentPerformanceState(false);
-        setInvestmentId('');
-        setInvestmentName('');
-    }
+        setIsPerformanceModalOpen(!isPerformanceModalOpen);
+    }, [isPerformanceModalOpen])
 
     const columns: GridColDef<Investment>[] = [
-        { field: 'investmentId', headerName: 'Id', flex: 1 },
+        { field: 'id', headerName: 'Id', flex: 1 },
         { field: 'name', headerName: 'Nome', flex: 3 },
         {
             field: 'maturityDate',
@@ -94,8 +93,8 @@ const InvestmentSettledTable = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="performance"
-                        color="secondary"
-                        onClick={showInvestmentPerformanceModal.bind(null, params)}
+                        color="primary"
+                        onClick={onPerformanceModalToggle.bind(null, params)}
                     >
                         <QueryStatsutlined />
                     </IconButton>
@@ -115,17 +114,21 @@ const InvestmentSettledTable = (): ReactElement => {
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
-            <DataGridComp
+            <DataGrid
                 columns={columns}
                 data={investmentData?.getInvestments?.investments}
                 isLoading={investmentLoading}
                 pageSize={100}
-                getRowId={(row) => row.investmentId}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
-                    investmentId: false,
+                    id: false,
                 }}
             />
-            <ModalInvestmentPerformance modalState={modalInvestmentPerformanceState} hideModal={hideInvestmentPerformanceModal} investmentId={investmentId} investmentName={investmentName} />
+            <ModalInvestmentPerformance
+                isOpen={isPerformanceModalOpen}
+                onToggle={onPerformanceModalToggle}
+                investmentId={investmentId}
+                investmentName={investmentName} />
         </Box>
 
     )

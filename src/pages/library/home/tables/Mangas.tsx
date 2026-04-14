@@ -7,7 +7,7 @@ import { Box, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
 import SelectAutocomplete from '../../../../components/form/SelectAutocomplete.tsx';
-import DataGridComp from "../../../../components/table/DataGridV2";
+import DataGrid from "../../../../components/table/DataGrid.tsx";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
 import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../../services/apollo/queries/Library.tsx';
@@ -32,34 +32,6 @@ const MangaTable = (): ReactElement => {
 
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)
 
-
-    const onItemModalToggle = useCallback((e: any) => {
-        if (e !== undefined && e.row !== undefined) {
-            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
-        } else {
-            setSelectedManga(undefined);
-        }
-        
-        if (isItemModalOpen) {
-            refetch()
-        }
-
-        setIsItemModalOpen(!isItemModalOpen);
-
-    }, [isItemModalOpen]);
-
-    const onOpenDrawerClick = useCallback((e: any) => {
-        if (e !== undefined && e.row !== undefined) {
-            // Nomalize itemId to number
-            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
-        } else {
-            setSelectedManga(undefined);
-        }
-
-        setIsDrawerOpened(!isDrawerOpened);
-
-    }, [isDrawerOpened]);
-
     const { data: mangaData, loading, refetch } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
@@ -81,6 +53,35 @@ const MangaTable = (): ReactElement => {
         }
         // pollInterval: 30000,
     });
+
+
+    const onItemModalToggle = useCallback((e: any) => {
+        if (e !== undefined && e.row !== undefined) {
+            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
+        } else {
+            setSelectedManga(undefined);
+        }
+
+        if (isItemModalOpen) {
+            refetch()
+        }
+
+        setIsItemModalOpen(!isItemModalOpen);
+
+    }, [isItemModalOpen, refetch]);
+
+    const onMangaDrawerToggle = useCallback((e: any) => {
+        if (e !== undefined && e.row !== undefined) {
+            // Nomalize itemId to number
+            setSelectedManga({ ...e.row, itemId: Number(e.row.itemId) });
+        } else {
+            setSelectedManga(undefined);
+        }
+
+        setIsDrawerOpened(!isDrawerOpened);
+
+    }, [isDrawerOpened]);
+
 
     const { data: seriesData } = useQuery(QUERY_SERIES, {
         client: apolloLibraryClient
@@ -118,15 +119,15 @@ const MangaTable = (): ReactElement => {
                 >
                     <IconButton
                         aria-label="editar"
-                        color="success"
+                        color="primary"
                         onClick={onItemModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
                     </IconButton>
                     <IconButton
                         aria-label="detalhes"
-                        color="success"
-                        onClick={onOpenDrawerClick.bind(null, params)}
+                        color="primary"
+                        onClick={onMangaDrawerToggle.bind(null, params)}
                     >
                         <LibraryBooksOutlinedIcon />
                     </IconButton>
@@ -224,15 +225,23 @@ const MangaTable = (): ReactElement => {
                     />
                 </Stack>
 
-                <IconButton aria-label="Novo Registro" onClick={onItemModalToggle} disabled={loading}>
+                <IconButton 
+                    aria-label="Novo Registro" 
+                    onClick={onItemModalToggle} 
+                    color={"primary"}
+                    disabled={loading}>
                     <AddCircleOutline />
                 </IconButton>
-                <IconButton aria-label="Atualizar" onClick={() => refetch()} disabled={loading}>
+                <IconButton 
+                aria-label="Atualizar" 
+                onClick={() => refetch()} 
+                color={"primary"}
+                disabled={loading}>
                     <Autorenew />
                 </IconButton>
             </Box>
 
-            <DataGridComp
+            <DataGrid
                 data={filteredRows}
                 columns={columns}
                 isLoading={loading}
@@ -243,14 +252,14 @@ const MangaTable = (): ReactElement => {
                 }}
             />
             <ItemModal
-                isOpen={isItemModalOpen} 
-                onToggle={onItemModalToggle} 
-                item={selectedManga} 
+                isOpen={isItemModalOpen}
+                onToggle={onItemModalToggle}
+                item={selectedManga}
                 itemTypeId='manga' />
             {selectedManga && (
                 <MangaDrawer
                     openDrawerState={isDrawerOpened}
-                    onCloseDrawerClick={onOpenDrawerClick}
+                    onCloseDrawerClick={onMangaDrawerToggle}
                     item={selectedManga}
                 />
             )}

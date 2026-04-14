@@ -1,5 +1,5 @@
 import {ReactElement} from "react";
-import '../../assets/core/errors.css'
+import '@/styles/pages/errors.css'
 import error404 from '../../assets/core/images/error/404.png'
 
 

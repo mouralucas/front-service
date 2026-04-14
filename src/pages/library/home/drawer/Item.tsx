@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { Box, Button, Chip, Divider, LinearProgress, LinearProgressProps, Stack, Typography } from "@mui/material";
+import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
+import { Box, Button, Chip, Divider, IconButton, LinearProgress, LinearProgressProps, Stack, SvgIcon, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import DrawerV2 from "../../../../components/Drawer";
 import ItemCard from "../../../../components/ItemCard";
@@ -12,15 +13,17 @@ import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 
 
 interface ItemDrawerProps {
-    openDrawerState: boolean;
+    isOpen: boolean;
+    onToggle: (e: any) => void;
     itemId: number | undefined;
-    onCloseDrawerClick: (e: any) => void;
 };
 
 
 const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
     const [isReadingModalOpen, setIsReadingModalOpen] = useState<boolean>(false);
     const [isProgressModalOpen, setIsProgressModalOpen] = useState<boolean>(false);
+
+    const [itemInQueue, setItemInQueue] = useState<boolean>(false)
 
     const { data: itemData, loading: itemLoading } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
@@ -38,7 +41,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         client: apolloLibraryClient,
         variables: { itemId: props.itemId },
         fetchPolicy: "no-cache",
-        skip: !props.openDrawerState || !item,
+        skip: !props.isOpen || !item,
     });
 
     const stats = statsData?.getReadingStats?.stats;
@@ -60,8 +63,12 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         setIsProgressModalOpen(!isProgressModalOpen);
     }, [isProgressModalOpen])
 
+    const setItemQueue = useCallback(() => {
+        setItemInQueue(prev => !prev);
+    }, [])
+
     const getStatusChipVariant = (): any => {
-        if (props.openDrawerState) {
+        if (props.isOpen) {
             if (item?.lastStatusId == 'lost') {
                 return "danger";
             }
@@ -107,6 +114,17 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                                 variant={getStatusChipVariant()}
                             />
                             <span className="contact-name"> | {item?.title}</span>
+
+                            <IconButton
+                                aria-label="performance"
+                                onClick={setItemQueue}
+                            >
+                                <BookOutlinedIcon
+                                    sx={{
+                                        color: itemInQueue ? 'blue' : 'red'
+                                    }}
+                                />
+                            </IconButton>
                         </Box>
                     </Stack>
                 </Box>
@@ -126,7 +144,9 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                         <Box>
                             <div className="title">Autor</div>
                             <div>{item?.mainAuthorName}</div>
-                            <div className="fw-light text-muted small">Owen King; Outro Autor; Mais um ainda</div>
+                            <div className="fw-light text-muted small">
+                                {item?.authorsNames?.join("; ")}
+                            </div>
                         </Box>
                         <Box>
                             <div className="title">Páginas</div>
@@ -135,9 +155,9 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                     </Stack>
                 </Stack>
 
-                {/* Publisher + Serie */}
+                {/* Publisher + Serie  + Collection */}
                 <Stack direction="row" spacing={2} px={2}>
-                    <Box flex={1}>
+                    <Box flex={2}>
                         <div className="title">Editora</div>
                         <div>{item?.publisherName}</div>
                     </Box>
@@ -145,6 +165,12 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                         <div className="title">Série</div>
                         <div>{item?.serieName}</div>
                     </Box>
+                    {item?.collectionId !== 0 &&
+                        <Box flex={2}>
+                            <div className="title">Coleção</div>
+                            <div>{item?.collectionName}</div>
+                        </Box>
+                    }
                 </Stack>
 
                 {/* ISBN */}
@@ -234,20 +260,20 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
     return (
         <>
             <DrawerV2
-                isOpened={props.openDrawerState}
-                changePanelOpened={props.onCloseDrawerClick}
+                isOpened={props.isOpen}
+                changePanelOpened={props.onToggle}
                 anchor="right"
                 content={content}
             />
             <CreateReadingProgressModal
-                modalState={isProgressModalOpen}
-                hideCreateReadingProgressModal={onProgresModalToggle}
+                isOpen={isProgressModalOpen}
+                onToggle={onProgresModalToggle}
                 readingId={stats?.currentReadingId || ''}
             />
             {props?.itemId && item &&
                 <CreateReadingModal
-                    modalState={isReadingModalOpen}
-                    hideCreateReadingModal={onReadingModalToggle}
+                    isOpen={isReadingModalOpen}
+                    onToggle={onReadingModalToggle}
                     itemId={props.itemId}
                     itemTitle={item.title}
                 />
