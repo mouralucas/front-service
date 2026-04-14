@@ -1,10 +1,10 @@
-import { ReactElement } from "react";
-import DataGridComp from "../../../../components/table/DataGrid"
-import { Box, IconButton } from "@mui/material"
-import { GridColDef } from "@mui/x-data-grid";
-import { useQuery } from "@apollo/client"
-import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
+import { useQuery } from "@apollo/client";
 import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
+import { Box, IconButton } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { ReactElement } from "react";
+import DataGrid from "../../../../components/table/DataGrid";
+import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import { QUERY_COLLECTION } from "../../../../services/apollo/queries/Library";
 
 const CollectionsTable = (): ReactElement => {
@@ -30,7 +30,7 @@ const CollectionsTable = (): ReactElement => {
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
-            <DataGridComp 
+            <DataGrid 
                 columns={columns}
                 data={collectionsData?.getCollections?.collections}
                 isLoading={collectionsLoading}

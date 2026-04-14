@@ -3,7 +3,7 @@ import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
-import DataGridComp from '../../../../components/table/DataGrid.tsx';
+import DataGrid from '../../../../components/table/DataGrid.tsx';
 import { Category } from "../../../../interfaces/Finance.tsx";
 import { getCategories } from "../../../../services/getCommonData/Finance.tsx";
 import CategoryModal from '../modals/Category.tsx';
@@ -84,7 +84,7 @@ const DefaultCategoryTable = (): ReactElement => {
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
-            <DataGridComp
+            <DataGrid
                 columns={columns}
                 data={defaultCategories}
                 isLoading={isLoading}

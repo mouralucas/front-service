@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
-import DataGridComp from '../../../../../components/table/DataGrid.tsx';
+import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { Investment } from '../../../../../interfaces/Finance.tsx';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
@@ -114,7 +114,7 @@ const InvestmentSettledTable = (): ReactElement => {
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
-            <DataGridComp
+            <DataGrid
                 columns={columns}
                 data={investmentData?.getInvestments?.investments}
                 isLoading={investmentLoading}

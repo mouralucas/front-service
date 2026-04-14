@@ -1,14 +1,14 @@
 import { useQuery } from "@apollo/client";
+import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
 import { Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
-import DataGridComp from "../../../../components/table/DataGrid.tsx";
+import DataGrid from "../../../../components/table/DataGrid.tsx";
 import { Serie } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import { QUERY_SERIES } from "../../../../services/apollo/queries/Library";
 import SerieModal from "../modals/Serie.tsx";
-import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 
 const SeriesTable = (): ReactElement => {
     const [selectedSerie, setSelectedSerie] = useState<Serie>();
@@ -60,7 +60,7 @@ const SeriesTable = (): ReactElement => {
                     <AddCircleOutline />
                 </IconButton>
             </Box>
-            <DataGridComp
+            <DataGrid
                 columns={columns}
                 data={seriesData?.getSeries?.series}
                 isLoading={seriesLoading}

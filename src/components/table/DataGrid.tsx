@@ -1,4 +1,4 @@
-import { DataGrid, GridDensity, GridRowIdGetter } from '@mui/x-data-grid';
+import { DataGrid as MuiDataGrid, GridDensity, GridRowIdGetter } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 
 
@@ -20,10 +20,10 @@ interface DataGridProps {
     sx?: any;
 }
 
-const DataGridComp = (props: DataGridProps) => {
+const DataGrid = (props: DataGridProps) => {
     return (
         <Box sx={{ width: '100%' }}>
-            <DataGrid
+            <MuiDataGrid
                 rows={props.data}
                 columns={props.columns}
                 autoHeight // TODO: update this attr
@@ -51,4 +51,4 @@ const DataGridComp = (props: DataGridProps) => {
     );
 };
 
-export default DataGridComp;
+export default DataGrid;

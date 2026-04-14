@@ -1,11 +1,11 @@
-import { ReactElement } from "react"
-import DataGridComp from "../../../../components/table/DataGrid"
-import { Box, IconButton } from "@mui/material"
+import { useQuery } from "@apollo/client";
+import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
+import { Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { useQuery } from "@apollo/client"
+import { ReactElement } from "react";
+import DataGrid from "../../../../components/table/DataGrid";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import { QUERY_PUBLISHERS } from "../../../../services/apollo/queries/Library";
-import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
 
 const PublisherTable = (): ReactElement => {
     const { data: publishersData, loading: publishersLoading, refetch: publishersRefetch} = useQuery(QUERY_PUBLISHERS, {
@@ -31,7 +31,7 @@ const PublisherTable = (): ReactElement => {
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
-            <DataGridComp 
+            <DataGrid 
                 columns={columns}
                 data={publishersData?.getPublishers?.publishers}
                 isLoading={publishersLoading}

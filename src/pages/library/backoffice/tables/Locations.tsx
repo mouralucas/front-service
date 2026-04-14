@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
-import { ReactElement, useCallback } from "react";
-import { QUERY_ITEM_LOCATIONS } from "../../../../services/apollo/queries/Library";
-import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService";
-import { GridColDef } from "@mui/x-data-grid";
-import { Box, IconButton } from "@mui/material";
-import DataGridComp from "../../../../components/table/DataGrid";
 import { AddCircleOutline, AutorenewOutlined } from "@mui/icons-material";
+import { Box, IconButton } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { ReactElement, useCallback } from "react";
+import DataGrid from "../../../../components/table/DataGrid";
+import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService";
+import { QUERY_ITEM_LOCATIONS } from "../../../../services/apollo/queries/Library";
 
 
 const ItemLocationTable = (): ReactElement => {
@@ -41,7 +41,7 @@ const ItemLocationTable = (): ReactElement => {
                     <AutorenewOutlined />
                 </IconButton>
             </Box>
-            <DataGridComp
+            <DataGrid
                 columns={columns}
                 data={locationData?.getItemLocations?.locations}
                 isLoading={locationLoading}
