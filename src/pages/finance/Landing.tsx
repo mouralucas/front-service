@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { Box, Card, CardContent, Chip, Grid, Typography } from "@mui/material";
 import { ReactElement, useEffect } from "react";
 import { apolloFinanceClient } from "../../services/apollo/client/ApolloFinanceService";
 import { QUERY_FINANCE_SUMMARY } from "../../services/apollo/queries/Finance";
@@ -67,14 +67,21 @@ const FinanceLanding = (): ReactElement => {
                             <CardContent>
                                 {summaryLoading ? <CircularLoader height="20vh"></CircularLoader> :
                                     <>
-                                        <Typography variant="h5" component="div">
-                                            Total Investido
-                                        </Typography>
+                                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                                            <Typography variant="h5" component="div">
+                                                Total Investido
+                                            </Typography>
+
+                                            <Chip
+                                                label={`${summaryData?.getFinanceSummary?.investment?.activeInvestmentsCount ?? 0} ativos`}
+                                                size="small"
+                                                color="primary"
+                                                variant="outlined"
+                                            />
+                                        </Box>
                                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                            R$ {(summaryData?.getFinanceSummary?.investment?.totalInvested ?? 0).toFixed(2)}
-                                        </Typography>
-                                        <Typography variant="body4" sx={{ color: 'text.secondary' }}>
-                                            {summaryData?.getFinanceSummary?.investment?.activeInvestmentsCount} investimentos.
+                                            R$ {(summaryData?.getFinanceSummary?.investment?.totalInvested ?? 0).toFixed(2)} | R$ {(summaryData?.getFinanceSummary?.investment?.totalGross ?? 0).toFixed(2)} | {(summaryData?.getFinanceSummary?.investment?.totalGrowthPercentage ?? 0).toFixed(2)}%
+
                                         </Typography>
                                     </>
                                 }
