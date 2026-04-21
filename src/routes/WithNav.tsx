@@ -1,13 +1,13 @@
 import Header from "../components/Header.tsx";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import Loader from "../components/Loader";
+import CircularLoader from "../components/Loader";
 
 const WithNav = () => {
   return (
     <>
       <Header />
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<CircularLoader />}>
         <Outlet />
       </Suspense>
     </>

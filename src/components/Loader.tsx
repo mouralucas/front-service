@@ -1,7 +1,12 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { ReactElement } from "react";
 
-const Loader = (): ReactElement => {
+interface CircularLoaderProps {
+  height?: string;
+  bgcolor?: string;
+}
+
+const CircularLoader = (props: CircularLoaderProps): ReactElement => {
   return (
     <Box
       sx={{
@@ -9,12 +14,12 @@ const Loader = (): ReactElement => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: props.height || "100vh",
         width: "100%",
-        bgcolor: "background.default",
+        bgcolor: props.bgcolor || null,
       }}
     >
-      <CircularProgress size={50} thickness={4} />
+      <CircularProgress color="primary" size={50} thickness={4} />
       <Typography variant="body2" sx={{ mt: 2, color: "text.secondary" }}>
         Carregando...
       </Typography>
@@ -22,4 +27,4 @@ const Loader = (): ReactElement => {
   );
 };
 
-export default Loader;
+export default CircularLoader;

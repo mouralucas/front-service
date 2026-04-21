@@ -5,12 +5,13 @@ import Landing from '../pages/Landing'
 import WithNav from "./WithNav";
 import Login from '../pages/user/Login'
 import RequireAuth from "../services/auth/RequireAuth";
-import Loader from "../components/Loader.tsx";
+import CircularLoader from "../components/Loader.tsx";
 
 const Error404: FC = lazy(() => import('../pages/errors/404'))
 
 // Finance imports
-const InvestmentDashboard: FC = lazy(() => import('../pages/finance/investment/dashboard/Landing'))
+const Investment: FC = lazy(() => import('../pages/finance/Landing.tsx'))
+const InvestmentDashboard: FC = lazy(() => import('../pages/finance/investment/dashboard/Landing.tsx'))
 const InvestmentActive: FC = lazy(() => import('../pages/finance/investment/records/InvestmentsActive.tsx'))
 const InvestmentSettled: FC = lazy(() => import('../pages/finance/investment/records/InvestmentsSettled.tsx'))
 const FinanceTransactions: FC = lazy(() => import('../pages/finance/transactions/records/Landing'))
@@ -27,7 +28,7 @@ const DesignTesting: FC = lazy(() => import('../pages/DesignTests.tsx'))
 function RolfRoutes(): ReactElement {
     return (
         <BrowserRouter>
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={<CircularLoader />}>
                 <Routes>
                     <Route element={<WithNav />}>
                         {/* Default page */}
@@ -37,6 +38,7 @@ function RolfRoutes(): ReactElement {
                         <Route element={<DesignTesting></DesignTesting>} path={'/testing'} />
 
                         {/* Finance */}
+                        <Route element={<RequireAuth><Investment /></RequireAuth>} path="/finance"/>
                         <Route element={<RequireAuth><InvestmentDashboard /></RequireAuth>} path="/finance/investment" />
                         <Route element={<RequireAuth><InvestmentActive /></RequireAuth>} path="/finance/investment/active" />
                         <Route element={<RequireAuth><InvestmentSettled /></RequireAuth>} path="/finance/investment/settled" />

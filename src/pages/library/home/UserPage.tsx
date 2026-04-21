@@ -3,7 +3,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Divider, Stack, TextField, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
-import Loader from "../../../components/Loader";
+import CircularLoader from "../../../components/Loader";
 import { Item, ItemSummary } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
 import { QUERY_ITEMS_SUMMARY } from "../../../services/apollo/queries/Library";
@@ -72,7 +72,7 @@ const UserPage = (): ReactElement => {
         ? itemSummaryData?.getItemSummary.summary.filter((row: Item) => row.title.toLowerCase().includes(bookFilter.toLowerCase()))
         : itemSummaryData?.getItemSummary.summary
 
-    return (itemSummaryLoading ? <Loader /> :
+    return (itemSummaryLoading ? <CircularLoader /> :
         <Box display="flex" flexDirection="column" height="100%">
             <Box display="flex" justifyContent="flex-end" sx={{ mb: 4 }}>
                 <TextField

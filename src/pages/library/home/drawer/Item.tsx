@@ -4,7 +4,7 @@ import { Box, Button, Chip, Divider, IconButton, LinearProgress, LinearProgressP
 import { ReactElement, useCallback, useState } from "react";
 import DrawerV2 from "../../../../components/Drawer";
 import ItemCard from "../../../../components/ItemCard";
-import Loader from "../../../../components/Loader";
+import CircularLoader from "../../../../components/Loader";
 import { Item } from "../../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService";
 import { QUERY_ITEMS, QUERY_READING_STATS } from "../../../../services/apollo/queries/Library";
@@ -97,7 +97,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         );
     }
 
-    const content: ReactElement = itemLoading ? <Loader /> :
+    const content: ReactElement = itemLoading ? <CircularLoader /> :
         <>
             <Box display="flex" flexDirection="column" height="100%">
                 {/* Toolbar */}
@@ -183,7 +183,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
 
                 <hr />
                 {/* Reading stats */}
-                {loadingStats ? <Loader /> :
+                {loadingStats ? <CircularLoader /> :
                     <Box flex={1} overflow="auto" px={2} pb={2}>
                         {(stats && stats?.readingsCount !== undefined && stats.readingsCount > 0) ? (
                             <>

@@ -10,7 +10,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
-import Loader from "../../../../../components/Loader.tsx";
+import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 import { BrazilianFundInvestment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
@@ -117,7 +117,7 @@ const BrazilianFundInvestmentModal = (props: BrazilianFundInvestmentModalProps) 
         // })
     }
 
-    const body: ReactElement = isLoading ? <Loader /> :
+    const body: ReactElement = isLoading ? <CircularLoader /> :
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>

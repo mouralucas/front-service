@@ -26,8 +26,12 @@ export const items = [
     },
     {
         title: 'Financeiro',
-        // url: 'finance/home'
         submenu: [
+            {
+                // TODO: this should not be a submenu, but a direct link in root menu
+                title: 'Visão Geral',
+                url: '/finance',
+            },
             {
                 title: 'Investimentos',
                 submenu: [
@@ -37,11 +41,11 @@ export const items = [
                     },
                     {
                         title: 'Ativos',
-                        url: 'finance/investment/active'
+                        url: '/finance/investment/active'
                     },
                     {
                         title: 'Liquidados',
-                        url: 'finance/investment/settled'
+                        url: '/finance/investment/settled'
                     }
                 ]
             },

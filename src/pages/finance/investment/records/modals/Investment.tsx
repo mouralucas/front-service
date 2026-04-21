@@ -10,7 +10,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx';
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
-import Loader from "../../../../../components/Loader.tsx";
+import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from '../../../../../components/Modal.tsx';
 import { Investment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
@@ -128,7 +128,7 @@ const App = (props: InvestmentProps): ReactElement => {
         const price = getValues("price");
 
         const amount = quantity * price
-        setValue('amount', amount);
+        setValue('amount', amount, {shouldDirty: true});
     }
 
     const onSubmit = (data: Investment, e: BaseSyntheticEvent<object> | undefined) => {
@@ -146,7 +146,7 @@ const App = (props: InvestmentProps): ReactElement => {
             (Object.keys(dirtyFields) as Array<keyof Investment>).forEach((key: keyof Investment) => {
                 modifiedFields[key] = currentValues[key];
             });
-
+            console.log(modifiedFields);
             submitData = modifiedFields
         } else {
             method = 'post'
@@ -162,7 +162,7 @@ const App = (props: InvestmentProps): ReactElement => {
     }
 
 
-    const body: ReactElement = isLoading ? <Loader /> :
+    const body: ReactElement = isLoading ? <CircularLoader /> :
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>

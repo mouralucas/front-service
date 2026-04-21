@@ -9,7 +9,7 @@ import { ptBR } from "date-fns/locale";
 import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Loader from "../../../../../components/Loader.tsx";
+import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
@@ -153,7 +153,7 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
         }
     };
 
-    const body: ReactElement = isLoading || !hasData ? <Loader /> : (
+    const body: ReactElement = isLoading || !hasData ? <CircularLoader /> : (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container rowSpacing={4} columnSpacing={2} sx={{ mt: 4 }}>

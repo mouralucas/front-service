@@ -364,3 +364,19 @@ query GetInvestmentPerformance($params: GetInvestmentPerformanceInput) {
     }
 }
 `
+
+// Sumary query
+export const QUERY_FINANCE_SUMMARY = gql`
+    query GetFinanceSummary {
+        getFinanceSummary {
+            investment {
+                totalInvested
+                totalGross
+                totalGrowth
+                totalGrowthPercentage
+                activeInvestmentsCount
+                lastMonthGrowthPercentage
+            }
+        }
+    }
+`
