@@ -188,7 +188,7 @@ const CreateReadingProgressModal = (props: CreateReadingProgressProps) => {
                 title={'Progresso de Leitura'}
                 body={body}
                 actionModal={handleSubmit(submitReadingProgress)}
-                size={'modal-fullscreen'}
+                size={'modal-md'}
             />
         </div>
     )
