@@ -57,8 +57,12 @@ const InvestmentV2 = (): ReactElement => {
 
 
     const onStatementModalToggle = useCallback((e: any) => {
-        if (typeof e.row !== 'undefined') {
+        if (typeof e?.row !== 'undefined') {
             setSelectedInvestmentId(e.row.id);
+        }
+
+        if (isStatementModalOpen) {
+            investmentRefetch();
         }
 
         setIsStatementModalOpen(!isStatementModalOpen);
@@ -66,7 +70,7 @@ const InvestmentV2 = (): ReactElement => {
 
 
     const onPerformanceModalToggle = useCallback((e: any) => {
-        if (typeof e.row !== 'undefined') {
+        if (typeof e?.row !== 'undefined') {
             setInvestmentId(e.row.id);
             setInvestmentName(e.row.name);
         }
