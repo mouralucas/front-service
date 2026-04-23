@@ -19,9 +19,9 @@ const Books = (): ReactElement => {
     const { data, loading, refetch } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
         variables: {
-            params: { 
+            params: {
                 itemTypeId: "book"
-             }
+            }
         }
         // pollInterval: 30000,
     });

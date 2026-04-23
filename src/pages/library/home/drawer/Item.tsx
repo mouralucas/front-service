@@ -10,12 +10,13 @@ import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLi
 import { QUERY_ITEMS, QUERY_READING_STATS } from "../../../../services/apollo/queries/Library";
 import CreateReadingModal from "../modals/CreateReading";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
+import ReadingHistoryTable from "../tables/ReadingHistory.tsx";
 
 
 interface ItemDrawerProps {
     isOpen: boolean;
     onToggle: (e: any) => void;
-    itemId: number | undefined;
+    itemId: number;
 };
 
 
@@ -181,7 +182,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                     </Box>
                 </Stack>
 
-                <hr />
+                <Divider variant="middle" component="li" sx={{ mb: 5 }}/>
                 {/* Reading stats */}
                 {loadingStats ? <CircularLoader /> :
                     <Box flex={1} overflow="auto" px={2} pb={2}>
@@ -235,6 +236,9 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                                         Iniciar Nova Leitura
                                     </Button>
                                 }
+                                <Divider variant="middle" component="li" />
+
+                                <ReadingHistoryTable itemId={props.itemId} />
                             </>
                         ) :
                             // If no previous reading for the item, then show the button to start the first reading

@@ -77,7 +77,7 @@ export const QUERY_ITEMS_BY_ID = gql`
       }
     }
   }
-`;
+`
 
 export const QUERY_ITEMS_SUMMARY = gql`
   query GetItemSummary($params: GetItemSummaryInput) {
@@ -100,7 +100,6 @@ export const QUERY_ITEMS_SUMMARY = gql`
     }
   }
 `
-
 
 export const QUERY_SERIES = gql`
 query {
@@ -285,3 +284,21 @@ export const QUERY_ITEM_LOCATIONS = gql`
   }
 `
 
+export const QUERY_READING = gql`
+  query GetReadings($params: GetReadingsInput) {
+    getReadings(params: $params) {
+        quantity
+        readings {
+            id
+            itemId
+            itemTitle
+            startDate
+            finishDate
+            number
+            active
+            statusId
+            statusName
+        }
+    }
+  }
+`
