@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import { Box, Button, Chip, Divider, IconButton, LinearProgress, LinearProgressProps, Stack, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
@@ -11,6 +11,8 @@ import { QUERY_ITEMS, QUERY_READING_STATS } from "../../../../services/apollo/qu
 import CreateReadingModal from "../modals/CreateReading";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 import ReadingHistoryTable from "../tables/ReadingHistory.tsx";
+import { UPDATE_READING_STATUS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { toast } from "react-toastify";
 
 
 interface ItemDrawerProps {
@@ -47,6 +49,30 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
 
     const stats = statsData?.getReadingStats?.stats;
 
+    const [updateReadingStatus] = useMutation(UPDATE_READING_STATUS_MUTATION, {
+        client: apolloLibraryClient,
+        onCompleted: (data) => {
+            toast.success(
+                `Leitura abandonada`
+            );
+            // props.onToggle()
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
+
+    const updateStatus = async (newStatus: string) => {
+        await updateReadingStatus({
+            variables: {
+                params: {
+                    itemId: props.itemId,
+                    newStatus: newStatus
+                }
+
+            }
+        })
+    }
 
     const onReadingModalToggle = useCallback(() => {
         // If the reading modal is closing, refetch the reading stats
@@ -182,7 +208,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                     </Box>
                 </Stack>
 
-                <Divider variant="middle" component="li" sx={{ mb: 5 }}/>
+                <Divider variant="middle" component="li" sx={{ mb: 5 }} />
                 {/* Reading stats */}
                 {loadingStats ? <CircularLoader /> :
                     <Box flex={1} overflow="auto" px={2} pb={2}>
@@ -216,13 +242,22 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                                             <LinearProgressWithLabel value={stats?.currentPercentage} />
                                         </Box>
                                         <Divider />
-                                        <Box mt={2}>
+                                        <Box mt={2} display="flex" gap={2}>
                                             <Button
-                                                fullWidth
-                                                variant="outlined"
+                                                variant="contained"
                                                 onClick={onProgresModalToggle}
+                                                fullWidth
+                                                color="info"
                                             >
-                                                Adicionar Progresso
+                                                Progresso
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                fullWidth
+                                                color="warning"
+                                                onClick={() => updateStatus("dropped")}
+                                            >
+                                                Abandonar
                                             </Button>
                                         </Box>
                                     </>

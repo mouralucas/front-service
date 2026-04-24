@@ -2,28 +2,28 @@
 
 export const COLORS = {
   // === BASE PASTEL ===
-  PASTEL_RED: '#F28B82',
-  PASTEL_ORANGE: '#FBCB8B',
-  PASTEL_YELLOW: '#FFF2A1',
-  PASTEL_GREEN: '#B5EAD7',
-  PASTEL_BLUE: '#A7C7E7',
-  PASTEL_PURPLE: '#CBAACB',
-  PASTEL_PINK: '#FFD1DC',
-  PASTEL_BROWN: '#E6CBA8',
-  PASTEL_GRAY: '#E0E0E0',
-  PASTEL_WHITE: '#FAFAFA',
+  RED: '#F28B82',
+  ORANGE: '#FBCB8B',
+  YELLOW: '#FFF2A1',
+  GREEN: '#B5EAD7',
+  BLUE: '#A7C7E7',
+  PURPLE: '#CBAACB',
+  PINK: '#FFD1DC',
+  BROWN: '#E6CBA8',
+  GRAY: '#E0E0E0',
+  WHITE: '#FAFAFA',
 
   // === HOVER ===
-  PASTEL_RED_HOVER: '#E0746B',
-  PASTEL_ORANGE_HOVER: '#F0B873',
-  PASTEL_YELLOW_HOVER: '#E8D98D',
-  PASTEL_GREEN_HOVER: '#9FD1BE',
-  PASTEL_BLUE_HOVER: '#8FAFD0',
-  PASTEL_PURPLE_HOVER: '#B092B0',
-  PASTEL_PINK_HOVER: '#E6B8C3',
-  PASTEL_BROWN_HOVER: '#CCB08E',
-  PASTEL_GRAY_HOVER: '#C7C7C7',
-  PASTEL_WHITE_HOVER: '#E1E1E1',
+  RED_HOVER: '#E0746B',
+  ORANGE_HOVER: '#F0B873',
+  YELLOW_HOVER: '#E8D98D',
+  GREEN_HOVER: '#9FD1BE',
+  BLUE_HOVER: '#8FAFD0',
+  PURPLE_HOVER: '#B092B0',
+  PINK_HOVER: '#E6B8C3',
+  BROWN_HOVER: '#CCB08E',
+  GRAY_HOVER: '#C7C7C7',
+  WHITE_HOVER: '#E1E1E1',
 
   // === FOCUS ===
   PASTEL_RED_FOCUS: '#F5A29A',
@@ -50,39 +50,39 @@ export const COLORS = {
   PASTEL__WHITE_GRADIENT: 'linear-gradient(135deg, #FFFFFF, #FAFAFA)',
 
   BLACK: '#000000',
-  WHITE: '#FFFFFF',
+  // WHITE: '#FFFFFF',
 };
 
 
 export const ColorPalette = {
   primary: {
     light: COLORS.PASTEL_BLUE_FOCUS,
-    main: COLORS.PASTEL_BLUE,
-    dark: COLORS.PASTEL_BLUE_HOVER,
+    main: COLORS.BLUE,
+    dark: COLORS.BLUE_HOVER,
     contrastText: COLORS.BLACK,
   },
   secondary: {
     light: COLORS.PASTEL_ORANGE_FOCUS,
-    main: COLORS.PASTEL_ORANGE,
-    dark: COLORS.PASTEL_ORANGE_HOVER,
+    main: COLORS.ORANGE,
+    dark: COLORS.ORANGE_HOVER,
     contrastText: COLORS.BLACK,
   },
   error: {
     light: COLORS.PASTEL_RED_FOCUS,
-    main: COLORS.PASTEL_RED,
-    dark: COLORS.PASTEL_RED_HOVER,
+    main: COLORS.RED,
+    dark: COLORS.RED_HOVER,
     contrastText: COLORS.BLACK,
   },
   success: {
     light: COLORS.PASTEL_GREEN_FOCUS,
-    main: COLORS.PASTEL_GREEN,
-    dark: COLORS.PASTEL_GREEN_HOVER,
+    main: COLORS.GREEN,
+    dark: COLORS.GREEN_HOVER,
     contrastText: COLORS.BLACK,
   },
   warning: {
-    light: COLORS.PASTEL_YELLOW_FOCUS,
-    main: COLORS.PASTEL_YELLOW,
-    dark: COLORS.PASTEL_YELLOW_HOVER,
+    light: COLORS.PASTEL_RED_FOCUS,
+    main: COLORS.RED,
+    dark: COLORS.RED_HOVER,
     contrastText: COLORS.BLACK,
   },
 
@@ -102,7 +102,7 @@ export const ColorPalette = {
   white: COLORS.WHITE,
 
   background: {
-    default: COLORS.PASTEL_WHITE,
+    default: COLORS.WHITE,
     paper: COLORS.WHITE,
   },
 
@@ -116,29 +116,29 @@ export const ColorPalette = {
 
   // === CUSTOM ===
   pastel: {
-    red: COLORS.PASTEL_RED,
-    orange: COLORS.PASTEL_ORANGE,
-    yellow: COLORS.PASTEL_YELLOW,
-    green: COLORS.PASTEL_GREEN,
-    blue: COLORS.PASTEL_BLUE,
-    purple: COLORS.PASTEL_PURPLE,
-    pink: COLORS.PASTEL_PINK,
-    brown: COLORS.PASTEL_BROWN,
-    gray: COLORS.PASTEL_GRAY,
-    white: COLORS.PASTEL_WHITE,
+    red: COLORS.RED,
+    orange: COLORS.ORANGE,
+    yellow: COLORS.YELLOW,
+    green: COLORS.GREEN,
+    blue: COLORS.BLUE,
+    purple: COLORS.PURPLE,
+    pink: COLORS.PINK,
+    brown: COLORS.BROWN,
+    gray: COLORS.GRAY,
+    white: COLORS.WHITE,
   },
 
   pastel_hover: {
-    red: COLORS.PASTEL_RED_HOVER,
-    orange: COLORS.PASTEL_ORANGE_HOVER,
-    yellow: COLORS.PASTEL_YELLOW_HOVER,
-    green: COLORS.PASTEL_GREEN_HOVER,
-    blue: COLORS.PASTEL_BLUE_HOVER,
-    purple: COLORS.PASTEL_PURPLE_HOVER,
-    pink: COLORS.PASTEL_PINK_HOVER,
-    brown: COLORS.PASTEL_BROWN_HOVER,
-    gray: COLORS.PASTEL_GRAY_HOVER,
-    white: COLORS.PASTEL_WHITE_HOVER,
+    red: COLORS.RED_HOVER,
+    orange: COLORS.ORANGE_HOVER,
+    yellow: COLORS.YELLOW_HOVER,
+    green: COLORS.GREEN_HOVER,
+    blue: COLORS.BLUE_HOVER,
+    purple: COLORS.PURPLE_HOVER,
+    pink: COLORS.PINK_HOVER,
+    brown: COLORS.BROWN_HOVER,
+    gray: COLORS.GRAY_HOVER,
+    white: COLORS.WHITE_HOVER,
   },
 
   gradients: {

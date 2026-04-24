@@ -78,3 +78,11 @@ export const CREATE_READING_PROGRESS_MUTATION = gql`
         readingProgressId
     }
 }`
+
+export const UPDATE_READING_STATUS_MUTATION = gql`
+  mutation UpdateReadingStatus($params: UpdatedReadingStatusInput) {
+    updateReadingStatus(params: $params) {
+        updatedStatus
+    }
+  }
+`

@@ -14,7 +14,7 @@ interface ReadingHistoryTableProps {
 
 const ReadingHistoryTable = (props: ReadingHistoryTableProps): ReactElement => {
 
-    const { data, loading } = useQuery(QUERY_READING, {
+    const { data } = useQuery(QUERY_READING, {
         client: apolloLibraryClient,
         variables: {
             params: {
