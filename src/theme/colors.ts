@@ -12,6 +12,7 @@ export const COLORS = {
   BROWN: '#E6CBA8',
   GRAY: '#E0E0E0',
   WHITE: '#FAFAFA',
+  BLACK: '#000000',
 
   // === HOVER ===
   RED_HOVER: '#E0746B',
@@ -26,61 +27,58 @@ export const COLORS = {
   WHITE_HOVER: '#E1E1E1',
 
   // === FOCUS ===
-  PASTEL_RED_FOCUS: '#F5A29A',
-  PASTEL_ORANGE_FOCUS: '#FCD7A1',
-  PASTEL_YELLOW_FOCUS: '#FFF6B8',
-  PASTEL_GREEN_FOCUS: '#C9F0E1',
-  PASTEL_BLUE_FOCUS: '#BAD4ED',
-  PASTEL_PURPLE_FOCUS: '#D8B9D8',
-  PASTEL_PINK_FOCUS: '#FFDEE7',
-  PASTEL_BROWN_FOCUS: '#ECD8BA',
-  PASTEL_GRAY_FOCUS: '#EBEBEB',
-  PASTEL_WHITE_FOCUS: '#FFFFFF',
+  RED_FOCUS: '#F5A29A',
+  ORANGE_FOCUS: '#FCD7A1',
+  YELLOW_FOCUS: '#FFF6B8',
+  GREEN_FOCUS: '#C9F0E1',
+  BLUE_FOCUS: '#BAD4ED',
+  PURPLE_FOCUS: '#D8B9D8',
+  PINK_FOCUS: '#FFDEE7',
+  BROWN_FOCUS: '#ECD8BA',
+  GRAY_FOCUS: '#EBEBEB',
+  WHITE_FOCUS: '#FFFFFF',
 
   // === GRADIENTS ===
-  PASTEL_RED_GRADIENT: 'linear-gradient(135deg, #FFEAEA, #F28B82)',
-  PASTEL_ORANGE_GRADIENT: 'linear-gradient(135deg, #FFF4E6, #FBCB8B)',
-  PASTEL_YELLOW_GRADIENT: 'linear-gradient(135deg, #FFFDEA, #FFF2A1)',
-  PASTEL_GREEN_GRADIENT: 'linear-gradient(135deg, #EAFBF6, #B5EAD7)',
-  PASTEL_BLUE_GRADIENT: 'linear-gradient(135deg, #EAF1FA, #A7C7E7)',
-  PASTEL_PURPLE_GRADIENT: 'linear-gradient(135deg, #F5EAF5, #CBAACB)',
-  PASTEL_PINK_GRADIENT: 'linear-gradient(135deg, #FFF0F4, #FFD1DC)',
-  PASTEL_BROWN_GRADIENT: 'linear-gradient(135deg, #FAF5EE, #E6CBA8)',
-  PASTEL_GRAY_GRADIENT: 'linear-gradient(135deg, #F8F8F8, #E0E0E0)',
-  PASTEL__WHITE_GRADIENT: 'linear-gradient(135deg, #FFFFFF, #FAFAFA)',
-
-  BLACK: '#000000',
-  // WHITE: '#FFFFFF',
+  RED_GRADIENT: 'linear-gradient(135deg, #FFEAEA, #F28B82)',
+  ORANGE_GRADIENT: 'linear-gradient(135deg, #FFF4E6, #FBCB8B)',
+  YELLOW_GRADIENT: 'linear-gradient(135deg, #FFFDEA, #FFF2A1)',
+  GREEN_GRADIENT: 'linear-gradient(135deg, #EAFBF6, #B5EAD7)',
+  BLUE_GRADIENT: 'linear-gradient(135deg, #EAF1FA, #A7C7E7)',
+  PURPLE_GRADIENT: 'linear-gradient(135deg, #F5EAF5, #CBAACB)',
+  PINK_GRADIENT: 'linear-gradient(135deg, #FFF0F4, #FFD1DC)',
+  BROWN_GRADIENT: 'linear-gradient(135deg, #FAF5EE, #E6CBA8)',
+  GRAY_GRADIENT: 'linear-gradient(135deg, #F8F8F8, #E0E0E0)',
+  WHITE_GRADIENT: 'linear-gradient(135deg, #FFFFFF, #FAFAFA)',
 };
 
 
 export const ColorPalette = {
   primary: {
-    light: COLORS.PASTEL_BLUE_FOCUS,
+    light: COLORS.BLUE_FOCUS,
     main: COLORS.BLUE,
     dark: COLORS.BLUE_HOVER,
     contrastText: COLORS.BLACK,
   },
   secondary: {
-    light: COLORS.PASTEL_ORANGE_FOCUS,
+    light: COLORS.ORANGE_FOCUS,
     main: COLORS.ORANGE,
     dark: COLORS.ORANGE_HOVER,
     contrastText: COLORS.BLACK,
   },
   error: {
-    light: COLORS.PASTEL_RED_FOCUS,
+    light: COLORS.RED_FOCUS,
     main: COLORS.RED,
     dark: COLORS.RED_HOVER,
     contrastText: COLORS.BLACK,
   },
   success: {
-    light: COLORS.PASTEL_GREEN_FOCUS,
+    light: COLORS.GREEN_FOCUS,
     main: COLORS.GREEN,
     dark: COLORS.GREEN_HOVER,
     contrastText: COLORS.BLACK,
   },
   warning: {
-    light: COLORS.PASTEL_RED_FOCUS,
+    light: COLORS.RED_FOCUS,
     main: COLORS.RED,
     dark: COLORS.RED_HOVER,
     contrastText: COLORS.BLACK,
@@ -114,7 +112,6 @@ export const ColorPalette = {
 
   divider: '#E0E0E0',
 
-  // === CUSTOM ===
   pastel: {
     red: COLORS.RED,
     orange: COLORS.ORANGE,
@@ -142,15 +139,15 @@ export const ColorPalette = {
   },
 
   gradients: {
-    red: COLORS.PASTEL_RED_GRADIENT,
-    orange: COLORS.PASTEL_ORANGE_GRADIENT,
-    yellow: COLORS.PASTEL_YELLOW_GRADIENT,
-    green: COLORS.PASTEL_GREEN_GRADIENT,
-    blue: COLORS.PASTEL_BLUE_GRADIENT,
-    purple: COLORS.PASTEL_PURPLE_GRADIENT,
-    pink: COLORS.PASTEL_PINK_GRADIENT,
-    brown: COLORS.PASTEL_BROWN_GRADIENT,
-    gray: COLORS.PASTEL_GRAY_GRADIENT,
-    white: COLORS.PASTEL__WHITE_GRADIENT,
+    red: COLORS.RED_GRADIENT,
+    orange: COLORS.ORANGE_GRADIENT,
+    yellow: COLORS.YELLOW_GRADIENT,
+    green: COLORS.GREEN_GRADIENT,
+    blue: COLORS.BLUE_GRADIENT,
+    purple: COLORS.PURPLE_GRADIENT,
+    pink: COLORS.PINK_GRADIENT,
+    brown: COLORS.BROWN_GRADIENT,
+    gray: COLORS.GRAY_GRADIENT,
+    white: COLORS.WHITE_GRADIENT,
   },
 };
