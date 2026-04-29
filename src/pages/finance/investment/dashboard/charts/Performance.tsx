@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import Line from "../../../../../components/chart/Line.tsx"
-import Select from "react-select";
-import { Indexer } from "../../../../../interfaces/Finance.tsx";
-import { getIndexers } from "../../../../../services/getCommonData/Finance.tsx";
-import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
-import { Divider, Paper, Typography } from "@mui/material";
 import { useQuery } from "@apollo/client";
-import { QUERY_INVESTMENT_PERFORMANCE } from "../../../../../services/apollo/queries/Finance.tsx";
+import { Divider, Paper, Typography } from "@mui/material";
+import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
+import { useEffect, useState } from "react";
+import Select from "react-select";
+import Line from "../../../../../components/chart/Line.tsx";
+import { Indexer } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
+import { QUERY_INVESTMENT_PERFORMANCE } from "../../../../../services/apollo/queries/Finance.tsx";
+import { getIndexers } from "../../../../../services/getCommonData/Finance.tsx";
 import { getPeriodName } from "../../../../../utils/datetime.tsx";
 
 const periodsRange = [
