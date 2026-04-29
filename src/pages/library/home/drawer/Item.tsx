@@ -53,7 +53,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         client: apolloLibraryClient,
         onCompleted: (data) => {
             toast.success(
-                `Leitura abandonada`
+                `Leitura abandonada para o item ${data?.updateReadingStatus?.itemTitlte}`
             );
             // props.onToggle()
         },
