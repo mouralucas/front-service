@@ -219,7 +219,9 @@ const App = (props: CreditCardBillProps): ReactElement => {
                         <Controller
                             name="totalAmount"
                             control={control}
-                            rules={{ required: "Campo obrigatório" }}
+                            rules={{
+                                    validate: (value) => value !== 0 || "Este campo deve ser diferente de zero",
+                                }}
                             render={({ field }) => (
                                 <CurrencyInput
                                     label="Valor"

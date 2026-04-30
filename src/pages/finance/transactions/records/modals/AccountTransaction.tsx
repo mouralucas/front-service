@@ -228,7 +228,7 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
                                 name="amount"
                                 control={control}
                                 rules={{
-                                    validate: (value) => value !== 0 || "Este campo deve ser maior que zero",
+                                    validate: (value) => value !== 0 || "Este campo deve ser diferente de zero",
                                 }}
                                 render={({ field }) => (
                                     <CurrencyInput
