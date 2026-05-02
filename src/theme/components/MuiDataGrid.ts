@@ -51,35 +51,35 @@ export const getMuiDataGrid = (theme: Theme) => ({
 
             // Status rows
             '& .MuiDataGrid-row.danger-mui-row': {
-                backgroundColor: theme.palette.pastel.red,
+                backgroundColor: theme.palette.default.red,
 
                 '&:hover': {
-                    backgroundColor: theme.palette.pastel.red,
+                    backgroundColor: theme.palette.default.red,
                     filter: 'brightness(0.95)',
                 },
             },
 
             '& .MuiDataGrid-row.success-mui-row': {
-                backgroundColor: theme.palette.pastel.green,
+                backgroundColor: theme.palette.default.green,
 
                 '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover.green,
+                    backgroundColor: theme.palette.hovers.green,
                 },
             },
 
             '& .MuiDataGrid-row.alert-mui-row': {
-                backgroundColor: theme.palette.pastel.orange,
+                backgroundColor: theme.palette.default.orange,
 
                 '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover.orange,
+                    backgroundColor: theme.palette.hovers.orange,
                 },
             },
 
             '& .MuiDataGrid-row.info-mui-row': {
-                backgroundColor: theme.palette.pastel.blue,
+                backgroundColor: theme.palette.default.blue,
 
                 '&:hover': {
-                    backgroundColor: theme.palette.pastel_hover.blue,
+                    backgroundColor: theme.palette.hovers.blue,
                 },
             },
         },

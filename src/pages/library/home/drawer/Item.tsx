@@ -13,6 +13,7 @@ import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 import ReadingHistoryTable from "../tables/ReadingHistory.tsx";
 import { UPDATE_READING_STATUS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { toast } from "react-toastify";
+import ItemStatusChip from "../../../../components/ItemStatusChip.tsx";
 
 
 interface ItemDrawerProps {
@@ -136,10 +137,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                         sx={{ width: '100%' }}
                     >
                         <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }} >
-                            <Chip
-                                label={item?.lastStatusName}
-                                variant={getStatusChipVariant()}
-                            />
+                            <ItemStatusChip label={item?.lastStatusName} status={item?.lastStatusId} />
                             <span className="contact-name"> | {item?.title}</span>
 
                             <IconButton

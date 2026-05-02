@@ -112,7 +112,7 @@ export const ColorPalette = {
 
   divider: '#E0E0E0',
 
-  pastel: {
+  default: {
     red: COLORS.RED,
     orange: COLORS.ORANGE,
     yellow: COLORS.YELLOW,
@@ -125,7 +125,7 @@ export const ColorPalette = {
     white: COLORS.WHITE,
   },
 
-  pastel_hover: {
+  hovers: {
     red: COLORS.RED_HOVER,
     orange: COLORS.ORANGE_HOVER,
     yellow: COLORS.YELLOW_HOVER,
@@ -136,6 +136,19 @@ export const ColorPalette = {
     brown: COLORS.BROWN_HOVER,
     gray: COLORS.GRAY_HOVER,
     white: COLORS.WHITE_HOVER,
+  },
+
+  focus: {
+    red: COLORS.RED_FOCUS,
+    orange: COLORS.ORANGE_FOCUS,
+    yellow: COLORS.YELLOW_FOCUS,
+    green: COLORS.GREEN_FOCUS,
+    blue: COLORS.BLUE_FOCUS,
+    purple: COLORS.PURPLE_FOCUS,
+    pink: COLORS.PINK_FOCUS,
+    brown: COLORS.BROWN_FOCUS,
+    gray: COLORS.GRAY_FOCUS,
+    white: COLORS.WHITE_FOCUS,
   },
 
   gradients: {

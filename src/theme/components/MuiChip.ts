@@ -5,9 +5,9 @@ export const getMuiChip = (theme: Theme) => ({
         {
             props: { variant: "danger" as any },
             style: {
-                backgroundColor: theme.palette.pastel.red,
+                backgroundColor: theme.palette.default.red,
                 "& .MuiChip-label": {
-                    color: theme.palette.pastel.white,
+                    color: theme.palette.default.white,
                 },
             },
         },

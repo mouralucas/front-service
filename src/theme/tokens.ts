@@ -20,7 +20,7 @@ export const getCssVariables = (theme: Theme) => ({
     '--white': theme.palette.common.white,
 
     /* =========================
-     * STATUS (MUI padrão)
+     * STATUS
      * ========================= */
     '--color-success': theme.palette.success.main,
     '--color-success-hover': theme.palette.success.dark,
@@ -35,18 +35,18 @@ export const getCssVariables = (theme: Theme) => ({
     '--color-warning-focus': theme.palette.warning.light,
 
     /* =========================
-     * PASTEL (CUSTOM)
+     * PASTEL
      * ========================= */
-    '--pastel-red': theme.palette.pastel.red,
-    '--pastel-orange': theme.palette.pastel.orange,
-    '--pastel-yellow': theme.palette.pastel.yellow,
-    '--pastel-green': theme.palette.pastel.green,
-    '--pastel-blue': theme.palette.pastel.blue,
-    '--pastel-purple': theme.palette.pastel.purple,
-    '--pastel-pink': theme.palette.pastel.pink,
-    '--pastel-brown': theme.palette.pastel.brown,
-    '--pastel-gray': theme.palette.pastel.gray,
-    '--pastel-white': theme.palette.pastel.white,
+    '--pastel-red': theme.palette.default.red,
+    '--pastel-orange': theme.palette.default.orange,
+    '--pastel-yellow': theme.palette.default.yellow,
+    '--pastel-green': theme.palette.default.green,
+    '--pastel-blue': theme.palette.default.blue,
+    '--pastel-purple': theme.palette.default.purple,
+    '--pastel-pink': theme.palette.default.pink,
+    '--pastel-brown': theme.palette.default.brown,
+    '--pastel-gray': theme.palette.default.gray,
+    '--pastel-white': theme.palette.default.white,
 
     /* =========================
      * GRADIENTS (CUSTOM)

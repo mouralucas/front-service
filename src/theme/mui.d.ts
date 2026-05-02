@@ -3,13 +3,14 @@ import { ColorPalette } from './colors';
 
 declare module '@mui/material/styles' {
   interface Palette {
-    pastel: typeof ColorPalette.pastel;
-    pastel_hover: typeof ColorPalette.pastel_hover;
+    default: typeof ColorPalette.default;
+    hovers: typeof ColorPalette.hovers;
+    focus: typeof ColorPalette.focus;
     gradients: typeof ColorPalette.gradients;
   }
 
   interface PaletteOptions {
-    pastel?: typeof ColorPalette.pastel;
+    pastel?: typeof ColorPalette.default;
     gradients?: typeof ColorPalette.gradients;
   }
 
