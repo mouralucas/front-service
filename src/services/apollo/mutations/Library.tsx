@@ -86,3 +86,16 @@ export const UPDATE_READING_STATUS_MUTATION = gql`
     }
   }
 `
+
+export const UPDATE_ITEM_ON_QUEUE = gql`
+  mutation UpdateReadingQueue($params: UpdateReadingQueueInput!) {
+    updateReadingQueue(params: $params) {
+        created
+        readingGoalId
+        currentStatus
+        isCurrentlyInQueue
+        itemId
+        itemTitle
+    }
+  }
+`

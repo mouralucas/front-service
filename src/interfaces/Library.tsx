@@ -34,6 +34,7 @@ export interface Item {
     createdBy?: string | null
     createdAt?: Date | null
     locationId: number
+    isInReadingQueue: boolean
     lastEditedBy?: string | null
     lastEditedAt?: Date | null
 }

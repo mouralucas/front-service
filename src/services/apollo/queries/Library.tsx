@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_ITEMS = gql`
-  query GetDetailedItems($params: GetItemsInput) {
+  query GetDetailedItems($params: GetDetailedItemsInput) {
     getDetailedItems(params: $params) {
       quantity
       items {
@@ -38,6 +38,7 @@ export const QUERY_ITEMS = gql`
         locationId
         cover
         summary
+        isInReadingQueue
       }
     }
   }
@@ -220,9 +221,9 @@ export const QUERY_READING_STATS = gql`
   }
 `
 
-export const QUERY_READING_GOALS = gql`
-  query GetReadingGoals($params: GetReadingGoalsInput) {
-      getReadingGoals(params: $params) {
+export const QUERY_READING_QUEUE = gql`
+  query GetReadingQueue($params: GetReadingQueueInput) {
+      getReadingQueue(params: $params) {
           goals {
               id
               item {

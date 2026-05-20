@@ -8,6 +8,7 @@ import Card from '../../../components/Card';
 import BookTable from './tables/Books.tsx'
 import MangaTable from "./tables/Mangas.tsx";
 import UserPage from "./UserPage.tsx"
+import ItemLocationAccordion from './accordion/ItemLocation.tsx';
 
 
 const LibraryLanding = (): ReactElement => {
@@ -36,6 +37,7 @@ const LibraryLanding = (): ReactElement => {
                         <Tab label="Resumo de <Username>" value={0} />
                         <Tab label="Livros" value={1} />
                         <Tab label="Mangás" value={2} />
+                        <Tab label="Localização" value={3} />
                     </Tabs>
                     <TabPanel value="0">
                         <Card>
@@ -55,6 +57,13 @@ const LibraryLanding = (): ReactElement => {
                         <Card>
                             <Card.Body>
                                 <MangaTable />
+                            </Card.Body>
+                        </Card>
+                    </TabPanel>
+                    <TabPanel value="3">
+                        <Card>
+                            <Card.Body>
+                                <ItemLocationAccordion />
                             </Card.Body>
                         </Card>
                     </TabPanel>

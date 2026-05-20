@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import { Box, Button, Chip, Divider, IconButton, LinearProgress, LinearProgressProps, Stack, Typography } from "@mui/material";
-import { ReactElement, useCallback, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import DrawerV2 from "../../../../components/Drawer";
 import ItemCard from "../../../../components/ItemCard";
 import CircularLoader from "../../../../components/Loader";
@@ -11,7 +11,7 @@ import { QUERY_ITEMS, QUERY_READING_STATS } from "../../../../services/apollo/qu
 import CreateReadingModal from "../modals/CreateReading";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 import ReadingHistoryTable from "../tables/ReadingHistory.tsx";
-import { UPDATE_READING_STATUS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import { UPDATE_ITEM_ON_QUEUE, UPDATE_READING_STATUS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { toast } from "react-toastify";
 import ItemStatusChip from "../../../../components/ItemStatusChip.tsx";
 
@@ -27,7 +27,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
     const [isReadingModalOpen, setIsReadingModalOpen] = useState<boolean>(false);
     const [isProgressModalOpen, setIsProgressModalOpen] = useState<boolean>(false);
 
-    const [itemInQueue, setItemInQueue] = useState<boolean>(false)
+    const [isInReadingQueue, setIsInReadingQueue] = useState<boolean>(false)
 
     const { data: itemData, loading: itemLoading } = useQuery(QUERY_ITEMS, {
         client: apolloLibraryClient,
@@ -40,6 +40,11 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
     });
 
     const item: Item = itemData?.getDetailedItems?.items[0];
+
+    useEffect(() => {
+        // Set the variable for the item in queue
+        setIsInReadingQueue(item?.isInReadingQueue)
+    }, [item])
 
     const { data: statsData, loading: loadingStats, refetch: refetchStats } = useQuery(QUERY_READING_STATS, {
         client: apolloLibraryClient,
@@ -54,7 +59,7 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         client: apolloLibraryClient,
         onCompleted: (data) => {
             toast.success(
-                `Leitura abandonada para o item ${data?.updateReadingStatus?.itemTitlte}`
+                `Leitura abandonada para o item ${data?.updateReadingStatus?.itemTitle}`
             );
             // props.onToggle()
         },
@@ -75,6 +80,33 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         })
     }
 
+    const [updateItemOnQueue] = useMutation(UPDATE_ITEM_ON_QUEUE, {
+        client: apolloLibraryClient,
+        onCompleted: (data) => {
+            let message;
+            if (data?.updateReadingQueue?.isCurrentlyInQueue === true) {
+                message = `Item ${data?.updateReadingQueue?.itemTitle} adicionado a lista de leitura`
+            } else if (data?.updateReadingQueue?.isCurrentlyInQueue === false) {
+                message = `Item ${data?.updateReadingQueue?.itemTitle} removido da lista de leitura`
+            }
+            toast.success(message);
+            setIsInReadingQueue(data?.updateItemInQueue?.isCurrentlyInQueue);
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
+
+    const updateItemInQueue = async () => {
+        await updateItemOnQueue({
+            variables: {
+                params: {
+                    itemId: props.itemId,
+                }
+            }
+        })
+    }
+
     const onReadingModalToggle = useCallback(() => {
         // If the reading modal is closing, refetch the reading stats
         if (isReadingModalOpen) {
@@ -90,22 +122,6 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
         }
         setIsProgressModalOpen(!isProgressModalOpen);
     }, [isProgressModalOpen])
-
-    const setItemQueue = useCallback(() => {
-        setItemInQueue(prev => !prev);
-    }, [])
-
-    const getStatusChipVariant = (): any => {
-        if (props.isOpen) {
-            if (item?.lastStatusId == 'lost') {
-                return "danger";
-            }
-
-            return 'info';
-        }
-
-        return "undefined";
-    }
 
     function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
         return (
@@ -136,17 +152,38 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                         alignItems="flex-end"
                         sx={{ width: '100%' }}
                     >
-                        <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }} >
-                            <ItemStatusChip label={item?.lastStatusName} status={item?.lastStatusId} />
-                            <span className="contact-name"> | {item?.title}</span>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                            }}
+                        >
+                            <ItemStatusChip
+                                label={item.lastStatusName}
+                                status={item.lastStatusId}
+                            />
+
+                            <Divider
+                                orientation="vertical"
+                                flexItem
+                                sx={{
+                                    borderColor: 'text.primary',
+                                    opacity: 0.2,
+                                }}
+                            />
+
+                            <Typography className="contact-name">
+                                {item?.title}
+                            </Typography>
 
                             <IconButton
                                 aria-label="performance"
-                                onClick={setItemQueue}
+                                onClick={updateItemInQueue}
                             >
                                 <BookOutlinedIcon
                                     sx={{
-                                        color: itemInQueue ? 'blue' : 'red'
+                                        color: isInReadingQueue ? 'primary.main' : 'secondary.main'
                                     }}
                                 />
                             </IconButton>
@@ -198,12 +235,10 @@ const ItemDrawer = (props: ItemDrawerProps): ReactElement => {
                     }
                 </Stack>
 
-                {/* ISBN */}
+                {/* description */}
                 <Stack direction="row" spacing={2} px={2}>
-                    <Box flex={1}>
-                        <div className="title">ISBN</div>
-                        <div>{item?.isbn}</div>
-                    </Box>
+                    {/* TODO: need to add scroll to drawer view */}
+                    {/* {item?.summary} */}
                 </Stack>
 
                 <Divider variant="middle" component="li" sx={{ mb: 5 }} />
