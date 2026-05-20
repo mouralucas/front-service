@@ -1,3 +1,4 @@
+
 export interface Item {
     id?: number | null
     lastStatusId: string | null
@@ -41,7 +42,7 @@ export interface Item {
 
 export type CreateItemInput = Omit<
   Item,
-  "lastStatusName" | "mainAuthorName" | "serieName" | "collectionName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId"
+  "lastStatusName" | "mainAuthorName" | "serieName" | "collectionName" | "publisherName" | "createdBy" | "createdAt" | "lastEditedBy" | "lastEditedAt" | "period" | "ownerId" | "isInReadingQueue"
 >;
 
 export interface ItemSummary {

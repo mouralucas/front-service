@@ -1,14 +1,15 @@
 import { Chip } from "@mui/material";
 import theme from "../theme/theme";
 
-type ItemStatus = 'bought' | 'owned' | 'lost' | 'wished' | 'ebook';
+// # TODO: add a list for available statuses. 
+//  Have to change in all places that use these statuses
 
 type Props = {
     label?: string | null;
-    status?: ItemStatus | null;
+    status?: string | null;
 };
 
-const statusColours = (itemStatus: ItemStatus | undefined | null) => {
+const statusColours = (itemStatus: string | undefined | null) => {
     switch (itemStatus) {
         case 'bought':
             return {
