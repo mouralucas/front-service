@@ -106,6 +106,7 @@ const CreateReadingProgressModal = (props: CreateReadingProgressProps) => {
                                 type="number"
                                 fullWidth
                                 size="small"
+                                onFocus={(e) => e.currentTarget.select()}
                                 error={!!errors.value}
                                 helperText={errors.value?.message}
                             />
