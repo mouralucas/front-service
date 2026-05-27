@@ -9,14 +9,16 @@ import { ptBR } from "date-fns/locale";
 import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import CircularLoader from "../../../../../components/Loader.tsx";
-import Modal from "../../../../../components/Modal.tsx";
-import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
-import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
-import { Account, AccountTransaction, CreateAccountTransactionInput } from "../../../../../interfaces/Finance.tsx";
-import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance.tsx";
-import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
+import { Account, AccountTransaction } from "../../../../type/Accounts";
+import { CreateAccountTransactionInput } from "../../../../../../interfaces/Finance";
+import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../../services/apollo/mutations/Finance";
+import { apolloFinanceClient } from "../../../../../../services/apollo/client/ApolloFinanceService";
+import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../../services/apollo/queries/Finance";
+import CircularLoader from "../../../../../../components/Loader";
+import SelectAutocomplete from "../../../../../../components/form/SelectAutocomplete";
+import CurrencyInput from "../../../../../../components/form/CurrencyInput";
+import Modal from "../../../../../../components/Modal";
+import { GetAccountsQuery } from "../../../../type/AccountQueries";
 
 /**
  *
@@ -30,6 +32,7 @@ interface AccountStatementProps {
     onToggle: any;
 }
 
+// TODO: update this type to new structure
 const DefaultTransaction: CreateAccountTransactionInput = {
     transactionId: null,
     amount: 0,
@@ -77,7 +80,7 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
         },
     })
 
-    const { data: accountData, loading: accountsLoading } = useQuery(QUERY_ACCOUNTS, {
+    const { data: accountData, loading: accountsLoading } = useQuery<GetAccountsQuery>(QUERY_ACCOUNTS, {
         client: apolloFinanceClient,
         variables: { params: {} },
         skip: !props.isOpen,
@@ -98,7 +101,7 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
 
     const updateCurrency = () => {
         const accountId: string = getValues('accountId');
-        const account: Account = accountData?.getAccounts?.accounts?.find((a: any) => a.accountId === accountId);
+        const account: Account | undefined = accountData?.getAccounts?.accounts?.find((a: any) => a.accountId === accountId);
         if (account) {
             setValue('currencyId', account?.currencyId);
         }

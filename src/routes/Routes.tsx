@@ -10,12 +10,13 @@ import CircularLoader from "../components/Loader.tsx";
 const Error404: FC = lazy(() => import('../pages/errors/404'))
 
 // Finance imports
-const Investment: FC = lazy(() => import('../pages/finance/Landing.tsx'))
+// const Investment: FC = lazy(() => import('../pages/finance/Landing.tsx'))
+const Investment: FC = lazy(() => import('../features/finance/pages/Landing.tsx'))
 const InvestmentDashboard: FC = lazy(() => import('../pages/finance/investment/dashboard/Landing.tsx'))
 const InvestmentActive: FC = lazy(() => import('../pages/finance/investment/records/InvestmentsActive.tsx'))
 const InvestmentSettled: FC = lazy(() => import('../pages/finance/investment/records/InvestmentsSettled.tsx'))
-const FinanceTransactions: FC = lazy(() => import('../pages/finance/transactions/records/Landing'))
-const FinanceTransactionsDashboard: FC = lazy(() => import('../pages/finance/transactions/dashboard/Landing'))
+const FinanceTransactions: FC = lazy(() => import('../features/finance/pages/transactions/records/Landing.tsx'))
+const FinanceTransactionsDashboard: FC = lazy(() => import('../features/finance/pages/transactions/dashboard/Landing.tsx'))
 const FinanceAdmin: FC = lazy(() => import('../pages/finance/administration/Landing'))
 
 // Library imports

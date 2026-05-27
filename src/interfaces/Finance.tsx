@@ -1,95 +1,18 @@
 // Account interfaces
-export interface Account {
-    accountId: string;
-    nickname: string;
-    currencyId: string;
-    currencySymbol: string;
-    branch: string;
-    number: string;
-    openAt: string;
-    closeAt: string;
-}
+import { AccountTransaction } from "../features/finance/type/Accounts";
 
-export interface AccountTransaction {
-    transactionId?: number | null;
-    ownerId: string;
-    accountId: string;
-    accountNickname: string;
-    period: number;
-    currencyId: string;
-    currencySymbol: string;
-    amount: number;
-    transactionDate: string;
-    categoryId: string;
-    description: string | undefined;
-    transactionCurrencyId: string;
-    exchangeRate: number | null;
-    taxPerc: number | null;
-    tax: number | null;
-    spreadPerc: number | null;
-    spread: number | null;
-    effectiveRate: number | null;
-    createdAt: Date | null;
-    lastEditedAt: Date | null;
-}
-
+// TODO: update to types in features folder
 export type CreateAccountTransactionInput = Omit<
     AccountTransaction,
     "currencySymbol" | "accountNickname" | "createdAt" | "lastEditedAt" | "period" | "ownerId"
 >;
 
 // Credit card interfaces
-export interface CreditCard {
-    creditCardId: string
-    nickname: string
-    description: string
-    closingAt: string //maybe date
-    dueAt: string //maybe date
-}
 
 export interface CreditCardBill {
     creditCardId?: string | null;
     period: number;
     totalAmount: number;
-}
-
-export interface CreditCardInstalments {
-    currentInstallment: number;
-    amount: number;
-    dueDate: string;
-}
-
-export interface TaxFeeDetail {
-    currencyId: string;
-    taxFeeId: string;
-    amount: number;
-}
-
-export interface CreditCardTransaction {
-    transactionId: number | null;
-    creditCardId: string;
-    transactionDate: string;
-    categoryId: string;
-    currencyId: string;
-
-    // International transactions information
-    isInternationalTransaction: boolean;
-    transactionCurrencyId: string;
-    transactionAmount: number;
-    dollarExchangeRate?: number;
-    currencyDollarExchangeRate?: number;
-    taxDetail?: TaxFeeDetail[];
-    totalTax?: number
-
-    description: string;
-    isInstallment: boolean;
-    installments: CreditCardInstalments[];
-    totInstallments: number;
-    currentInstallment: number
-    totalAmount: number;
-    parentId: number | null;
-    createdAt?: string;
-    lastEditedAt?: string;
 }
 
 export interface UpdateCreditCardTransaction {
