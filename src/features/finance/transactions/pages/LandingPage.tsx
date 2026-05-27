@@ -2,8 +2,8 @@ import { useQuery } from "@apollo/client";
 import { Box, Card, CardContent, Chip, Grid, Typography } from "@mui/material";
 import { ReactElement, useEffect } from "react";
 import { apolloFinanceClient } from "../../../../services/apollo/client/ApolloFinanceService";
-import { QUERY_FINANCE_SUMMARY } from "../../../../services/apollo/queries/Finance";
 import CircularLoader from "../../../../components/Loader";
+import { QUERY_FINANCE_SUMMARY } from "../../api/queries";
 
 
 

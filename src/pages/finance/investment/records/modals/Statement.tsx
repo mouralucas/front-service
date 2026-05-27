@@ -15,8 +15,9 @@ import Modal from "../../../../../components/Modal.tsx";
 import { InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../../../../services/apollo/mutations/Finance.tsx";
-import { QUERY_CURRENCY, QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
 import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
+import { QUERY_CURRENCY } from "../../../../../features/finance/api/queries.ts";
+import { QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
 
 interface InvestmentStatementProps {
     isOpen: boolean

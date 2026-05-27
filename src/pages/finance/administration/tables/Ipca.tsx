@@ -6,8 +6,8 @@ import { ReactElement, useEffect, useState } from "react";
 import DataGrid from "../../../../components/table/DataGrid";
 import { Ipca } from "../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../services/apollo/client/ApolloFinanceService";
-import { QUERY_INDEXER_SERIES, QUERY_PERIODICITY } from "../../../../services/apollo/queries/Finance";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete";
+import { QUERY_INDEXER_SERIES, QUERY_PERIODICITY } from "../../../../features/finance/api/queries";
 
 
 const IpcaTable = (): ReactElement => {

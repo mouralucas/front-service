@@ -12,9 +12,10 @@ import CurrencyInput from '../../../../../components/form/CurrencyInput.tsx';
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from '../../../../../components/Modal.tsx';
+import { QUERY_ACCOUNTS, QUERY_CURRENCY } from "../../../../../features/finance/api/queries.ts";
 import { Investment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_ACCOUNTS, QUERY_CURRENCY as QUERY_CURRENCIES, QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../../../../services/apollo/queries/Finance.tsx";
+import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
@@ -84,7 +85,7 @@ const App = (props: InvestmentProps): ReactElement => {
         }
     )
 
-    const { data: currencyData, loading: currencyLoading } = useQuery(QUERY_CURRENCIES,
+    const { data: currencyData, loading: currencyLoading } = useQuery(QUERY_CURRENCY,
         {
             client: apolloFinanceClient,
             skip: !props.isOpen

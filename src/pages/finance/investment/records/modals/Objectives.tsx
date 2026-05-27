@@ -13,7 +13,6 @@ import SelectAutocomplete from "../../../../../components/form/SelectAutocomplet
 import Modal from "../../../../../components/Modal.tsx";
 import { InvestmentObjective } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_INVESTMENT_OBJECTIVE } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 

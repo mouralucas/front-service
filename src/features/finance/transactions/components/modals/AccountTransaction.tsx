@@ -13,13 +13,13 @@ import { Account, AccountTransaction } from "../../../type/Accounts";
 import { CreateAccountTransactionInput } from "../../../../../interfaces/Finance";
 import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
-import { QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance";
 import CircularLoader from "../../../../../components/Loader";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete";
 import CurrencyInput from "../../../../../components/form/CurrencyInput";
 import Modal from "../../../../../components/Modal";
 import { GetAccountsQuery } from "../../../type/AccountQueries";
-import { QUERY_ACCOUNTS } from "../../../api/queries";
+import { QUERY_ACCOUNTS, QUERY_CURRENCY } from "../../../api/queries";
+import { QUERY_TRANSACTION_CATEGORIES } from "../../api/queries";
 
 
 /**
@@ -88,7 +88,7 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
         skip: !props.isOpen,
     })
 
-    const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_CATEGORIES, {
+    const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_TRANSACTION_CATEGORIES, {
         client: apolloFinanceClient,
         skip: !props.isOpen,
     })

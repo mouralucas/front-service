@@ -8,13 +8,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useCallback, useEffect, useState } from 'react';
-import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../utils/datetime';
-import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
-import { QUERY_CREDIT_CARD_TRANSACTIONS, QUERY_CREDIT_CARDS } from '../../../../../services/apollo/queries/Finance';
-import { CreditCardTransaction } from '../../../type/CreditCard';
 import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete';
 import DataGrid from '../../../../../components/table/DataGrid';
-import CreditCardTransactionModal from '../modals/CreditCardTransaction'
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
+import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../utils/datetime';
+import { QUERY_CREDIT_CARDS } from '../../../api/queries';
+import { CreditCardTransaction } from '../../../type/CreditCard';
+import { QUERY_CREDIT_CARD_TRANSACTIONS } from '../../api/queries';
+import CreditCardTransactionModal from '../modals/CreditCardTransaction';
 
 const CreditCardTransactionTable = (): ReactElement => {
 

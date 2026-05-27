@@ -14,10 +14,11 @@ import Modal from '../../../../../components/Modal.tsx';
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_CATEGORIES, QUERY_CREDIT_CARDS, QUERY_CURRENCY, QUERY_INSTALLMENT_DUE_DATE } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { QUERY_CREDIT_CARDS, QUERY_CURRENCY } from "../../../api/queries.ts";
 import { CreditCardTransaction } from "../../../type/CreditCard.ts";
+import { QUERY_INSTALLMENT_DUE_DATE, QUERY_TRANSACTION_CATEGORIES } from "../../api/queries.ts";
 
 interface CreditCardBillProps {
     isOpen: boolean;
@@ -67,7 +68,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
         variables: { params: { active: true } },
     })
 
-    const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_CATEGORIES, {
+    const { data: categoriesData, loading: categoriesLoading } = useQuery(QUERY_TRANSACTION_CATEGORIES, {
         client: apolloFinanceClient,
         skip: !props.isOpen,
     })
