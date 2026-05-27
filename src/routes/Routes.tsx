@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import WithoutNav from './WithoutNav'
 import Landing from '../pages/Landing'
 import WithNav from "./WithNav";
-import Login from '../pages/user/Login'
+import Login from '../features/users/pages/Login.tsx'
 import RequireAuth from "../services/auth/RequireAuth";
 import CircularLoader from "../components/Loader.tsx";
 
