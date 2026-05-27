@@ -9,13 +9,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useCallback, useEffect, useState } from "react";
-import ModalStatement from '../modals/AccountTransaction.tsx';
-import { QUERY_ACCOUNT_TRANSACTIONS, QUERY_ACCOUNTS } from '../../../../../../services/apollo/queries/Finance.tsx';
-import { apolloFinanceClient } from '../../../../../../services/apollo/client/ApolloFinanceService.tsx';
-import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../../utils/datetime.tsx';
-import { AccountTransaction } from '../../../../type/Accounts.ts';
-import SelectAutocomplete from '../../../../../../components/form/SelectAutocomplete.tsx';
-import DataGrid from '../../../../../../components/table/DataGrid.tsx';
+import { AccountTransaction } from '../../../type/Accounts';
+import { QUERY_ACCOUNT_TRANSACTIONS } from '../../api/queries';
+import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
+import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../utils/datetime';
+import DataGrid from '../../../../../components/table/DataGrid';
+import ModalStatement from '../modals/AccountTransaction'
+import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete';
+import { QUERY_ACCOUNTS } from '../../../api/queries';
+
 
 
 const AccountTransactionTable = (): ReactElement => {

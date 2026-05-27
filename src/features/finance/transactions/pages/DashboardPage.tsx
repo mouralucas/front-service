@@ -1,7 +1,7 @@
 import {FC, ReactElement} from "react";
 import Card from "../../../../components/Card.tsx";
-import CreditCardBillHistory from "./tables/CreditCardBillHistory.tsx";
-import CreditCardBillEvolution from "./charts/CreditCardBillEvolution.tsx";
+import CreditCardBillEvolution from "../components/charts/CreditCardBillEvolution.tsx";
+import CreditCardBillHistory from "../components/tables/CreditCardBillHistory.tsx";
 
 
 const TransactionsDashboardLanding: FC = (): ReactElement => {

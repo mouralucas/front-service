@@ -9,15 +9,15 @@ import { ptBR } from "date-fns/locale";
 import React, { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast, ToastOptions } from "react-toastify";
-import CircularLoader from "../../../../../../components/Loader.tsx";
-import Modal from '../../../../../../components/Modal.tsx';
-import CurrencyInput from "../../../../../../components/form/CurrencyInput.tsx";
-import SelectAutocomplete from "../../../../../../components/form/SelectAutocomplete.tsx";
-import { apolloFinanceClient } from "../../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_CATEGORIES, QUERY_CREDIT_CARDS, QUERY_CURRENCY, QUERY_INSTALLMENT_DUE_DATE } from "../../../../../../services/apollo/queries/Finance.tsx";
-import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../../services/axios/ApiUrls.tsx";
-import { financeSubmit } from "../../../../../../services/axios/Submit.tsx";
-import { CreditCardTransaction } from "../../../../type/CreditCard.ts";
+import CircularLoader from "../../../../../components/Loader.tsx";
+import Modal from '../../../../../components/Modal.tsx';
+import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
+import { QUERY_CATEGORIES, QUERY_CREDIT_CARDS, QUERY_CURRENCY, QUERY_INSTALLMENT_DUE_DATE } from "../../../../../services/apollo/queries/Finance.tsx";
+import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { CreditCardTransaction } from "../../../type/CreditCard.ts";
 
 interface CreditCardBillProps {
     isOpen: boolean;

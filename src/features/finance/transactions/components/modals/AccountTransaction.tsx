@@ -9,16 +9,18 @@ import { ptBR } from "date-fns/locale";
 import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { Account, AccountTransaction } from "../../../../type/Accounts";
-import { CreateAccountTransactionInput } from "../../../../../../interfaces/Finance";
-import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../../services/apollo/mutations/Finance";
-import { apolloFinanceClient } from "../../../../../../services/apollo/client/ApolloFinanceService";
-import { QUERY_ACCOUNTS, QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../../services/apollo/queries/Finance";
-import CircularLoader from "../../../../../../components/Loader";
-import SelectAutocomplete from "../../../../../../components/form/SelectAutocomplete";
-import CurrencyInput from "../../../../../../components/form/CurrencyInput";
-import Modal from "../../../../../../components/Modal";
-import { GetAccountsQuery } from "../../../../type/AccountQueries";
+import { Account, AccountTransaction } from "../../../type/Accounts";
+import { CreateAccountTransactionInput } from "../../../../../interfaces/Finance";
+import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
+import { QUERY_CATEGORIES, QUERY_CURRENCY } from "../../../../../services/apollo/queries/Finance";
+import CircularLoader from "../../../../../components/Loader";
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete";
+import CurrencyInput from "../../../../../components/form/CurrencyInput";
+import Modal from "../../../../../components/Modal";
+import { GetAccountsQuery } from "../../../type/AccountQueries";
+import { QUERY_ACCOUNTS } from "../../../api/queries";
+
 
 /**
  *
