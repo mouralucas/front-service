@@ -10,7 +10,7 @@ import { Investment } from '../../../../../interfaces/Finance.tsx';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate } from '../../../../../utils/datetime.tsx';
-import ModalInvestmentPerformance from '../modals/Performance.tsx';
+import ModalInvestmentPerformance from '../../../../../pages/finance/investment/records/modals/Performance.tsx';
 
 
 const InvestmentSettledTable = (): ReactElement => {

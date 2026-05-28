@@ -14,9 +14,9 @@ import { Investment } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
 import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance';
 import { formatDate, isLessThanMonths } from "../../../../../utils/datetime";
-import ModalInvestment from '../modals/Investment';
-import ModalInvestmentPerformance from '../modals/Performance';
-import ModalInvestmentStatement from '../modals/Statement';
+import ModalInvestment from '../modals/Investment'
+import ModalInvestmentStatement from '../modals/InvestmentStatement'
+import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
 
 
 const InvestmentV2 = (): ReactElement => {

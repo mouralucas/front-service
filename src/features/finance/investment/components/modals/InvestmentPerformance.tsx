@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Modal from "../../../../../components/Modal";
-import PerformanceChart from '../charts/Performance';
+import PerformanceChart from '../charts/InvestmentPerformance';
 import StatementTable from '../tables/InvestmentStatement';
 
 interface InvestmentPerformanceProps {

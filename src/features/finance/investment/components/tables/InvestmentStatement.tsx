@@ -7,7 +7,7 @@ import DataGrid from "../../../../../components/table/DataGrid";
 import { InvestmentStatement } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 import { QUERY_INVESTMENT_STATEMENTS } from "../../../../../services/apollo/queries/Finance";
-import StatementModal from "../modals/Statement";
+import StatementModal from "../modals/InvestmentStatement";
 
 
 interface IncestmentStatementTableProps {

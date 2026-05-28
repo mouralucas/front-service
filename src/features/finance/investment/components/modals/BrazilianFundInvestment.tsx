@@ -14,8 +14,8 @@ import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 import { BrazilianFundInvestment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_ACCOUNTS } from "../../../../../services/apollo/queries/Finance.tsx";
 import { getBrazilianFunds, getInvestmentObjectives } from "../../../../../services/getCommonData/Finance.tsx";
+import { QUERY_ACCOUNTS } from "../../../api/queries.ts";
 
 
 interface BrazilianFundInvestmentModalProps {

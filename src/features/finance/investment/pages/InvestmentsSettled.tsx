@@ -1,6 +1,6 @@
 import {ReactElement, useEffect} from "react";
 import Card from "../../../../components/Card.tsx";
-import InvestmentLiquidatedTable from './tables/InvestmentSettled.tsx'
+import InvestmentSettledTable from '../components/tables/InvestmentSettled.tsx'
 
 
 const LiquidatedInvestments = (): ReactElement => {
@@ -19,7 +19,7 @@ const LiquidatedInvestments = (): ReactElement => {
                                 <b>Investimentos liquidados</b>
                             </Card.Header>
                             <Card.Body>
-                                <InvestmentLiquidatedTable />
+                                <InvestmentSettledTable />
                             </Card.Body>
                         </Card>
                     </div>

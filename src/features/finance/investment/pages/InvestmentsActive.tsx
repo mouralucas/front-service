@@ -1,8 +1,8 @@
 import Card from '../../../../components/Card'
 import React, {useEffect} from "react";
-import InvestmentTable from './tables/Investment.tsx'
-import ObjectivesTable from './tables/Objectives.tsx'
-import BrazilianFundInvestmentTable from "./tables/BrazilianFundInvestment.tsx";
+import InvestmentTable from '../components/tables/Investment'
+import BrazilianFundInvestmentTable from '../components/tables/BrazilianFundInvestment';
+import ObjectivesTable from '../components/tables/InvestmentObjectives';
 
 const ActiveInvestments = (): React.ReactElement => {
     useEffect(() => {
