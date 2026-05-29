@@ -3,21 +3,21 @@ import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton, Stack } from "@mui/material";
 import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement, useEffect, useState } from "react";
-import DataGrid from "../../../../components/table/DataGrid";
-import { Ipca } from "../../../../interfaces/Finance";
-import { apolloFinanceClient } from "../../../../services/apollo/client/ApolloFinanceService";
-import SelectAutocomplete from "../../../../components/form/SelectAutocomplete";
-import { QUERY_INDEXER_SERIES, QUERY_PERIODICITY } from "../../../../features/finance/api/queries";
+import DataGrid from "../../../../../components/table/DataGrid";
+import { Ipca } from "../../../../../interfaces/Finance";
+import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete";
+import { QUERY_INDEXER_SERIES, QUERY_PERIODICITY } from "../../../api/queries";
 
 
-const IpcaTable = (): ReactElement => {
+const CdiTable = (): ReactElement => {
     const [selectedPeriodocity, setSelectedPeriodicity] = useState("")
-
+    
     const { data, loading, refetch } = useQuery(QUERY_INDEXER_SERIES, {
         client: apolloFinanceClient,
         variables: { params: { 
-            indexerId: "ef07cbb0-9b29-43c6-a060-bef73f1cc000",
-            periodicityId: selectedPeriodocity !== "" ? selectedPeriodocity : undefined 
+            indexerId: "2a2b100f-17d9-4c61-b3b4-f06662113953",
+            periodicityId: selectedPeriodocity !== "" ? selectedPeriodocity : undefined
         } },
         skip: selectedPeriodocity === ""
     });
@@ -38,18 +38,6 @@ const IpcaTable = (): ReactElement => {
         { field: 'value', headerName: 'Valor (%)', flex: 1, type: 'number' },
         { field: 'periodicityName', headerName: 'Periodicidade', flex: 1 }
     ]
-
-    /*
-    Possible way to update the grid rows, avoid undefined and add possible
-        missing ID required by the grid. Otherwise use data direct in te grid
-
-    const rows = data.getIndexerSeries.series.map((s: any, index: number) => ({
-        id: index,
-        indexerName: s.indexer_name,
-        period: s.period,
-        value: s.value,
-    }));
-    */
 
     return (
         <Box sx={{ display: 'block' }}>
@@ -84,4 +72,4 @@ const IpcaTable = (): ReactElement => {
     )
 }
 
-export default IpcaTable;
+export default CdiTable;

@@ -1,7 +1,7 @@
 import {FC, ReactElement} from "react";
 import Card from "../../../../components/Card.tsx";
-import AllocationChart from './charts/Allocation.tsx'
-import PerformanceChart from './charts/Performance.tsx'
+import AllocationChart from '../components/charts/InvestmentAllocation.tsx'
+import WalletPerformanceChart from '../components/charts/InvestmentWalletPerformance.tsx'
 
 const InvestmentLanding: FC = (): ReactElement => {
     return (
@@ -20,7 +20,7 @@ const InvestmentLanding: FC = (): ReactElement => {
                 <div className="col-12">
                     <Card>
                         <Card.Body>
-                            <PerformanceChart/>
+                            <WalletPerformanceChart/>
                         </Card.Body>
                     </Card>
                 </div>

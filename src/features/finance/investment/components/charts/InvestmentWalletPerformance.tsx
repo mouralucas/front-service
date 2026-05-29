@@ -33,9 +33,8 @@ const App = () => {
     const [indexers, setIndexers] = useState<Indexer[]>([])
 
     const [filters, setFilters] = useState({
-        selectedIndexer: '2a2b100f-17d9-4c61-b3b4-f06662113953',
+        selectedIndexer: '2a2b100f-17d9-4c61-b3b4-f06662113953', // CDI
         selectedPeriod: 12,
-        somethingElse: 35
     });
 
     const { data: performanceData, loading: performanceLoading } = useQuery(

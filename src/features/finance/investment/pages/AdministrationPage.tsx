@@ -1,12 +1,12 @@
 import { ReactElement } from "react";
 import Grid from "@mui/material/Grid";
 
-import Card from "../../../components/Card";
-import BankTable from "./tables/Bank";
-import DefaultCategoriesTable from "./tables/DefaultCategory";
-import BrazilianFundsTable from "./tables/BrazilianFunds";
-import IpcaTable from "./tables/Ipca";
-import CdiTable from "./tables/Cdi";
+import Card from "../../../../components/Card";
+import BankTable from "../components/tables/Bank";
+import DefaultCategoriesTable from "../components/tables/DefaultCategory";
+import BrazilianFundsTable from "../components/tables/BrazilianFunds";
+import IpcaTable from "../components/tables/Ipca";
+import CdiTable from "../components/tables/Cdi";
 
 const App = (): ReactElement => {
     return (
