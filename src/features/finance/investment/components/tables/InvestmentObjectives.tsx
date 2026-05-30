@@ -12,6 +12,7 @@ import { formatDate } from '../../../../../utils/datetime.tsx';
 import ObjectiveModal from '../modals/InvestmentObjectives.tsx'
 import { InvestmentObjective } from '../../types/Investment.ts';
 import { QUERY_INVESTMENT_OBJECTIVES } from '../../api/queries.ts';
+import { QueryInvestmentObjective } from '../../types/InvestmentQueries.ts';
 
 
 const InvestmentObjectivesTable = (): ReactElement => {
@@ -19,7 +20,8 @@ const InvestmentObjectivesTable = (): ReactElement => {
 
     const [selectedObjective, setSelectedObjective] = useState<InvestmentObjective | undefined>()
 
-    const { data: objectivesData, loading: objectivesLoading, refetch: objectivesRefetch } = useQuery(QUERY_INVESTMENT_OBJECTIVES,
+    const { data: objectivesData, loading: objectivesLoading, refetch: objectivesRefetch } = useQuery<QueryInvestmentObjective>(
+        QUERY_INVESTMENT_OBJECTIVES,
         {
             client: apolloFinanceClient,
             fetchPolicy: "no-cache",

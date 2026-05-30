@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 
 interface DataGridProps {
     columns: any;
-    data: any[];
+    data: any[] | undefined;
     isLoading?: boolean;
     pageSizeOptions?: number[];
     pageSize?: number;

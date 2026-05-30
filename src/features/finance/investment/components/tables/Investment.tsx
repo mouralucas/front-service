@@ -17,6 +17,7 @@ import ModalInvestmentStatement from '../modals/InvestmentStatement'
 import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
 import { QUERY_INVESTMENTS } from '../../api/queries';
 import { Investment } from '../../types/Investment';
+import { QueryInvestment } from '../../types/InvestmentQueries';
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -34,7 +35,7 @@ const InvestmentV2 = (): ReactElement => {
     const [investmentId, setInvestmentId] = useState<string>('')
     const [investmentName, setInvestmentName] = useState<string>('')
 
-    const { data: investmentData, loading: investmentLoading, refetch: investmentRefetch } = useQuery(
+    const { data: investmentData, loading: investmentLoading, refetch: investmentRefetch } = useQuery<QueryInvestment>(
         QUERY_INVESTMENTS,
         {
             client: apolloFinanceClient,
@@ -204,10 +205,10 @@ const InvestmentV2 = (): ReactElement => {
         },
     ]
 
-    const investments = investmentData?.getInvestments?.investments
+    const investments: Investment[] | undefined = investmentData?.getInvestments?.investments
 
     const filterdRows = investmentFilter
-        ? investments.filter((row: { name: string; }) => row.name.toLowerCase().includes(investmentFilter.toLowerCase()))
+        ? investments?.filter((row: { name: string; }) => row.name.toLowerCase().includes(investmentFilter.toLowerCase()))
         : investments
 
     return (

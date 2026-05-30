@@ -32,6 +32,27 @@ export interface Liquidity {
     description: string;
 }
 
+export interface TaxFee {
+    taxFeeId: string;
+    name: string
+    description: string;
+    acronyms: string;
+    countryId: string;
+    type: string
+}
+
+export interface Currency {
+    currencyId: string
+    name: string
+    symbol: string
+}
+
+export interface Ipca {
+    period: number,
+    value: number,
+    periodicity: string,
+}
+
 /**
  * @deprecated BrazilianFunds are not used anymore in new investments, 
  *      but the interface is still used in some places, so it will be kept for now.

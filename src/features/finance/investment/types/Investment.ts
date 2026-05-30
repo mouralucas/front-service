@@ -82,3 +82,14 @@ export interface InvestmentObjective {
     currencyId: string;
     estimatedDeadline: string;
 }
+
+export interface InvestmentAllocation {
+    typeAllocation: [{
+        name: string,
+        total: number
+    }],
+    categoryAllocation: [{
+        name: string,
+        total: number
+    }]
+}

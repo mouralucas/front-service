@@ -30,7 +30,7 @@ const PerformanceModal = (props: InvestmentPerformanceProps) => {
             <div className="row">
                 <div className="col-12">
                     <StatementTable
-                        investmentId={props.‚}
+                        investmentId={props.investmentId}
                         updatePerformanceChart={handleUpdated}
                     />
                 </div>

@@ -9,17 +9,17 @@ import { ptBR } from "date-fns/locale";
 import { ReactElement, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { Account, AccountTransaction } from "../../../type/Accounts";
-import { CreateAccountTransactionInput } from "../../../../../interfaces/Finance";
+import { Account } from "../../../type/Accounts";
 import { CREATE_ACCOUNT_TRANSACTION, UPDATE_ACCOUNT_TRANSACTION } from "../../../../../services/apollo/mutations/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 import CircularLoader from "../../../../../components/Loader";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete";
 import CurrencyInput from "../../../../../components/form/CurrencyInput";
 import Modal from "../../../../../components/Modal";
-import { GetAccountsQuery } from "../../../type/AccountQueries";
+import { QueryAccount } from "../../../type/AccountQueries";
 import { QUERY_ACCOUNTS, QUERY_CURRENCY } from "../../../api/queries";
 import { QUERY_TRANSACTION_CATEGORIES } from "../../api/queries";
+import { AccountTransaction, CreateAccountTransactionInput } from "../../types/Account";
 
 
 /**
@@ -82,7 +82,7 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
         },
     })
 
-    const { data: accountData, loading: accountsLoading } = useQuery<GetAccountsQuery>(QUERY_ACCOUNTS, {
+    const { data: accountData, loading: accountsLoading } = useQuery<QueryAccount>(QUERY_ACCOUNTS, {
         client: apolloFinanceClient,
         variables: { params: {} },
         skip: !props.isOpen,

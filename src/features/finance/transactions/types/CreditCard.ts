@@ -33,3 +33,21 @@ export interface CreditCardInstalments {
     amount: number;
     dueDate: string;
 }
+
+export interface CreditCardBill {
+    creditCardId?: string | null;
+    period: number;
+    totalAmount: number;
+}
+
+export interface CreditCardBillHistory {
+    id: number;
+    period: number;
+    totalAmount: number;
+    creditCards: {
+        nickname: string;
+        currencySymbol: string;
+        totalInstallments: number;
+        total: number;
+    }
+}

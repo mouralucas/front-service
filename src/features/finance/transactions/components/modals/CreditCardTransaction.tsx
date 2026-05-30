@@ -17,8 +17,8 @@ import { apolloFinanceClient } from "../../../../../services/apollo/client/Apoll
 import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { QUERY_CREDIT_CARDS, QUERY_CURRENCY } from "../../../api/queries.ts";
-import { CreditCardTransaction } from "../../../type/CreditCard.ts";
 import { QUERY_INSTALLMENT_DUE_DATE, QUERY_TRANSACTION_CATEGORIES } from "../../api/queries.ts";
+import { CreditCardTransaction } from "../../types/CreditCard.ts";
 
 interface CreditCardBillProps {
     isOpen: boolean;
