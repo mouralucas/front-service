@@ -10,13 +10,13 @@ import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGrid';
-import { Investment } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
-import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance';
 import { formatDate, isLessThanMonths } from "../../../../../utils/datetime";
 import ModalInvestment from '../modals/Investment'
 import ModalInvestmentStatement from '../modals/InvestmentStatement'
 import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
+import { QUERY_INVESTMENTS } from '../../api/queries';
+import { Investment } from '../../types/Investment';
 
 
 const InvestmentV2 = (): ReactElement => {

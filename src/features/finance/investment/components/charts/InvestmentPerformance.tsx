@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
+import { Divider, Paper, Typography } from "@mui/material";
+import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
 import { useEffect } from "react";
 import Line from "../../../../../components/chart/Line.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_INVESTMENT_PERFORMANCE } from "../../../../../services/apollo/queries/Finance.tsx";
-import { Divider, Paper, Typography } from "@mui/material";
-import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
 import { getPeriodName } from "../../../../../utils/datetime.tsx";
+import { QUERY_INVESTMENT_PERFORMANCE } from "../../api/queries.ts";
 
 interface InvestmentPerformanceProps {
     investmentId: string;

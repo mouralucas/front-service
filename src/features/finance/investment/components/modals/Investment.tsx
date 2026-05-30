@@ -13,13 +13,13 @@ import SelectAutocomplete from "../../../../../components/form/SelectAutocomplet
 import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from '../../../../../components/Modal.tsx';
 import { QUERY_ACCOUNTS, QUERY_CURRENCY } from "../../../../../features/finance/api/queries.ts";
-import { Investment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../../../../services/apollo/queries/Finance.tsx";
 import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
 import { getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
+import { Investment } from "../../types/Investment.ts";
+import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../api/queries.ts";
 
 
 interface InvestmentProps {

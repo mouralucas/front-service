@@ -1,7 +1,7 @@
 import { BaseSyntheticEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Modal from "../../../../components/Modal.tsx";
-import { BrazilianFunds } from "../../../../interfaces/Finance.tsx";
+import { BrazilianFunds } from "../../../type/Finance";
+import Modal from "../../../../../components/Modal";
 
 interface BrazilianFundsModalProps {
     isOpen: boolean;

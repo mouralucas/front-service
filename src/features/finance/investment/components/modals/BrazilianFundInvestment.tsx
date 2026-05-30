@@ -12,10 +12,10 @@ import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
-import { BrazilianFundInvestment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { getBrazilianFunds, getInvestmentObjectives } from "../../../../../services/getCommonData/Finance.tsx";
 import { QUERY_ACCOUNTS } from "../../../api/queries.ts";
+import { BrazilianFundInvestment } from "../../types/Investment.ts";
 
 
 interface BrazilianFundInvestmentModalProps {

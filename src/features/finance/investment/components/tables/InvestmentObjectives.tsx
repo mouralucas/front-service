@@ -7,11 +7,11 @@ import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
-import { InvestmentObjective } from '../../../../../interfaces/Finance.tsx';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
-import { QUERY_INVESTMENT_OBJECTIVES } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate } from '../../../../../utils/datetime.tsx';
 import ObjectiveModal from '../modals/InvestmentObjectives.tsx'
+import { InvestmentObjective } from '../../types/Investment.ts';
+import { QUERY_INVESTMENT_OBJECTIVES } from '../../api/queries.ts';
 
 
 const InvestmentObjectivesTable = (): ReactElement => {

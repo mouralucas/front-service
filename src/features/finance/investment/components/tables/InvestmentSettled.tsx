@@ -4,13 +4,13 @@ import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { ReactElement, useCallback, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
-import { Investment } from '../../../../../interfaces/Finance.tsx';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
-import { QUERY_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate } from '../../../../../utils/datetime.tsx';
-import ModalInvestmentPerformance from '../../../../../pages/finance/investment/records/modals/Performance.tsx';
+import { QUERY_INVESTMENTS } from '../../api/queries.ts';
+import { Investment } from '../../types/Investment.ts';
+import ModalInvestmentPerformance from '../modals/InvestmentPerformance.tsx'
 
 
 const InvestmentSettledTable = (): ReactElement => {
@@ -30,7 +30,7 @@ const InvestmentSettledTable = (): ReactElement => {
     
     const onPerformanceModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
-            setInvestmentId(e.row.investmentId);
+            setInvestmentId(e.row.id);
             setInvestmentName(e.row.name);
         }
 

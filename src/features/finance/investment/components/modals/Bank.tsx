@@ -1,10 +1,10 @@
 import { BaseSyntheticEvent, ReactElement } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Modal from "../../../../components/Modal.tsx";
-import { Bank } from "../../../../interfaces/Finance.tsx";
-import { URL_FINANCE_BANK } from "../../../../services/axios/ApiUrls.tsx";
-import { financeSubmit } from "../../../../services/axios/Submit.tsx";
+import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
+import { Bank } from "../../../type/Finance.ts";
+import { URL_FINANCE_BANK } from "../../../../../services/axios/ApiUrls.tsx";
+import Modal from "../../../../../components/Modal.tsx";
 
 interface BankModalProps {
     isOpen: boolean;

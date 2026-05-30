@@ -4,11 +4,11 @@ import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import Line from "../../../../../components/chart/Line.tsx";
-import { Indexer } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { QUERY_INVESTMENT_PERFORMANCE } from "../../../../../services/apollo/queries/Finance.tsx";
 import { getIndexers } from "../../../../../services/getCommonData/Finance.tsx";
 import { getPeriodName } from "../../../../../utils/datetime.tsx";
+import { Indexer } from "../../../type/Finance.ts";
+import { QUERY_INVESTMENT_PERFORMANCE } from "../../api/queries.ts";
 
 const periodsRange = [
     {

@@ -5,11 +5,11 @@ import { Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
-import { BrazilianFundInvestment } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
-import { QUERY_BRAZILIAN_FUND_INVESTMENTS } from '../../../../../services/apollo/queries/Finance.tsx';
 import { formatDate } from "../../../../../utils/datetime.tsx";
 import BrazilianFundInvestmentModal from '../modals/BrazilianFundInvestment.tsx';
+import { QUERY_BRAZILIAN_FUND_INVESTMENTS } from '../../api/queries.ts';
+import { BrazilianFundInvestment } from '../../types/Investment.ts';
 
 
 const BrazilianFundInvestmentTable = (): ReactElement => {

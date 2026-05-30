@@ -4,18 +4,18 @@ import { Box, IconButton } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
 import DataGrid from "../../../../../components/table/DataGrid";
-import { InvestmentStatement } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
-import { QUERY_INVESTMENT_STATEMENTS } from "../../../../../services/apollo/queries/Finance";
+import { QUERY_INVESTMENT_STATEMENTS } from "../../api/queries";
+import { InvestmentStatement } from "../../types/Investment";
 import StatementModal from "../modals/InvestmentStatement";
 
 
-interface IncestmentStatementTableProps {
+interface InvestmentStatementTableProps {
     investmentId: string
     updatePerformanceChart: any;
 }
 
-const InvestmentStatementTable = (props: IncestmentStatementTableProps): ReactElement => {
+const InvestmentStatementTable = (props: InvestmentStatementTableProps): ReactElement => {
     const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false);
     const [selectedStatementId, setSelectedStatementId] = useState<string>()
 

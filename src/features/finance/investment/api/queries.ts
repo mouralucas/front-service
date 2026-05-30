@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 
 
-// Investment Queries
 export const QUERY_BRAZILIAN_FUND_INVESTMENTS = gql`
     query GetBrazilianFundInvestments($params: GetInvestmentBrazilianFundsInput) {
         getInvestmentsBrazilianFunds(params: $params) {
@@ -189,6 +188,7 @@ export const QUERY_INVESTMENT_OBJECTIVES = gql`
         }
     }
 `
+
 
 export const QUERY_INVESTMENT_PERFORMANCE = gql`
 query GetInvestmentPerformance($params: GetInvestmentPerformanceInput) {

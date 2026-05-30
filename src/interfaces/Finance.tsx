@@ -77,24 +77,7 @@ export interface TaxFee {
     type: string
 }
 
-export interface BrazilianFunds {
-    fundId: string;
-    name: string;
-    fundCnpj: string;
-    administrator: string;
-    administratorCnpj: string;
-    status: string;
-    startDate: string;
-    minimumBalance: number;
-    minimumInvestment: number;
-    minimumWithdraw: number;
-    initialInvestment: number;
-    investmentQuotation: string;
-    redemptionQuotation: string;
-    redemptionSettlement: string;
-    fees: any;
-    benchmark: string;
-}
+
 
 export interface Currency {
     currencyId: string
@@ -102,13 +85,7 @@ export interface Currency {
     symbol: string
 }
 
-export interface Category {
-    categoryId: string | null
-    name: string
-    description?: string
-    fatherId?: string
-    fatherName?: string
-}
+
 
 export interface Ipca {
     period: number,

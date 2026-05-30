@@ -12,12 +12,12 @@ import '../../../../../assets/core/icons.css';
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from "../../../../../components/Modal.tsx";
-import { InvestmentStatement } from "../../../../../interfaces/Finance.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../../../../services/apollo/mutations/Finance.tsx";
 import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 import { QUERY_CURRENCY } from "../../../api/queries.ts";
-import { QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../../../../services/apollo/queries/Finance.tsx";
+import { QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../api/queries.ts";
+import { InvestmentStatement } from "../../types/Investment.ts";
+import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../api/mutations.ts";
 
 interface InvestmentStatementProps {
     isOpen: boolean
