@@ -4,13 +4,14 @@ import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { formatDate } from '../../../../../utils/datetime.tsx';
 import { QUERY_INVESTMENTS } from '../../api/queries.ts';
 import { Investment } from '../../types/Investment.ts';
-import ModalInvestmentPerformance from '../modals/InvestmentPerformance.tsx'
+import { QueryInvestment } from '../../types/InvestmentQueries.ts';
+import ModalInvestmentPerformance from '../modals/InvestmentPerformance.tsx';
 
 
 const InvestmentSettledTable = (): ReactElement => {
@@ -19,7 +20,7 @@ const InvestmentSettledTable = (): ReactElement => {
     const [investmentId, setInvestmentId] = useState<string>('')
     const [investmentName, setInvestmentName] = useState<string>('')
 
-    const { data: investmentData, loading: investmentLoading, refetch: investmentRefetch } = useQuery(
+    const { data: investmentData, loading: investmentLoading, refetch: investmentRefetch } = useQuery<QueryInvestment>(
         QUERY_INVESTMENTS,
         {
             client: apolloFinanceClient,

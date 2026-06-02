@@ -7,6 +7,7 @@ import DataGrid from "../../../../../components/table/DataGrid";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 import { QUERY_INVESTMENT_STATEMENTS } from "../../api/queries";
 import { InvestmentStatement } from "../../types/Investment";
+import { QueryInvestmentStatements } from "../../types/InvestmentQueries";
 import StatementModal from "../modals/InvestmentStatement";
 
 
@@ -19,7 +20,8 @@ const InvestmentStatementTable = (props: InvestmentStatementTableProps): ReactEl
     const [isStatementModalOpen, setIsStatementModalOpen] = useState<boolean>(false);
     const [selectedStatementId, setSelectedStatementId] = useState<string>()
 
-    const { data: statementData, loading: statementLoading, refetch: statementRefetch } = useQuery(QUERY_INVESTMENT_STATEMENTS,
+    const { data: statementData, loading: statementLoading, refetch: statementRefetch } = useQuery<QueryInvestmentStatements>(
+        QUERY_INVESTMENT_STATEMENTS,
         {
             client: apolloFinanceClient,
             variables: { params: { investmentId: props.investmentId } },
@@ -99,11 +101,11 @@ const InvestmentStatementTable = (props: InvestmentStatementTableProps): ReactEl
                 <Box
                     sx={{
                         display: 'flex',
-                        alignItems: 'center',      // vertical
-                        justifyContent: 'center',  // horizontal
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         gap: 1,
-                        flex: 1,                   // ocupa toda a largura da célula
-                        height: '100%',            // ocupa toda a altura
+                        flex: 1,
+                        height: '100%',
                     }}
                 >
                     <IconButton

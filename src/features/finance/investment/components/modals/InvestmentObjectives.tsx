@@ -16,6 +16,7 @@ import { apolloFinanceClient } from "../../../../../services/apollo/client/Apoll
 import { URL_FINANCE_INVESTMENT_OBJECTIVE } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { QUERY_CURRENCY } from "../../../api/queries.ts";
+import { QueryCurrency } from "../../../type/FinanceQueries.ts";
 
 interface ObjectivesProps {
     isOpen: boolean;
@@ -35,7 +36,7 @@ const DefaultObjective: InvestmentObjective = {
 const App = (props: ObjectivesProps) => {
     const { handleSubmit, control, reset, formState: { errors, dirtyFields }, getValues } = useForm<InvestmentObjective>({ defaultValues: DefaultObjective });
 
-    const { data: currenciesData } = useQuery(QUERY_CURRENCY, {
+    const { data: currenciesData } = useQuery<QueryCurrency>(QUERY_CURRENCY, {
         client: apolloFinanceClient,
         skip: !props.isOpen,
     })

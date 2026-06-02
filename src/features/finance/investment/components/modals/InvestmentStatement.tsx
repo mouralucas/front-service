@@ -18,6 +18,8 @@ import { QUERY_CURRENCY } from "../../../api/queries.ts";
 import { QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../api/queries.ts";
 import { InvestmentStatement } from "../../types/Investment.ts";
 import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../api/mutations.ts";
+import { QueryCurrency } from "../../../type/FinanceQueries.ts";
+import { QueryInvestmentStatement, QueryInvestmentStatementMetadada } from "../../types/InvestmentQueries.ts";
 
 interface InvestmentStatementProps {
     isOpen: boolean
@@ -42,21 +44,22 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
-    const { handleSubmit, control, getValues, reset, formState: {dirtyFields, errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
+    const { handleSubmit, control, getValues, reset, formState: { dirtyFields, errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
 
-    const { data: currenciesData, loading: currenciesLoading } = useQuery(QUERY_CURRENCY, {
+    const { data: currenciesData, loading: currenciesLoading } = useQuery<QueryCurrency>(QUERY_CURRENCY, {
         client: apolloFinanceClient,
         skip: !props.isOpen,
     })
 
-    const { data: metadata, loading: metadataLoading } = useQuery(QUERY_INVESTMENT_STATEMENT_METADATA, {
+    const { data: metadata, loading: metadataLoading } = useQuery<QueryInvestmentStatementMetadada>(
+        QUERY_INVESTMENT_STATEMENT_METADATA, {
         client: apolloFinanceClient,
         skip: !props.isOpen,
         fetchPolicy: "no-cache",
         variables: { params: { investmentId: props.investmentId } },
     })
 
-    const { data: statementData, loading: statementLoading } = useQuery(QUERY_INVESTMENT_STATEMENT, {
+    const { data: statementData, loading: statementLoading } = useQuery<QueryInvestmentStatement>(QUERY_INVESTMENT_STATEMENT, {
         client: apolloFinanceClient,
         variables: {
             params: {
@@ -83,8 +86,8 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                 netAmount: statement?.netAmount ?? 0,
                 contribution: statement?.contribution ?? metadata?.getStatementMetadata?.contribution,
                 withdrawn: statement?.withdrawn ?? 0,
-                name: metadata?.getStatementMetadata?.investmentName,
-                transactionDate: metadata?.getStatementMetadata?.investmentTransactionDate,
+                name: metadata.getStatementMetadata.investmentName,
+                transactionDate: metadata.getStatementMetadata.investmentTransactionDate,
                 maturityDate: metadata?.getStatementMetadata?.investmentMaturityDate,
             });
         }
@@ -148,7 +151,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
             (Object.keys(dirtyFields) as Array<keyof InvestmentStatement>).forEach((key: keyof InvestmentStatement) => {
                 modifiedFields[key] = currentValues[key];
             });
-            
+
             console.log(modifiedFields);
             await updateStatement({
                 variables: {

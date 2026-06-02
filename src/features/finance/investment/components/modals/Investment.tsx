@@ -18,8 +18,10 @@ import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.ts
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
 import { getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
-import { Investment } from "../../types/Investment.ts";
+import { QueryAccounts, QueryCurrency } from "../../../type/FinanceQueries.ts";
 import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../api/queries.ts";
+import { Investment } from "../../types/Investment.ts";
+import { QueryInvestmentById, QueryInvestmentObjective } from "../../types/InvestmentQueries.ts";
 
 
 interface InvestmentProps {
@@ -62,7 +64,7 @@ const App = (props: InvestmentProps): ReactElement => {
     const [liquidity, setLiquidity] = useState<any[]>([])
     const [countries, setCountries] = useState<any[]>([])
 
-    const { data: investmentData, loading: investmentLoading } = useQuery(QUERY_INVESTMENT_BY_ID, {
+    const { data: investmentData, loading: investmentLoading } = useQuery<QueryInvestmentById>(QUERY_INVESTMENT_BY_ID, {
         client: apolloFinanceClient,
         variables: {
             params: {id: props.investmentId}
@@ -71,21 +73,21 @@ const App = (props: InvestmentProps): ReactElement => {
         fetchPolicy: "no-cache"
     })
 
-    const { data: accountData, loading: accountLoading } = useQuery(QUERY_ACCOUNTS,
+    const { data: accountData, loading: accountLoading } = useQuery<QueryAccounts>(QUERY_ACCOUNTS,
         {
             client: apolloFinanceClient,
             skip: !props.isOpen
         }
     )
     
-    const { data: objectiveData, loading: objectiveLoading } = useQuery(QUERY_INVESTMENT_OBJECTIVES,
+    const { data: objectiveData, loading: objectiveLoading } = useQuery<QueryInvestmentObjective>(QUERY_INVESTMENT_OBJECTIVES,
         {
             client: apolloFinanceClient,
             skip: !props.isOpen
         }
     )
 
-    const { data: currencyData, loading: currencyLoading } = useQuery(QUERY_CURRENCY,
+    const { data: currencyData, loading: currencyLoading } = useQuery<QueryCurrency>(QUERY_CURRENCY,
         {
             client: apolloFinanceClient,
             skip: !props.isOpen

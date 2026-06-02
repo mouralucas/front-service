@@ -70,8 +70,15 @@ export interface InvestmentStatement {
     netAmount: number;
     valueChange: number;
     percentageChange: number;
-    taxDetails: TaxFeeDetail[];
-    feeDetails: TaxFeeDetail[];
+}
+
+export interface InvestmentStatementMetadata {
+    period: number;
+    referenceDate: string;
+    contribution: number;
+    investmentName: string | null;
+    investmentTransactionDate: string | null;
+    investmentMaturityDate: string | null;
 }
 
 export interface InvestmentObjective {
