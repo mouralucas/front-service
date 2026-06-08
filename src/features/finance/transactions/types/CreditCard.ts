@@ -1,31 +1,69 @@
-import { TaxFeeDetail } from "../../type/Finance";
 
 
 export interface CreditCardTransaction {
-    transactionId: number | null;
+    id?: string | null;
+    ownerId: string;
+    creditCardId: string;
+
+    creditCardNickname?: string | null;
+
+    period: number;
+    dueDate: string;
+    transactionDate: string;
+
+    amount: number;
+
+    categoryId: string;
+    categoryName?: string | null;
+
+    currencyId: string;
+    currencySymbol?: string | null;
+
+    transactionCurrencyId?: string | null;
+    transactionCurrencySymbol?: string | null;
+
+    transactionAmount: number;
+
+    dollarExchangeRate?: number | null;
+    currencyDollarExchangeRate?: number | null;
+
+    totalTax?: number | null;
+
+    isInstallment: boolean;
+    currentInstallment: number;
+    installments: number;
+
+    totalAmount?: number | null;
+    parentId?: number | null;
+
+    description?: string | null;
+
+    origin: string;
+
+    isValidated: boolean;
+
+    operationType?: string | null;
+
+    createdAt: string;
+    editedAt?: string | null;
+}
+
+export interface CreateCreditCardTransactionInput {
+    id?: string | null;
     creditCardId: string;
     transactionDate: string;
+    isInstallment: boolean;
+    totalAmount: number;
+    totalInstallments: number;
+    installments: CreditCardInstalments[];
     categoryId: string;
     currencyId: string;
-
-    // International transactions information
-    isInternationalTransaction: boolean;
-    transactionCurrencyId: string;
-    transactionAmount: number;
-    dollarExchangeRate?: number;
-    currencyDollarExchangeRate?: number;
-    taxDetail?: TaxFeeDetail[];
-    totalTax?: number
-
-    description: string;
-    isInstallment: boolean;
-    installments: CreditCardInstalments[];
-    totInstallments: number;
-    currentInstallment: number
-    totalAmount: number;
-    parentId: number | null;
-    createdAt?: string;
-    lastEditedAt?: string;
+    isInternationalTransaction: Boolean;
+    transactionCurrencyId?: string | null;
+    transactionAmount?: number | null;
+    dollarExchangeRate?: number | null;
+    currencyDollarExchangeRate?: number | null;
+    description?: string | null;
 }
 
 export interface CreditCardInstalments {

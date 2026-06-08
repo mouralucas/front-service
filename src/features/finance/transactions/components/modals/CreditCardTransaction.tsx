@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { Box, Checkbox, CircularProgress, Divider, FormControlLabel, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -6,27 +6,26 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import React, { BaseSyntheticEvent, ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { toast, ToastOptions } from "react-toastify";
+import { toast } from "react-toastify";
 import CircularLoader from "../../../../../components/Loader.tsx";
 import Modal from '../../../../../components/Modal.tsx';
 import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
-import { URL_CREDIT_CARD_TRANSACTION } from "../../../../../services/axios/ApiUrls.tsx";
-import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { QUERY_CREDIT_CARDS, QUERY_CURRENCY } from "../../../api/queries.ts";
+import { CREATE_CREDIT_CARD_TRANSACTION_MUTATION } from "../../api/mutations.ts";
 import { QUERY_INSTALLMENT_DUE_DATE, QUERY_TRANSACTION_CATEGORIES } from "../../api/queries.ts";
-import { CreditCardTransaction } from "../../types/CreditCard.ts";
+import { CreateCreditCardTransactionInput, CreditCardTransaction } from "../../types/CreditCard.ts";
 
 interface CreditCardBillProps {
     isOpen: boolean;
     onToggle: any;
 }
 
-const DefaultCreditCardTransaction: CreditCardTransaction = {
-    transactionId: null,
+const DefaultCreditCardTransaction: CreateCreditCardTransactionInput = {
+    id: null,
     creditCardId: '',
     transactionDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
     categoryId: '',
@@ -37,25 +36,20 @@ const DefaultCreditCardTransaction: CreditCardTransaction = {
     transactionAmount: 0,
     dollarExchangeRate: 0,
     currencyDollarExchangeRate: 0,
-    totalTax: 0,
 
     description: '',
     isInstallment: false,
     installments: [{ currentInstallment: 1, amount: 0, dueDate: format(new Date().toDateString(), 'yyyy-MM-dd') }],
-    totInstallments: 1,
-    currentInstallment: 1,
+    totalInstallments: 1,
     totalAmount: 0,
-    parentId: null,
-    createdAt: undefined,
-    lastEditedAt: undefined
 }
 
 const App = (props: CreditCardBillProps): ReactElement => {
-    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, watch } = useForm<CreditCardTransaction>({ defaultValues: DefaultCreditCardTransaction })
+    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, watch } = useForm<CreateCreditCardTransactionInput>({ defaultValues: DefaultCreditCardTransaction })
 
     const [qtdInstallments] = useState<any[]>(Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: String(i + 1) })))
 
-    const showInternationalTransaction: boolean = watch('isInternationalTransaction')
+    const showInternationalTransaction = watch('isInternationalTransaction')
 
     const { fields, append, remove, update } = useFieldArray({
         control,
@@ -83,6 +77,19 @@ const App = (props: CreditCardBillProps): ReactElement => {
         fetchPolicy: "no-cache",
     });
 
+    const [createCreditCardTransaction] = useMutation(CREATE_CREDIT_CARD_TRANSACTION_MUTATION, {
+        client: apolloFinanceClient,
+        onCompleted: () => {
+            toast.success(
+                "Transação salva"
+            );
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        }
+    }
+    )
+
     const isLoading = creditCardsLoading || categoriesLoading || currenciesLoading
     const hasData = creditCardsData && categoriesData && currenciesData
 
@@ -91,8 +98,8 @@ const App = (props: CreditCardBillProps): ReactElement => {
     }, [props.isOpen, reset]);
 
     const updateInstallmentList = async () => {
-        const totInstallments: number = getValues("totInstallments");
-        const totAmount: number = getValues("totalAmount");
+        const totInstallments: number = getValues("totalInstallments");
+        const totAmount: number | null = getValues("totalAmount");
         const creditCardId: string = getValues("creditCardId");
         const transactionDate: string = getValues("transactionDate");
 
@@ -142,33 +149,52 @@ const App = (props: CreditCardBillProps): ReactElement => {
         }
     };
 
-    const onSubmit = (data: CreditCardTransaction, e: BaseSyntheticEvent<object> | undefined) => {
-        let method;
-        let submitData;
-        if (data.transactionId !== null) {
-            method = 'patch'
+    const onSubmit = async (data: CreateCreditCardTransactionInput) => {
+        // let method;
+        // let submitData;
+        // if (data.transactionId !== null) {
+        //     method = 'patch'
 
+        //     const currentValues: CreditCardTransaction = getValues();
+        //     const modifiedFields: Partial<Record<keyof CreditCardTransaction, CreditCardTransaction[keyof CreditCardTransaction]>> = {
+        //         transactionId: data.transactionId
+        //     };
+
+
+        //     (Object.keys(dirtyFields) as Array<keyof CreditCardTransaction>).forEach((key: keyof CreditCardTransaction) => {
+        //         modifiedFields[key] = currentValues[key];
+        //     });
+        //     submitData = modifiedFields
+        // } else {
+        //     method = 'post'
+        //     submitData = data
+        // }
+
+        // financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submitData, method).then(() => {
+        //     toast.success('Transação em crédito salva com sucesso');
+        //     reset(DefaultCreditCardTransaction);
+        // }).catch((err: string | ToastOptions) => {
+        //     toast.error('Erro ao salvar transação com o cartão de crédito ' + err);
+        // })
+        if (data.id) {
             const currentValues: CreditCardTransaction = getValues();
-            const modifiedFields: Partial<Record<keyof CreditCardTransaction, CreditCardTransaction[keyof CreditCardTransaction]>> = {
-                transactionId: data.transactionId
-            };
-
-
-            (Object.keys(dirtyFields) as Array<keyof CreditCardTransaction>).forEach((key: keyof CreditCardTransaction) => {
-                modifiedFields[key] = currentValues[key];
-            });
-            submitData = modifiedFields
+            console.log(currentValues);
         } else {
-            method = 'post'
-            submitData = data
+            const cleanData = {
+                ...data,
+                installments: data.installments.map(({ id, ...rest }) => rest)
+            };
+            console.log(cleanData);
+            try {
+                await createCreditCardTransaction({
+                    variables: {
+                        transaction: cleanData
+                    }
+                })
+            } catch (error) {
+                console.error("Erro ao criar extrato " + error)
+            }
         }
-
-        financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submitData, method).then(() => {
-            toast.success('Transação em crédito salva com sucesso');
-            reset(DefaultCreditCardTransaction);
-        }).catch((err: string | ToastOptions) => {
-            toast.error('Erro ao salvar transação com o cartão de crédito ' + err);
-        })
     }
 
     const body: ReactElement = isLoading || !hasData ? <CircularLoader /> :
@@ -221,8 +247,8 @@ const App = (props: CreditCardBillProps): ReactElement => {
                             name="totalAmount"
                             control={control}
                             rules={{
-                                    validate: (value) => value !== 0 || "Este campo deve ser diferente de zero",
-                                }}
+                                validate: (value) => value !== 0 || "Este campo deve ser diferente de zero",
+                            }}
                             render={({ field }) => (
                                 <CurrencyInput
                                     label="Valor"
@@ -279,7 +305,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
                     </Grid>
                     <Grid size={{ sm: 12, md: 3 }} >
                         <Controller
-                            name={'totInstallments'}
+                            name={'totalInstallments'}
                             control={control}
                             rules={{ required: 'Esse campo é obrigatório' }}
                             render={({ field }) => {
@@ -505,7 +531,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
         </>
 
     return (
-        <Modal 
+        <Modal
             isOpen={props.isOpen}
             onToggle={props.onToggle}
             title={'Transação'}

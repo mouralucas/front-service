@@ -13,9 +13,10 @@ import DataGrid from '../../../../../components/table/DataGrid';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
 import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../utils/datetime';
 import { QUERY_CREDIT_CARDS } from '../../../api/queries';
-import { CreditCardTransaction } from '../../../type/CreditCard';
 import { QUERY_CREDIT_CARD_TRANSACTIONS } from '../../api/queries';
 import CreditCardTransactionModal from '../modals/CreditCardTransaction';
+import { CreditCardTransaction } from '../../types/CreditCard';
+import { CreditCardTransactionQuery } from '../../types/CreditCardQueries';
 
 const CreditCardTransactionTable = (): ReactElement => {
 
@@ -51,7 +52,8 @@ const CreditCardTransactionTable = (): ReactElement => {
         client: apolloFinanceClient
     })
 
-    const { data: transactionData, loading: transactionLoading, refetch: transactionRefetch } = useQuery(QUERY_CREDIT_CARD_TRANSACTIONS, {
+    const { data: transactionData, loading: transactionLoading, refetch: transactionRefetch } = useQuery<CreditCardTransactionQuery>(
+        QUERY_CREDIT_CARD_TRANSACTIONS, {
         client: apolloFinanceClient,
         variables: {
             params: {
@@ -60,6 +62,7 @@ const CreditCardTransactionTable = (): ReactElement => {
                 creditCardId: selectedCreditCard
             }
         },
+        fetchPolicy: 'no-cache',
         skip: !startDate || !endDate
     });
 
