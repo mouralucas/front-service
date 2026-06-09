@@ -86,21 +86,20 @@ const ItemModal = (props: ItemModalProps) => {
     const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
 
 
-    const { data: itemData, loading: itemLoading } = useQuery(QUERY_ITEMS_BY_ID, {
+    const { loading: itemLoading } = useQuery(QUERY_ITEMS_BY_ID, {
         client: apolloLibraryClient,
         variables: {
             id: props.itemId
         },
         skip: !props.itemId,
-        fetchPolicy: "no-cache"
-
+        fetchPolicy: "no-cache",
+        onCompleted: (data) => {
+            const item = data?.getItem?.item;
+            if (item) {
+                reset(item);
+            }
+        }
     })
-
-    const item = itemData?.getItem?.item
-
-    useEffect(() => {
-        reset(item);
-    }, [item, reset])
 
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
@@ -150,7 +149,7 @@ const ItemModal = (props: ItemModalProps) => {
     })
 
     const isLoading = authorsLoading || statusesLoading || seriesLoading || collectionsLoading || publishersLoading || languageLoading || locationsLoading || itemLoading
-    const hasData = authorsData && statusesData && seriesData && collectionsData && publishersData && languageData && locationsData && item
+    const hasData = authorsData && statusesData && seriesData && collectionsData && publishersData && languageData && locationsData
 
 
     const [createItem] = useMutation(CREATE_ITEM_MUTATION, {
