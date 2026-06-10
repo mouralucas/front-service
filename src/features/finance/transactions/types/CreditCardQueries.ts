@@ -1,4 +1,4 @@
-import { CreditCardTransaction } from "./CreditCard";
+import { CreditCardTransaction, CreditCardTransactionMetadata } from "./CreditCard";
 
 
 export interface CreditCardTransactionQuery {
@@ -7,3 +7,9 @@ export interface CreditCardTransactionQuery {
         transactions: CreditCardTransaction[];
     }
 }
+
+export interface GetCreditCardTransactionsMetadataById {
+    getCreditCardTransactionMetadataById: {
+        transactionMetadata: CreditCardTransactionMetadata;
+    }
+} 

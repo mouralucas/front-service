@@ -48,7 +48,7 @@ export interface CreditCardTransaction {
     editedAt?: string | null;
 }
 
-export interface CreateCreditCardTransactionInput {
+export interface CreditCardTransactionMetadata {
     id?: string | null;
     creditCardId: string;
     transactionDate: string;
@@ -67,6 +67,7 @@ export interface CreateCreditCardTransactionInput {
 }
 
 export interface CreditCardInstalments {
+    transactionId?: number | null;
     currentInstallment: number;
     amount: number;
     dueDate: string;

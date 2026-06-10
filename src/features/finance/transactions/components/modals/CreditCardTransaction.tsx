@@ -16,15 +16,17 @@ import SelectAutocomplete from "../../../../../components/form/SelectAutocomplet
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_CREDIT_CARDS, QUERY_CURRENCY } from "../../../api/queries.ts";
 import { CREATE_CREDIT_CARD_TRANSACTION_MUTATION } from "../../api/mutations.ts";
-import { QUERY_INSTALLMENT_DUE_DATE, QUERY_TRANSACTION_CATEGORIES } from "../../api/queries.ts";
-import { CreateCreditCardTransactionInput, CreditCardTransaction } from "../../types/CreditCard.ts";
+import { QUERY_CREDIT_CARD_TRANSACTION_METADATA_BY_ID, QUERY_INSTALLMENT_DUE_DATE, QUERY_TRANSACTION_CATEGORIES } from "../../api/queries.ts";
+import { CreditCardTransactionMetadata } from "../../types/CreditCard.ts";
+import { GetCreditCardTransactionsMetadataById } from "../../types/CreditCardQueries.ts";
 
-interface CreditCardBillProps {
+interface CreditCardBillTransactionProps {
     isOpen: boolean;
     onToggle: any;
+    transactionId?: number;
 }
 
-const DefaultCreditCardTransaction: CreateCreditCardTransactionInput = {
+const DefaultCreditCardTransaction: CreditCardTransactionMetadata = {
     id: null,
     creditCardId: '',
     transactionDate: format(new Date().toDateString(), 'yyyy-MM-dd'),
@@ -44,8 +46,8 @@ const DefaultCreditCardTransaction: CreateCreditCardTransactionInput = {
     totalAmount: 0,
 }
 
-const App = (props: CreditCardBillProps): ReactElement => {
-    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, watch } = useForm<CreateCreditCardTransactionInput>({ defaultValues: DefaultCreditCardTransaction })
+const App = (props: CreditCardBillTransactionProps): ReactElement => {
+    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, watch } = useForm<CreditCardTransactionMetadata>({ defaultValues: DefaultCreditCardTransaction })
 
     const [qtdInstallments] = useState<any[]>(Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: String(i + 1) })))
 
@@ -55,6 +57,22 @@ const App = (props: CreditCardBillProps): ReactElement => {
         control,
         name: "installments",
     });
+
+    const { loading: creaditCardTransactionLoading } = useQuery<GetCreditCardTransactionsMetadataById>(
+        QUERY_CREDIT_CARD_TRANSACTION_METADATA_BY_ID, {
+        client: apolloFinanceClient,
+        variables: {
+            id: props.transactionId
+        },
+        skip: !props.transactionId,
+        fetchPolicy: "no-cache",
+        onCompleted: (data) => {
+            const transaction = data?.getCreditCardTransactionMetadataById?.transactionMetadata;
+            if (transaction) {
+                reset(transaction);
+            }
+        }
+    })
 
     const { data: creditCardsData, loading: creditCardsLoading } = useQuery(QUERY_CREDIT_CARDS, {
         client: apolloFinanceClient,
@@ -149,7 +167,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
         }
     };
 
-    const onSubmit = async (data: CreateCreditCardTransactionInput) => {
+    const onSubmit = async (data: CreditCardTransactionMetadata) => {
         // let method;
         // let submitData;
         // if (data.transactionId !== null) {
@@ -177,8 +195,17 @@ const App = (props: CreditCardBillProps): ReactElement => {
         //     toast.error('Erro ao salvar transação com o cartão de crédito ' + err);
         // })
         if (data.id) {
-            const currentValues: CreditCardTransaction = getValues();
-            console.log(currentValues);
+            const currentValues: CreditCardTransactionMetadata = getValues();
+            const modifiedFields: Partial<Record<keyof CreditCardTransactionMetadata, CreditCardTransactionMetadata[keyof CreditCardTransactionMetadata]>> = {
+                id: data.id
+            };
+
+
+            (Object.keys(dirtyFields) as Array<keyof CreditCardTransactionMetadata>).forEach((key: keyof CreditCardTransactionMetadata) => {
+                modifiedFields[key] = currentValues[key];
+            });
+            
+            console.log(modifiedFields)
         } else {
             const cleanData = {
                 ...data,
@@ -322,7 +349,7 @@ const App = (props: CreditCardBillProps): ReactElement => {
                                             field.onChange(newVal);
                                             updateInstallmentList();
                                         }}
-                                        error={errors.totInstallments?.message}
+                                        error={errors.totalInstallments?.message}
                                     />
                                 );
                             }}

@@ -61,6 +61,28 @@ export const QUERY_CREDIT_CARD_TRANSACTIONS = gql`
     }
 `
 
+export const QUERY_CREDIT_CARD_TRANSACTION_METADATA_BY_ID = gql`
+query GetCreditCardTransactionMetadataById($id: int!) {
+    getCreditCardTransactionMetadataById(id: $id) {
+        transactionMetadata {
+            id
+            creditCardId
+            transactionDate
+            totalAmount
+            totalInstallments
+            categoryId
+            currencyId
+            isInternationalTransaction
+            transactionCurrencyId
+            transactionAmount
+            dollarExchangeRate
+            currencyDollarExchangeRate
+            description
+        }
+    }
+}
+`
+
 export const QUERY_INSTALLMENT_DUE_DATE = gql`
     query GetInstallmentDueDates($params: GetInstallmentsDueDatesInput) {
         getCreditCardInstallmentDueDates(params: $params) {
