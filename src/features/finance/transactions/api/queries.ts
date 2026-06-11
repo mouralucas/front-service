@@ -62,14 +62,20 @@ export const QUERY_CREDIT_CARD_TRANSACTIONS = gql`
 `
 
 export const QUERY_CREDIT_CARD_TRANSACTION_METADATA_BY_ID = gql`
-query GetCreditCardTransactionMetadataById($id: int!) {
-    getCreditCardTransactionMetadataById(id: $id) {
+query GetCreditCardTransactionMetadataById($param: Int!) {
+    getCreditCardTransactionMetadataById(id: $param) {
         transactionMetadata {
             id
             creditCardId
             transactionDate
             totalAmount
             totalInstallments
+            installments {
+                transactionId
+                currentInstallment
+                dueDate
+                amount
+            }
             categoryId
             currencyId
             isInternationalTransaction

@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -17,12 +17,13 @@ import { QUERY_CREDIT_CARD_TRANSACTIONS } from '../../api/queries';
 import CreditCardTransactionModal from '../modals/CreditCardTransaction';
 import { CreditCardTransaction } from '../../types/CreditCard';
 import { CreditCardTransactionQuery } from '../../types/CreditCardQueries';
+import EditOutlined from '@mui/icons-material/EditOutlined';
 
 const CreditCardTransactionTable = (): ReactElement => {
 
-    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState<boolean>(false)
-
-    const [selectedCreditCard, setSelectedCreditCard] = useState(null)
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState<boolean>(false);
+    const [selectedCreditCard, setSelectedCreditCard] = useState(null);
+    const [selectedTransactionId, setSelectedTransactionId] = useState<number>();
 
     // Filter date range
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -41,7 +42,12 @@ const CreditCardTransactionTable = (): ReactElement => {
         }
     }, [startDate, endDate])
 
-    const onTransactionModalToggle = useCallback(() => {
+    const onTransactionModalToggle = useCallback((e: any) => {
+        if (typeof e.row !== 'undefined') {
+            console.log(typeof(e.row.id))
+            setSelectedTransactionId(Number(e.row.id));
+        }
+
         if (isTransactionModalOpen) {
             updateDateRange([startDate, endDate]);
         }
@@ -117,7 +123,35 @@ const CreditCardTransactionTable = (): ReactElement => {
             }
         },
         { field: 'description', headerAlign: "center", headerName: 'Descrição', flex: 2 },
-        { field: 'categoryName', headerAlign: "center", headerName: 'Categoria', flex: 1.5 }
+        { field: 'categoryName', headerAlign: "center", headerName: 'Categoria', flex: 1.5 },
+        {
+            field: 'actions',
+            headerName: 'Ações',
+            headerAlign: "center",
+            flex: 1,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 1,
+                        flex: 1,
+                        height: '100%',
+                    }}
+                >
+                    <IconButton
+                        aria-label="editar"
+                        color="primary"
+                        onClick={onTransactionModalToggle.bind(null, params)}
+                    >
+                        <EditOutlined />
+                    </IconButton>
+                </Box>
+            ),
+        },
     ];
 
     const filterCreditCards = (val: any) => {
@@ -202,7 +236,9 @@ const CreditCardTransactionTable = (): ReactElement => {
             />
             <CreditCardTransactionModal
                 isOpen={isTransactionModalOpen}
-                onToggle={onTransactionModalToggle} />
+                onToggle={onTransactionModalToggle}
+                transactionId={selectedTransactionId}
+            />
         </Box>
     )
 }

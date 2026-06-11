@@ -62,7 +62,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
         QUERY_CREDIT_CARD_TRANSACTION_METADATA_BY_ID, {
         client: apolloFinanceClient,
         variables: {
-            id: props.transactionId
+            param: props.transactionId
         },
         skip: !props.transactionId,
         fetchPolicy: "no-cache",
