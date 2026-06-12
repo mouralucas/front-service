@@ -15,7 +15,7 @@ import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { QUERY_CREDIT_CARDS, QUERY_CURRENCY } from "../../../api/queries.ts";
-import { CREATE_CREDIT_CARD_TRANSACTION_MUTATION } from "../../api/mutations.ts";
+import { CREATE_CREDIT_CARD_TRANSACTION_MUTATION, UPDATE_CREDIT_CARD_TRANSACTION_MUTATION } from "../../api/mutations.ts";
 import { QUERY_CREDIT_CARD_TRANSACTION_METADATA_BY_ID, QUERY_INSTALLMENT_DUE_DATE, QUERY_TRANSACTION_CATEGORIES } from "../../api/queries.ts";
 import { CreditCardTransactionMetadata } from "../../types/CreditCard.ts";
 import { GetCreditCardTransactionsMetadataById } from "../../types/CreditCardQueries.ts";
@@ -108,6 +108,18 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
     }
     )
 
+    const [updateCreditCardTransaction] = useMutation(UPDATE_CREDIT_CARD_TRANSACTION_MUTATION, {
+        client: apolloFinanceClient,
+        onCompleted: () => {
+            toast.success(
+                "Transação atualizada"
+            );
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        }
+    })
+
     const isLoading = creditCardsLoading || categoriesLoading || currenciesLoading
     const hasData = creditCardsData && categoriesData && currenciesData
 
@@ -167,51 +179,44 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
         }
     };
 
-    const onSubmit = async (data: CreditCardTransactionMetadata) => {
-        // let method;
-        // let submitData;
-        // if (data.transactionId !== null) {
-        //     method = 'patch'
+    const cleanObject = (obj: any): any => {
+        if (Array.isArray(obj)) {
+            return obj.map(cleanObject);
+        }
 
-        //     const currentValues: CreditCardTransaction = getValues();
-        //     const modifiedFields: Partial<Record<keyof CreditCardTransaction, CreditCardTransaction[keyof CreditCardTransaction]>> = {
-        //         transactionId: data.transactionId
-        //     };
-
-
-        //     (Object.keys(dirtyFields) as Array<keyof CreditCardTransaction>).forEach((key: keyof CreditCardTransaction) => {
-        //         modifiedFields[key] = currentValues[key];
-        //     });
-        //     submitData = modifiedFields
-        // } else {
-        //     method = 'post'
-        //     submitData = data
-        // }
-
-        // financeSubmit(e, URL_CREDIT_CARD_TRANSACTION, submitData, method).then(() => {
-        //     toast.success('Transação em crédito salva com sucesso');
-        //     reset(DefaultCreditCardTransaction);
-        // }).catch((err: string | ToastOptions) => {
-        //     toast.error('Erro ao salvar transação com o cartão de crédito ' + err);
-        // })
-        if (data.id) {
-            const currentValues: CreditCardTransactionMetadata = getValues();
-            const modifiedFields: Partial<Record<keyof CreditCardTransactionMetadata, CreditCardTransactionMetadata[keyof CreditCardTransactionMetadata]>> = {
-                id: data.id
-            };
-
-
-            (Object.keys(dirtyFields) as Array<keyof CreditCardTransactionMetadata>).forEach((key: keyof CreditCardTransactionMetadata) => {
-                modifiedFields[key] = currentValues[key];
+        if (obj !== null && typeof obj === "object") {
+            const newObj: any = {};
+            Object.keys(obj).forEach((key) => {
+                if (key !== "__typename") {
+                    newObj[key] = cleanObject(obj[key]);
+                }
             });
-            
-            console.log(modifiedFields)
+            return newObj;
+        }
+
+        return obj;
+    };
+
+    const onSubmit = async (data: CreditCardTransactionMetadata) => {
+        if (data.id) {
+            const cleanData = {
+                ...data,
+                installments: data.installments.map(({ id, ...rest }) => rest)
+            };
+            try {
+                await updateCreditCardTransaction({
+                    variables: {
+                        transaction: cleanObject(cleanData)
+                    }
+                })
+            } catch (error) {
+                console.error("Erro ao atualizar transação " + error)
+            }
         } else {
             const cleanData = {
                 ...data,
                 installments: data.installments.map(({ id, ...rest }) => rest)
             };
-            console.log(cleanData);
             try {
                 await createCreditCardTransaction({
                     variables: {
@@ -219,7 +224,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
                     }
                 })
             } catch (error) {
-                console.error("Erro ao criar extrato " + error)
+                console.error("Erro ao criar transação " + error)
             }
         }
     }
