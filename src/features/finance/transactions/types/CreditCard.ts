@@ -59,11 +59,12 @@ export interface CreditCardTransactionMetadata {
     categoryId: string;
     currencyId: string;
     isInternationalTransaction: Boolean;
-    transactionCurrencyId?: string | null;
-    transactionAmount?: number | null;
-    dollarExchangeRate?: number | null;
-    currencyDollarExchangeRate?: number | null;
-    description?: string | null;
+    transactionCurrencyId?: string;
+    transactionAmount?: number;
+    totalTax?: number;
+    dollarExchangeRate?: number;
+    currencyDollarExchangeRate?: number;
+    description?: string;
 }
 
 export interface CreditCardInstalments {

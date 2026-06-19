@@ -50,6 +50,7 @@ const CreditCardTransactionTable = (): ReactElement => {
 
         if (isTransactionModalOpen) {
             updateDateRange([startDate, endDate]);
+            setSelectedTransactionId(undefined);
         }
         setIsTransactionModalOpen(!isTransactionModalOpen);
     }, [isTransactionModalOpen])

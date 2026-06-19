@@ -69,6 +69,7 @@ query GetCreditCardTransactionMetadataById($param: Int!) {
             creditCardId
             transactionDate
             totalAmount
+            isInstallment
             totalInstallments
             installments {
                 transactionId

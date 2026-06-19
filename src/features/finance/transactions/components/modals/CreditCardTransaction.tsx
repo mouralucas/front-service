@@ -36,6 +36,7 @@ const DefaultCreditCardTransaction: CreditCardTransactionMetadata = {
     isInternationalTransaction: false,
     transactionCurrencyId: '',
     transactionAmount: 0,
+    totalTax: 0,
     dollarExchangeRate: 0,
     currencyDollarExchangeRate: 0,
 
@@ -58,7 +59,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
         name: "installments",
     });
 
-    const { loading: creaditCardTransactionLoading } = useQuery<GetCreditCardTransactionsMetadataById>(
+    const { data: creaditCardTransactionData,  loading: creaditCardTransactionLoading } = useQuery<GetCreditCardTransactionsMetadataById>(
         QUERY_CREDIT_CARD_TRANSACTION_METADATA_BY_ID, {
         client: apolloFinanceClient,
         variables: {
@@ -120,7 +121,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
         }
     })
 
-    const isLoading = creditCardsLoading || categoriesLoading || currenciesLoading
+    const isLoading = creditCardsLoading || categoriesLoading || currenciesLoading || creaditCardTransactionLoading
     const hasData = creditCardsData && categoriesData && currenciesData
 
     useEffect(() => {
@@ -179,6 +180,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
         }
     };
 
+    // Clean object from graphql kyes
     const cleanObject = (obj: any): any => {
         if (Array.isArray(obj)) {
             return obj.map(cleanObject);
@@ -204,6 +206,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
                 installments: data.installments.map(({ id, ...rest }) => rest)
             };
             try {
+                console.log("updating");
                 await updateCreditCardTransaction({
                     variables: {
                         transaction: cleanObject(cleanData)
@@ -349,11 +352,13 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
                                         options={qtdInstallments}
                                         getOptionLabel={(option: any) => option.label}
                                         getOptionValue={(option: any) => option.value}
+                                        disabled={!!props.transactionId}
                                         onChange={(val: any) => {
                                             const newVal = val ? (val.value ?? val) : null;
                                             field.onChange(newVal);
                                             updateInstallmentList();
                                         }}
+                                        
                                         error={errors.totalInstallments?.message}
                                     />
                                 );
@@ -449,7 +454,9 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
                                 <Controller
                                     name="totalTax"
                                     control={control}
-                                    rules={{ required: "Campo obrigatório" }}
+                                    // rules={{
+                                    //     validate: (value) => value !== 0 || "Este campo deve ser diferente de zero",
+                                    // }}
                                     render={({ field }) => (
                                         <CurrencyInput
                                             label="Total de imposto"
