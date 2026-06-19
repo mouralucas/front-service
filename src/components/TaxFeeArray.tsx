@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { AddCircleOutline, RemoveCircleOutline } from "@mui/icons-material";
 import CurrencyInput from "../components/form/CurrencyInput";
-import { Currency } from "../interfaces/Finance";
+import { Currency } from "../features/finance/type/Finance";
 
 interface TaxFeeArrayProps {
     control: any;

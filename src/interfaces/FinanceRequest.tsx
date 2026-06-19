@@ -1,4 +1,9 @@
-import {Account, AccountTransaction, Bank, BrazilianFundInvestment, BrazilianFunds, Category, CreditCard, CreditCardBill, CreditCardBillHistory, CreditCardTransaction, Currency, Indexer, IndexerType, Investment, InvestmentObjective, InvestmentStatement, InvestmentType, Liquidity, TaxFee} from "./Finance.tsx";
+import { BrazilianFundInvestment, Investment, InvestmentObjective, InvestmentStatement, InvestmentType } from "../features/finance/investment/types/Investment";
+import { AccountTransaction } from "../features/finance/transactions/types/Account";
+import { CreditCardBill, CreditCardBillHistory, CreditCardTransaction } from "../features/finance/transactions/types/CreditCard";
+import { Account } from "../features/finance/type/Accounts";
+import { CreditCard } from "../features/finance/type/CreditCard";
+import { Bank, BrazilianFunds, Category, Currency, Indexer, IndexerType, Liquidity, TaxFee } from "../features/finance/type/Finance";
 
 
 // Account
@@ -108,6 +113,10 @@ export interface GetBrazilianFundResponse {
     funds: BrazilianFunds[]
 }
 
+/**
+ * @deprecated TaxFee are not used anymore, 1
+ *      but the interface is still used in some places, so it will be kept for now.
+ */
 export interface GetTaxFeeResponse {
     quantity: number;
     taxFee: TaxFee[];

@@ -4,10 +4,10 @@ import { Box, IconButton, Stack } from "@mui/material";
 import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement, useEffect, useState } from "react";
 import DataGrid from "../../../../../components/table/DataGrid";
-import { Ipca } from "../../../../../interfaces/Finance";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete";
 import { QUERY_INDEXER_SERIES, QUERY_PERIODICITY } from "../../../api/queries";
+import { Ipca } from "../../../type/Finance";
 
 
 const IpcaTable = (): ReactElement => {

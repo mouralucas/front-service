@@ -2,12 +2,12 @@ import BarChart from '../../../../../components/chart/StackedBar.tsx'
 import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {URL_FINANCE_CREDIT_CARD_BILL_EVOLUTION} from "../../../../../services/axios/ApiUrls.tsx";
 import {useEffect, useState} from "react";
-import {CreditCardBill} from '../../../../../interfaces/Finance.tsx';
 import {toast} from "react-toastify";
 import DatePicker from "react-datepicker";
 import {getLastPeriods, getPeriodFromDate} from "../../../../../utils/datetime.tsx";
 import {ptBR} from 'date-fns/locale';
 import {CreditCardBillConsolidatedResponse} from "../../../../../interfaces/FinanceRequest.tsx";
+import { CreditCardBill } from '../../types/CreditCard.ts';
 
 const CreditCardBillEvolution = () => {
     const [creditCardBillEvolution, setCreditCardBillEvolution] = useState<CreditCardBill[]>([])

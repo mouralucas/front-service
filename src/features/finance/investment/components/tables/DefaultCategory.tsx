@@ -4,9 +4,9 @@ import { Box, IconButton } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
-import { Category } from "../../../../../interfaces/Finance.tsx";
 import { getCategories } from "../../../../../services/getCommonData/Finance.tsx";
 import CategoryModal from '../modals/Category.tsx';
+import { Category } from '../../../type/Finance.ts';
 
 
 const DefaultCategoryTable = (): ReactElement => {

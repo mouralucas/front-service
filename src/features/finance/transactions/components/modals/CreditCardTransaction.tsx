@@ -48,7 +48,7 @@ const DefaultCreditCardTransaction: CreditCardTransactionMetadata = {
 }
 
 const App = (props: CreditCardBillTransactionProps): ReactElement => {
-    const { handleSubmit, control, reset, formState: { isDirty, dirtyFields, errors }, getValues, watch } = useForm<CreditCardTransactionMetadata>({ defaultValues: DefaultCreditCardTransaction })
+    const { handleSubmit, control, reset, formState: { isDirty, errors }, getValues, watch } = useForm<CreditCardTransactionMetadata>({ defaultValues: DefaultCreditCardTransaction })
 
     const [qtdInstallments] = useState<any[]>(Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: String(i + 1) })))
 
@@ -59,7 +59,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
         name: "installments",
     });
 
-    const { data: creaditCardTransactionData,  loading: creaditCardTransactionLoading } = useQuery<GetCreditCardTransactionsMetadataById>(
+    const { loading: creaditCardTransactionLoading } = useQuery<GetCreditCardTransactionsMetadataById>(
         QUERY_CREDIT_CARD_TRANSACTION_METADATA_BY_ID, {
         client: apolloFinanceClient,
         variables: {
@@ -358,7 +358,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
                                             field.onChange(newVal);
                                             updateInstallmentList();
                                         }}
-                                        
+
                                         error={errors.totalInstallments?.message}
                                     />
                                 );

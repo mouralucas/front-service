@@ -107,7 +107,8 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
         if (account) {
             setValue('currencyId', account?.currencyId);
         }
-        setCurrencySymbol(account?.currencySymbol);
+        const loadedCurrencySymbol = account ? account.currencyId : "R$"
+        setCurrencySymbol(loadedCurrencySymbol);
     }
 
     useEffect(() => {

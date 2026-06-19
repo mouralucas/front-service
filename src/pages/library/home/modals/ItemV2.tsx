@@ -5,7 +5,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
 import CircularLoader from "../../../../components/Loader.tsx";

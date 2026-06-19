@@ -10,21 +10,21 @@ interface SelectAutocompleteProps<
   ReturnValue extends "id" | "object" = "id"
 > {
   label: string;
-  value: ReturnValue extends "id"
-    ? string | number | Array<string | number> | null
-    : T | T[] | null;
+  value: ReturnValue extends "object"
+    ? T | T[] | null | undefined
+    : string | number | Array<string | number> | null | undefined;
   options: T[];
   getOptionLabel: (option: T) => string;
   getOptionValue: (option: T) => string | number;
   onChange: (
-    value: ReturnValue extends "id"
-      ? string | number | Array<string | number> | null
-      : T | T[] | null
+    value: ReturnValue extends "object"
+      ? T | T[] | null
+      : string | number | Array<string | number> | null
   ) => void;
   error?: string;
   multiple?: boolean;
   width?: number | string;
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 function SelectAutocomplete<

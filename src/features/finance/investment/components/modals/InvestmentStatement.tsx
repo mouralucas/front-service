@@ -34,13 +34,11 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
     name: '',
     maturityDate: null,
     referenceDate: null,
-    period: '',
+    period: null,
     contribution: 0,
     withdrawn: 0,
     grossAmount: 0,
     netAmount: 0,
-    taxDetails: [],
-    feeDetails: [],
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
@@ -127,7 +125,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
         if (!selectedDate) return;
 
         const period = getPeriodFromDate(selectedDate);
-        setValue('period', String(period));
+        setValue('period', period);
     }
 
     const updateNetAmount = () => {

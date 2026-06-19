@@ -4,9 +4,9 @@ import { Box, IconButton } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
-import { BrazilianFunds } from "../../../../../interfaces/Finance.tsx";
 import { getBrazilianFunds } from "../../../../../services/getCommonData/Finance.tsx";
 import BrazilianFundsModal from '../modals/BrazilianFunds.tsx';
+import { BrazilianFunds } from '../../../type/Finance.ts';
 
 
 const BrazilianFundsTable = (): ReactElement => {

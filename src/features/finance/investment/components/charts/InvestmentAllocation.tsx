@@ -3,7 +3,7 @@ import PieChart from "../../../../../components/chart/Pie.tsx"
 import {getFinanceData} from "../../../../../services/axios/Get.tsx";
 import {URL_FINANCE_INVESTMENT_ALLOCATION} from "../../../../../services/axios/ApiUrls.tsx";
 import {toast, ToastOptions} from "react-toastify";
-import {InvestmentAllocation} from "../../../../../interfaces/Finance.tsx";
+import { InvestmentAllocation } from "../../types/Investment.ts";
 
 interface InvestmentAllocationResponse {
     success: boolean

@@ -1,4 +1,3 @@
-import { TaxFeeDetail } from "../../type/Finance";
 
 export interface Investment {
     id?: string | null,
@@ -59,11 +58,11 @@ export interface InvestmentType {
 export interface InvestmentStatement {
     id?: string | null
     investmentId: string;
-    name: string;
-    transactionDate: string;
+    name: string | null;
+    transactionDate: string | null;
     maturityDate: string | null;
     referenceDate: string | null;
-    period: string;
+    period: number | null;
     contribution: number;
     withdrawn: number;
     grossAmount: number;
