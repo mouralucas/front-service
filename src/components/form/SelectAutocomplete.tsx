@@ -24,6 +24,7 @@ interface SelectAutocompleteProps<
   error?: string;
   multiple?: boolean;
   width?: number | string;
+  disabled?: boolean
 }
 
 function SelectAutocomplete<
@@ -39,6 +40,7 @@ function SelectAutocomplete<
   error,
   multiple = false,
   width,
+  disabled,
 }: SelectAutocompleteProps<T, ReturnValue>) {
   const isReturningObject = false as ReturnValue extends "object"
     ? true
@@ -70,6 +72,7 @@ function SelectAutocomplete<
       <Autocomplete<T, boolean, false, false>
         multiple={multiple}
         options={options}
+        disabled={disabled}
         getOptionLabel={getOptionLabel}
         value={selectedOption as any}
         autoHighlight
