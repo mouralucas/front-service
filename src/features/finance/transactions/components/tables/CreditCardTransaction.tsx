@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import { Box, IconButton } from '@mui/material';
@@ -18,6 +18,10 @@ import CreditCardTransactionModal from '../modals/CreditCardTransaction';
 import { CreditCardTransaction } from '../../types/CreditCard';
 import { CreditCardTransactionQuery } from '../../types/CreditCardQueries';
 import EditOutlined from '@mui/icons-material/EditOutlined';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import { DeleteCreditCardTransactionMutation } from '../../types/CreditCardMutations';
+import { DELETE_CREDIT_CARD_TRANSACTION_MUTATION } from '../../api/mutations';
+import { toast } from 'react-toastify';
 
 const CreditCardTransactionTable = (): ReactElement => {
 
@@ -44,7 +48,7 @@ const CreditCardTransactionTable = (): ReactElement => {
 
     const onTransactionModalToggle = useCallback((e: any) => {
         if (typeof e.row !== 'undefined') {
-            console.log(typeof(e.row.id))
+            console.log(typeof (e.row.id))
             setSelectedTransactionId(Number(e.row.id));
         }
 
@@ -78,6 +82,27 @@ const CreditCardTransactionTable = (): ReactElement => {
             transactionRefetch();
         }
     }, [transactionRefetch]);
+    
+    const [deleteTransaction] = useMutation<DeleteCreditCardTransactionMutation>(DELETE_CREDIT_CARD_TRANSACTION_MUTATION, {
+        client: apolloFinanceClient,
+        onCompleted: () => {
+            toast.success(
+                'Extrato deletado com sucesso'
+            );
+            transactionRefetch();
+        },
+        onError: (error) => {
+            toast.error(`Erro: ${error.message}`);
+        },
+    })
+
+    const deleteTransactionAction = async (e: any) => {
+        await deleteTransaction({
+            variables: {
+                id: Number(e.id)
+            }
+        })
+    }
 
     const columns: GridColDef<CreditCardTransaction>[] = [
         { field: 'id', headerName: 'Id', flex: 1 },
@@ -149,6 +174,13 @@ const CreditCardTransactionTable = (): ReactElement => {
                         onClick={onTransactionModalToggle.bind(null, params)}
                     >
                         <EditOutlined />
+                    </IconButton>
+                    <IconButton
+                        aria-label="editar"
+                        color="primary"
+                        onClick={deleteTransactionAction.bind(null, params)}
+                    >
+                        <DeleteForeverOutlinedIcon />
                     </IconButton>
                 </Box>
             ),

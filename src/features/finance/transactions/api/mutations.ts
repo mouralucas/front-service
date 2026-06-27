@@ -26,3 +26,12 @@ export const UPDATE_CREDIT_CARD_TRANSACTION_MUTATION = gql`
             }
         }
 `
+
+export const DELETE_CREDIT_CARD_TRANSACTION_MUTATION = gql`
+    mutation DeleteCreditCardTransaction($id: Int!) {
+        deleteCreditCardTransaction(id: $id) {
+            success
+            transactionCount
+        }
+    }
+`

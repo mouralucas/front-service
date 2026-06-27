@@ -11,7 +11,7 @@ interface DataGridProps {
     checkBoxSelection?: boolean;
     disableRowSelectionOnClick?: boolean;
     // onRowClick?: () => null;
-    onRowClick: any;
+    onRowClick?: any;
     getRowId?: GridRowIdGetter<any>;
     getRowClassName?: any;
     getRowHeight?: any;
