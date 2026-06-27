@@ -100,15 +100,18 @@ const CreditCardTransactionTable = (): ReactElement => {
     })
 
     const onDeleteConfirmModalToggle = useCallback((params?: any) => {
-        if (params?.row || params) {
-            const transaction = params?.row ?? params;
+        const isRowPayload = params && typeof params === 'object' && 'row' in params;
+        const isTransactionPayload = params && typeof params === 'object' && !('currentTarget' in params) && ('id' in params || 'creditCardId' in params);
+
+        if (isRowPayload || isTransactionPayload) {
+            const transaction = isRowPayload ? params.row : params;
             setSelectedTransactionToDelete(transaction);
             setIsDeleteConfirmModalOpen(true);
             return;
         }
 
         setSelectedTransactionToDelete(null);
-        setIsDeleteConfirmModalOpen(false);
+        setIsDeleteConfirmModalOpen((current) => !current);
     }, []);
 
     const confirmDeleteTransaction = async () => {
