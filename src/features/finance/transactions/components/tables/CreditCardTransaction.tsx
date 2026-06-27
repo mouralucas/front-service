@@ -1,28 +1,28 @@
 import { useMutation, useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
-import { Box, Button, IconButton } from '@mui/material';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import { Box, IconButton } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete';
 import DataGrid from '../../../../../components/table/DataGrid';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
 import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../utils/datetime';
 import { QUERY_CREDIT_CARDS } from '../../../api/queries';
-import { QUERY_CREDIT_CARD_TRANSACTIONS } from '../../api/queries';
-import CreditCardTransactionModal from '../modals/CreditCardTransaction';
-import ConfirmDeleteCreditCardTransaction from '../modals/ConfirmDeleteCreditCardTransaction';
-import { CreditCardTransaction } from '../../types/CreditCard';
-import { CreditCardTransactionQuery } from '../../types/CreditCardQueries';
-import EditOutlined from '@mui/icons-material/EditOutlined';
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import { DeleteCreditCardTransactionMutation } from '../../types/CreditCardMutations';
 import { DELETE_CREDIT_CARD_TRANSACTION_MUTATION } from '../../api/mutations';
-import { toast } from 'react-toastify';
+import { QUERY_CREDIT_CARD_TRANSACTIONS } from '../../api/queries';
+import { CreditCardTransaction } from '../../types/CreditCard';
+import { DeleteCreditCardTransactionMutation } from '../../types/CreditCardMutations';
+import { CreditCardTransactionQuery } from '../../types/CreditCardQueries';
+import ConfirmDeleteCreditCardTransaction from '../modals/ConfirmDeleteCreditCardTransaction';
+import CreditCardTransactionModal from '../modals/CreditCardTransaction';
 
 const CreditCardTransactionTable = (): ReactElement => {
 
