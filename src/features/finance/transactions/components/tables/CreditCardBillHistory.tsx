@@ -35,7 +35,10 @@ const BillHistoryTable = (): ReactElement => {
         })
     }
 
-    console.log(creditCardBillHistory);
+    const creditCardBillToggle = (e: any) => {
+        alert("Opa");
+        console.log(e);
+    }
 
     const columns: GridColDef[] = [
         { field: "period", headerName: "Período", flex: 1 },
@@ -80,6 +83,7 @@ const BillHistoryTable = (): ReactElement => {
             pageSizeOptions={[12]}
             getRowHeight={() => 'auto'}
             pageSize={12}
+            onRowClick={creditCardBillToggle}
             sx={{
                 "& .MuiDataGrid-cell": {
                     display: "flex",

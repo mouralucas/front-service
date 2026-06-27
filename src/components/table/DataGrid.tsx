@@ -10,7 +10,8 @@ interface DataGridProps {
     pageSize?: number;
     checkBoxSelection?: boolean;
     disableRowSelectionOnClick?: boolean;
-    onRowClick?: () => null;
+    // onRowClick?: () => null;
+    onRowClick: any;
     getRowId?: GridRowIdGetter<any>;
     getRowClassName?: any;
     getRowHeight?: any;

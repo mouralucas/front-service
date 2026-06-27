@@ -102,6 +102,7 @@ const App = (props: CreditCardBillTransactionProps): ReactElement => {
             toast.success(
                 "Transação salva"
             );
+            reset(DefaultCreditCardTransaction);
         },
         onError: (error) => {
             toast.error(`Erro: ${error.message}`);
