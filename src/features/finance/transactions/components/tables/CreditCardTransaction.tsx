@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
-import { Box, IconButton } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -15,6 +15,7 @@ import { formatDate, getLastPeriods, getPeriodFromDate } from '../../../../../ut
 import { QUERY_CREDIT_CARDS } from '../../../api/queries';
 import { QUERY_CREDIT_CARD_TRANSACTIONS } from '../../api/queries';
 import CreditCardTransactionModal from '../modals/CreditCardTransaction';
+import ConfirmDeleteCreditCardTransaction from '../modals/ConfirmDeleteCreditCardTransaction';
 import { CreditCardTransaction } from '../../types/CreditCard';
 import { CreditCardTransactionQuery } from '../../types/CreditCardQueries';
 import EditOutlined from '@mui/icons-material/EditOutlined';
@@ -28,6 +29,8 @@ const CreditCardTransactionTable = (): ReactElement => {
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState<boolean>(false);
     const [selectedCreditCard, setSelectedCreditCard] = useState(null);
     const [selectedTransactionId, setSelectedTransactionId] = useState<number>();
+    const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState<boolean>(false);
+    const [selectedTransactionToDelete, setSelectedTransactionToDelete] = useState<CreditCardTransaction | null>(null);
 
     // Filter date range
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -57,7 +60,7 @@ const CreditCardTransactionTable = (): ReactElement => {
             setSelectedTransactionId(undefined);
         }
         setIsTransactionModalOpen(!isTransactionModalOpen);
-    }, [isTransactionModalOpen])
+    }, [isTransactionModalOpen, startDate, endDate])
 
     const { data: creditCardData } = useQuery(QUERY_CREDIT_CARDS, {
         client: apolloFinanceClient
@@ -82,7 +85,7 @@ const CreditCardTransactionTable = (): ReactElement => {
             transactionRefetch();
         }
     }, [transactionRefetch]);
-    
+
     const [deleteTransaction] = useMutation<DeleteCreditCardTransactionMutation>(DELETE_CREDIT_CARD_TRANSACTION_MUTATION, {
         client: apolloFinanceClient,
         onCompleted: () => {
@@ -96,12 +99,30 @@ const CreditCardTransactionTable = (): ReactElement => {
         },
     })
 
-    const deleteTransactionAction = async (e: any) => {
+    const onDeleteConfirmModalToggle = useCallback((params?: any) => {
+        if (params?.row || params) {
+            const transaction = params?.row ?? params;
+            setSelectedTransactionToDelete(transaction);
+            setIsDeleteConfirmModalOpen(true);
+            return;
+        }
+
+        setSelectedTransactionToDelete(null);
+        setIsDeleteConfirmModalOpen(false);
+    }, []);
+
+    const confirmDeleteTransaction = async () => {
+        if (!selectedTransactionToDelete) {
+            onDeleteConfirmModalToggle();
+            return;
+        }
+
         await deleteTransaction({
             variables: {
-                id: Number(e.id)
+                id: Number(selectedTransactionToDelete.id)
             }
-        })
+        });
+        onDeleteConfirmModalToggle();
     }
 
     const columns: GridColDef<CreditCardTransaction>[] = [
@@ -178,7 +199,7 @@ const CreditCardTransactionTable = (): ReactElement => {
                     <IconButton
                         aria-label="editar"
                         color="primary"
-                        onClick={deleteTransactionAction.bind(null, params)}
+                        onClick={() => onDeleteConfirmModalToggle(params)}
                     >
                         <DeleteForeverOutlinedIcon />
                     </IconButton>
@@ -266,6 +287,12 @@ const CreditCardTransactionTable = (): ReactElement => {
                 columnVisibilityModel={{
                     id: false
                 }}
+            />
+            <ConfirmDeleteCreditCardTransaction
+                isOpen={isDeleteConfirmModalOpen}
+                onToggle={onDeleteConfirmModalToggle}
+                onConfirm={confirmDeleteTransaction}
+                transaction={selectedTransactionToDelete}
             />
             <CreditCardTransactionModal
                 isOpen={isTransactionModalOpen}
