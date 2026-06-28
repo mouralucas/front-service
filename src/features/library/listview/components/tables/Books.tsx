@@ -7,12 +7,10 @@ import { Box, TextField } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
 import { ReactElement, useCallback, useState } from "react"
-import DataGrid from "../../../../components/table/DataGrid.tsx"
-import { Item } from "../../../../interfaces/Library.tsx"
-import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx'
-import { QUERY_ITEMS } from '../../../../services/apollo/queries/Library.tsx'
-import BookDrawer from "../drawer/Book.tsx"
 import ItemModal from '../modals/Item.tsx'
+import { apolloLibraryClient } from '../../../../../services/apollo/client/ApolloLibraryService.tsx'
+import { QUERY_ITEMS } from '../../../api/queries.ts'
+import { Item } from '../../../type/Item.ts'
 
 
 const Books = (): ReactElement => {

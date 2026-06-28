@@ -3,13 +3,13 @@ import { Box, Button, Divider, LinearProgress, LinearProgressProps, Typography }
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { ReactElement, useState } from "react";
-import DrawerV2 from "../../../../components/Drawer.tsx";
-import { Item } from "../../../../interfaces/Library.tsx";
-import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { QUERY_READING_STATS } from "../../../../services/apollo/queries/Library.tsx";
+import DrawerV2 from "../../../../../components/Drawer.tsx";
+import { Item } from "../../../../../interfaces/Library.tsx";
+import { apolloLibraryClient } from "../../../../../services/apollo/client/ApolloLibraryService.tsx";
+import { QUERY_READING_STATS } from "../../../../../services/apollo/queries/Library.tsx";
 import CreateReadingModal from "../modals/CreateReading.tsx";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
-import ItemCard from "../../../../components/ItemCard.tsx";
+import ItemCard from "../../../../../components/ItemCard.tsx";
 
 
 interface BookDrawerProps {

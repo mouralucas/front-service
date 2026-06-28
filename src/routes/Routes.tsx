@@ -1,7 +1,7 @@
 import { lazy, ReactElement, FC, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import WithoutNav from './WithoutNav'
-import Landing from '../pages/Landing'
+import Landing from '../features/library/listview/pages/Landing.tsx'
 import WithNav from "./WithNav";
 import Login from '../features/users/pages/Login.tsx'
 import RequireAuth from "../services/auth/RequireAuth";
@@ -19,7 +19,7 @@ const FinanceTransactionsDashboard: FC = lazy(() => import('../features/finance/
 const FinanceAdmin: FC = lazy(() => import('../features/finance/investment/pages/AdministrationPage.tsx'))
 
 // Library imports
-const LibraryLanding: FC = lazy(() => import('../pages/library/home/LandingV2.tsx'))
+const LibraryLanding: FC = lazy(() => import('../features/library/listview/pages/LandingV2.tsx'))
 const LibraryBackoffice: FC = lazy(() => import('../pages/library/backoffice/Landing'));
 const LibraryItem: FC = lazy(() => import('../pages/library/home/Item'));
 

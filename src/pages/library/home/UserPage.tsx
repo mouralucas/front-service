@@ -7,8 +7,8 @@ import CircularLoader from "../../../components/Loader";
 import { Item, ItemSummary } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
 import { QUERY_ITEMS_SUMMARY } from "../../../services/apollo/queries/Library";
-import BookDrawer from "./drawer/Item.tsx";
-import ItemModal from './modals/ItemV2.tsx';
+import BookDrawer from "../../../features/library/listview/components/drawers/Item.tsx";
+import ItemModal from "../../../features/library/listview/components/modals/ItemV2.tsx";
 
 const UserPage = (): ReactElement => {
     const [isDrawerOpened, setIsDrawerOpened] = useState<boolean>(false)

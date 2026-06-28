@@ -4,11 +4,11 @@ import { Box } from "@mui/material";
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { ReactElement, SyntheticEvent, useEffect, useState } from "react";
-import Card from '../../../components/Card';
-import BookTable from './tables/Books.tsx'
-import MangaTable from "./tables/Mangas.tsx";
-import UserPage from "./UserPage.tsx"
-import ItemLocationAccordion from './accordion/ItemLocation.tsx';
+import Card from '../../../../components/Card';
+import UserPage from '../../../../pages/library/home/UserPage';
+import ItemLocationAccordion from '../components/accordions/ItemLocation';
+import BookTable from '../components/tables/Books';
+import MangaTable from '../components/tables/Mangas';
 
 
 const LibraryLanding = (): ReactElement => {

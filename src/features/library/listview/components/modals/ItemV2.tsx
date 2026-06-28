@@ -5,25 +5,20 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
-import CircularLoader from "../../../../components/Loader.tsx";
-import Modal from "../../../../components/Modal.tsx";
-import CurrencyInput from "../../../../components/form/CurrencyInput.tsx";
-import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
-import { CreateItemInput } from '../../../../interfaces/Library.tsx';
-import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { CREATE_ITEM_MUTATION, UPDATE_ITEM_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
-import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_ITEM_LOCATIONS, QUERY_LANGUAGES, QUERY_PUBLISHERS, QUERY_SERIES, QUERY_STATUS } from "../../../../services/apollo/queries/Library.tsx";
+import { apolloLibraryClient } from "../../../../../services/apollo/client/ApolloLibraryService";
+import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_ITEM_BY_ID, QUERY_ITEM_LOCATIONS, QUERY_LANGUAGES, QUERY_PUBLISHERS, QUERY_SERIES, QUERY_STATUS as QUERY_LIBRARY_STATUS } from "../../../api/queries";
+import CircularLoader from "../../../../../components/Loader";
+import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete";
 
 export interface ItemModalProps {
-    item: CreateItemInput | undefined | null
-    itemTypeId: string
+    itemId: number | undefined | null
+    itemTypeId?: string
     onToggle: any;
     isOpen: boolean;
 }
-
 
 const DefaultItem: CreateItemInput = {
     id: null,
@@ -83,7 +78,23 @@ const itemFormats = [
 
 
 const ItemModal = (props: ItemModalProps) => {
-    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues, setValue } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
+    const { handleSubmit, control, reset, formState: { isDirty, errors, dirtyFields }, getValues } = useForm<CreateItemInput>({ defaultValues: DefaultItem });
+
+
+    const { loading: itemLoading } = useQuery(QUERY_ITEM_BY_ID, {
+        client: apolloLibraryClient,
+        variables: {
+            id: props.itemId
+        },
+        skip: !props.itemId,
+        fetchPolicy: "no-cache",
+        onCompleted: (data) => {
+            const item = data?.getItem?.item;
+            if (item) {
+                reset(item);
+            }
+        }
+    })
 
     const { data: authorsData, loading: authorsLoading } = useQuery(QUERY_AUTHORS, {
         client: apolloLibraryClient,
@@ -91,7 +102,7 @@ const ItemModal = (props: ItemModalProps) => {
         skip: !props.isOpen
     })
 
-    const { data: statusesData, loading: statusesLoading } = useQuery(QUERY_STATUS, {
+    const { data: statusesData, loading: statusesLoading } = useQuery(QUERY_LIBRARY_STATUS, {
         client: apolloLibraryClient,
         onError: (error) => { toast.error(`Erro: ${error.message}`); },
         variables: {
@@ -132,7 +143,7 @@ const ItemModal = (props: ItemModalProps) => {
         skip: !props.isOpen
     })
 
-    const isLoading = authorsLoading || statusesLoading || seriesLoading || collectionsLoading || publishersLoading || languageLoading || locationsLoading
+    const isLoading = authorsLoading || statusesLoading || seriesLoading || collectionsLoading || publishersLoading || languageLoading || locationsLoading || itemLoading
     const hasData = authorsData && statusesData && seriesData && collectionsData && publishersData && languageData && locationsData
 
 
@@ -161,22 +172,6 @@ const ItemModal = (props: ItemModalProps) => {
             toast.error(`Erro: ${error.message}`);
         },
     })
-
-    useEffect(() => {
-        // Set initial values
-        if (props.isOpen && props.item) {
-            reset(props.item);
-        } else if (props.isOpen && !props.item) {
-            reset(DefaultItem);
-        }
-
-        setValue("itemTypeId", props.itemTypeId)
-
-        // Clean form when modal closes
-        if (!props.isOpen) {
-            reset(DefaultItem);
-        }
-    }, [props.isOpen, props.item, reset]);
 
     const onSubmit = async (itemFormData: CreateItemInput) => {
         if (itemFormData.id) {

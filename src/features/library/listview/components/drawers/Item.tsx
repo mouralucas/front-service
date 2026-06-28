@@ -3,17 +3,17 @@ import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import { Box, Button, Divider, IconButton, LinearProgress, LinearProgressProps, Stack, Typography } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import DrawerV2 from "../../../../components/Drawer";
-import ItemCard from "../../../../components/ItemCard";
-import ItemStatusChip from "../../../../components/ItemStatusChip.tsx";
-import CircularLoader from "../../../../components/Loader";
-import { Item } from "../../../../interfaces/Library";
-import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService";
-import { UPDATE_ITEM_ON_QUEUE, UPDATE_READING_STATUS_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
-import { QUERY_ITEMS, QUERY_READING_STATS } from "../../../../services/apollo/queries/Library";
+import DrawerV2 from "../../../../../components/Drawer.tsx";
+import ItemCard from "../../../../../components/ItemCard.tsx";
+import ItemStatusChip from "../../../../../components/ItemStatusChip.tsx";
+import CircularLoader from "../../../../../components/Loader.tsx";
+import { apolloLibraryClient } from "../../../../../services/apollo/client/ApolloLibraryService.tsx";
+import { UPDATE_ITEM_ON_QUEUE, UPDATE_READING_STATUS_MUTATION } from "../../../../../services/apollo/mutations/Library.tsx";
 import CreateReadingModal from "../modals/CreateReading";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 import ReadingHistoryTable from "../tables/ReadingHistory.tsx";
+import { QUERY_ITEMS, QUERY_READING_STATS } from "../../../api/queries.ts";
+import { Item } from "../../../type/Item.ts";
 
 
 interface ItemDrawerProps {

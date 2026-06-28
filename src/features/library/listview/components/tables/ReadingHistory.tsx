@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { ReactElement } from "react";
-import DataGrid from "../../../../components/table/DataGrid.tsx";
 import { useQuery } from "@apollo/client";
-import { QUERY_READING } from "../../../../services/apollo/queries/Library.tsx";
-import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { formatDate } from "../../../../utils/datetime.tsx";
+import { apolloLibraryClient } from "../../../../../services/apollo/client/ApolloLibraryService";
+import { QUERY_READING } from "../../../api/queries";
+import { formatDate } from "../../../../../utils/datetime";
+import DataGrid from "../../../../../components/table/DataGrid";
 
 
 interface ReadingHistoryTableProps {

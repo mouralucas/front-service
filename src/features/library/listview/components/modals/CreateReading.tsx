@@ -9,10 +9,10 @@ import { ptBR } from "date-fns/locale";
 import { ReactElement, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Modal from "../../../../components/Modal.tsx";
-import { ItemReading } from "../../../../interfaces/Library.tsx";
-import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
-import { CREATE_READING_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
+import Modal from "../../../../../components/Modal";
+import { ItemReading } from "../../../type/Reading";
+import { apolloLibraryClient } from "../../../../../services/apollo/client/ApolloLibraryService";
+import { CREATE_READING_MUTATION } from "../../../api/mutations";
 
 
 interface CreateReadingModalProps {

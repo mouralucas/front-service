@@ -6,13 +6,10 @@ import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import { Box, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
-import SelectAutocomplete from '../../../../components/form/SelectAutocomplete.tsx';
-import DataGrid from "../../../../components/table/DataGrid.tsx";
-import { Item } from "../../../../interfaces/Library";
-import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService.tsx';
-import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../../services/apollo/queries/Library.tsx';
-import MangaDrawer from "../drawer/Manga.tsx";
 import ItemModal from "../modals/Item.tsx";
+import { apolloLibraryClient } from '../../../../../services/apollo/client/ApolloLibraryService.tsx';
+import { Item } from '../../../type/Item.ts';
+import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../api/queries.ts';
 
 
 type ItemFilters = {
