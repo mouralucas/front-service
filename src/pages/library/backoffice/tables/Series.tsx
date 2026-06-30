@@ -7,8 +7,8 @@ import { ReactElement, useCallback, useState } from "react";
 import DataGrid from "../../../../components/table/DataGrid.tsx";
 import { Serie } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
-import { QUERY_SERIES } from "../../../../services/apollo/queries/Library";
 import SerieModal from "../modals/Serie.tsx";
+import { QUERY_SERIES } from "../../../../features/library/api/queries.ts";
 
 const SeriesTable = (): ReactElement => {
     const [selectedSerie, setSelectedSerie] = useState<Serie>();

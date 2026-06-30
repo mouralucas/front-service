@@ -10,6 +10,9 @@ import ItemModal from "../modals/Item.tsx";
 import { apolloLibraryClient } from '../../../../../services/apollo/client/ApolloLibraryService.tsx';
 import { Item } from '../../../type/Item.ts';
 import { QUERY_COLLECTION, QUERY_ITEMS, QUERY_SERIES } from '../../../api/queries.ts';
+import MangaDrawer from '../drawers/Manga.tsx';
+import DataGrid from '../../../../../components/table/DataGrid.tsx';
+import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete.tsx';
 
 
 type ItemFilters = {

@@ -8,9 +8,9 @@ import { toast } from 'react-toastify';
 import DataGrid from '../../../../components/table/DataGrid.tsx';
 import { Author } from '../../../../interfaces/Library';
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
-import { QUERY_AUTHORS } from '../../../../services/apollo/queries/Library';
 import { formatDate } from '../../../../utils/datetime';
 import AuthorModal from '../modals/Author.tsx';
+import { QUERY_AUTHORS } from '../../../../features/library/api/queries.ts';
 
 const AuthorTable = (): ReactElement => {
     const [authorModalState, setAuthorModalState] = useState<boolean>(false)

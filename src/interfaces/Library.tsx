@@ -1,3 +1,4 @@
+import { Item } from "../features/library/type/Item";
 
 
 export interface ItemSummary {
@@ -24,11 +25,6 @@ export interface ItemReadingStats {
     currentPage: number | null;
     currentPercentage: number | null;
 }
-
-
-
-
-
 
 export interface ItemReadingGoal {
     id: string;

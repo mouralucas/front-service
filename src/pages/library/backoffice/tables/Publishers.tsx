@@ -5,7 +5,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { ReactElement } from "react";
 import DataGrid from "../../../../components/table/DataGrid";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
-import { QUERY_PUBLISHERS } from "../../../../services/apollo/queries/Library";
+import { QUERY_PUBLISHERS } from "../../../../features/library/api/queries";
 
 const PublisherTable = (): ReactElement => {
     const { data: publishersData, loading: publishersLoading, refetch: publishersRefetch} = useQuery(QUERY_PUBLISHERS, {

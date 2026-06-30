@@ -8,7 +8,7 @@ import Modal from "../../../../components/Modal.tsx";
 import { Serie } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_SERIE_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
-import { QUERY_COUNTRIES } from "../../../../services/apollo/queries/Library.tsx";
+import { QUERY_COUNTRIES } from "../../../../features/library/api/queries.ts";
 
 export interface SerieModalProps {
     serie: Serie | undefined

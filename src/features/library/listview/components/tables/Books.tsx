@@ -11,6 +11,8 @@ import ItemModal from '../modals/Item.tsx'
 import { apolloLibraryClient } from '../../../../../services/apollo/client/ApolloLibraryService.tsx'
 import { QUERY_ITEMS } from '../../../api/queries.ts'
 import { Item } from '../../../type/Item.ts'
+import BookDrawer from '../drawers/Book.tsx'
+import DataGrid from '../../../../../components/table/DataGrid.tsx'
 
 
 const Books = (): ReactElement => {

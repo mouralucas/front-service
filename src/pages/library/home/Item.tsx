@@ -1,6 +1,6 @@
 import {ReactElement} from "react";
-import {Item} from "../../../interfaces/Library.tsx";
 import NoCover from '../../../assets/core/images/no-cover.png'
+import { Item } from "../../../features/library/type/Item";
 
 interface ItemProps {
     item?: Item;

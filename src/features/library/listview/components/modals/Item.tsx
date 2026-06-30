@@ -15,6 +15,7 @@ import CircularLoader from "../../../../../components/Loader.tsx";
 import SelectAutocomplete from "../../../../../components/form/SelectAutocomplete.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 import { QUERY_AUTHORS, QUERY_COLLECTION, QUERY_ITEM_LOCATIONS, QUERY_LANGUAGES, QUERY_PUBLISHERS, QUERY_SERIES, QUERY_STATUS } from "../../../api/queries.ts";
+import CurrencyInput from "../../../../../components/form/CurrencyInput.tsx";
 
 export interface ItemModalProps {
     item: CreateItemInput | undefined | null

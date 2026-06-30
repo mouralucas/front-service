@@ -13,7 +13,7 @@ import Modal from "../../../../components/Modal.tsx";
 import { Author } from "../../../../interfaces/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_AUTHOR_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
-import { QUERY_COUNTRIES, QUERY_LANGUAGES } from "../../../../services/apollo/queries/Library.tsx";
+import { QUERY_COUNTRIES, QUERY_LANGUAGES } from "../../../../features/library/api/queries.ts";
 
 interface AuthorModalProps {
     modalState: boolean;
