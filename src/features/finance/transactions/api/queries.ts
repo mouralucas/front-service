@@ -90,6 +90,52 @@ query GetCreditCardTransactionMetadataById($param: Int!) {
 }
 `
 
+export const QUERY_CREDIT_CARDS_MONTHLY_BILL = gql`
+    query GetCreditCardMonthlyBill($period: Int!) {
+    getCreditCardMonthlyBill(period: $period) {
+        bill {
+            creditCardId
+            creditCardNickname
+            period
+            totalAmount
+            transactions {
+                id
+                ownerId
+                creditCardId
+                creditCardNickname
+                period
+                dueDate
+                transactionDate
+                amount
+                categoryId
+                categoryName
+                currencyId
+                currencySymbol
+                transactionCurrencyId
+                transactionCurrencySymbol
+                transactionAmount
+                dollarExchangeRate
+                currencyDollarExchangeRate
+                totalTax
+                isInstallment
+                currentInstallment
+                installments
+                totalAmount
+                parentId
+                description
+                origin
+                isValidated
+                operationType
+                createdAt
+                editedAt
+            }
+            quantityTransactions
+        }
+    }
+}
+
+`
+
 export const QUERY_INSTALLMENT_DUE_DATE = gql`
     query GetInstallmentDueDates($params: GetInstallmentsDueDatesInput) {
         getCreditCardInstallmentDueDates(params: $params) {

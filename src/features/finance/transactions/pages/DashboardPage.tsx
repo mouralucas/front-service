@@ -19,9 +19,6 @@ const TransactionsDashboardLanding: FC = (): ReactElement => {
             <div className="row">
                 <div className="col-6">
                     <Card>
-                        {/*<Card.Header>*/}
-                        {/*    Histórico de faturas*/}
-                        {/*</Card.Header>*/}
                         <Card.Body>
                             <h5 className="card-title mb-3">Histórico Crédito</h5>
                             <CreditCardBillHistory/>

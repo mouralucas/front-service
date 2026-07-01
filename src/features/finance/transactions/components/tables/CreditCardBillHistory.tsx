@@ -1,17 +1,20 @@
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import DataGrid from '../../../../../components/table/DataGrid';
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import { getFinanceData } from "../../../../../services/axios/Get";
 import { toast } from "react-toastify";
 import { GetCreditCardBillHistoryResponse } from "../../../../../interfaces/FinanceRequest";
 import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
 import { URL_FINANCE_CREDIT_CARD_BILL_HISTORY } from "../../../../../services/axios/ApiUrls";
 import { Stack } from "@mui/material";
+import CreditCardMonthlyBillModal from "../modals/CreditCardMonthlyBill";
 
 
 
 const BillHistoryTable = (): ReactElement => {
     const [creditCardBillHistory, setCreditCardBillHistory] = useState<any[]>([])
+    const [isCreditCardMonthlyBillModalOpen, setIsCreditCardMonthlyBillModalOpen] = useState<boolean>(false);
+    const [selectedPeriod, setSelectedPeriod] = useState<number>()
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -35,10 +38,17 @@ const BillHistoryTable = (): ReactElement => {
         })
     }
 
-    const creditCardBillToggle = (e: any) => {
-        alert("Opa");
-        console.log(e);
-    }
+    const onCreditCardMonthlyBillModalToggle = useCallback((e: any) => {
+        if(e?.row?.period) {
+            setSelectedPeriod(e.row.period);
+        }
+
+        if (isCreditCardMonthlyBillModalOpen) {
+            setSelectedPeriod(undefined);
+        }
+
+        setIsCreditCardMonthlyBillModalOpen(!isCreditCardMonthlyBillModalOpen);
+    }, [isCreditCardMonthlyBillModalOpen])
 
     const columns: GridColDef[] = [
         { field: "period", headerName: "Período", flex: 1 },
@@ -76,21 +86,28 @@ const BillHistoryTable = (): ReactElement => {
 
 
     return (
-        <DataGrid
-            columns={columns}
-            data={creditCardBillHistory}
-            isLoading={isLoading}
-            pageSizeOptions={[12]}
-            getRowHeight={() => 'auto'}
-            pageSize={12}
-            onRowClick={creditCardBillToggle}
-            sx={{
-                "& .MuiDataGrid-cell": {
-                    display: "flex",
-                    alignItems: "center", // centraliza verticalmente
-                },
-            }}
-        />
+        <>
+            <DataGrid
+                columns={columns}
+                data={creditCardBillHistory}
+                isLoading={isLoading}
+                pageSizeOptions={[12]}
+                getRowHeight={() => 'auto'}
+                pageSize={12}
+                onRowClick={onCreditCardMonthlyBillModalToggle}
+                sx={{
+                    "& .MuiDataGrid-cell": {
+                        display: "flex",
+                        alignItems: "center",
+                    },
+                }}
+            />
+            <CreditCardMonthlyBillModal 
+                isOpen={isCreditCardMonthlyBillModalOpen}
+                onToggle={onCreditCardMonthlyBillModalToggle}
+                period={selectedPeriod}
+            />
+        </>
     )
 }
 

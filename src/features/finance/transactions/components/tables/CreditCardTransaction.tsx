@@ -163,14 +163,16 @@ const CreditCardTransactionTable = (): ReactElement => {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
             }
         },
-        {
-            field: 'installments',
+         {
+            field: 'currentInstallment',
             headerName: 'Parcelas',
-            headerAlign: "center",
-            flex: .5,
-            valueFormatter: (value: number, row) => {
-                return `${row.currentInstallment}/${value}`
-            }
+            flex: 0.8,
+            headerAlign: 'center',
+            align: "center",
+            valueFormatter: (value: any, row: CreditCardTransaction) => {
+                if (!row?.isInstallment) return 'À vista';
+                return `${value}/${row.installments}`;
+            },
         },
         { field: 'description', headerAlign: "center", headerName: 'Descrição', flex: 2 },
         { field: 'categoryName', headerAlign: "center", headerName: 'Categoria', flex: 1.5 },
