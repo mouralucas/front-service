@@ -46,8 +46,8 @@ export const QUERY_ITEMS = gql`
 `
 
 export const QUERY_ITEM_BY_ID = gql`
-  query GetItem($id: Int!) {
-    getItem(id: $id) {
+  query GetItemByItem($id: Int!) {
+    getItemById(id: $id) {
       item {
         id
         mainAuthorId

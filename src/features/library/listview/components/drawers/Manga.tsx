@@ -4,12 +4,12 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { ReactElement, useCallback, useState } from "react";
 import DrawerV2 from "../../../../../components/Drawer.tsx";
-import { apolloLibraryClient } from "../../../../../services/apollo/client/ApolloLibraryService.tsx";
-import CreateReadingModal from "../modals/CreateReading.tsx";
-import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 import ItemCard from "../../../../../components/ItemCard.tsx";
+import { apolloLibraryClient } from "../../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { QUERY_READING_STATS } from "../../../api/queries.ts";
 import { Item } from "../../../type/Item.ts";
+import CreateReadingModal from "../modals/CreateReading.tsx";
+import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 
 interface BookDrawerProps {
     openDrawerState: boolean;
@@ -17,6 +17,9 @@ interface BookDrawerProps {
     onCloseDrawerClick: (e: any) => void;
 };
 
+/**
+ * @deprecated Manga drawer is not used anymore, update to shared drawer ItemDrawer
+ */
 const MangaDrawer = (props: BookDrawerProps): ReactElement => {
 
     const [isCreateReadingProgressModalOpen, setIsCreateReadingProgressModalOpen] = useState<boolean>(false)

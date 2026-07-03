@@ -18,6 +18,10 @@ interface BookDrawerProps {
     onCloseDrawerClick: (e: any) => void;
 };
 
+
+/**
+ * @deprecated Book drawer is not used anymore, update to shared drawer ItemDrawer
+ */
 const BookDrawer = (props: BookDrawerProps): ReactElement => {
 
     const [crateReadingProgressModalState, setCrateReadingProgressModalState] = useState<boolean>(false)
