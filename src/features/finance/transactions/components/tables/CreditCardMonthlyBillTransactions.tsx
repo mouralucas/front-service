@@ -9,17 +9,6 @@ interface CreditCardMonthlyBillTransactionsProps {
     isLoading?: boolean;
 }
 
-const currencyFormatter = (value: number, currency?: string) => {
-    if (value === null || value === undefined) {
-        return '';
-    }
-
-    return value.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: currency ?? 'BRL',
-    });
-};
-
 const CreditCardMonthlyBillTransactionsTable = (
     props: CreditCardMonthlyBillTransactionsProps
 ): ReactElement => {
@@ -39,9 +28,9 @@ const CreditCardMonthlyBillTransactionsTable = (
             flex: 1,
             headerAlign: 'center',
             align: 'right',
-            valueFormatter: (value: number, row: CreditCardTransaction) => {
-                return currencyFormatter(value, row?.currencyId);
-            },
+            valueFormatter: (value: number, row) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+            }
         },
         {
             field: 'description',
