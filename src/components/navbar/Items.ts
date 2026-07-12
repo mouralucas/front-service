@@ -60,6 +60,15 @@ export const items = [
         ]
     },
     {
+        title: 'Esportes',
+        submenu: [
+            {
+                title: 'Futebol',
+                url: '/sports/football'
+            },
+        ]
+    },
+    {
         title: 'Configurções',
         submenu: [
             {

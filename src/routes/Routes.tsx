@@ -23,6 +23,10 @@ const LibraryLanding: FC = lazy(() => import('../features/library/listview/pages
 const LibraryBackoffice: FC = lazy(() => import('../pages/library/backoffice/Landing'));
 const LibraryItem: FC = lazy(() => import('../pages/library/home/Item'));
 
+// Sports imports
+const FootballLandingPage: FC = lazy(() => import('../features/sports/football/pages/LandingPage.tsx'))
+
+// Tests
 const DesignTesting: FC = lazy(() => import('../pages/DesignTests.tsx'))
 
 function RolfRoutes(): ReactElement {
@@ -50,6 +54,9 @@ function RolfRoutes(): ReactElement {
                         <Route element={<RequireAuth><LibraryLanding /></RequireAuth>} path={'/library/records'} />
                         <Route element={<RequireAuth><LibraryBackoffice /></RequireAuth>} path={'/library/backoffice'} />
                         <Route element={<RequireAuth><LibraryItem /></RequireAuth>} path={'/library/item'} />
+
+                        {/* Sports */}
+                        <Route element={<FootballLandingPage />} path={'/sports/football'}/>
 
                         {/* Settings */}
                         <Route element={<RequireAuth><FinanceAdmin /></RequireAuth>} path="/config/financeiro" />
