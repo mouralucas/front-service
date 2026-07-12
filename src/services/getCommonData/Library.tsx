@@ -1,19 +1,8 @@
-import {getLibraryData} from "../axios/Get.tsx";
-import {URL_LIBRARY_AUTHOR, URL_LIBRARY_COLLECTION, URL_LIBRARY_ITEM, URL_LIBRARY_PUBLISHER, URL_LIBRARY_SERIE, URL_LIBRARY_STATUS} from "../axios/ApiUrls.tsx";
-import {toast} from "react-toastify";
-import {CollectionResponse, GetAuthorsResponse, GetStatusResponse, PublisherResponse, SeriesResponse} from "../../interfaces/LibraryRequest.tsx";
-import {Author, Collection, LastStatus, Publisher, Serie} from "../../interfaces/Library.tsx";
-
-
-export const getItems = async (itemType: string) => {
-    try {
-        const response = await getLibraryData(URL_LIBRARY_ITEM, {itemType: itemType});
-        return response.items
-    } catch {
-        toast.error('Houve um erro ao buscar os itens')
-        return [];
-    }
-}
+import { toast } from "react-toastify";
+import { Author, Collection, Publisher, Serie } from "../../interfaces/Library.tsx";
+import { CollectionResponse, GetAuthorsResponse, PublisherResponse, SeriesResponse } from "../../interfaces/LibraryRequest.tsx";
+import { URL_LIBRARY_AUTHOR, URL_LIBRARY_COLLECTION, URL_LIBRARY_PUBLISHER, URL_LIBRARY_SERIE } from "../axios/ApiUrls.tsx";
+import { getLibraryData } from "../axios/Get.tsx";
 
 
 export const getAuthors = async (selectFormat: boolean) => {
@@ -28,23 +17,6 @@ export const getAuthors = async (selectFormat: boolean) => {
         return response.authors
     } catch {
         toast.error('Houve um erro ao buscar os autores');
-        return []
-    }
-}
-
-
-export const getStatuses = async (itemType: string, selectFormat: boolean) => {
-    try {
-        const response: GetStatusResponse = await getLibraryData(URL_LIBRARY_STATUS, {itemType: itemType});
-        if (selectFormat) {
-            return response.statuses.map((i: LastStatus) => (
-                {value: i.statusId, label: i.name}
-            ));
-        }
-
-        return response.statuses
-    } catch {
-        toast.error('Houve um erro ao buscar os status de itens');
         return []
     }
 }
