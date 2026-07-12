@@ -39,7 +39,19 @@ const UserPage = (): ReactElement => {
         client: apolloLibraryClient,
         variables: {
             params: {
-                activeGoal: true
+                activeGoal: true,
+                orderBy: [
+                    {
+                        field: 'serie_id'
+                    },
+                    {
+                        field: 'collection_id'
+                    },
+                    {
+                        field: "volume",
+                        direction: "ASC"
+                    }
+                ]
             }
         }
     })
