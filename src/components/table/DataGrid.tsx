@@ -9,7 +9,7 @@ interface DataGridProps {
     pageSizeOptions?: number[];
     pageSize?: number;
     checkBoxSelection?: boolean;
-    onRowSelectionModelChange: any;
+    onRowSelectionModelChange?: any;
     disableRowSelectionOnClick?: boolean;
     // onRowClick?: () => null;
     onRowClick?: any;

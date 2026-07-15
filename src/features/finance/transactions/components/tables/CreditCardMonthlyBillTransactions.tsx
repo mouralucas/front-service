@@ -7,6 +7,7 @@ import { CreditCardTransaction } from '../../types/CreditCard';
 interface CreditCardMonthlyBillTransactionsProps {
     transactions: CreditCardTransaction[];
     isLoading?: boolean;
+    onSelectionChange?: (rows: CreditCardTransaction[]) => void;
 }
 
 const CreditCardMonthlyBillTransactionsTable = (
@@ -58,6 +59,19 @@ const CreditCardMonthlyBillTransactionsTable = (
         },
     ];
 
+    const handleSelection = (selection: any) => {
+        // TODO
+        // Known bug: it is not consideing includ or exclude
+        // If selected everything in header, the selectedRows is []
+        // After that every click to disable is set as selectedRow
+        const selectedRows = props.transactions.filter(transaction =>
+            selection.ids.has(transaction.id)
+        );
+
+        console.log(selectedRows)
+        props.onSelectionChange?.(selectedRows);
+    };
+
     return (
         <Box>
             <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600 }}>
@@ -67,8 +81,10 @@ const CreditCardMonthlyBillTransactionsTable = (
                 columns={columns}
                 data={props.transactions}
                 isLoading={props.isLoading}
-                pageSizeOptions={[5, 10, 20]}
-                pageSize={10}
+                pageSizeOptions={[5, 10, 20, 50, 100]}
+                pageSize={100}
+                checkBoxSelection={true}
+                onRowSelectionModelChange={(e: any) => handleSelection(e)}
                 sx={{
                     '& .MuiDataGrid-cell': {
                         display: 'flex',

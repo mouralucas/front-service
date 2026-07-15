@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { ReactElement, SyntheticEvent, useEffect, useState } from "react";
+import { ReactElement, SyntheticEvent, useEffect, useMemo, useState } from "react";
 import Modal from '../../../../../components/Modal';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
 import { QUERY_CREDIT_CARDS_MONTHLY_BILL } from '../../api/queries';
@@ -11,6 +11,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
 import CircularLoader from '../../../../../components/Loader';
+import { CreditCardTransaction } from '../../types/CreditCard';
 
 interface CreditCardMonthlyBillProps {
     isOpen: boolean;
@@ -34,6 +35,7 @@ const formatCurrency = (value: number): string => {
 
 const CreditCardMonthlyBillModal = (props: CreditCardMonthlyBillProps): ReactElement => {
     const [selectedTab, setSelectedTab] = useState('0');
+    const [selectedTransactions, setSelectedTransactions] = useState<CreditCardTransaction[]>([]);
 
     const { data: billData, loading: billLoading } = useQuery<GetCreditCardMonthlyBillQuery>(
         QUERY_CREDIT_CARDS_MONTHLY_BILL,
@@ -57,6 +59,16 @@ const CreditCardMonthlyBillModal = (props: CreditCardMonthlyBillProps): ReactEle
     const handleTabChange = (_event: SyntheticEvent, newValue: string) => {
         setSelectedTab(newValue);
     };
+
+    const selectedAmount = useMemo(
+        () =>
+            selectedTransactions.reduce(
+                // Multiplied to -1 cause is the total selected.
+                (sum, transaction) => sum + (transaction.amount * -1),
+                0
+            ),
+        [selectedTransactions]
+    );
 
     const body: ReactElement = (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -115,6 +127,16 @@ const CreditCardMonthlyBillModal = (props: CreditCardMonthlyBillProps): ReactEle
                                         {formatCurrency(bill.totalAmount)}
                                     </Typography>
                                 </Box>
+                                {selectedTransactions.length > 0 &&
+                                <Box>
+                                    <Typography variant="overline" color="text.secondary">
+                                        Total selecionado
+                                    </Typography>
+                                    <Typography variant="h5" fontWeight={700}>
+                                        {formatCurrency(selectedAmount)}
+                                    </Typography>
+                                </Box>
+                                }
                                 <Box textAlign="right">
                                     <Typography variant="overline" color="text.secondary">
                                         Transações
@@ -128,6 +150,7 @@ const CreditCardMonthlyBillModal = (props: CreditCardMonthlyBillProps): ReactEle
                             <CreditCardMonthlyBillTransactionsTable
                                 transactions={bill.transactions}
                                 isLoading={billLoading}
+                                onSelectionChange={setSelectedTransactions}
                             />
                         </TabPanel>
                     ))}
