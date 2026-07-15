@@ -56,8 +56,15 @@ const CreditCardMonthlyBillModal = (props: CreditCardMonthlyBillProps): ReactEle
         }
     }, [bills.length]);
 
+    useEffect(() => {
+        if (!props.isOpen) {
+            setSelectedTransactions([]);
+        }
+    })
+
     const handleTabChange = (_event: SyntheticEvent, newValue: string) => {
         setSelectedTab(newValue);
+        setSelectedTransactions([]);
     };
 
     const selectedAmount = useMemo(

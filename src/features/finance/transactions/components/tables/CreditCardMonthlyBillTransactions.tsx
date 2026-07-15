@@ -60,15 +60,15 @@ const CreditCardMonthlyBillTransactionsTable = (
     ];
 
     const handleSelection = (selection: any) => {
-        // TODO
-        // Known bug: it is not consideing includ or exclude
-        // If selected everything in header, the selectedRows is []
-        // After that every click to disable is set as selectedRow
-        const selectedRows = props.transactions.filter(transaction =>
-            selection.ids.has(transaction.id)
-        );
+        const selectedRows =
+            selection.type === "include"
+                ? props.transactions.filter(transaction =>
+                    selection.ids.has(transaction.id)
+                )
+                : props.transactions.filter(transaction =>
+                    !selection.ids.has(transaction.id)
+                );
 
-        console.log(selectedRows)
         props.onSelectionChange?.(selectedRows);
     };
 
