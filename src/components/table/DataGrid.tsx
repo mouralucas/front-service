@@ -9,6 +9,7 @@ interface DataGridProps {
     pageSizeOptions?: number[];
     pageSize?: number;
     checkBoxSelection?: boolean;
+    onRowSelectionModelChange: any;
     disableRowSelectionOnClick?: boolean;
     // onRowClick?: () => null;
     onRowClick?: any;
@@ -39,6 +40,7 @@ const DataGrid = (props: DataGridProps) => {
                 }}
                 pageSizeOptions={props.pageSizeOptions ?? [5, 10, 30, 50, 100]}
                 checkboxSelection={props.checkBoxSelection ?? false}
+                onRowSelectionModelChange={props.onRowSelectionModelChange ?? null}
                 disableRowSelectionOnClick={props.disableRowSelectionOnClick ?? true}
                 onRowClick={props.onRowClick}
                 getRowId={props.getRowId ?? ((row: any) => row.id)}
