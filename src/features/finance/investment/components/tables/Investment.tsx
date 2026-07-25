@@ -15,9 +15,10 @@ import { formatDate, isLessThanMonths } from "../../../../../utils/datetime";
 import ModalInvestment from '../modals/Investment'
 import ModalInvestmentStatement from '../modals/InvestmentStatement'
 import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
-import { QUERY_INVESTMENTS } from '../../api/queries';
-import { Investment } from '../../types/Investment';
-import { QueryInvestment } from '../../types/InvestmentQueries';
+import { QUERY_INVESTMENT_TYPES, QUERY_INVESTMENTS } from '../../api/queries';
+import { Investment, InvestmentType } from '../../types/Investment';
+import { QueryInvestment, QueryInvestmentType } from '../../types/InvestmentQueries';
+import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete';
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -30,6 +31,7 @@ const InvestmentV2 = (): ReactElement => {
 
     // Table Filter
     const [investmentFilter, setInvestmentFilter] = useState('');
+    const [selectedInvestmentType, setSelectedInvestmentType] = useState<string>(null)
 
     // Investment information for the stats modal - soon to be deprecated
     const [investmentId, setInvestmentId] = useState<string>('')
@@ -39,10 +41,24 @@ const InvestmentV2 = (): ReactElement => {
         QUERY_INVESTMENTS,
         {
             client: apolloFinanceClient,
-            variables: { params: { isSettled: false } },
+            variables: {
+                params:
+                    { 
+                        isSettled: false,
+                        investmentTypeId: selectedInvestmentType
+                    }
+            },
             fetchPolicy: "no-cache",
         }
     )
+
+    const { data: investmentTypeData } = useQuery<QueryInvestmentType>(QUERY_INVESTMENT_TYPES,
+        {
+            client: apolloFinanceClient,
+        }
+    )
+
+    const investmentTypes = investmentTypeData?.getInvestmentTypes.investmentTypes
 
     const onInvestmentModalToggle = useCallback((e: any) => {
         if (typeof e?.row !== 'undefined') {
@@ -211,9 +227,23 @@ const InvestmentV2 = (): ReactElement => {
         ? investments?.filter((row: { name: string; }) => row.name.toLowerCase().includes(investmentFilter.toLowerCase()))
         : investments
 
+    const filterCreditCards = (val: any) => {
+        console.log(val);
+        setSelectedInvestmentType(val);
+    }
+
     return (
         <Box sx={{ display: 'block', me: 5 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 0, mb: 2, me: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
+                <SelectAutocomplete
+                    label='Tipo de investimento'
+                    value={selectedInvestmentType}
+                    options={investmentTypes || []}
+                    getOptionLabel={(option: InvestmentType) => option.name}
+                    getOptionValue={(option: InvestmentType) => option.id}
+                    onChange={(val) => filterCreditCards(val)}
+                    width={250}
+                />
                 <TextField
                     label='Filtrar por nome'
                     variant='outlined'

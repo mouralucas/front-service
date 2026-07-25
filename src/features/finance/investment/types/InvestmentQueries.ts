@@ -1,4 +1,4 @@
-import { Investment, InvestmentObjective, InvestmentStatement, InvestmentStatementMetadata } from "./Investment";
+import { Investment, InvestmentObjective, InvestmentStatement, InvestmentStatementMetadata, InvestmentType } from "./Investment";
 
 /*
     This file contains the types for the queries related to investments, 
@@ -38,5 +38,12 @@ export interface QueryInvestmentObjective {
     getInvestmentObjectives: {
         quantity: number;
         objectives: InvestmentObjective[];
+    }
+}
+
+export interface QueryInvestmentType {
+    getInvestmentTypes: {
+        quantity: number;
+        investmentTypes: InvestmentType[];
     }
 }

@@ -17,11 +17,11 @@ import { apolloFinanceClient } from "../../../../../services/apollo/client/Apoll
 import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
+import { getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
 import { QueryAccounts, QueryCurrency } from "../../../type/FinanceQueries.ts";
 import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../api/queries.ts";
 import { Investment } from "../../types/Investment.ts";
 import { QueryInvestmentById, QueryInvestmentObjective } from "../../types/InvestmentQueries.ts";
-import { getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
 
 
 interface InvestmentProps {

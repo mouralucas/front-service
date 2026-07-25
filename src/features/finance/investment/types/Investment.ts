@@ -48,8 +48,8 @@ export interface BrazilianFundInvestment {
 }
 
 export interface InvestmentType {
-    investmentTypeId: string
-    investmentTypeName: string
+    id: string
+    name: string
     description: string
     parentId: string
     investmentCategoryId: string

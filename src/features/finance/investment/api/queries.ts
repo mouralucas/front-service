@@ -189,6 +189,21 @@ export const QUERY_INVESTMENT_OBJECTIVES = gql`
     }
 `
 
+export const QUERY_INVESTMENT_TYPES = gql `
+    query GetInvestmentTypes {
+        getInvestmentTypes {
+            quantity
+            investmentTypes {
+                id
+                name
+                description
+                parentId
+                investmentCategoryId
+            }
+        }
+    }
+`
+
 
 export const QUERY_INVESTMENT_PERFORMANCE = gql`
 query GetInvestmentPerformance($params: GetInvestmentPerformanceInput) {

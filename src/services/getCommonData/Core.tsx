@@ -4,6 +4,10 @@ import {URL_COUNTRY, URL_LANGUAGE} from "../axios/ApiUrls.tsx";
 import {Country, Language} from "../../interfaces/Core.tsx";
 import {toast} from "react-toastify";
 
+
+/**
+ * @deprecated All Rest APIs are now deprecated, use Graphql instead
+ */
 export const getCountries = async (selectFormat: boolean): Promise<any[]> => {
     try {
         const response: GetCountryResponse = await getFinanceData(URL_COUNTRY);
@@ -21,6 +25,9 @@ export const getCountries = async (selectFormat: boolean): Promise<any[]> => {
     }
 };
 
+/**
+ * @deprecated All Rest APIs are now deprecated, use Graphql instead
+ */
 export const getLanguages = async (selectFormat: boolean) => {
     try {
         const response: GetLanguageResponse = await getLibraryData(URL_LANGUAGE);
