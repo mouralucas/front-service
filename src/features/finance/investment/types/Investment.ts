@@ -21,6 +21,7 @@ export interface Investment {
     settlementAmount?: number;
     countryId: string;
     observation?: string;
+    description?: string;
     objectiveId?: string | null;
     percentageChange?: number;
     isLatestStatementPeriod?: boolean;

@@ -144,11 +144,6 @@ const InvestmentV2 = (): ReactElement => {
                 return (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <Box>{text}</Box>
-                        {row.isLatestStatementPeriod === false && (
-                            <Tooltip title={`Valor desatualizado. Último extrato em ${getPeriodName(row.latestStatementPeriod)}`} arrow>
-                                <WarningAmberIcon color="warning" fontSize="small" />
-                            </Tooltip>
-                        )}
                     </Box>
                 );
             },
@@ -160,7 +155,7 @@ const InvestmentV2 = (): ReactElement => {
             type: 'number',
 
             renderCell: (params: GridRenderCellParams) => {
-                const { totalContribution, totalWithdrawn, currencyId, amount } = params.row;
+                const { totalContribution, totalWithdrawn, currencyId, amount } = params.row as Investment;
                 const formattedAmount = amount.toLocaleString('pt-BR', { style: 'currency', currency: currencyId });
 
                 return (
@@ -186,11 +181,23 @@ const InvestmentV2 = (): ReactElement => {
             headerName: 'Valor Bruto',
             flex: 1.5,
             type: 'number',
-            valueFormatter: (value: string, row) => {
-                if (!value) return 'R$ 0.00 (0.00%)';
-                const formattedAmount = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
-                return `${formattedAmount}`
-            }
+            renderCell: (params: GridRenderCellParams) => {
+                const value = params.value;
+                const row = params.row as Investment;
+
+                 const formattedAmount = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+
+                return (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Box>{formattedAmount}</Box>
+                        {row.isLatestStatementPeriod === false && (
+                            <Tooltip title={`Valor desatualizado. Último extrato em ${getPeriodName(row.latestStatementPeriod)}`} arrow>
+                                <WarningAmberIcon color="warning" fontSize="small" />
+                            </Tooltip>
+                        )}
+                    </Box>
+                );
+            },
         },
         { field: 'contractedRate', headerName: 'Taxa', flex: 1 },
         {
