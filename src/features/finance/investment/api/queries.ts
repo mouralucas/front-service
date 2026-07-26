@@ -69,6 +69,8 @@ export const QUERY_INVESTMENTS = gql`
                 percentageChange
                 totalContribution
                 totalWithdrawn
+                isLatestStatementPeriod
+                latestStatementPeriod
             }
         }
     }

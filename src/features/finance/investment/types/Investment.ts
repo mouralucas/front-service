@@ -23,7 +23,9 @@ export interface Investment {
     observation?: string;
     objectiveId?: string | null;
     percentageChange?: number;
-} 
+    isLatestStatementPeriod?: boolean;
+    latestStatementPeriod?: number;
+}
 
 /**
  * @deprecated Funds are not used anymore in the application, will be merged with investment,

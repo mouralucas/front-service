@@ -5,13 +5,14 @@ import AutorenewOutlined from '@mui/icons-material/AutorenewOutlined';
 import ClearIcon from '@mui/icons-material/Clear';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import QueryStatsutlined from '@mui/icons-material/QueryStatsOutlined';
-import { Box, TextField } from "@mui/material";
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { Box, TextField, Tooltip } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
 import DataGrid from '../../../../../components/table/DataGrid';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
-import { formatDate, isLessThanMonths } from "../../../../../utils/datetime";
+import { formatDate, getPeriodName, isLessThanMonths } from "../../../../../utils/datetime";
 import ModalInvestment from '../modals/Investment'
 import ModalInvestmentStatement from '../modals/InvestmentStatement'
 import ModalInvestmentPerformance from '../modals/InvestmentPerformance'
@@ -31,7 +32,7 @@ const InvestmentV2 = (): ReactElement => {
 
     // Table Filter
     const [investmentFilter, setInvestmentFilter] = useState('');
-    const [selectedInvestmentType, setSelectedInvestmentType] = useState<string>(null)
+    const [selectedInvestmentType, setSelectedInvestmentType] = useState<string | null>(null)
 
     // Investment information for the stats modal - soon to be deprecated
     const [investmentId, setInvestmentId] = useState<string>('')
@@ -130,12 +131,26 @@ const InvestmentV2 = (): ReactElement => {
             field: 'transactionDate',
             headerName: 'Data => vencimento',
             flex: 1,
-            valueFormatter: (value, row) => {
-                if (!value) return '';
+            renderCell: (params: GridRenderCellParams) => {
+                const value = params.value;
+                const row = params.row as Investment;
 
-                const start = formatDate(value, 'MM/yy'); // transactionDate
-                const end = formatDate(row.maturityDate, 'MM/yy'); // maturityDate
-                return end ? `${start} => ${end}` : start;
+                if (!value) return null;
+
+                const start = formatDate(value, 'MM/yy');
+                const end = formatDate(row.maturityDate, 'MM/yy');
+                const text = end ? `${start} => ${end}` : start;
+
+                return (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Box>{text}</Box>
+                        {row.isLatestStatementPeriod === false && (
+                            <Tooltip title={`Valor desatualizado. Último extrato em ${getPeriodName(row.latestStatementPeriod)}`} arrow>
+                                <WarningAmberIcon color="warning" fontSize="small" />
+                            </Tooltip>
+                        )}
+                    </Box>
+                );
             },
         },
         {

@@ -117,9 +117,13 @@ export const formatDate = (
  * @returns {string} - The formatted month and year name (e.g., 'Março de 2026' for pt, 'March 2026' for en)
  */
 export const getPeriodName = (
-    period: number,
+    period: number | undefined,
     locale: string = 'pt'
-): string => {
+): string | undefined => {
+    if (period === undefined) {
+        return period
+    }
+
     const monthNamesPt = [
         'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
