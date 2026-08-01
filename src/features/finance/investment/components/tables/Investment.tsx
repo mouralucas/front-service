@@ -208,7 +208,7 @@ const InvestmentV2 = (): ReactElement => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <Box>{formattedAmount}</Box>
                         {row.isLatestStatementPeriod === false && (
-                            <Tooltip title={`Valor desatualizado. Último extrato em ${getPeriodName(row.latestStatementPeriod)}`} arrow>
+                            <Tooltip title={`Valor desatualizado. Último extrato em ${getPeriodName(row.latestStatementPeriod)}`} arrow placement='right'>
                                 <WarningAmberIcon color="warning" fontSize="small" />
                             </Tooltip>
                         )}

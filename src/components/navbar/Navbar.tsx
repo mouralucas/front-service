@@ -66,7 +66,7 @@ const NavItem = ({ item }: { item: MenuItemType }) => {
           <SubMenuItem
             key={index}
             item={subItem}
-            onCloseAll={handleClose} // 🔥 passa o fechamento global
+            onCloseAll={handleClose}
           />
         ))}
       </Menu>
