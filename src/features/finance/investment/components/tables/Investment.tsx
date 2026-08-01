@@ -20,6 +20,8 @@ import { QUERY_INVESTMENT_TYPES, QUERY_INVESTMENTS } from '../../api/queries';
 import { Investment, InvestmentType } from '../../types/Investment';
 import { QueryInvestment, QueryInvestmentType } from '../../types/InvestmentQueries';
 import SelectAutocomplete from '../../../../../components/form/SelectAutocomplete';
+import InvestmentDetailDrawer from '../drawers/InvestmentDrawer'
+import InfoIconOutlined from '@mui/icons-material/InfoOutline';
 
 
 const InvestmentV2 = (): ReactElement => {
@@ -38,16 +40,31 @@ const InvestmentV2 = (): ReactElement => {
     const [investmentId, setInvestmentId] = useState<string>('')
     const [investmentName, setInvestmentName] = useState<string>('')
 
+    // Investment details drawer
+    const [isInvestmentDetailDrawerOpened, setIsInvestmentDetailDrawerOpened] = useState<boolean>(false)
+
+    const onInvestmentDetailDrawerToggle = useCallback((e: any) => {
+        if (e !== undefined && e.row !== undefined) {
+            // Nomalize itemId to number
+            setSelectedInvestmentId(e.row.id);
+        } else {
+            setSelectedInvestmentId("");
+        }
+
+        setIsInvestmentDetailDrawerOpened(!isInvestmentDetailDrawerOpened);
+
+    }, [isInvestmentDetailDrawerOpened]);
+
     const { data: investmentData, loading: investmentLoading, refetch: investmentRefetch } = useQuery<QueryInvestment>(
         QUERY_INVESTMENTS,
         {
             client: apolloFinanceClient,
             variables: {
                 params:
-                    { 
-                        isSettled: false,
-                        investmentTypeId: selectedInvestmentType
-                    }
+                {
+                    isSettled: false,
+                    investmentTypeId: selectedInvestmentType
+                }
             },
             fetchPolicy: "no-cache",
         }
@@ -185,7 +202,7 @@ const InvestmentV2 = (): ReactElement => {
                 const value = params.value;
                 const row = params.row as Investment;
 
-                 const formattedAmount = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
+                const formattedAmount = parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: row.currencyId });
 
                 return (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -217,6 +234,13 @@ const InvestmentV2 = (): ReactElement => {
                         height: '100%',
                     }}
                 >
+                    <IconButton
+                        aria-label="details"
+                        color="primary"
+                        onClick={onInvestmentDetailDrawerToggle.bind(null, params)}
+                    >
+                        <InfoIconOutlined />
+                    </IconButton>
                     <IconButton
                         aria-label="editar"
                         color="primary"
@@ -326,6 +350,13 @@ const InvestmentV2 = (): ReactElement => {
                 onToggle={onPerformanceModalToggle}
                 investmentId={investmentId}
                 investmentName={investmentName} />
+            {isInvestmentDetailDrawerOpened && selectedInvestmentId && (
+                <InvestmentDetailDrawer
+                    isOpen={isInvestmentDetailDrawerOpened}
+                    onToggle={onInvestmentDetailDrawerToggle}
+                    investmentId={selectedInvestmentId}
+                />
+            )}
         </Box>
     )
 }

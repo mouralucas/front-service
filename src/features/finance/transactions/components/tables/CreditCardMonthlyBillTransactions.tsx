@@ -3,6 +3,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { ReactElement } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid';
 import { CreditCardTransaction } from '../../types/CreditCard';
+import { formatDate } from '../../../../../utils/datetime';
 
 interface CreditCardMonthlyBillTransactionsProps {
     transactions: CreditCardTransaction[];
@@ -18,9 +19,9 @@ const CreditCardMonthlyBillTransactionsTable = (
             field: 'transactionDate',
             headerName: 'Compra',
             flex: 1,
-            valueFormatter: (value: string) => {
+            valueFormatter: (value) => {
                 if (!value) return '';
-                return new Date(value).toLocaleDateString('pt-BR');
+                return formatDate(value);
             },
         },
         {

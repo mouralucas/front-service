@@ -7,7 +7,7 @@ import CircularLoader from "../../../components/Loader";
 import { ItemSummary } from "../../../interfaces/Library";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
 import { QUERY_ITEMS_SUMMARY } from "../../../services/apollo/queries/Library";
-import BookDrawer from "../../../features/library/listview/components/drawers/Item.tsx";
+import BookDrawer from "../../../features/library/listview/components/drawers/ItemDrawer.tsx";
 import ItemModal from "../../../features/library/listview/components/modals/ItemV2.tsx";
 import { Item } from "../../../features/library/type/Item.ts";
 

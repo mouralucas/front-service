@@ -9,7 +9,7 @@ import ItemStatusChip from "../../../../../components/ItemStatusChip.tsx";
 import CircularLoader from "../../../../../components/Loader.tsx";
 import { apolloLibraryClient } from "../../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { UPDATE_ITEM_ON_QUEUE, UPDATE_READING_STATUS_MUTATION } from "../../../../../services/apollo/mutations/Library.tsx";
-import CreateReadingModal from "../modals/CreateReading";
+import CreateReadingModal from "../modals/CreateReading.tsx";
 import CreateReadingProgressModal from "../modals/CreateReadingProgress.tsx";
 import ReadingHistoryTable from "../tables/ReadingHistory.tsx";
 import { QUERY_ITEMS, QUERY_READING_STATS } from "../../../api/queries.ts";
