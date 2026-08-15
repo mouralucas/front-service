@@ -6,7 +6,7 @@ export const CREATE_ACCOUNT_TRANSACTION = gql`
     mutation CreateAccountTransaction($input: CreateAccountTransactionInput!) {
         createAccountTransaction(transaction: $input) {
             success
-            transactionId
+            id
         }
     }
 `
@@ -15,7 +15,7 @@ export const UPDATE_ACCOUNT_TRANSACTION = gql`
     mutation CreateAccountTransaction($input: UpdateAccountTransactionInput!) {
         updateAccountTransaction(transaction: $input) {
             success
-            transactionId
+            id
         }
     }
 `

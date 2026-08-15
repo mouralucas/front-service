@@ -1,5 +1,5 @@
 export interface AccountTransaction {
-    transactionId?: number | null;
+    id?: number | null;
     ownerId: string;
     accountId: string;
     accountNickname: string;

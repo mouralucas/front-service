@@ -5,7 +5,7 @@ query GetAccountTransactions($params: GetAccountTransactionInput) {
     getAccountTransactions(params: $params) {
         quantity
         transactions {
-            transactionId
+            id
             ownerId
             accountId
             accountNickname

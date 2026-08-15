@@ -79,7 +79,7 @@ const AccountTransactionTable = (): ReactElement => {
     }
 
     const columns: GridColDef<AccountTransaction>[] = [
-        { field: 'transactionId', headerName: 'Id', headerAlign: "center", flex: 1, type: 'number' },
+        { field: 'id', headerName: 'Id', headerAlign: "center", flex: 1, type: 'number' },
         { field: 'accountNickname', headerName: 'Conta', headerAlign: "center", flex: 1 },
         {
             field: 'transactionDate',
@@ -209,9 +209,9 @@ const AccountTransactionTable = (): ReactElement => {
                 columns={columns}
                 data={transactionData?.getAccountTransactions?.transactions}
                 isLoading={loading}
-                getRowId={(row) => row.transactionId}
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{
-                    transactionId: false
+                    id: false
                 }}
             />
             <ModalStatement

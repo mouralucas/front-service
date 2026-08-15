@@ -36,7 +36,7 @@ interface AccountStatementProps {
 
 // TODO: update this type to new structure
 const DefaultTransaction: CreateAccountTransactionInput = {
-    transactionId: null,
+    id: null,
     amount: 0,
     accountId: '',
     categoryId: '',
@@ -126,12 +126,12 @@ const AccountTransactionModal = (props: AccountStatementProps) => {
     }, [props.isOpen, props.transaction, reset, accountData, currenciesData, categoriesData]);
 
     const onSubmit = async (transactionFormData: CreateAccountTransactionInput) => {
-        if (transactionFormData.transactionId !== null) {
+        if (transactionFormData.id !== null) {
             try {
                 const currentValues: CreateAccountTransactionInput = getValues();
 
                 const modifiedFields: Partial<Record<keyof CreateAccountTransactionInput, CreateAccountTransactionInput[keyof CreateAccountTransactionInput]>> = {
-                    transactionId: transactionFormData.transactionId
+                    id: transactionFormData.id
                 };
 
                 (Object.keys(dirtyFields) as Array<keyof CreateAccountTransactionInput>).forEach((key: keyof CreateAccountTransactionInput) => {
