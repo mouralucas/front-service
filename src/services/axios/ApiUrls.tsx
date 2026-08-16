@@ -1,5 +1,6 @@
 // User URLs
 export const URL_LOGIN = '/login';
+export const URL_USER_LOGGED_PROFILE = '/user/logged/profile'
 
 //Account
 export const URL_FINANCE_ACCOUNT = '/account'

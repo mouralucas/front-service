@@ -1,27 +1,7 @@
-import financeAxios from '../axios/FinanceServiceAxios'
-import userAxios from '../axios/UserServiceAxios'
-import libraryAxios from './LibraryServiceAxios.tsx'
+import financeAxios from '../axios/FinanceServiceAxios';
+import libraryAxios from './LibraryServiceAxios.tsx';
 
 
-const userSubmit = async (
-    e: any,
-    url: string,
-    values: any,
-    method: string
-) => {
-    e.preventDefault();
-
-    const response = await userAxios({
-        method: method,
-        url: url,
-        data: values,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-
-    return response?.data
-}
 
 
 /**
@@ -68,4 +48,4 @@ const librarySubmit = async (
     return response?.data
 }
 
-export { financeSubmit, librarySubmit, userSubmit};
+export { financeSubmit, librarySubmit };

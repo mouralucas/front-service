@@ -11,8 +11,8 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setToken } from "../../../services/auth/Auth";
 import { URL_LOGIN } from "../../../services/axios/ApiUrls";
-import { userSubmit } from "../../../services/axios/Submit";
-import { Login as LoginInterface } from "../types/request";
+import userSubmit from '../api/Auth';
+import { LoginInterface } from '../types/Auth';
 
 interface LoginResponse {
     tokenPair: {
