@@ -1,7 +1,4 @@
 import {ReactElement} from "react";
-import TreeList, {Column, ColumnChooser, HeaderFilter, Item, SearchPanel,} from 'devextreme-react/tree-list';
-import {Format, Pager, Paging, Toolbar} from "devextreme-react/data-grid";
-
 
 interface TreeListProps {
     tableColumns: any[],

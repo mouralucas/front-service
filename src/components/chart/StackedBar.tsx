@@ -1,5 +1,3 @@
-import {ArgumentAxis, Chart, CommonSeriesSettings, ConstantLine, Export, Font, Label, Legend, Series, Title, Tooltip, ValueAxis} from 'devextreme-react/chart';
-
 interface BarChartProps {
     data: any[]
     argumentField: string

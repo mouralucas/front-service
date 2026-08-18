@@ -1,6 +1,3 @@
-import PieChart, {Animation, Export, Label, Legend, Margin, Series} from 'devextreme-react/pie-chart';
-import {Tooltip} from "devextreme-react/chart";
-
 interface PieCharProps {
     data: any[],
     title: string
