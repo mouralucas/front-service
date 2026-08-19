@@ -3,9 +3,9 @@ import { Box, Stack } from '@mui/material';
 import { ReactElement } from 'react';
 import DrawerV2 from '../../../../../components/Drawer';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService';
-import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENTS } from '../../api/queries';
+import { QUERY_INVESTMENTS } from '../../api/queries';
 import { Investment } from '../../types/Investment';
-import { QueryInvestment, QueryInvestmentById } from '../../types/InvestmentQueries';
+import { QueryInvestment } from '../../types/InvestmentQueries';
 
 
 interface IvestmentDrawerProps {
@@ -35,14 +35,14 @@ const InvestmentDetailDrawer = (props: IvestmentDrawerProps): ReactElement => {
                     {investment?.name || "Loading"}
                 </Box>
                 <Stack direction="row" spacing={2} p={2}>
-                    <Box flex={2}>
+                    {/* <Box flex={2}>
                         <div className="title">Data</div>
                         <div>{new Date(investment?.transactionDate).toLocaleDateString('pt-BR')}</div>
                     </Box>
                     <Box flex={2}>
                         <div className="title">Vencimento</div>
                         <div>{new Date(investment?.maturityDate).toLocaleDateString('pt-BR')}</div>
-                    </Box>
+                    </Box> */}
                     <Box flex={2}>
                         <div className="title">Taxa</div>
                         <div>{investment?.contractedRate}</div>

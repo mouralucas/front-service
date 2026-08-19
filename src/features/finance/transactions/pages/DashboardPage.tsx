@@ -1,6 +1,5 @@
-import {FC, ReactElement} from "react";
+import { FC, ReactElement } from "react";
 import Card from "../../../../components/Card.tsx";
-import CreditCardBillEvolution from "../components/charts/CreditCardBillEvolution.tsx";
 import CreditCardBillHistory from "../components/tables/CreditCardBillHistory.tsx";
 
 
@@ -11,7 +10,8 @@ const TransactionsDashboardLanding: FC = (): ReactElement => {
                 <div className="col-12">
                     <Card>
                         <Card.Body>
-                            <CreditCardBillEvolution />
+                            {/* <CreditCardBillEvolution /> */}
+                            <></>
                         </Card.Body>
                     </Card>
                 </div>
