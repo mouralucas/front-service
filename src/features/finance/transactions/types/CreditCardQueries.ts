@@ -1,4 +1,4 @@
-import { CreditCardTransaction, CreditCardTransactionMetadata } from "./CreditCard";
+import { CreditCardBillHistoricalData as CreditCardBillHistoricalData, CreditCardTransaction, CreditCardTransactionMetadata } from "./CreditCard";
 
 
 export interface CreditCardTransactionQuery {
@@ -26,5 +26,11 @@ export interface CreditCardMonthlyBill {
 export interface GetCreditCardMonthlyBillQuery {
     getCreditCardMonthlyBill: {
         bill: CreditCardMonthlyBill[];
+    };
+}
+
+export interface GetCreditCardBillHistoricalDataQuery {
+    getCreditCardBillHistoricalData: {
+        historicalData: CreditCardBillHistoricalData;
     };
 }

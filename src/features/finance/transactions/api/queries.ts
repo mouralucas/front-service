@@ -161,3 +161,17 @@ export const QUERY_TRANSACTION_CATEGORIES = gql`
         }
 }
 `
+
+export const QUERY_CREDIT_CARDS_MONTHLY_BILL_EVOLUTION = gql`
+    query GetCreditCardBillHistoricalData($params: GetCreditCardMonthlyBillEvolutionInput) {
+        getCreditCardBillHistoricalData(params: $params) {
+            historicalData {
+                periodAverage
+                historicalAverage
+                goal
+                periodRange
+                historicalData  
+            }
+        }
+    }
+`
