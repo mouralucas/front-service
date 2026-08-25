@@ -1,6 +1,7 @@
 import { FC, ReactElement } from "react";
 import Card from "../../../../components/Card.tsx";
 import CreditCardBillHistory from "../components/tables/CreditCardBillHistory.tsx";
+import CreditCardBillHistoricalDataChart from "../components/charts/CreditCardBillHistoricalDataChart.tsx";
 
 
 const TransactionsDashboardLanding: FC = (): ReactElement => {
@@ -10,7 +11,7 @@ const TransactionsDashboardLanding: FC = (): ReactElement => {
                 <div className="col-12">
                     <Card>
                         <Card.Body>
-                            {/* <CreditCardBillEvolution /> */}
+                            <CreditCardBillHistoricalDataChart />
                             <></>
                         </Card.Body>
                     </Card>

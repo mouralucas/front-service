@@ -60,7 +60,7 @@ const CreditCardMonthlyBillModal = (props: CreditCardMonthlyBillProps): ReactEle
         if (!props.isOpen) {
             setSelectedTransactions([]);
         }
-    })
+    }, [props.isOpen])
 
     const handleTabChange = (_event: SyntheticEvent, newValue: string) => {
         setSelectedTab(newValue);

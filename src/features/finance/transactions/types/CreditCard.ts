@@ -92,3 +92,11 @@ export interface CreditCardBillHistory {
         total: number;
     }
 }
+
+export interface CreditCardBillHistoricalData {
+    periodAverage: number;
+    historicalAverage: number;
+    goal: number;
+    historicalData: any[];
+    periodRange: any[];
+}
