@@ -7,6 +7,7 @@ import { apolloFinanceClient } from '../../../../../services/apollo/client/Apoll
 import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 import { QUERY_CREDIT_CARDS_MONTHLY_BILL_EVOLUTION as QUERY_CREDIT_CARD_BILL_HITORICAL_DATA } from '../../api/queries.ts';
 import { GetCreditCardBillHistoricalDataQuery } from '../../types/CreditCardQueries.ts';
+import { BarChartReferenceLine } from '../../../../../interfaces/BarChart.ts';
 
 const CreditCardBillEvolution = () => {
     const [dateRange, setDateRange] = useState<any[]>(getLastPeriods());
@@ -27,18 +28,20 @@ const CreditCardBillEvolution = () => {
     })
 
     const historicalData = historyData?.getCreditCardBillHistoricalData.historicalData;
-    const referenceLine = [
-        {
-            value: historicalData.historicalAverage,
-            label: "Média histórica",
-            labelAlign: 'start',
-        },
-        {
-            value: historicalData.goal, 
-            label: "Meta",
-            labelAlign: 'start'
-        },
-    ]
+    const referenceLine: BarChartReferenceLine[] = historicalData
+        ? [
+            {
+                value: historicalData.historicalAverage,
+                label: "Média histórica",
+                labelAlign: "start",
+            },
+            {
+                value: historicalData.goal,
+                label: "Meta",
+                labelAlign: "start",
+            },
+        ]
+        : [];
 
     useEffect(() => {
         console.log(historicalData);
