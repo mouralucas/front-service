@@ -10,6 +10,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ptBR } from 'date-fns/locale';
+import { Box } from '@mui/material';
 
 const CreditCardBillEvolution = () => {
     // Filter date range
@@ -66,58 +67,55 @@ const CreditCardBillEvolution = () => {
     }, [historicalData])
 
     return (
-        <>
-            <div className="row mb-3">
-                <div className="col-4"></div>
-                <div className="col-4">
-                </div>
-                <div className="col-4">
-                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
-                        <DatePicker
-                            label="Data inicial"
-                            views={["month", "year"]}
-                            value={startDate}
-                            onChange={(newValue) => {
-                                setStartDate(newValue);
-                                if (endDate && newValue && endDate < newValue) {
-                                    setEndDate(newValue);
-                                }
-                            }}
-                            maxDate={endDate || undefined}
-                            slotProps={{
-                                textField: {
-                                    size: "small",
-                                    fullWidth: false
-                                },
-                            }}
-                        />
-                        <DatePicker
-                            label="Data final"
-                            views={["month", "year"]}
-                            value={endDate}
-                            onChange={(newValue) => {
+        <Box sx={{ display: 'block ' }} >
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+                    <DatePicker
+                        label="Data inicial"
+                        views={["month", "year"]}
+                        value={startDate}
+                        onChange={(newValue) => {
+                            setStartDate(newValue);
+                            if (endDate && newValue && endDate < newValue) {
                                 setEndDate(newValue);
-                                if (startDate && newValue && startDate > newValue) {
-                                    setStartDate(newValue);
-                                }
-                            }}
-                            minDate={startDate || undefined}
-                            slotProps={{
-                                textField: {
-                                    size: "small",
-                                    fullWidth: false
-                                },
-                            }}
-                        />
-                    </LocalizationProvider>
-                </div>
-            </div>
-            <BarChart
-                data={historicalData?.historicalData ?? []}
-                serie={historicalData?.periodRange ?? []}
-                referenceLine={referenceLine}
-            />
-        </>
+                            }
+                        }}
+                        maxDate={endDate || undefined}
+                        slotProps={{
+                            textField: {
+                                size: "small",
+                                fullWidth: false
+                            },
+                        }}
+                    />
+                    <DatePicker
+                        label="Data final"
+                        views={["month", "year"]}
+                        value={endDate}
+                        onChange={(newValue) => {
+                            setEndDate(newValue);
+                            if (startDate && newValue && startDate > newValue) {
+                                setStartDate(newValue);
+                            }
+                        }}
+                        minDate={startDate || undefined}
+                        slotProps={{
+                            textField: {
+                                size: "small",
+                                fullWidth: false
+                            },
+                        }}
+                    />
+                </LocalizationProvider>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4, mt: 6 }}>
+                <BarChart
+                    data={historicalData?.historicalData ?? []}
+                    serie={historicalData?.periodRange ?? []}
+                    referenceLine={referenceLine}
+                />
+            </Box>
+        </Box>
     )
 }
 
