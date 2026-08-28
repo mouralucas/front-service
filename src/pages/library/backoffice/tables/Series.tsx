@@ -5,7 +5,7 @@ import { Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { ReactElement, useCallback, useState } from "react";
 import DataGrid from "../../../../components/table/DataGrid.tsx";
-import { Serie } from "../../../../interfaces/Library.tsx";
+import { Serie } from "../../../../types/Library.tsx";
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import SerieModal from "../modals/Serie.tsx";
 import { QUERY_SERIES } from "../../../../features/library/api/queries.ts";

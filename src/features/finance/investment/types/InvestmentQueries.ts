@@ -47,3 +47,12 @@ export interface QueryInvestmentType {
         investmentTypes: InvestmentType[];
     }
 }
+
+export interface QueryInvestmentPerformance {
+    getInvestmentPerformance: {
+        investmentSerie: number[];
+        indexerSerie: number[];
+        indexerName: string;
+        periodRange: number[];
+    }
+}

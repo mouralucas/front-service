@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 import Modal from "../../../../components/Modal.tsx";
-import { Serie } from "../../../../interfaces/Library.tsx";
+import { Serie } from "../../../../types/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_SERIE_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { QUERY_COUNTRIES } from "../../../../features/library/api/queries.ts";

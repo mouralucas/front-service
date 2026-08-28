@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
-import { Author, Collection, Publisher, Serie } from "../../interfaces/Library.tsx";
-import { CollectionResponse, GetAuthorsResponse, PublisherResponse, SeriesResponse } from "../../interfaces/LibraryRequest.tsx";
+import { Author, Collection, Publisher, Serie } from "../../types/Library.tsx";
+import { CollectionResponse, GetAuthorsResponse, PublisherResponse, SeriesResponse } from "../../types/LibraryRequest.tsx";
 import { URL_LIBRARY_AUTHOR, URL_LIBRARY_COLLECTION, URL_LIBRARY_PUBLISHER, URL_LIBRARY_SERIE } from "../axios/ApiUrls.tsx";
 import { getLibraryData } from "../axios/Get.tsx";
 

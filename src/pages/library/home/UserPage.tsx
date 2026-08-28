@@ -4,7 +4,7 @@ import { Box, Divider, Stack, TextField, Typography } from "@mui/material";
 import { ReactElement, useCallback, useState } from "react";
 import ItemCard from "../../../components/ItemCard";
 import CircularLoader from "../../../components/Loader";
-import { ItemSummary } from "../../../interfaces/Library";
+import { ItemSummary } from "../../../types/Library.tsx";
 import { apolloLibraryClient } from "../../../services/apollo/client/ApolloLibraryService";
 import { QUERY_ITEMS_SUMMARY } from "../../../services/apollo/queries/Library";
 import BookDrawer from "../../../features/library/listview/components/drawers/ItemDrawer.tsx";

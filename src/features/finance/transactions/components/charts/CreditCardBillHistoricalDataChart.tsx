@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useCallback, useEffect, useState } from "react";
 import BarChart from '../../../../../components/chart/BarChart.tsx';
-import { BarChartReferenceLine } from '../../../../../interfaces/BarChart.ts';
+import { BarChartReferenceLine } from '../../../../../types/finance/BarChartTypes.ts';
 import { apolloFinanceClient } from '../../../../../services/apollo/client/ApolloFinanceService.tsx';
 import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 import { QUERY_CREDIT_CARDS_MONTHLY_BILL_EVOLUTION as QUERY_CREDIT_CARD_BILL_HITORICAL_DATA } from '../../api/queries.ts';

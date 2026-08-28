@@ -6,7 +6,7 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ReactElement, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 import DataGrid from '../../../../components/table/DataGrid.tsx';
-import { Author } from '../../../../interfaces/Library';
+import { Author } from '../../../../types/Library.tsx';
 import { apolloLibraryClient } from '../../../../services/apollo/client/ApolloLibraryService';
 import { formatDate } from '../../../../utils/datetime';
 import AuthorModal from '../modals/Author.tsx';

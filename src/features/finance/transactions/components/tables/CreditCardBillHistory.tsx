@@ -3,7 +3,7 @@ import DataGrid from '../../../../../components/table/DataGrid';
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { getFinanceData } from "../../../../../services/axios/Get";
 import { toast } from "react-toastify";
-import { GetCreditCardBillHistoryResponse } from "../../../../../interfaces/FinanceRequest";
+import { GetCreditCardBillHistoryResponse } from "../../../../../types/FinanceRequest";
 import { getLastPeriods, getPeriodFromDate } from "../../../../../utils/datetime";
 import { URL_FINANCE_CREDIT_CARD_BILL_HISTORY } from "../../../../../services/axios/ApiUrls";
 import { Stack } from "@mui/material";
