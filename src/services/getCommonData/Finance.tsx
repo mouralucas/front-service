@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { GetBankResponse, GetBrazilianFundResponse, GetCategoryResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentObjectivesResponse, GetInvestmentTypesResponse, GetLiquidityResponse } from "../../interfaces/FinanceRequest.tsx";
+import { GetBankResponse, GetBrazilianFundResponse, GetCategoryResponse, GetIndexersResponse, GetIndexerTypesResponse, GetInvestmentObjectivesResponse, GetInvestmentTypesResponse, GetLiquidityResponse } from "../../types/FinanceRequest.tsx";
 import { URL_FINANCE_BANK, URL_FINANCE_BRAZILIAN_FUNDS, URL_FINANCE_CATEGORIES, URL_FINANCE_INDEXER, URL_FINANCE_INDEXER_TYPE, URL_FINANCE_INVESTMENT_OBJECTIVE, URL_FINANCE_INVESTMENT_TYPE, URL_FINANCE_LIQUIDITY } from "../axios/ApiUrls.tsx";
 import { getFinanceData } from "../axios/Get.tsx";
 import { Bank, BrazilianFunds, Category, Indexer, IndexerType, Liquidity } from "../../features/finance/type/Finance";

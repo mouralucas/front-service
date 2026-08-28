@@ -1,16 +1,13 @@
 import Box from '@mui/material/Box';
 import { ChartsReferenceLine } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { BarChartSeries, BarChartReferenceLine } from '../../interfaces/BarChart';
+import { BarChartSeries, BarChartReferenceLine } from '../../types/finance/BarChartTypes';
 
 interface BarChartProps {
     data: any[];
     serie: any[];
     referenceLine?: BarChartReferenceLine[];
 }
-
-// Maybe add to a genereal type folder so we can use on the reference call
-
 
 export default function StackedBarChart(props: BarChartProps) {
     const stacked = buildBillStackedSeries(props.data)

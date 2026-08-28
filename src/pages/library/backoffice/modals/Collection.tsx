@@ -4,7 +4,7 @@ import { ReactElement } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Modal from "../../../../components/Modal.tsx";
-import { Collection } from "../../../../interfaces/Library.tsx";
+import { Collection } from "../../../../types/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_COLLECTION_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 

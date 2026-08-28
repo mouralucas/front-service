@@ -3,12 +3,14 @@ import { Divider, Paper, Typography } from "@mui/material";
 import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import Select from "react-select";
-import Line from "../../../../../components/chart/Line.tsx";
+import Line from "../../../../../components/chart/LineChart.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { getIndexers } from "../../../../../services/getCommonData/Finance.tsx";
 import { getPeriodName } from "../../../../../utils/datetime.tsx";
 import { Indexer } from "../../../type/Finance.ts";
 import { QUERY_INVESTMENT_PERFORMANCE } from "../../api/queries.ts";
+import { QueryInvestmentPerformance } from "../../types/InvestmentQueries.ts";
+import { LineChartSeries } from "../../../../../types/finance/LineChartTypes.ts";
 
 const periodsRange = [
     {
@@ -37,7 +39,7 @@ const App = () => {
         selectedPeriod: 12,
     });
 
-    const { data: performanceData, loading: performanceLoading } = useQuery(
+    const { data: performanceData, loading: performanceLoading } = useQuery<QueryInvestmentPerformance>(
         QUERY_INVESTMENT_PERFORMANCE,
         {
             client: apolloFinanceClient,
@@ -107,7 +109,36 @@ const App = () => {
         );
     }
 
+    //TODO: add type to data in param here
+    const buildPerformanceChartData = (data: any) => {
+        let series: LineChartSeries[] = [
+            {
+                "id": "investment",
+                "label": "Investimento",
+                "data": data.investmentSerie,
+                "showMark": false,
+            },
+            {
+                "id": data.indexerName,
+                "label": data.indexerName,
+                "data": data.indexerSerie,
+                "showMark": false
+            }
+        ]
+        return series
+    };
+
     const performance = performanceData?.getInvestmentPerformance
+    const chartData = performance ? buildPerformanceChartData(performance) : []
+    const periodRange = performance
+        ? performance.periodRange.map(period => getPeriodName(period))
+        : [];
+
+
+    useEffect(() => {
+        console.log(chartData)
+    }, [chartData])
+
     return (
         <>
             <div className="row mb-3">
@@ -132,9 +163,13 @@ const App = () => {
             <div className="row">
                 <div className="col-12">
                     <Line
-                        series={performance?.data}
-                        xLabels={performance?.xLabel}
-                        customAxisTooltip={CustomAxisTooltip}
+                        series={chartData}
+                        xAxis={{
+                            data: periodRange
+                        }}
+                        yAxis={{
+                            label: "Porcentagem (%)"
+                        }}
                         loading={performanceLoading}
                     />
                 </div>

@@ -1,7 +1,7 @@
-import {GetCountryResponse, GetLanguageResponse} from "../../interfaces/CoreRequest.tsx";
+import {GetCountryResponse, GetLanguageResponse} from "../../types/CoreRequest.tsx";
 import {getFinanceData, getLibraryData} from "../axios/Get.tsx";
 import {URL_COUNTRY, URL_LANGUAGE} from "../axios/ApiUrls.tsx";
-import {Country, Language} from "../../interfaces/Core.tsx";
+import {Country, Language} from "../../types/Core.tsx";
 import {toast} from "react-toastify";
 
 

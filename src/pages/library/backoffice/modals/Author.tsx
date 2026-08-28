@@ -10,7 +10,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete.tsx";
 import Modal from "../../../../components/Modal.tsx";
-import { Author } from "../../../../interfaces/Library.tsx";
+import { Author } from "../../../../types/Library.tsx";
 import { apolloLibraryClient } from "../../../../services/apollo/client/ApolloLibraryService.tsx";
 import { CREATE_AUTHOR_MUTATION } from "../../../../services/apollo/mutations/Library.tsx";
 import { QUERY_COUNTRIES, QUERY_LANGUAGES } from "../../../../features/library/api/queries.ts";
