@@ -210,10 +210,12 @@ export const QUERY_INVESTMENT_TYPES = gql `
 export const QUERY_INVESTMENT_PERFORMANCE = gql`
 query GetInvestmentPerformance($params: GetInvestmentPerformanceInput) {
     getInvestmentPerformance(params: $params) {
-        investmentSerie
-        indexerSerie
-        indexerName
-        periodRange
+        performance {
+            indexerSerie
+            investmentSerie
+            periodRange
+            indexerName
+        }
     }
 }
 `

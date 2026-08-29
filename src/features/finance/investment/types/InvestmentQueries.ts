@@ -1,4 +1,4 @@
-import { Investment, InvestmentObjective, InvestmentStatement, InvestmentStatementMetadata, InvestmentType } from "./Investment";
+import { Investment, InvestmentObjective, InvestmentPerformance, InvestmentStatement, InvestmentStatementMetadata, InvestmentType } from "./Investment";
 
 /*
     This file contains the types for the queries related to investments, 
@@ -50,9 +50,6 @@ export interface QueryInvestmentType {
 
 export interface QueryInvestmentPerformance {
     getInvestmentPerformance: {
-        investmentSerie: number[];
-        indexerSerie: number[];
-        indexerName: string;
-        periodRange: number[];
+        performance: InvestmentPerformance;
     }
 }
