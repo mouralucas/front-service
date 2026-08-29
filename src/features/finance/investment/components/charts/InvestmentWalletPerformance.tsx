@@ -11,6 +11,7 @@ import { Indexer } from "../../../type/Finance.ts";
 import { QUERY_INVESTMENT_PERFORMANCE } from "../../api/queries.ts";
 import { QueryInvestmentPerformance } from "../../types/InvestmentQueries.ts";
 import { LineChartSeries } from "../../../../../types/finance/LineChartTypes.ts";
+import { InvestmentPerformance } from "../../types/Investment.ts";
 
 const periodsRange = [
     {
@@ -110,7 +111,7 @@ const App = () => {
     }
 
     //TODO: add type to data in param here
-    const buildPerformanceChartData = (data: any) => {
+    const buildPerformanceChartData = (data: InvestmentPerformance) => {
         let series: LineChartSeries[] = [
             {
                 "id": "investment",
@@ -128,7 +129,7 @@ const App = () => {
         return series
     };
 
-    const performance = performanceData?.getInvestmentPerformance
+    const performance = performanceData?.getInvestmentPerformance.performance
     const chartData = performance ? buildPerformanceChartData(performance) : []
     const periodRange = performance
         ? performance.periodRange.map(period => getPeriodName(period))

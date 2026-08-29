@@ -102,3 +102,10 @@ export interface InvestmentAllocation {
         total: number
     }]
 }
+
+export interface InvestmentPerformance {
+    indexerSerie: number[];
+    investmentSerie: number[];
+    periodRange: string[];
+    indexerName: string;
+}
