@@ -81,6 +81,15 @@ export interface CreditCardBill {
     totalAmount: number;
 }
 
+export interface CreditCardMonthlyBill {
+    creditCardId: number;
+    creditCardNickname?: string | null;
+    period: number;
+    totalAmount: number;
+    quantityTransactions: number;
+    transactions: CreditCardTransaction[];
+}
+
 export interface CreditCardBillHistory {
     id: number;
     period: number;
