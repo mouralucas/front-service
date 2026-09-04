@@ -115,6 +115,21 @@ export const QUERY_READING_STATS = gql`
   }
 `
 
+export const QUERY_ITEM_BY_LOCATION = gql`
+  query GetItemsByLocation($params: GetItemsByLocationInput) {
+    getItemsByLocation(params: $params) {
+        locationName
+        locationId
+        items {
+            id
+            mainAuthorId
+            title
+            physicalLocation
+        }
+    }
+}
+`
+
 // General queries
 export const QUERY_AUTHORS = gql`
 query GetAuthors($params: GetAuthorsRequest) {
@@ -133,6 +148,7 @@ query GetAuthors($params: GetAuthorsRequest) {
     }
   }
 `
+
 export const QUERY_SERIES = gql`
 query {
   getSeries {
