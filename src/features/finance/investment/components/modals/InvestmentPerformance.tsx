@@ -24,7 +24,8 @@ const PerformanceModal = (props: InvestmentPerformanceProps) => {
                 <div className="col-12">
                     <PerformanceChart
                         investmentId={props.investmentId}
-                        refreshKey={refreshKey} />
+                        refreshKey={refreshKey} 
+                    />
                 </div>
             </div>
             <div className="row">

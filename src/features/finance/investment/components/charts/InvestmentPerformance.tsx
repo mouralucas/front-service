@@ -2,13 +2,18 @@ import { useQuery } from "@apollo/client";
 import { Divider, Paper, Typography } from "@mui/material";
 import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
 import { useEffect } from "react";
-import Line from "../../../../../components/chart/Line.tsx";
+import Line from "../../../../../components/chart/LineChart.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { getPeriodName } from "../../../../../utils/datetime.tsx";
 import { QUERY_INVESTMENT_PERFORMANCE } from "../../api/queries.ts";
+import { InvestmentPerformance } from "../../types/Investment.ts";
+import { LineChartSeries } from "../../../../../types/finance/LineChartTypes.ts";
+
 
 interface InvestmentPerformanceProps {
+    /** Identifier of the investment whose performance is displayed. */
     investmentId: string;
+    /** Used when related info are updated and the chart must refresh. */
     refreshKey: number;
 }
 
@@ -18,7 +23,12 @@ const App = (props: InvestmentPerformanceProps) => {
         QUERY_INVESTMENT_PERFORMANCE,
         {
             client: apolloFinanceClient,
-            variables: { params: { investmentId: props.investmentId, isSettled: true } },
+            variables: {
+                params: {
+                    investmentId: props.investmentId,
+                    periodRange: 0,
+                }
+            },
             skip: !props.investmentId,
             fetchPolicy: 'no-cache'
         }
@@ -29,7 +39,30 @@ const App = (props: InvestmentPerformanceProps) => {
         performanceRefetch();
     }, [props.refreshKey])
 
-    const performance = performanceData?.getInvestmentPerformance
+
+    const buildPerformanceChartData = (data: InvestmentPerformance) => {
+        let series: LineChartSeries[] = [
+            {
+                "id": "investment",
+                "label": "Investimento",
+                "data": data.investmentSerie,
+                "showMark": true,
+            },
+            {
+                "id": data.indexerName,
+                "label": data.indexerName,
+                "data": data.indexerSerie,
+                "showMark": true
+            }
+        ]
+        return series
+    };
+
+    const performance = performanceData?.getInvestmentPerformance.performance
+    const chartData = performance ? buildPerformanceChartData(performance) : []
+    const periodRange = performance
+        ? performance.periodRange.map(period => getPeriodName(period))
+        : [];
 
     function CustomAxisTooltip() {
         const tooltipData = useAxesTooltip();
@@ -82,11 +115,13 @@ const App = (props: InvestmentPerformanceProps) => {
     return (
         <>
             <Line
-                series={performance?.data || []}
-                xLabels={performance?.xLabel}
-                title="Evolução do investimento"
-                subtitle={`Evolução, em %, dos investimentos comparados ao ${performance?.indexerName}`}
-                customAxisTooltip={CustomAxisTooltip}
+                series={chartData}
+                xAxis={{
+                    data: periodRange
+                }}
+                yAxis={{
+                    label: "Porcentagem (%)"
+                }}
                 loading={performanceLoading}
             />
         </>
