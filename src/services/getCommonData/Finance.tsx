@@ -20,21 +20,21 @@ import { InvestmentObjective, InvestmentType } from "../../features/finance/inve
 //     }
 // };
 
-/**
- * @deprecated All Rest APIs are now deprecated, use Graphql instead
- */
-export const getInvestmentTypes = async (): Promise<any[]> => {
-    try {
-        const response: GetInvestmentTypesResponse = await getFinanceData(URL_FINANCE_INVESTMENT_TYPE);
-        return response.investmentTypes.map((i: InvestmentType) => ({
-            value: i.id,
-            label: i.name,
-        }));
-    } catch {
-        toast.error('Houve um erro ao buscar os cartões de crédito');
-        return [];
-    }
-};
+// /**
+//  * @deprecated All Rest APIs are now deprecated, use Graphql instead
+//  */
+// export const getInvestmentTypes = async (): Promise<any[]> => {
+//     try {
+//         const response: GetInvestmentTypesResponse = await getFinanceData(URL_FINANCE_INVESTMENT_TYPE);
+//         return response.investmentTypes.map((i: InvestmentType) => ({
+//             value: i.id,
+//             label: i.name,
+//         }));
+//     } catch {
+//         toast.error('Houve um erro ao buscar os cartões de crédito');
+//         return [];
+//     }
+// };
 
 /**
  * @deprecated All Rest APIs are now deprecated, use Graphql instead

@@ -17,9 +17,9 @@ import { apolloFinanceClient } from "../../../../../services/apollo/client/Apoll
 import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
-import { getIndexers, getIndexerTypes, getInvestmentTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
+import { getIndexers, getIndexerTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
 import { QueryAccounts, QueryCurrency } from "../../../type/FinanceQueries.ts";
-import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES } from "../../api/queries.ts";
+import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES, QUERY_INVESTMENT_TYPES } from "../../api/queries.ts";
 import { Investment } from "../../types/Investment.ts";
 import { QueryInvestmentById, QueryInvestmentObjective } from "../../types/InvestmentQueries.ts";
 
@@ -94,10 +94,16 @@ const App = (props: InvestmentProps): ReactElement => {
         }
     )
 
+    const { data: investmentTypeData, loading: investmentTypeLoading } = useQuery(QUERY_INVESTMENT_TYPES, 
+        {
+            client: apolloFinanceClient,
+            skip: !props.isOpen,
+        }
+    )
+
     const investment = investmentData?.getInvestmentById?.investment
 
     const fetchInvestmentData: () => Promise<void> = async () => {
-        setInvestmentTypes(await getInvestmentTypes());
         setIndexerTypes(await getIndexerTypes());
         setIndexers(await getIndexers(true));
         setLiquidity(await getLiquidity());
@@ -105,7 +111,7 @@ const App = (props: InvestmentProps): ReactElement => {
     };
 
 
-    const isLoading = objectiveLoading || currencyLoading || accountLoading || investmentLoading
+    const isLoading = objectiveLoading || currencyLoading || accountLoading || investmentLoading || investmentTypeLoading
 
     useEffect(() => {
         // Set initial value if provided
@@ -228,9 +234,9 @@ const App = (props: InvestmentProps): ReactElement => {
                                 <SelectAutocomplete
                                     label="Tipo de Investimento"
                                     value={field.value}
-                                    options={investmentTypes || []}
-                                    getOptionLabel={(option: any) => option.label}
-                                    getOptionValue={(option: any) => option.value}
+                                    options={investmentTypeData?.getInvestmentTypes?.investmentTypes || []}
+                                    getOptionLabel={(option: any) => option.name}
+                                    getOptionValue={(option: any) => option.id}
                                     onChange={(value) => {
                                         field.onChange(value);
                                     }}

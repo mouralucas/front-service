@@ -53,6 +53,7 @@ const App = () => {
         }
     );
 
+    /** Deprecated functions that use REST API */
     const fetchPerformanceData = async () => {
         setIndexers(await getIndexers(true));
     }
@@ -110,7 +111,6 @@ const App = () => {
         );
     }
 
-    //TODO: add type to data in param here
     const buildPerformanceChartData = (data: InvestmentPerformance) => {
         let series: LineChartSeries[] = [
             {
