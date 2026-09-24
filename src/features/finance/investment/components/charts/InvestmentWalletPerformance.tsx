@@ -172,6 +172,7 @@ const App = () => {
                             label: "Porcentagem (%)"
                         }}
                         loading={performanceLoading}
+                        title="Performance da carteira"
                     />
                 </div>
             </div>
