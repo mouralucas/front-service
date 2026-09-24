@@ -1,31 +1,23 @@
 import { FC, ReactElement } from "react";
-import Card from "../../../../components/Card.tsx";
+
 import WalletPerformanceChart from '../components/charts/InvestmentWalletPerformance.tsx'
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 
 const InvestmentLanding: FC = (): ReactElement => {
     return (
         <div className="container">
-            <div className="row">
-                <div className="col-12">
-                    <Card>
-                        <Card.Header>Alocação dos investimentos</Card.Header>
-                        <Card.Body>
-                            {/* <AllocationChart/> */}
-                            <></>
-                        </Card.Body>
+            <Box>
+                <Grid container spacing={4} alignItems="stretch">
+                    <Card
+                        variant="outlined"
+                        sx={{ flex: 1, borderRadius: 4 }}
+                    >
+                        <CardContent>
+                            <WalletPerformanceChart />
+                        </CardContent>
                     </Card>
-                </div>
-            </div>
-            <div className='row'>
-                <div className="col-12">
-                    <Card>
-                        <Card.Body>
-                            <WalletPerformanceChart/>
-                            <></>
-                        </Card.Body>
-                    </Card>
-                </div>
-            </div>
+                </Grid>
+            </Box>
         </div>
     )
 }
