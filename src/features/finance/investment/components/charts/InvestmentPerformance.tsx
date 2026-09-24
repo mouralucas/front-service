@@ -46,13 +46,13 @@ const App = (props: InvestmentPerformanceProps) => {
                 "id": "investment",
                 "label": "Investimento",
                 "data": data.investmentSerie,
-                "showMark": true,
+                "showMark": false,
             },
             {
                 "id": data.indexerName,
                 "label": data.indexerName,
                 "data": data.indexerSerie,
-                "showMark": true
+                "showMark": false
             }
         ]
         return series
@@ -123,6 +123,7 @@ const App = (props: InvestmentPerformanceProps) => {
                     label: "Porcentagem (%)"
                 }}
                 loading={performanceLoading}
+                title="Performance do investimento"
             />
         </>
     )
