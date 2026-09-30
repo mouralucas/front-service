@@ -168,6 +168,7 @@ export const QUERY_INVESTMENT_STATEMENT_METADATA = gql`
             investmentName
             investmentTransactionDate
             investmentMaturityDate
+            atMaturity
         }
     }
 `
