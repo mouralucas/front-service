@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -20,6 +20,7 @@ import { InvestmentStatement } from "../../types/Investment.ts";
 import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../api/mutations.ts";
 import { QueryCurrency } from "../../../type/FinanceQueries.ts";
 import { QueryInvestmentStatement, QueryInvestmentStatementMetadada } from "../../types/InvestmentQueries.ts";
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 
 interface InvestmentStatementProps {
     isOpen: boolean
@@ -39,6 +40,7 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
     withdrawn: 0,
     grossAmount: 0,
     netAmount: 0,
+    atMaturity: false,
 }
 
 const App = (props: InvestmentStatementProps): ReactElement => {
@@ -87,6 +89,7 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                 name: metadata.getStatementMetadata.investmentName,
                 transactionDate: metadata.getStatementMetadata.investmentTransactionDate,
                 maturityDate: metadata?.getStatementMetadata?.investmentMaturityDate,
+                atMaturity: metadata?.getStatementMetadata?.atMaturity,
             });
         }
     }, [statement, metadata, props.statementId, reset])
@@ -368,6 +371,14 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                             />
                         </div>
                     </Grid>
+                    {metadata?.getStatementMetadata.atMaturity &&
+                        <Grid size={{ sm: 12, md: 12 }}>
+                            <Typography variant="caption" color="text.secondary">
+                                <ReportProblemOutlinedIcon /> Esse é o mes de vencimento. A data de referência é a data de vencimento do investimento!
+                            </Typography>
+                        </Grid>
+                    }
+
                 </Grid>
             </form>
         </>

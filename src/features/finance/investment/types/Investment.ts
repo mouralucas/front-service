@@ -72,6 +72,7 @@ export interface InvestmentStatement {
     netAmount: number;
     valueChange: number;
     percentageChange: number;
+    atMaturity: boolean;
 }
 
 export interface InvestmentStatementMetadata {
@@ -81,6 +82,7 @@ export interface InvestmentStatementMetadata {
     investmentName: string | null;
     investmentTransactionDate: string | null;
     investmentMaturityDate: string | null;
+    atMaturity: boolean;
 }
 
 export interface InvestmentObjective {
