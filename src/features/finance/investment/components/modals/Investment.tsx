@@ -58,7 +58,7 @@ const DefaultInvestment: Investment = {
 const App = (props: InvestmentProps): ReactElement => {
     const { handleSubmit, control, reset, formState: { errors, dirtyFields }, getValues, setValue } = useForm<Investment>({ defaultValues: DefaultInvestment })
 
-    const [investmentTypes, setInvestmentTypes] = useState<any[]>([])
+    // const [investmentTypes, setInvestmentTypes] = useState<any[]>([])
     const [indexerTypes, setIndexerTypes] = useState<any[]>([])
     const [indexers, setIndexers] = useState<any[]>([])
     const [liquidity, setLiquidity] = useState<any[]>([])

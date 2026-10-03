@@ -1,17 +1,15 @@
 import { useQuery } from "@apollo/client";
-import { Divider, Paper, Typography } from "@mui/material";
-import { ChartsTooltipContainer, useAxesTooltip } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import Line from "../../../../../components/chart/LineChart.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { getIndexers } from "../../../../../services/getCommonData/Finance.tsx";
+import { LineChartSeries } from "../../../../../types/finance/LineChartTypes.ts";
 import { getPeriodName } from "../../../../../utils/datetime.tsx";
 import { Indexer } from "../../../type/Finance.ts";
 import { QUERY_INVESTMENT_PERFORMANCE } from "../../api/queries.ts";
-import { QueryInvestmentPerformance } from "../../types/InvestmentQueries.ts";
-import { LineChartSeries } from "../../../../../types/finance/LineChartTypes.ts";
 import { InvestmentPerformance } from "../../types/Investment.ts";
+import { QueryInvestmentPerformance } from "../../types/InvestmentQueries.ts";
 
 const periodsRange = [
     {
@@ -62,54 +60,54 @@ const App = () => {
         fetchPerformanceData().then();
     }, []);
 
-    function CustomAxisTooltip() {
-        const tooltipData = useAxesTooltip();
-        const firstAxisData: any = tooltipData?.[0];
+    // function CustomAxisTooltip() {
+    //     const tooltipData = useAxesTooltip();
+    //     const firstAxisData: any = tooltipData?.[0];
 
-        if (!firstAxisData) return null;
+    //     if (!firstAxisData) return null;
 
-        return (
-            <ChartsTooltipContainer>
-                <Paper
-                    sx={{
-                        p: 2,
-                        minWidth: 160,
-                        backgroundColor: (theme) => theme.palette.background.default,
-                        border: (theme) => `1px solid ${theme.palette.divider}`,
-                        boxShadow: (theme) => theme.shadows[2],
-                    }}
-                >
-                    <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }} align="center">
-                        {getPeriodName(parseInt(firstAxisData.axisValue))}
-                    </Typography>
+    //     return (
+    //         <ChartsTooltipContainer>
+    //             <Paper
+    //                 sx={{
+    //                     p: 2,
+    //                     minWidth: 160,
+    //                     backgroundColor: (theme) => theme.palette.background.default,
+    //                     border: (theme) => `1px solid ${theme.palette.divider}`,
+    //                     boxShadow: (theme) => theme.shadows[2],
+    //                 }}
+    //             >
+    //                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }} align="center">
+    //                     {getPeriodName(parseInt(firstAxisData.axisValue))}
+    //                 </Typography>
 
-                    <Divider variant="middle" sx={{
-                        mb: 3,
-                        borderColor: (theme) => theme.palette.text.primary,
-                        opacity: 0.2,
-                    }} />
+    //                 <Divider variant="middle" sx={{
+    //                     mb: 3,
+    //                     borderColor: (theme) => theme.palette.text.primary,
+    //                     opacity: 0.2,
+    //                 }} />
 
-                    {firstAxisData.seriesItems.map((s: any) => (
-                        <div key={s.seriesId} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-                            <div
-                                style={{
-                                    width: 10,
-                                    height: 10,
-                                    borderRadius: 2,
-                                    backgroundColor: s.color,
-                                    marginRight: 8,
-                                }}
-                            />
-                            <Typography variant="body2" sx={{ flex: 1 }}>
-                                {s.formattedLabel}:
-                            </Typography>
-                            <Typography variant="body2" sx={{ ml: 2 }}>{s.formattedValue}%</Typography>
-                        </div>
-                    ))}
-                </Paper>
-            </ChartsTooltipContainer>
-        );
-    }
+    //                 {firstAxisData.seriesItems.map((s: any) => (
+    //                     <div key={s.seriesId} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+    //                         <div
+    //                             style={{
+    //                                 width: 10,
+    //                                 height: 10,
+    //                                 borderRadius: 2,
+    //                                 backgroundColor: s.color,
+    //                                 marginRight: 8,
+    //                             }}
+    //                         />
+    //                         <Typography variant="body2" sx={{ flex: 1 }}>
+    //                             {s.formattedLabel}:
+    //                         </Typography>
+    //                         <Typography variant="body2" sx={{ ml: 2 }}>{s.formattedValue}%</Typography>
+    //                     </div>
+    //                 ))}
+    //             </Paper>
+    //         </ChartsTooltipContainer>
+    //     );
+    // }
 
     const buildPerformanceChartData = (data: InvestmentPerformance) => {
         let series: LineChartSeries[] = [
@@ -132,7 +130,7 @@ const App = () => {
     const performance = performanceData?.getInvestmentPerformance.performance
     const chartData = performance ? buildPerformanceChartData(performance) : []
     const periodRange = performance
-        ? performance.periodRange.map(period => getPeriodName(period))
+        ? performance.periodRange.map(period => getPeriodName(parseInt(period)))
         : [];
 
 
