@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -15,12 +16,11 @@ import Modal from "../../../../../components/Modal.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 import { QUERY_CURRENCY } from "../../../api/queries.ts";
+import { QueryCurrency } from "../../../type/FinanceQueries.ts";
+import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../api/mutations.ts";
 import { QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../api/queries.ts";
 import { InvestmentStatement } from "../../types/Investment.ts";
-import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../api/mutations.ts";
-import { QueryCurrency } from "../../../type/FinanceQueries.ts";
 import { QueryInvestmentStatement, QueryInvestmentStatementMetadada } from "../../types/InvestmentQueries.ts";
-import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 
 interface InvestmentStatementProps {
     isOpen: boolean
@@ -43,7 +43,7 @@ const DefaultInvestmentStatement: Partial<InvestmentStatement> = {
     atMaturity: false,
 }
 
-const App = (props: InvestmentStatementProps): ReactElement => {
+const InvestmentStatementModal = (props: InvestmentStatementProps): ReactElement => {
     const { handleSubmit, control, getValues, reset, formState: { dirtyFields, errors }, setValue } = useForm<InvestmentStatement>({ defaultValues: DefaultInvestmentStatement })
 
     const { data: currenciesData, loading: currenciesLoading } = useQuery<QueryCurrency>(QUERY_CURRENCY, {
@@ -90,7 +90,9 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                 transactionDate: metadata.getStatementMetadata.investmentTransactionDate,
                 maturityDate: metadata?.getStatementMetadata?.investmentMaturityDate,
                 atMaturity: metadata?.getStatementMetadata?.atMaturity,
-            });
+            }); 
+        } else {
+            reset(DefaultInvestmentStatement);
         }
     }, [statement, metadata, props.statementId, reset])
 
@@ -372,9 +374,10 @@ const App = (props: InvestmentStatementProps): ReactElement => {
                         </div>
                     </Grid>
                     {metadata?.getStatementMetadata.atMaturity &&
-                        <Grid size={{ sm: 12, md: 12 }}>
+                        <Grid size={{ sm: 12, md: 12 }} sx={{ mt: 2 }}>
                             <Typography variant="caption" color="text.secondary">
-                                <ReportProblemOutlinedIcon /> Esse é o mes de vencimento. A data de referência é a data de vencimento do investimento!
+                                <WarningAmberIcon color="warning" fontSize="small" />
+                                Esse é o mes de vencimento. A data de referência é a data de vencimento do investimento!
                             </Typography>
                         </Grid>
                     }
@@ -396,4 +399,4 @@ const App = (props: InvestmentStatementProps): ReactElement => {
     )
 }
 
-export default App;
+export default InvestmentStatementModal;
