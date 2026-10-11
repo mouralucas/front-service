@@ -25,6 +25,7 @@ const LibraryItem: FC = lazy(() => import('../pages/library/home/Item'));
 
 // Sports imports
 const FootballLandingPage: FC = lazy(() => import('../features/sports/football/pages/LandingPage.tsx'))
+const CarRaceLandingPage: FC = lazy(() => import('../features/sports/racing/pages/Landing.tsx'))
 
 // Tests
 const DesignTesting: FC = lazy(() => import('../pages/DesignTests.tsx'))
@@ -57,6 +58,7 @@ function RolfRoutes(): ReactElement {
 
                         {/* Sports */}
                         <Route element={<FootballLandingPage />} path={'/sports/football'}/>
+                        <Route element={<CarRaceLandingPage />} path={'/sports/racing'} />
 
                         {/* Settings */}
                         <Route element={<RequireAuth><FinanceAdmin /></RequireAuth>} path="/config/financeiro" />

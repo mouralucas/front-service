@@ -66,6 +66,10 @@ export const items = [
                 title: 'Futebol',
                 url: '/sports/football'
             },
+            {
+                title: 'Corridas',
+                url: '/sports/racing'
+            },
         ]
     },
     {

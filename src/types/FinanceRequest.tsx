@@ -1,9 +1,9 @@
 import { BrazilianFundInvestment, Investment, InvestmentObjective, InvestmentStatement, InvestmentType } from "../features/finance/investment/types/Investment";
 import { AccountTransaction } from "../features/finance/transactions/types/Account";
 import { CreditCardBill, CreditCardBillHistory, CreditCardTransaction } from "../features/finance/transactions/types/CreditCard";
-import { Account } from "../features/finance/type/Accounts";
-import { CreditCard } from "../features/finance/type/CreditCard";
-import { Bank, BrazilianFunds, Category, Currency, Indexer, IndexerType, Liquidity, TaxFee } from "../features/finance/type/Finance";
+import { Account } from "../features/finance/types/Accounts";
+import { CreditCard } from "../features/finance/types/CreditCard";
+import { Bank, BrazilianFunds, Category, Currency, Indexer, IndexerType, Liquidity, TaxFee } from "../features/finance/types/Finance";
 
 
 // Account

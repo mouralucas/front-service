@@ -15,7 +15,7 @@ import { apolloFinanceClient } from "../../../../../services/apollo/client/Apoll
 import { URL_FINANCE_INVESTMENT_OBJECTIVE } from "../../../../../services/axios/ApiUrls.tsx";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { QUERY_CURRENCY } from "../../../api/queries.ts";
-import { QueryCurrency } from "../../../type/FinanceQueries.ts";
+import { QueryCurrency } from "../../../types/FinanceQueries.ts";
 import { InvestmentObjective } from "../../types/Investment.ts";
 
 interface ObjectivesProps {

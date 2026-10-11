@@ -1,7 +1,7 @@
 import { BaseSyntheticEvent, ReactElement } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { Category } from "../../../type/Finance";
+import { Category } from "../../../types/Finance";
 import { financeSubmit } from "../../../../../services/axios/Submit";
 import { URL_FINANCE_CATEGORIES } from "../../../../../services/axios/ApiUrls";
 import Modal from "../../../../../components/Modal";

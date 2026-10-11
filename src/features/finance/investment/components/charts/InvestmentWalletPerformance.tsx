@@ -6,7 +6,7 @@ import { apolloFinanceClient } from "../../../../../services/apollo/client/Apoll
 import { getIndexers } from "../../../../../services/getCommonData/Finance.tsx";
 import { LineChartSeries } from "../../../../../types/finance/LineChartTypes.ts";
 import { getPeriodName } from "../../../../../utils/datetime.tsx";
-import { Indexer } from "../../../type/Finance.ts";
+import { Indexer } from "../../../types/Finance.ts";
 import { QUERY_INVESTMENT_PERFORMANCE } from "../../api/queries.ts";
 import { InvestmentPerformance } from "../../types/Investment.ts";
 import { QueryInvestmentPerformance } from "../../types/InvestmentQueries.ts";

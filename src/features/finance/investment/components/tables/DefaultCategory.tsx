@@ -6,7 +6,7 @@ import { ReactElement, useCallback, useEffect, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { getCategories } from "../../../../../services/getCommonData/Finance.tsx";
 import CategoryModal from '../modals/Category.tsx';
-import { Category } from '../../../type/Finance.ts';
+import { Category } from '../../../types/Finance.ts';
 
 
 const DefaultCategoryTable = (): ReactElement => {

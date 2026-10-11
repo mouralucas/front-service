@@ -1,6 +1,6 @@
 import financeAxios from "../../services/axios/FinanceServiceAxios"
 import libraryAxios from "./LibraryServiceAxios.tsx"
-
+import sportsDataAxios from "./SportsDataAxios.ts"
 
 
 const getFinanceData = async (url: string, params: any = null) => {
@@ -25,4 +25,15 @@ const getLibraryData = async (url: string, params: any = null) => {
     return response?.data
 }
 
-export { getFinanceData, getLibraryData };
+const getSportsData = async (url: string, params: any = null) => {
+    let response: any;
+
+    try {
+        response = await sportsDataAxios.get(url, { params: params });
+    } catch {
+        response = null
+    }
+    return response?.data
+}
+
+export { getFinanceData, getLibraryData, getSportsData };

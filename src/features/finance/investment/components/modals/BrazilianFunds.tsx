@@ -1,6 +1,6 @@
 import { BaseSyntheticEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { BrazilianFunds } from "../../../type/Finance";
+import { BrazilianFunds } from "../../../types/Finance";
 import Modal from "../../../../../components/Modal";
 
 interface BrazilianFundsModalProps {

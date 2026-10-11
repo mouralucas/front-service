@@ -2,7 +2,7 @@ import { BaseSyntheticEvent, ReactElement } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
-import { Bank } from "../../../type/Finance.ts";
+import { Bank } from "../../../types/Finance.ts";
 import { URL_FINANCE_BANK } from "../../../../../services/axios/ApiUrls.tsx";
 import Modal from "../../../../../components/Modal.tsx";
 

@@ -6,7 +6,7 @@ import { ReactElement, useCallback, useEffect, useState } from 'react';
 import DataGrid from '../../../../../components/table/DataGrid.tsx';
 import { getBrazilianFunds } from "../../../../../services/getCommonData/Finance.tsx";
 import BrazilianFundsModal from '../modals/BrazilianFunds.tsx';
-import { BrazilianFunds } from '../../../type/Finance.ts';
+import { BrazilianFunds } from '../../../types/Finance.ts';
 
 
 const BrazilianFundsTable = (): ReactElement => {

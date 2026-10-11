@@ -16,7 +16,7 @@ import Modal from "../../../../../components/Modal.tsx";
 import { apolloFinanceClient } from "../../../../../services/apollo/client/ApolloFinanceService.tsx";
 import { getPeriodFromDate } from "../../../../../utils/datetime.tsx";
 import { QUERY_CURRENCY } from "../../../api/queries.ts";
-import { QueryCurrency } from "../../../type/FinanceQueries.ts";
+import { QueryCurrency } from "../../../types/FinanceQueries.ts";
 import { CREATE_INVESTMENT_STATEMENT, UPDATE_INVESTMENT_STATEMENT } from "../../api/mutations.ts";
 import { QUERY_INVESTMENT_STATEMENT, QUERY_INVESTMENT_STATEMENT_METADATA } from "../../api/queries.ts";
 import { InvestmentStatement } from "../../types/Investment.ts";

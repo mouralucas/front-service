@@ -18,7 +18,7 @@ import { URL_FINANCE_INVESTMENT } from "../../../../../services/axios/ApiUrls.ts
 import { financeSubmit } from "../../../../../services/axios/Submit.tsx";
 import { getCountries } from "../../../../../services/getCommonData/Core.tsx";
 import { getIndexers, getIndexerTypes, getLiquidity } from "../../../../../services/getCommonData/Finance.tsx";
-import { QueryAccounts, QueryCurrency } from "../../../type/FinanceQueries.ts";
+import { QueryAccounts, QueryCurrency } from "../../../types/FinanceQueries.ts";
 import { QUERY_INVESTMENT_BY_ID, QUERY_INVESTMENT_OBJECTIVES, QUERY_INVESTMENT_TYPES } from "../../api/queries.ts";
 import { Investment } from "../../types/Investment.ts";
 import { QueryInvestmentById, QueryInvestmentObjective } from "../../types/InvestmentQueries.ts";
