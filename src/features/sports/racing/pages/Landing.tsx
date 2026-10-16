@@ -6,15 +6,18 @@ import { getSportsData } from "../../../../services/axios/Get";
 import { formatDate } from "../../../../utils/datetime";
 import EventResultTable from "../components/tables/EventResultTable";
 import { SessionResultsResponse } from "../types/SessionResults";
+import { URL_RACE_COMPETITION } from "../../../../services/axios/ApiUrls";
+import { se } from "date-fns/locale";
 
 
 const CarRaceLanding = (): ReactElement => {
     const [sessionResultData, setSessionResultData] = useState<SessionResultsResponse>();
+    const [categorySeasons, setCategorySeasons] = useState([]);
     
         const getSessionResult = async (): Promise<SessionResultsResponse | undefined>  => {
             try {
                 const sessionId: number = 7;
-                const response = await getSportsData(`/api/v1/sessions/${sessionId}/result`);
+                const response = await getSportsData(URL_RACE_COMPETITION.sessions.result(sessionId));
                 if (response == null) {
                     toast.error('Houve um erro ao buscar os resultados da sessão');
                     return;
@@ -26,10 +29,26 @@ const CarRaceLanding = (): ReactElement => {
                 return;
             }
         }
+
+        const getSeasonByCategory = async (): Promise<any> => {
+            try {
+                const categorySlug = 'f1';
+                const response = await getSportsData(URL_RACE_COMPETITION.seasons.byCategory(categorySlug));
+
+                setCategorySeasons(response)
+            } catch {
+                toast.error('Houve um erro ao buscar as temporadas da categoria')
+            }
+        }
     
         useEffect(() => {
             getSessionResult();
+            getSeasonByCategory();
         }, [])
+
+        useEffect(() => {
+            console.log(categorySeasons);
+        }, [categorySeasons])
     
     return (
         <div className="container">
@@ -44,9 +63,9 @@ const CarRaceLanding = (): ReactElement => {
                                             <SelectAutocomplete
                                                 label="Temporada"
                                                 value={1}
-                                                options={[]}
-                                                getOptionLabel={(option: any) => option.nickname}
-                                                getOptionValue={(option: any) => option.accountId}
+                                                options={categorySeasons}
+                                                getOptionLabel={(option: any) => option.name}
+                                                getOptionValue={(option: any) => option.id}
                                                 onChange={(val) => console.log(val)}
                                                 width={250}
                                             />

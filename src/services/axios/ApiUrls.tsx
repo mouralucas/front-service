@@ -50,3 +50,11 @@ export const URL_LIBRARY_READING_PROGRESS = '/reading/progress';
 
 
 // Sports Data
+export const URL_RACE_COMPETITION = {
+    seasons: {
+        byCategory: (categorySlug: string) => `/api/v1/seasons/${categorySlug}`
+    },
+    sessions: {
+        result: (sessionId: number) => `/api/v1/sessions/${sessionId}/result`,
+    },
+};
