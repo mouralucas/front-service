@@ -1,8 +1,9 @@
 import { ReactElement, useState, SyntheticEvent } from "react";
-import Card from "../components/Card.tsx";
+// import Card from "../components/Card.tsx";
+
 import DataGrid from "../components/table/DataGrid.tsx";
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Grid, Card, CardContent } from '@mui/material';
 import { toast } from "react-toastify";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -223,11 +224,62 @@ const App = (): ReactElement => {
         </div>
     )
 
-    const b =  (
-        
+    const b = (
+        <div className="container">
+            <Box>
+                <Grid container spacing={4} alignItems="stretch">
+                    <Grid size={3}>
+                        <Card variant={"outlined"}
+                            sx={{ flex: 1, borderRadius: 4 }}>
+                            <CardContent>
+                                <>Card de descrição</>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid size={9} container direction={"row"}>
+                        <Grid size={4} >
+                            <Card variant={"outlined"}
+                                sx={{ flex: 1, borderRadius: 4 }}>
+                                <CardContent>
+                                    <p>Saldo</p>
+                                    <p>R$ 0,00</p>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={4} >
+                            <Card variant={"outlined"}
+                                sx={{ flex: 1, borderRadius: 4 }}>
+                                <CardContent>
+                                    <p>Entradas</p>
+                                    <p>R$ 0,00</p>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={4} >
+                            <Card variant={"outlined"}
+                                sx={{ flex: 1, borderRadius: 4 }}>
+                                <CardContent>
+                                    <p>Despesas</p>
+                                    <p>R$ 0,00</p>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid size={4} >
+                            <Card variant={"outlined"}
+                                sx={{ flex: 1, borderRadius: 4 }}>
+                                <CardContent>
+                                    <p>Outro</p>
+                                    <p>R$ 0,00</p>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Box>
+        </div>
     )
 
-    return a;
+    return b;
 }
 
 export default App;

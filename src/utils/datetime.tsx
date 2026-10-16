@@ -75,10 +75,10 @@ export const isLessThanMonths = (dateStr: string, months: number = 2, compareDat
  * @returns {string} - The formatted date string, or empty string if baseDate is null/falsy
  */
 export const formatDate = (
-    baseDate: Date | string | null, 
+    baseDate: Date | string | null | undefined,  
     format: string = 'dd/MM/yyyy'
 ): string => {
-    if (!baseDate) return '';
+    if (!baseDate || baseDate == undefined) return '';
 
     let date: Date;
     if (baseDate instanceof Date) {
