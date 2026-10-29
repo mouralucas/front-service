@@ -2,12 +2,11 @@ import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete";
+import { URL_RACE_COMPETITION } from "../../../../services/axios/ApiUrls";
 import { getSportsData } from "../../../../services/axios/Get";
 import { formatDate } from "../../../../utils/datetime";
 import EventResultTable from "../components/tables/EventResultTable";
 import { SessionResultsResponse } from "../types/SessionResults";
-import { URL_RACE_COMPETITION } from "../../../../services/axios/ApiUrls";
-import { se } from "date-fns/locale";
 
 
 const CarRaceLanding = (): ReactElement => {
@@ -59,7 +58,18 @@ const CarRaceLanding = (): ReactElement => {
                             <CardContent>
                                 <Box sx={{ display: 'flex', justifyContent: 'right', gap: 2, mb: 2, me: 4 }}>
                                     <Grid container flex={1} direction={"row"}>
-                                        <Grid size={4}>
+                                        <Grid size={3}>
+                                            <SelectAutocomplete
+                                                label="Categoria"
+                                                value={1}
+                                                options={categorySeasons}
+                                                getOptionLabel={(option: any) => option.name}
+                                                getOptionValue={(option: any) => option.id}
+                                                onChange={(val) => console.log(val)}
+                                                width={250}
+                                            />
+                                        </Grid>
+                                        <Grid size={3}>
                                             <SelectAutocomplete
                                                 label="Temporada"
                                                 value={1}
@@ -70,7 +80,7 @@ const CarRaceLanding = (): ReactElement => {
                                                 width={250}
                                             />
                                         </Grid>
-                                         <Grid size={4} >
+                                         <Grid size={3} >
                                             <SelectAutocomplete
                                                 label="Evento"
                                                 value={1}
@@ -81,7 +91,7 @@ const CarRaceLanding = (): ReactElement => {
                                                 width={250}
                                             />
                                         </Grid>
-                                        <Grid size={4} >
+                                        <Grid size={3} >
                                             <SelectAutocomplete
                                                 label="Sessão"
                                                 value={1}
