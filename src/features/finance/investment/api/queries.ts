@@ -137,8 +137,8 @@ export const QUERY_INVESTMENT_STATEMENTS = gql`
 `
 
 export const QUERY_INVESTMENT_STATEMENT = gql`
-    query GetInvestmentStatement($params: GetInvestmentStatementInput!) {
-        getInvestmentStatement(params: $params) {
+    query GetInvestmentStatementById($params: GetInvestmentStatementInput!) {
+        getInvestmentStatementById(params: $params) {
             statement {
                 id
                 investmentId

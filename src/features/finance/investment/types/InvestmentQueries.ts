@@ -22,7 +22,7 @@ export interface QueryInvestmentStatementMetadada {
 }
 
 export interface QueryInvestmentStatement {
-    getInvestmentStatement: {
+    getInvestmentStatementById: {
         statement: InvestmentStatement;
     }
 }

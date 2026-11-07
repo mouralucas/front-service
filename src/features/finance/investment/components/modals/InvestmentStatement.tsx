@@ -70,7 +70,7 @@ const InvestmentStatementModal = (props: InvestmentStatementProps): ReactElement
         fetchPolicy: "no-cache"
     })
 
-    const statement = statementData?.getInvestmentStatement?.statement
+    const statement = statementData?.getInvestmentStatementById?.statement
 
     // Effect for editing: combine statement with metadata
     useEffect(() => {
