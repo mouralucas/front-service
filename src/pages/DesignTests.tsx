@@ -1,272 +1,296 @@
-import { ReactElement, useState, SyntheticEvent } from "react";
-// import Card from "../components/Card.tsx";
+import * as React from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import CancelIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import {
+    Box,
+    Card,
+    CardContent,
+    Grid,
+    Tooltip,
+} from '@mui/material';
+import {
+    DataGrid,
+    GridActionsCell,
+    GridActionsCellItem,
+    GridRowEditStopReasons,
+    GridRowModes,
+    Toolbar,
+    ToolbarButton,
+    gridEditRowsStateSelector,
+    useGridApiContext,
+    useGridSelector,
+    type GridColDef,
+    type GridEventListener,
+    type GridRenderCellParams,
+    type GridRowId,
+    type GridRowModel,
+    type GridRowModesModel,
+    type GridSlotProps,
+    type GridSlots,
+} from '@mui/x-data-grid';
 
-import DataGrid from "../components/table/DataGrid.tsx";
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, Box, Grid, Card, CardContent } from '@mui/material';
-import { toast } from "react-toastify";
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import TabPanel from '@mui/lab/TabPanel';
-import TabContext from '@mui/lab/TabContext';
+type ServiceRow = {
+    id: number;
+    service: string;
+    host: string;
+    isNew?: boolean;
+};
 
-const App = (): ReactElement => {
+const initialRows: ServiceRow[] = [
+    { id: 1, service: 'Service 1', host: 'Host 2' },
+    { id: 2, service: 'Service 2', host: 'Host 2' },
+    { id: 3, service: 'Service 3', host: 'Host 2' },
+    { id: 4, service: 'Service 4', host: 'Host 2' },
+    { id: 5, service: 'Service 5', host: 'Host 2' },
+    { id: 6, service: 'Service 6', host: 'Host 2' },
+    { id: 7, service: 'Service 7', host: 'Host 2' },
+    { id: 8, service: 'Service 8', host: 'Host 2' },
+    { id: 9, service: 'Service 9', host: 'Host 2' },
+    { id: 10, service: 'Service 10', host: 'Host 2' },
+    { id: 11, service: 'Service 11', host: 'Host 2' },
+    { id: 12, service: 'Service 12', host: 'Host 2' },
+    { id: 13, service: 'Service 13', host: 'Host 2' },
+];
 
-    const handleEdit = (id: number) => {
-        toast.info("Editar registro com ID:" + id);
-        // Aqui você pode chamar sua função de edição
+declare module '@mui/x-data-grid' {
+    interface ToolbarPropsOverrides {
+        rows: ServiceRow[];
+        setRows: React.Dispatch<React.SetStateAction<ServiceRow[]>>;
+        setRowModesModel: (
+            newModel:
+                | GridRowModesModel
+                | ((oldModel: GridRowModesModel) => GridRowModesModel),
+        ) => void;
+    }
+}
+
+function EditToolbar(props: GridSlotProps['toolbar']) {
+    const { rows, setRows, setRowModesModel } = props;
+    const nextId = React.useRef(
+        rows.reduce((maxId, row) => Math.max(maxId, row.id), 0) + 1,
+    );
+
+    const handleAddClick = () => {
+        const newId = nextId.current++;
+        setRows((oldRows) => [
+            ...oldRows,
+            { id: newId, service: '', host: '', isNew: true },
+        ]);
+        setRowModesModel((oldModel) => ({
+            ...oldModel,
+            [newId]: { mode: GridRowModes.Edit, fieldToFocus: 'service' },
+        }));
     };
 
-    const columns: GridColDef[] = [
-        { field: 'service', headerName: 'Service Name', flex: 1, hideable: true },
-        { field: 'host', headerName: 'Host', flex: 1, hideable: false },
+    return (
+        <Toolbar>
+            <Tooltip title="Adicionar serviço">
+                <ToolbarButton onClick={handleAddClick} aria-label="Adicionar serviço">
+                    <AddIcon fontSize="small" />
+                </ToolbarButton>
+            </Tooltip>
+        </Toolbar>
+    );
+}
+
+interface ActionHandlers {
+    handleCancelClick: (id: GridRowId) => void;
+    handleDeleteClick: (id: GridRowId) => void;
+    handleEditClick: (id: GridRowId) => void;
+    handleSaveClick: (id: GridRowId, row: GridRowModel<ServiceRow>) => void;
+}
+
+const ActionHandlersContext = React.createContext<ActionHandlers>({
+    handleCancelClick: () => {},
+    handleDeleteClick: () => {},
+    handleEditClick: () => {},
+    handleSaveClick: () => {},
+});
+
+function ActionsCell(props: GridRenderCellParams<ServiceRow>) {
+    const apiRef = useGridApiContext();
+    const editRows = useGridSelector(apiRef, gridEditRowsStateSelector);
+    const isInEditMode = typeof editRows[props.id] !== 'undefined';
+    const {
+        handleSaveClick,
+        handleCancelClick,
+        handleEditClick,
+        handleDeleteClick,
+    } = React.useContext(ActionHandlersContext);
+
+    return (
+        <GridActionsCell {...props}>
+            {isInEditMode ? (
+                <>
+                    <GridActionsCellItem
+                        icon={<SaveIcon />}
+                        label="Salvar"
+                        color="primary"
+                        onClick={() =>
+                            handleSaveClick(
+                                props.id,
+                                apiRef.current.getRowWithUpdatedValues(props.id, 'service'),
+                            )
+                        }
+                    />
+                    <GridActionsCellItem
+                        icon={<CancelIcon />}
+                        label="Cancelar"
+                        onClick={() => handleCancelClick(props.id)}
+                        color="inherit"
+                    />
+                </>
+            ) : (
+                <>
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Editar"
+                        onClick={() => handleEditClick(props.id)}
+                        color="inherit"
+                    />
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Excluir"
+                        onClick={() => handleDeleteClick(props.id)}
+                        color="inherit"
+                    />
+                </>
+            )}
+        </GridActionsCell>
+    );
+}
+
+const App = (): React.ReactElement => {
+    const [rows, setRows] = React.useState(initialRows);
+    const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+
+    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
+    };
+
+    const actionHandlers = React.useMemo<ActionHandlers>(
+        () => ({
+            handleEditClick: (id) => {
+                setRowModesModel((oldModel) => ({
+                    ...oldModel,
+                    [id]: { mode: GridRowModes.Edit },
+                }));
+            },
+            handleSaveClick: (id, row) => {
+                console.log('Dados atuais da linha:', row);
+                setRowModesModel((oldModel) => ({
+                    ...oldModel,
+                    [id]: { mode: GridRowModes.View },
+                }));
+            },
+            handleDeleteClick: (id) => {
+                setRows((oldRows) => oldRows.filter((row) => row.id !== id));
+            },
+            handleCancelClick: (id) => {
+                setRowModesModel((oldModel) => ({
+                    ...oldModel,
+                    [id]: { mode: GridRowModes.View, ignoreModifications: true },
+                }));
+                setRows((oldRows) => {
+                    const editedRow = oldRows.find((row) => row.id === id);
+                    return editedRow?.isNew
+                        ? oldRows.filter((row) => row.id !== id)
+                        : oldRows;
+                    
+                });
+            },
+        }),
+        [],
+    );
+
+    const processRowUpdate = (newRow: GridRowModel<ServiceRow>) => {
+        const updatedRow = { ...newRow, isNew: false };
+        setRows((oldRows) =>
+            oldRows.map((row) => (row.id === updatedRow.id ? updatedRow : row)),
+        );
+        return updatedRow;
+    };
+
+    const columns: GridColDef<ServiceRow>[] = [
+        { field: 'service', headerName: 'Serviço', flex: 1, editable: true },
+        { field: 'host', headerName: 'Host', flex: 1, editable: true },
         {
             field: 'actions',
             headerName: 'Ações',
-            flex: 1,
+            type: 'actions',
+            width: 100,
             sortable: false,
             filterable: false,
-            renderCell: (params: GridRenderCellParams) => (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    onClick={() => handleEdit(params.row.id)}
-                >
-                    Editar
-                </Button>
-            ),
+            renderCell: (params) => <ActionsCell {...params} />,
         },
     ];
 
-    const rows = [
-        { 'id': 1, 'service': 'Service 1', 'host': 'Host 2' },
-        { 'id': 2, 'service': 'Service 2', 'host': 'Host 2' },
-        { 'id': 3, 'service': 'Service 3', 'host': 'Host 2' },
-        { 'id': 4, 'service': 'Service 4', 'host': 'Host 2' },
-        { 'id': 5, 'service': 'Service 5', 'host': 'Host 2' },
-        { 'id': 6, 'service': 'Service 6', 'host': 'Host 2' },
-        { 'id': 7, 'service': 'Service 7', 'host': 'Host 2' },
-        { 'id': 8, 'service': 'Service 8', 'host': 'Host 2' },
-        { 'id': 9, 'service': 'Service 9', 'host': 'Host 2' },
-        { 'id': 10, 'service': 'Service 10', 'host': 'Host 2' },
-        { 'id': 11, 'service': 'Service 11', 'host': 'Host 2' },
-        { 'id': 12, 'service': 'Service 12', 'host': 'Host 2' },
-        { 'id': 13, 'service': 'Service 13', 'host': 'Host 2' },
-    ];
-
-    const [value, setValue] = useState(0);
-
-    const handleChange = (event: SyntheticEvent, newValue: number) => {
-        console.log(event);
-        setValue(newValue);
-    };
-
-    const a = (
-        <div className="container">
-            <div className="row">
-                <div className="col-12">
-                    <Box sx={{ bgcolor: 'background.paper' }}>
-                        <TabContext value={String(value)}>
-                            <Tabs
-                                value={value}
-                                onChange={handleChange}
-                                variant="scrollable"
-                                scrollButtons="auto"
-                                aria-label="scrollable auto tabs example"
-                            >
-                                <Tab label="Item One" value={0} />
-                                <Tab label="Item Two" value={1} />
-                                <Tab label="Item Three" value={2} />
-                                <Tab label="Item Four" value={3} />
-                                <Tab label="Item Five" value={4} />
-                                <Tab label="Item Six" value={5} />
-                                <Tab label="Item Seven" value={6} />
-                            </Tabs>
-                            <TabPanel value="0">
-                                <Card>
-                                    <Card.Body>
-                                        <p>Conteúdo do Item One</p>
-                                    </Card.Body>
-                                </Card>
-                            </TabPanel>
-                            <TabPanel value="1">
-                                <Card>
-                                    <Card.Body>
-                                        <p>Conteúdo do Item Two</p>
-                                    </Card.Body>
-                                </Card>
-                            </TabPanel>
-                            <TabPanel value="2">
-                                <Card>
-                                    <Card.Body>
-                                        <p>Conteúdo do Item Three</p>
-                                    </Card.Body>
-                                </Card>
-                            </TabPanel>
-                            <TabPanel value="3">
-                                <Card>
-                                    <Card.Body>
-                                        <p>Conteúdo do Item Four</p>
-                                    </Card.Body>
-                                </Card>
-                            </TabPanel>
-                            <TabPanel value="4">
-                                <Card>
-                                    <Card.Body>
-                                        <p>Conteúdo do Item Five</p>
-                                    </Card.Body>
-                                </Card>
-                            </TabPanel>
-                            <TabPanel value="5">
-                                <Card>
-                                    <Card.Body>
-                                        <p>Conteúdo do Item Six</p>
-                                    </Card.Body>
-                                </Card>
-                            </TabPanel>
-                            <TabPanel value="6">
-                                <Card>
-                                    <Card.Body>
-                                        <p>Conteúdo do Item Seven</p>
-                                    </Card.Body>
-                                </Card>
-                            </TabPanel>
-                        </TabContext>
-                    </Box>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-12">
-                    <Card>
-                        <Card.Body>
-                            <Box>
-                                <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
-                                    <Button
-                                        variant='contained'
-                                        color='success'
-                                        size='small'
-                                        onClick={() => toast.info('Adicionou novos items')}
-                                    >
-                                        Add
-                                    </Button>
-                                    <Button
-                                        variant='contained'
-                                        color='success'
-                                        size='small'
-                                        onClick={() => toast.info('Atualizou')}
-                                    >
-                                        Refresh
-                                    </Button>
-                                </Box>
-                                <DataGrid
-                                    columns={columns}
-                                    data={rows}
-                                />
-                            </Box>
-                        </Card.Body>
-                    </Card>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-3">
-                    <Card>
-                        <Card.Body>
-                            <>Card de descrição</>
-                        </Card.Body>
-                    </Card>
-                </div>
-                <div className="col-9">
-                    <div className="row">
-                        <div className="col-4">
-                            <Card>
-                                <Card.Body>
-                                    <p>Saldo</p>
-                                    <p>R$ 0,00</p>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div className="col-4">
-                            <Card>
-                                <Card.Body>
-                                    <p>Entradas</p>
-                                    <p>R$ 0,00</p>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div className="col-4">
-                            <Card>
-                                <Card.Body>
-                                    <p>Despesas</p>
-                                    <p>R$ 0,00</p>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-6">
-                            <Card>
-                                <Card.Body>
-                                    <>Lucas</>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div className="col-6">
-                            <Card>
-                                <Card.Body>
-                                    <>Lucas</>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-
-    const b = (
+    return (
         <div className="container">
             <Box>
                 <Grid container spacing={4} alignItems="stretch">
-                    <Grid size={3}>
-                        <Card variant={"outlined"}
-                            sx={{ flex: 1, borderRadius: 4 }}>
+                    <Grid size={12}>
+                        <Card variant="outlined">
                             <CardContent>
-                                <>Card de descrição</>
+                                <ActionHandlersContext.Provider value={actionHandlers}>
+                                    <DataGrid
+                                        rows={rows}
+                                        columns={columns}
+                                        editMode="row"
+                                        rowModesModel={rowModesModel}
+                                        onRowModesModelChange={setRowModesModel}
+                                        onRowEditStop={handleRowEditStop}
+                                        processRowUpdate={processRowUpdate}
+                                        showToolbar
+                                        slots={{ toolbar: EditToolbar as GridSlots['toolbar'] }}
+                                        slotProps={{
+                                            toolbar: { rows, setRows, setRowModesModel },
+                                        }}
+                                        autoHeight
+                                    />
+                                </ActionHandlersContext.Provider>
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid size={9} container direction={"row"}>
-                        <Grid size={4} >
-                            <Card variant={"outlined"}
-                                sx={{ flex: 1, borderRadius: 4 }}>
+                </Grid>
+                <Grid container spacing={4} alignItems="stretch">
+                    <Grid size={3}>
+                        <Card variant="outlined" sx={{ flex: 1, borderRadius: 4 }}>
+                            <CardContent>Card de descrição</CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid size={9} container direction="row">
+                        <Grid size={4}>
+                            <Card variant="outlined" sx={{ flex: 1, borderRadius: 4 }}>
                                 <CardContent>
                                     <p>Saldo</p>
                                     <p>R$ 0,00</p>
                                 </CardContent>
                             </Card>
                         </Grid>
-                        <Grid size={4} >
-                            <Card variant={"outlined"}
-                                sx={{ flex: 1, borderRadius: 4 }}>
+                        <Grid size={4}>
+                            <Card variant="outlined" sx={{ flex: 1, borderRadius: 4 }}>
                                 <CardContent>
                                     <p>Entradas</p>
                                     <p>R$ 0,00</p>
                                 </CardContent>
                             </Card>
                         </Grid>
-                        <Grid size={4} >
-                            <Card variant={"outlined"}
-                                sx={{ flex: 1, borderRadius: 4 }}>
+                        <Grid size={4}>
+                            <Card variant="outlined" sx={{ flex: 1, borderRadius: 4 }}>
                                 <CardContent>
                                     <p>Despesas</p>
                                     <p>R$ 0,00</p>
                                 </CardContent>
                             </Card>
                         </Grid>
-                        <Grid size={4} >
-                            <Card variant={"outlined"}
-                                sx={{ flex: 1, borderRadius: 4 }}>
+                        <Grid size={4}>
+                            <Card variant="outlined" sx={{ flex: 1, borderRadius: 4 }}>
                                 <CardContent>
                                     <p>Outro</p>
                                     <p>R$ 0,00</p>
@@ -277,9 +301,7 @@ const App = (): ReactElement => {
                 </Grid>
             </Box>
         </div>
-    )
-
-    return b;
-}
+    );
+};
 
 export default App;
