@@ -1,54 +1,30 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import SelectAutocomplete from "../../../../components/form/SelectAutocomplete";
-import { URL_RACE_COMPETITION } from "../../../../services/axios/ApiUrls";
-import { getSportsData } from "../../../../services/axios/Get";
+import { getSeasonByCategory, getSessionResult } from "../../../../services/getCommonData/SportsData";
 import { formatDate } from "../../../../utils/datetime";
 import EventResultTable from "../components/tables/EventResultTable";
 import { SessionResultsResponse } from "../types/SessionResults";
 
 
+
 const CarRaceLanding = (): ReactElement => {
     const [sessionResultData, setSessionResultData] = useState<SessionResultsResponse>();
     const [categorySeasons, setCategorySeasons] = useState([]);
-    
-        const getSessionResult = async (): Promise<SessionResultsResponse | undefined>  => {
-            try {
-                const sessionId: number = 7;
-                const response = await getSportsData(URL_RACE_COMPETITION.sessions.result(sessionId));
-                if (response == null) {
-                    toast.error('Houve um erro ao buscar os resultados da sessão');
-                    return;
-                }
-    
-                setSessionResultData(response);
-            } catch {
-                toast.error('Houve um erro ao buscar os resultados da sessão');
-                return;
-            }
-        }
 
-        const getSeasonByCategory = async (): Promise<any> => {
-            try {
-                const categorySlug = 'f1';
-                const response = await getSportsData(URL_RACE_COMPETITION.seasons.byCategory(categorySlug));
+    const fetchData: () => Promise<void> = async () => {
+        setSessionResultData(await getSessionResult());
+        setCategorySeasons(await getSeasonByCategory());
+    }
 
-                setCategorySeasons(response)
-            } catch {
-                toast.error('Houve um erro ao buscar as temporadas da categoria')
-            }
-        }
-    
-        useEffect(() => {
-            getSessionResult();
-            getSeasonByCategory();
-        }, [])
+    useEffect(() => {
+        fetchData();
+    }, [])
 
-        useEffect(() => {
-            console.log(categorySeasons);
-        }, [categorySeasons])
-    
+    useEffect(() => {
+        // console.log(categorySeasons);
+    }, [categorySeasons])
+
     return (
         <div className="container">
             <Box>
@@ -80,7 +56,7 @@ const CarRaceLanding = (): ReactElement => {
                                                 width={250}
                                             />
                                         </Grid>
-                                         <Grid size={3} >
+                                        <Grid size={3} >
                                             <SelectAutocomplete
                                                 label="Evento"
                                                 value={1}
@@ -102,7 +78,7 @@ const CarRaceLanding = (): ReactElement => {
                                                 width={250}
                                             />
                                         </Grid>
-                                        <Grid size={12} sx={{ mt: 4}}>
+                                        <Grid size={12} sx={{ mt: 4 }}>
                                             <Typography variant="h2">
                                                 {sessionResultData?.eventName} - {sessionResultData?.sessionName}
                                             </Typography>
@@ -111,7 +87,7 @@ const CarRaceLanding = (): ReactElement => {
                                             </Typography>
                                         </Grid>
                                         <Grid size={12} >
-                                            <EventResultTable 
+                                            <EventResultTable
                                                 sessionResultData={sessionResultData?.result}
                                             />
                                         </Grid>

@@ -20,6 +20,13 @@ interface DataGridProps {
     getTreeDataPath?: any;
     density?: GridDensity;
     sx?: any;
+
+    // Editable table
+    editMode?: 'cell' | 'row';
+    rowModesModel?: any;
+    onRowModesModelChange?: any;
+    onRowEditStop?: any;
+    processRowUpdate?: any;
 }
 
 const DataGrid = (props: DataGridProps) => {
@@ -49,6 +56,12 @@ const DataGrid = (props: DataGridProps) => {
                 columnVisibilityModel={props.columnVisibilityModel ?? {}}
                 sx={props.sx ?? {}}
 
+                // Editable props
+                editMode={props.editMode}
+                rowModesModel={props.rowModesModel ?? null}
+                onRowModesModelChange={props.onRowModesModelChange ?? null}
+                onRowEditStop={props.onRowEditStop ?? null}
+                processRowUpdate={props.processRowUpdate ?? null}
             />
         </Box>
     );

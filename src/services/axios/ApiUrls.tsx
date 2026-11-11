@@ -57,4 +57,7 @@ export const URL_RACE_COMPETITION = {
     sessions: {
         result: (sessionId: number) => `/api/v1/sessions/${sessionId}/result`,
     },
+    outro: {
+        contructors: () => `/api/v1/constructors`
+    }
 };

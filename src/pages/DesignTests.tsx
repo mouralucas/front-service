@@ -36,23 +36,14 @@ type ServiceRow = {
     id: number;
     service: string;
     host: string;
+    test: number;
     isNew?: boolean;
 };
 
 const initialRows: ServiceRow[] = [
-    { id: 1, service: 'Service 1', host: 'Host 2' },
-    { id: 2, service: 'Service 2', host: 'Host 2' },
-    { id: 3, service: 'Service 3', host: 'Host 2' },
-    { id: 4, service: 'Service 4', host: 'Host 2' },
-    { id: 5, service: 'Service 5', host: 'Host 2' },
-    { id: 6, service: 'Service 6', host: 'Host 2' },
-    { id: 7, service: 'Service 7', host: 'Host 2' },
-    { id: 8, service: 'Service 8', host: 'Host 2' },
-    { id: 9, service: 'Service 9', host: 'Host 2' },
-    { id: 10, service: 'Service 10', host: 'Host 2' },
-    { id: 11, service: 'Service 11', host: 'Host 2' },
-    { id: 12, service: 'Service 12', host: 'Host 2' },
-    { id: 13, service: 'Service 13', host: 'Host 2' },
+    { id: 1, service: 'Service 1', host: 'Host 2', test: 1 },
+    { id: 2, service: 'Service 2', host: 'Host 2', test: 2 },
+    { id: 3, service: 'Service 3', host: 'Host 2', test: 3 },
 ];
 
 declare module '@mui/x-data-grid' {
